@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <menu xmlns:android="http://schemas.android.com/apk/res/android">
+     <item 
+         android:id="@+id/menu_instructions"
+         android:title="Instructions"
+         android:showAsAction="ifRoom|withText"/>
+     <item 
+         android:id="@+id/menu_start"
+         android:title="@string/startHere" 
+         android:icon="@drawable/smile_start_icon"
+         android:showAsAction="ifRoom|withText"/>
+     <!-- item 
+         android:id="@+id/menu_upload"
+         android:title="Stop and upload to iSENSE"
+         android:showAsAction="ifRoom|withText"/-->
+     <item 
+         android:id="@+id/menu_exit"
+         android:title="Exit Pendulator"
+         android:showAsAction="never"/>
+
+      
+ </menu>
+
+ 

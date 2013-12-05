@@ -1,0 +1,23 @@
+<resources>
+
+    <style name="AppTheme" parent="android:Theme.Light" />
+
+    <style name="PDTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:alertDialogStyle">@style/CustomProgressDialogStyle</item>
+        <item name="android:textColorPrimary">#000000</item>
+    </style>
+
+    <style name="CustomProgressDialogStyle">
+        <item name="android:bottomBright">#FF0000</item>
+        <item name="android:bottomDark">#FF0000</item>
+        <item name="android:bottomMedium">#FF0000</item>
+        <item name="android:centerBright">#FF0000</item>
+        <item name="android:centerDark">#FF0000</item>
+        <item name="android:centerMedium">#FF0000</item>
+        <item name="android:fullBright">#FF0000</item>
+        <item name="android:fullDark">#FF0000</item>
+        <item name="android:topBright">#FF0000</item>
+        <item name="android:topDark">#FF0000</item>
+    </style>
+
+</resources>

@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <style name="Theme.MyTheme" parent="@android:style/Theme.Light" />
+
+    <style name="Theme.MyTheme" parent="@android:style/Theme.Light">
+        <item name="menuConnect">@drawable/menu_connect_light</item>
+        <item name="menuRefresh">@drawable/menu_refresh_light</item>
+        <item name="menuSensor">@drawable/menu_sensor_light</item>
+        <item name="menuSettings">@drawable/menu_settings_light</item>
+        <item name="menuTime">@drawable/menu_time_light</item>
+    </style>
+
 </resources>

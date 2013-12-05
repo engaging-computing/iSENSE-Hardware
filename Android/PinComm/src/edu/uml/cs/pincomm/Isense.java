@@ -29,6 +29,7 @@
 package edu.uml.cs.pincomm;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -41,6 +42,7 @@ import java.util.List;
 import org.json.JSONArray;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -50,11 +52,14 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
+import android.nfc.NdefMessage;
+import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -109,6 +114,9 @@ public class Isense extends Activity implements OnClickListener {
 	String baseSessionUrl = "http://isense.cs.uml.edu/newvis.php?sessions=";
 	String sessionName, sessionDesc, sessionStreet, sessionCity;
 
+	NfcAdapter mAdapter;
+	PendingIntent pendingIntent;
+
 	ArrayList<String> trackedFields;
 	int amtTrackedFields = 0;
 
@@ -142,6 +150,8 @@ public class Isense extends Activity implements OnClickListener {
 
 		mContext = this;
 
+		mAdapter = NfcAdapter.getDefaultAdapter(this);
+
 		mSlideInTop = AnimationUtils.loadAnimation(this, R.anim.slide_in_top);
 		mSlideOutTop = AnimationUtils.loadAnimation(this, R.anim.slide_out_top);
 		rotateInPlace = AnimationUtils.loadAnimation(this, R.anim.superspinner);
@@ -149,6 +159,7 @@ public class Isense extends Activity implements OnClickListener {
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		rapi = RestAPI.getInstance((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE), getApplicationContext());
+		rapi.useDev(false);
 
 		//Initialize sensor data nested array list
 		for(int i = 0; i<16; i++) {
@@ -168,8 +179,14 @@ public class Isense extends Activity implements OnClickListener {
 			Intent i = new Intent(this, Login.class);
 			startActivityForResult(i, LOGIN_BOX);
 		} else {
-			if (!loggedIn && rapi.isConnectedToInternet()
-					&& !username.equals("") && !password.equals("")) new PerformLogin().execute();
+			boolean connected = rapi.isConnectedToInternet();
+			if (!connected) {
+				Intent i = new Intent(Isense.mContext, WifiDisabled.class);
+				startActivity(i);
+			}
+			if (!loggedIn && connected && !username.equals("") && !password.equals("")) {
+				new PerformLogin().execute();
+			}
 		}
 
 		flipper.setInAnimation(mSlideInTop);
@@ -191,6 +208,9 @@ public class Isense extends Activity implements OnClickListener {
 		pushToISENSE.setEnabled(false);
 
 		launchLayout.setVisibility(View.VISIBLE);
+
+		pendingIntent = PendingIntent.getActivity(
+				this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
 		mChatService = new BluetoothService(this, mHandler);
 	}
@@ -269,6 +289,14 @@ public class Isense extends Activity implements OnClickListener {
 	@Override
 	public synchronized void onResume() {
 		super.onResume();
+
+		if(Build.VERSION.SDK_INT >= 10) {
+			mAdapter = NfcAdapter.getDefaultAdapter(this);
+			if(mAdapter != null) {
+				mAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+			}
+		}
+
 		// Performing this check in onResume() covers the case in which BT was
 		// not enabled during onStart(), so we were paused to enable it...
 		// onResume() will be called when ACTION_REQUEST_ENABLE activity
@@ -280,6 +308,54 @@ public class Isense extends Activity implements OnClickListener {
 				// Start the Bluetooth chat services
 				mChatService.start();
 			}
+		}
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+			handleNFCIntent(getIntent());
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if(Build.VERSION.SDK_INT >= 10) {
+			if(mAdapter != null) {
+				mAdapter.disableForegroundDispatch(this);
+			}
+		}
+	}
+
+	void handleNFCIntent(Intent intent) {
+		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+		if(Build.VERSION.SDK_INT >= 9) {
+			if (rawMsgs != null) {
+				NdefMessage[] msgs = new NdefMessage[rawMsgs.length];
+				for (int i = 0; i < rawMsgs.length; i++) {
+					msgs[i] = (NdefMessage) rawMsgs[i];
+				}
+				byte[] payload = msgs[0].getRecords()[0].getPayload();
+				String text = "";
+				//Get the Text Encoding
+				String textEncoding = ((payload[0] & 0200) == 0) ? "UTF-8" : "UTF-16";
+				//Get the Language Code
+				int languageCodeLength = payload[0] & 0077;
+				try {
+					//Get the Text
+					text = new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				connectToBluetooth(text);
+			}
+		}
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		//Check to see if the activity is being started due to reading an NFC tag
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+			handleNFCIntent(intent);
 		}
 	}
 
@@ -523,6 +599,8 @@ public class Isense extends Activity implements OnClickListener {
 				edu.uml.cs.pincomm.DatapointRow newRow = new edu.uml.cs.pincomm.DatapointRow(getBaseContext(), null);
 				if(i%2 != 0) {
 					newRow.setLayoutBg(res.getColor(R.color.rowcols));
+				} else {
+					newRow.setLayoutBg(res.getColor(R.color.rowcols2));
 				}
 				newRow.setLabel("Datapoint "+ (i+1));
 
@@ -574,7 +652,6 @@ public class Isense extends Activity implements OnClickListener {
 		allSensors.remove(0);
 		allSensors.remove(0);
 
-		System.out.println(prefs2.getString("sensorspin_value", ""));
 		lookup = allSensors.indexOf(prefs2.getString("sensorspin_value", ""));
 
 		if (sensorData.get(lookup).size() != 0) {
@@ -689,6 +766,17 @@ public class Isense extends Activity implements OnClickListener {
 		}
 	};
 
+	public void connectToBluetooth(String macAddr) {
+		try {
+			BluetoothDevice device = mBluetoothAdapter
+					.getRemoteDevice(macAddr);
+			mChatService.connect(device);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			Toast.makeText(this, "Sorry, the MAC address was invalid. Connection failed!",  Toast.LENGTH_LONG).show();
+		}
+	}
+
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case REQUEST_CONNECT_DEVICE:
@@ -698,11 +786,7 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
-				// Attempt to connect to the device
-				mChatService.connect(device);
+				connectToBluetooth(address);
 			}
 			break;
 		case REQUEST_CONNECT_DEVICE_2:
@@ -712,11 +796,7 @@ public class Isense extends Activity implements OnClickListener {
 				// Get the device MAC address
 				String address = data.getExtras().getString(
 						DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-				// Get the BLuetoothDevice object
-				BluetoothDevice device = mBluetoothAdapter
-						.getRemoteDevice(address);
-				// Attempt to connect to the device
-				mChatService.connect(device);
+				connectToBluetooth(address);
 				Toast.makeText(getApplicationContext(), "Connecting...", Toast.LENGTH_SHORT).show();
 				rcrdBtn.setEnabled(false);
 			}

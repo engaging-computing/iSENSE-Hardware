@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:baselineAligned="false"
+    android:keepScreenOn="true"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/startStop"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/locationBlock"
+        android:layout_below="@+id/timePointCountBlock"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_rsense"
+        android:text="@string/startPrompt"
+        android:textColor="#3E94D1"
+        android:textSize="30sp"
+        android:textStyle="bold"
+         />
+
+    <LinearLayout
+        android:id="@+id/locationBlock"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#000033"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/myLocation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000033"
+            android:text="@string/noLocation0"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/timePointCountBlock"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:orientation="vertical" >
+
+        <TextView
+        android:id="@+id/NameStatus"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:background="#000033"
+        android:text="@string/nameWithColon"
+        android:textColor="#A8CFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" 
+        android:layout_weight="50"/>
+        
+        <TextView
+            android:id="@+id/timeElapsed"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#000033"
+            android:text="@string/timeElapsed"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    	<TextView
+            android:id="@+id/pointCount"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/pointsUploaded"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/loginStatus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/logged_in_as"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/expNumBx"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/Exp_Num_Is"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+           <TextView
+            android:id="@+id/RateBx"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#000033"
+            android:text="@string/Rate_Is"
+            android:textColor="#A8CFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+    
+    </LinearLayout>
+
+</RelativeLayout>

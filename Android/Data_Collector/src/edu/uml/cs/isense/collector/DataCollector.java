@@ -4,8 +4,8 @@
 /**      IIIIIIIIIIIII            General Purpose Data Collector App             SSSSSSSSS        **/
 /**           III                                                               SSS               **/
 /**           III                                                              SSS                **/
-/**           III                    By:               Jeremy Poulin,           SSS               **/
-/**           III                                      Michael Stowell           SSSSSSSSS        **/
+/**           III                    By:               Michael Stowell,         SSS               **/
+/**           III                                      Jeremy Poulin,            SSSSSSSSS        **/
 /**           III                    Faculty Advisor:  Fred Martin                      SSS       **/
 /**           III                                                                        SSS      **/
 /**           III                    Group:            ECG / iSENSE                     SSS       **/
@@ -22,462 +22,278 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.json.JSONArray;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.graphics.PorterDuff;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
-import android.provider.MediaStore;
 import android.provider.Settings;
-import android.text.InputType;
-import android.text.method.DigitsKeyListener;
-import android.text.method.NumberKeyListener;
-import android.util.Log;
-import android.view.Display;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import edu.uml.cs.isense.comm.RestAPI;
-
-/* Experiment 422 on iSENSE and 277 on Dev */
+import edu.uml.cs.isense.collector.dialogs.CanLogin;
+import edu.uml.cs.isense.collector.dialogs.Description;
+import edu.uml.cs.isense.collector.dialogs.ForceStop;
+import edu.uml.cs.isense.collector.dialogs.MediaManager;
+import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
+import edu.uml.cs.isense.collector.dialogs.NoGps;
+import edu.uml.cs.isense.collector.dialogs.Step1Setup;
+import edu.uml.cs.isense.collector.dialogs.Summary;
+import edu.uml.cs.isense.collector.splash.Welcome;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.dfm.DataFieldManager;
+import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.queue.QDataSet;
+import edu.uml.cs.isense.queue.QueueLayout;
+import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.supplements.OrientationManager;
+import edu.uml.cs.isense.sync.SyncTime;
+import edu.uml.cs.isense.waffle.Waffle;
 
 public class DataCollector extends Activity implements SensorEventListener,
 		LocationListener {
 
-	private static EditText experimentInput;
-	private static TextView session;
-	private static TextView time;
+	/* Constants */
 
-	private Button startStop;
-	private Button browseButton;
-	private Boolean running = false;
-	private Vibrator vibrator;
-	private TextView picCount;
-	private TextView loginInfo;
-	private SensorManager mSensorManager;
-	private LocationManager mLocationManager;
-	private LocationManager mRoughLocManager;
-	private Location loc;
-	private Location roughLoc;
-	private Timer timeTimer;
+	// String constants
+	public static final String activityName = "datacollector";
+	public static final String STEP_1_DATASET_NAME = "dataset_name";
+	public static final String STEP_1_SAMPLE_INTERVAL = "sample_interval";
+	public static final String STEP_1_TEST_LENGTH = "test_length";
 
-	private float rawAccel[];
-	private float rawMag[];
-	private float accel[];
-	private float orientation[];
-	private String temperature = "";
-	private String pressure = "";
-	private String light = "";
+	// Numerical constants
+	public static final int S_INTERVAL = 50;
+	public static final int TEST_LENGTH = 600;
 
-	private static final int INTERVAL = 200;
-
-	private static final int MENU_ITEM_SETUP = 0;
-	private static final int MENU_ITEM_LOGIN = 1;
-	private static final int MENU_ITEM_UPLOAD = 2;
-	private static final int MENU_ITEM_TIME = 3;
-
-	private static final int SAVE_DATA = 4;
-	private static final int DIALOG_SUMMARY = 5;
-	private static final int DIALOG_CHOICE = 6;
-	private static final int EXPERIMENT_CODE = 7;
-	private static final int DIALOG_NO_ISENSE = 8;
-	private static final int RECORDING_STOPPED = 9;
-	private static final int DIALOG_NO_GPS = 10;
-	private static final int DIALOG_FORCE_STOP = 11;
-	private static final int DIALOG_DESCRIPTION = 12;
+	private static final int MENU_ITEM_LOGIN = 0;
+	private static final int MENU_ITEM_MEDIA = 1;
+	private static final int MENU_ITEM_SYNC = 2;
 
 	public static final int DIALOG_CANCELED = 0;
 	public static final int DIALOG_OK = 1;
 	public static final int DIALOG_PICTURE = 2;
 
-	public static final int CAMERA_PIC_REQUESTED = 1;
-	public static final int CAMERA_VID_REQUESTED = 2;
-	public static final int SYNC_TIME_REQUESTED = 3;
-	public static final int CHOOSE_SENSORS_REQUESTED = 4;
-	
-	private static final int TIME = 0;
-	private static final int ACCEL_X = 1;
-	private static final int ACCEL_Y = 2;
-	private static final int ACCEL_Z = 3;
-	private static final int ACCEL_TOTAL = 4;
-	private static final int LATITUDE = 5;
-	private static final int LONGITUDE = 6;
-	private static final int MAG_X = 7;
-	private static final int MAG_Y = 8;
-	private static final int MAG_Z = 9;
-	private static final int MAG_TOTAL = 10;
-	private static final int HEADING_DEG = 11;
-	private static final int HEADING_RAD = 12;
-	private static final int TEMPERATURE_C = 13;
-	private static final int PRESSURE = 14;
-	private static final int ALTITUDE = 15;
-	private static final int LIGHT = 16;
-	
-	private static final int TEMPERATURE_F = 17;
-	private static final int TEMPERATURE_K = 18;
+	public static final int SYNC_TIME_REQUESTED = 1;
+	public static final int QUEUE_UPLOAD_REQUESTED = 3;
+	public static final int LOGIN_REQUESTED = 5;
+	public static final int GPS_REQUESTED = 7;
+	public static final int FORCE_STOP_REQUESTED = 8;
+	public static final int RECORDING_STOPPED_REQUESTED = 9;
+	public static final int DESCRIPTION_REQUESTED = 10;
+	public static final int CAN_LOGIN_REQUESTED = 11;
+	public static final int STEP_1_SETUP_REQUESTED = 12;
 
-	private String data;
+	/* UI Objects */
 
-	private Uri imageUri;
-	private Uri videoUri;
+	// Buttons
+	private static Button step1;
+	private static Button step2;
+	private static Button step3;
 
+	// Menu Items
+	private Menu mMenu;
+
+	private MenuItem menuLogin;
+	private MenuItem menuSync;
+	private MenuItem menuMedia;
+
+	// ProgressDialogs
+	private ProgressDialog dia;
+
+	// ImageView
+	private ImageView isenseLogo;
+
+	/* Formatters */
+
+	private final static DecimalFormat toThou = new DecimalFormat("######0.000");
+
+	/* GeoSpacial and Sensor Components */
+
+	// GeoSpacial Components
+	private LocationManager mLocationManager;
+	private static Location loc;
+
+	// Sensor Components
+	private SensorManager mSensorManager;
+
+	/* Data Recording Specific Components */
+
+	// Recording status trigger
+	private static Boolean running = false;
+
+	// Start/stop vibrator and beeper
+	private Vibrator vibrator;
 	private MediaPlayer mMediaPlayer;
 
-	private ArrayList<File> pictures;
-	private ArrayList<File> videos;
+	/* Data Variables */
 
-	private int elapsedMinutes = 0;
-	private int elapsedSeconds = 0;
-	private int elapsedMillis = 0;
-	private int totalMillis = 0;
-	private int dataPointCount = 0;
-	private int i = 0;
-	private int len = 0;
-	private int len2 = 0;
-	private int secondsElapsed = 0;
+	// Implemented into data variables
+	private static String data;
+	private static int dataPointCount = 0;
 
-	private long currentTime = 0;
-	private long timeOffset = 0;
+	// Recording Credentials
+	private static String dataSetName;
+	private static long sampleInterval;
+	private static long recordingLength;
+	private static int currentProjID;
 
-	private String dateString, s_elapsedSeconds, s_elapsedMillis,
-			s_elapsedMinutes;
-	private String sessionDescription = "";
+	// Raw data variables
+	private static String temperature = "";
+	private static String pressure = "";
+	private static String light = "";
 
-	RestAPI rapi;
-	Waffle w;
-	public static DataFieldManager dfm;
-	Fields f;
-	public static SensorCompatibility sc;
-	LinkedList<String> acceptedFields;
+	private float rawAccel[];
+	private float rawMag[];
+	private static float accel[];
+	private static float mag[];
+	private static float orientation[];
 
-	DecimalFormat toThou = new DecimalFormat("#,###,##0.000");
+	/* Publicized Variables */
 
-	ProgressDialog dia;
-	double partialProg = 1.0;
+	// Lists and Queues
+	public static LinkedList<String> acceptedFields;
+	public static UploadQueue uq;
 
-	private EditText sessionName;
-	String nameOfSession = "";
-	String partialSessionName = "";
-
+	// Booleans
 	public static boolean inPausedState = false;
+	public static boolean terminateThroughPowerOff = false;
+	public static boolean manageUploadQueueAfterLogin = false;
 
-	private static int mwidth = 1;
-	private static int mediaCount = 0;
-	private static boolean useMenu = true;
-	private static boolean beginWrite = true;
-	private static boolean setupDone = false;
-	private static boolean choiceViaMenu = false;
-	private static boolean successLogin = false;
-	private static boolean status400 = false;
-	private static boolean sdCardError = false;
-	private static boolean uploadSuccess = false;
-
-	private Handler mHandler;
-	private boolean throughHandler = false;
-
-	File SDFile;
-	FileWriter gpxwriter;
-	BufferedWriter out;
-
-	public static String textToSession = "";
+	// Strings
+	public static String textToDataSet = "";
 	public static String toSendOut = "";
 	public static String sdFileName = "";
 
+	/* Additional Private Variables */
+
+	// Integers
+	private int elapsedMinutes = 0;
+	private int elapsedSeconds = 0;
+	private static int elapsedMillis = 0;
+	private static int totalMillis = 0;
+
+	private static int rotation = 0;
+
+	// Longs
+	private static long currentTime = 0;
+	private long timeOffset = 0;
+
+	// Strings
+	private String dateString;
+	private String s_elapsedMinutes;
+	private String s_elapsedSeconds;
+	private String s_elapsedMillis;
+	private String dataSetDescription = "";
+
+	// Booleans
+	private static boolean useMenu = false;
+	private static boolean preLoad = false;
+	private static boolean beginWrite = true;
+	private static boolean sdCardError = false;
+	private static boolean showGpsDialog = true;
+	private static boolean throughUploadMenuItem = false;
+	private static boolean writeCSVFile = true;
+
+	/* Additional Objects */
+
+	// Built-In
+	private Animation rotateInPlace;
+	private static Handler mHandler;
+
+	private static File SDFile;
+	private static FileWriter gpxwriter;
+	private static BufferedWriter out;
+	private static Context mContext;
+
 	public static JSONArray dataSet;
-	public static Context mContext;
 
-	private static ArrayList<File> pictureArray = new ArrayList<File>();
-	private LinearLayout mScreen;
-	private ImageView isenseLogo;
+	// Custom
+	public static API api;
+	public static Waffle w;
+	public static DataFieldManager dfm;
+	public static Fields f;
 
-	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.loading);
 
-		mContext = this;
+		OrientationManager.disableRotation(DataCollector.this);
 
-		// Initialize everything you're going to need
-		initVars();
-
-		// Display the End User Agreement
-		displayEula();
-
-		// This block useful for if onBackPressed - retains some things from
-		// previous session
-		if (running)
-			showDialog(DIALOG_FORCE_STOP);
-
-		// Main Layout Button for Recording Data
-		startStop.getBackground().setColorFilter(0xFFFF0000,
-				PorterDuff.Mode.MULTIPLY);
-		startStop.setOnLongClickListener(new OnLongClickListener() {
-
+		mHandler = new Handler();
+		mHandler.post(new Runnable() {
 			@Override
-			public boolean onLongClick(View arg0) {
-
-				if (!setupDone) {
-
-					showDialog(MENU_ITEM_SETUP);
-					w.make("You must setup before recording data.",
-							Toast.LENGTH_LONG, "x");
-
-				} else {
-
-					vibrator.vibrate(300);
-					mMediaPlayer.setLooping(false);
-					mMediaPlayer.start();
-
-					if (running) {
-
-						writeToSDCard(null, 'f');
-						setupDone = false;
-						useMenu = true;
-
-						mSensorManager.unregisterListener(DataCollector.this);
-						running = false;
-						startStop.setText(R.string.startString);
-						time.setText(R.string.timeElapsed);
-
-						timeTimer.cancel();
-						
-						startStop.getBackground().setColorFilter(0xFFFF0000,
-								PorterDuff.Mode.MULTIPLY);
-						mScreen.setBackgroundResource(R.drawable.background);
-						isenseLogo.setImageResource(R.drawable.logo_red);
-						
-						choiceViaMenu = false;
-
-						if (sdCardError)
-							w.make("Could not write file to SD Card.",
-									Toast.LENGTH_SHORT, "x");
-
-						if (throughHandler)
-							showDialog(RECORDING_STOPPED);
-						else
-							showDialog(DIALOG_DESCRIPTION);
-
-					} else {
-
-						registerSensors();
-
-						dataSet = new JSONArray();
-						secondsElapsed = 0;
-						elapsedMillis = 0;
-						totalMillis = 0;
-						len = 0;
-						len2 = 0;
-						dataPointCount = 0;
-						i = 0;
-						beginWrite = true;
-						sdCardError = false;
-
-						currentTime = getUploadTime();
-
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							w.make("Data recording interrupted! Time values may be inconsistent.",
-									Toast.LENGTH_SHORT, "x");
-							e.printStackTrace();
-						}
-
-						useMenu = false;
-
-						data = "X Acceleration, Y Acceleration, Z Acceleration, Acceleration, "
-								+ "Latitude, Longitude, Heading, Magnetic X, Magnetic Y, Magnetic Z, Time\n";
-						running = true;
-						startStop.setText(R.string.stopString);
-
-						timeTimer = new Timer();
-						timeTimer.scheduleAtFixedRate(new TimerTask() {
-							public void run() {
-
-								dataPointCount++;
-								elapsedMillis += INTERVAL;
-								totalMillis = elapsedMillis;
-
-								if ((i % 5) == 0) {
-									mHandler.post(new Runnable() {
-										@Override
-										public void run() {
-											setTime(secondsElapsed++);
-										}
-									});
-								}
-
-								if (i >= 3000) {
-
-									timeTimer.cancel();
-
-									mHandler.post(new Runnable() {
-										@Override
-										public void run() {
-											throughHandler = true;
-											startStop.performLongClick();
-										}
-									});
-
-								} else {
-
-									i++;
-									len++;
-									len2++;
-
-									if (dfm.enabledFields[ACCEL_X])
-										f.accel_x = toThou.format(accel[0]);
-									if (dfm.enabledFields[ACCEL_Y])
-										f.accel_y = toThou.format(accel[1]);
-									if (dfm.enabledFields[ACCEL_Z])
-										f.accel_z = toThou.format(accel[2]);
-									if (dfm.enabledFields[ACCEL_TOTAL])
-										f.accel_total = toThou.format(accel[3]);
-									if (dfm.enabledFields[LATITUDE])
-										f.latitude = loc.getLatitude();
-									if (dfm.enabledFields[LONGITUDE])
-										f.longitude = loc.getLongitude();
-									if (dfm.enabledFields[HEADING_DEG])
-										f.angle_deg = toThou.format(orientation[0]);
-									if (dfm.enabledFields[HEADING_RAD])
-										f.angle_rad = "" + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
-									if (dfm.enabledFields[MAG_X])
-										f.mag_x = rawMag[0];
-									if (dfm.enabledFields[MAG_Y])
-										f.mag_y = rawMag[1];
-									if (dfm.enabledFields[MAG_Z])
-										f.mag_z = rawMag[2];
-									if (dfm.enabledFields[MAG_TOTAL])
-										f.mag_total = Math.sqrt(Math
-												.pow(f.mag_x, 2)
-												+ Math.pow(f.mag_y, 2)
-												+ Math.pow(f.mag_z, 2));
-									if (dfm.enabledFields[TIME])
-										f.timeMillis = currentTime + elapsedMillis;
-									if (dfm.enabledFields[TEMPERATURE_C])
-										f.temperature_c = temperature;
-									if (dfm.enabledFields[TEMPERATURE_F])
-										f.temperature_f = "" + ((Double.parseDouble(temperature) * 1.8) + 32);
-									if (dfm.enabledFields[TEMPERATURE_K])
-										f.temperature_k = "" + (Double.parseDouble(temperature) + 273.15);
-									if (dfm.enabledFields[PRESSURE])
-										f.pressure = pressure;
-									if (dfm.enabledFields[ALTITUDE])
-										f.altitude = calcAltitude();
-									if (dfm.enabledFields[LIGHT])
-										f.lux = light;
-
-									dataSet.put(dfm.putData());
-									data = dfm.writeSdCardLine();
-
-									if (beginWrite) {
-										writeToSDCard(data, 's');
-									} else {
-										writeToSDCard(data, 'u');
-									}
-
-								}
-
-							}
-						}, 0, INTERVAL);
-						startStop.getBackground().setColorFilter(0xFF00FF00,
-								PorterDuff.Mode.MULTIPLY);
-						mScreen.setBackgroundResource(R.drawable.background_running);
-						isenseLogo.setImageResource(R.drawable.logo_green);
-					}
-					return running;
-
-				}
-				running = false;
-				return running;
+			public void run() {
+				rotateInPlace = AnimationUtils.loadAnimation(
+						DataCollector.this, R.anim.superspinner);
+				ImageView spinner = (ImageView) findViewById(R.id.spinner);
+				spinner.startAnimation(rotateInPlace);
 			}
-
 		});
 
-		Criteria c = new Criteria();
-		c.setAccuracy(Criteria.ACCURACY_FINE);
+		// Set main context of application once
+		mContext = this;
 
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-				&& mRoughLocManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-			mLocationManager.requestLocationUpdates(
-					mLocationManager.getBestProvider(c, true), 0, 0,
-					DataCollector.this);
-			mRoughLocManager.requestLocationUpdates(
-					LocationManager.NETWORK_PROVIDER, 0, 0, DataCollector.this);
-		} else {
-			showDialog(DIALOG_NO_GPS);
-		}
+		// Action bar customization for API >= 14
+		setActionBarNormal();
 
-		accel = new float[4];
-		orientation = new float[3];
-		rawAccel = new float[3];
-		rawMag = new float[3];
-		loc = new Location(mLocationManager.getBestProvider(c, true));
-
-		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
+		// Load the main UI
+		new LoadingMainTask().execute();
 
 	}
 
 	// (s)tarts, (u)pdates, and (f)inishes writing the .csv to the SD Card
 	// containing "data"
-	public void writeToSDCard(String data, char code) {
+	public static void writeToSDCard(String data, char code) {
 		switch (code) {
 		case 's':
-			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss",
+					Locale.US);
 			Date dt = new Date();
-
-			dateString = sdf.format(dt);
+			String csvDateString = sdf.format(dt);
 
 			File folder = new File(Environment.getExternalStorageDirectory()
 					+ "/iSENSE");
@@ -486,10 +302,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 				folder.mkdir();
 			}
 
-			SDFile = new File(folder, partialSessionName
-					+ " - " + dateString + ".csv");
-			sdFileName = partialSessionName + " - " + dateString;
-			Log.d("tag", sdFileName);
+			SDFile = new File(folder, dataSetName + "--" + csvDateString
+					+ ".csv");
+			sdFileName = dataSetName + " - " + csvDateString;
 
 			try {
 				gpxwriter = new FileWriter(SDFile);
@@ -497,6 +312,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				out.write(data);
 				beginWrite = false;
 			} catch (IOException e) {
+				sdCardError = true;
+			} catch (Exception e) {
 				sdCardError = true;
 			}
 
@@ -506,7 +323,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 			try {
 				out.append(data);
 			} catch (IOException e) {
-				sdCardError = true;
+				if (running)
+					sdCardError = true;
+
+			} catch (Exception e) {
+				if (running)
+					sdCardError = true;
 			}
 
 			break;
@@ -529,184 +351,156 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
-	// Adds pictures to the SD Card
-	public void pushPicture() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-		Date dt = new Date();
-		String uploadSessionString;
-
-		dateString = sdf.format(dt);
-
-		if (session.getText().toString().equals(getString(R.string.session)))
-			uploadSessionString = "Session Name Not Provided";
-		else
-			uploadSessionString = session.getText().toString();
-
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		for (int i = 0; i < pictures.size(); i++) {
-			File f = pictures.get(i);
-			File newFile = new File(folder, uploadSessionString
-					+ " - " + dateString + "-" + (i + 1) + ".jpeg");
-			f.renameTo(newFile);
-			pictureArray.add(newFile);
-		}
-
-		pictures.clear();
-	}
-
-	// Adds videos to the SD Card
-	public void pushVideo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss");
-		Date dt = new Date();
-		String uploadSessionString;
-
-		dateString = sdf.format(dt);
-
-		if (session.getText().toString().equals(getString(R.string.session)))
-			uploadSessionString = "Session Name Not Provided";
-		else
-			uploadSessionString = session.getText().toString();
-		File folder = new File(Environment.getExternalStorageDirectory()
-				+ "/iSENSE");
-
-		if (!folder.exists()) {
-			folder.mkdir();
-		}
-
-		for (int i = 0; i < videos.size(); i++) {
-			File f = videos.get(i);
-			File newFile = new File(folder, uploadSessionString
-					+ " - " + dateString + "-" + (i + 1) + ".3gp");
-			f.renameTo(newFile);
-		}
-
-		videos.clear();
-	}
-
+	// Activity paused
 	@Override
 	public void onPause() {
 		super.onPause();
-		mLocationManager.removeUpdates(DataCollector.this);
-		mRoughLocManager.removeUpdates(DataCollector.this);
-		mSensorManager.unregisterListener(DataCollector.this);
-		if (timeTimer != null)
-			timeTimer.cancel();
+
 		inPausedState = true;
-		if (pictures.size() > 0)
-			pushPicture();
-		if (videos.size() > 0)
-			pushVideo();
+
 	}
 
+	// Activity stopped
 	@Override
 	public void onStop() {
 		super.onStop();
-		mLocationManager.removeUpdates(DataCollector.this);
-		mRoughLocManager.removeUpdates(DataCollector.this);
-		mSensorManager.unregisterListener(DataCollector.this);
-		if (timeTimer != null)
-			timeTimer.cancel();
+		if (!running) {
+			if (mLocationManager != null)
+				mLocationManager.removeUpdates(DataCollector.this);
+
+			if (mSensorManager != null)
+				mSensorManager.unregisterListener(DataCollector.this);
+		}
+
 		inPausedState = true;
-		if (pictures.size() > 0)
-			pushPicture();
-		if (videos.size() > 0)
-			pushVideo();
+
 	}
 
+	// Called when activity rotates
 	@Override
-	public void onStart() {
-		super.onStart();
-		inPausedState = false;
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		setContentView(R.layout.automatic_concept);
+
+		// Re-initialize everything we're going to need
+		reInitVars();
+		reInitMainUI();
+
+		// Assign everything to respective variables
+		assignVars();
 	}
 
-	@SuppressWarnings("deprecation")
+	// Activity resuming
 	@Override
 	public void onResume() {
 		super.onResume();
-		inPausedState = false;
-		if (running)
-			showDialog(DIALOG_FORCE_STOP);
 
-		// Will call the login dialogue if necessary and update UI
+		// Will call the login dialogue if necessary
+		// and update UI
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences("USER_INFO",
+				DataCollector.mContext.getSharedPreferences(
+						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
-		if (!(mPrefs.getString("username", "").equals("")))
+
+		if (!(mPrefs.getString(
+				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+				.equals(""))
+				&& !inPausedState)
 			login();
 
-		picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
+		inPausedState = false;
+
+		// if (uq != null)
+		// uq.buildQueueFromFile();
+
+		// keeps menu buttons disabled while running
+		if (running)
+			setMenuStatus(false);
+		else if (step3 != null)
+			if (uq != null)
+				if (uq.emptyQueue())
+					disableStep3();
+				else
+					enableStep3();
 	}
 
 	// Overridden to prevent user from exiting app unless back button is pressed
 	// twice
 	@Override
 	public void onBackPressed() {
-		if (!w.dontToastMeTwice) {
+
+		if (!w.isDisplaying) {
 			if (running)
 				w.make("Cannot exit via BACK while recording data; use HOME instead.",
-						Toast.LENGTH_LONG, "x");
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else
-				w.make("Double press \"Back\" to exit.", Toast.LENGTH_SHORT, "check");
+				w.make("Double press \"Back\" to exit.");
 
-		} else if (w.exitAppViaBack && !running) {
-			setupDone = false;
+		} else if (w.canPerformTask && !running) {
 			super.onBackPressed();
 		}
 	}
 
+	// Create menu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, MENU_ITEM_SETUP, Menu.NONE, "Setup").setIcon(
-				R.drawable.ic_menu_settings);
-		menu.add(Menu.NONE, MENU_ITEM_LOGIN, Menu.NONE, "Login").setIcon(
-				R.drawable.ic_menu_login);
-		menu.add(Menu.NONE, MENU_ITEM_UPLOAD, Menu.NONE, "Upload").setIcon(
-				R.drawable.ic_menu_upload);
-		menu.add(Menu.NONE, MENU_ITEM_TIME, Menu.NONE, "Sync Time").setIcon(
-				R.drawable.ic_menu_synctime);
+
+		super.onCreateOptionsMenu(menu);
+
+		mMenu = menu;
+
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+
+		menuLogin = menu.getItem(MENU_ITEM_LOGIN);
+		menuMedia = menu.getItem(MENU_ITEM_MEDIA);
+		menuSync = menu.getItem(MENU_ITEM_SYNC);
+
+		if (preLoad)
+			setMenuStatus(false);
+
 		return true;
+
 	}
 
+	// Prepare the menu (enable/disable properly)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+		// if (!preLoad)
+		// setMenuStatus(true);
 		if (!useMenu) {
-			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
-			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
-			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
+
+			menu.getItem(0).setEnabled(false);
+			menu.getItem(1).setEnabled(false);
+			menu.getItem(2).setEnabled(false);
+
 		} else {
-			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
-			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
-			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
+
+			menu.getItem(0).setEnabled(true);
+			menu.getItem(1).setEnabled(true);
+			menu.getItem(2).setEnabled(true);
+
 		}
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
+	// Handle all menu item selections
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_ITEM_SETUP:
-			showDialog(MENU_ITEM_SETUP);
+		case R.id.menu_item_login:
+			Intent iLogin = new Intent(mContext, Login.class);
+			startActivityForResult(iLogin, LOGIN_REQUESTED);
 			return true;
-		case MENU_ITEM_LOGIN:
-			showDialog(MENU_ITEM_LOGIN);
+		case R.id.menu_item_sync:
+			Intent iTime = new Intent(DataCollector.this, SyncTime.class);
+			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
 			return true;
-		case MENU_ITEM_UPLOAD:
-			choiceViaMenu = true;
-			showDialog(DIALOG_CHOICE);
-			return true;
-		case MENU_ITEM_TIME:
-			Intent i = new Intent(DataCollector.this, SyncTime.class);
-			startActivityForResult(i, SYNC_TIME_REQUESTED);
+		case R.id.menu_item_media:
+			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
+			iMedia.putExtra("dataSetName", dataSetName);
+			startActivity(iMedia);
 			return true;
 		}
 		return false;
@@ -718,29 +512,78 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		
+
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y] || 
-					dfm.enabledFields[ACCEL_Z] || dfm.enabledFields[ACCEL_TOTAL]) {
-				
+			if (dfm.enabledFields[Fields.ACCEL_X]
+					|| dfm.enabledFields[Fields.ACCEL_Y]
+					|| dfm.enabledFields[Fields.ACCEL_Z]
+					|| dfm.enabledFields[Fields.ACCEL_TOTAL]) {
+
 				rawAccel = event.values.clone();
-				accel[0] = event.values[0];
-				accel[1] = event.values[1];
+
+				switch (rotation) {
+				case 90:
+					// x = -y && y = x
+					accel[0] = -event.values[1];
+					accel[1] = event.values[0];
+					break;
+				case 180:
+					// x = -x && y = -y
+					accel[0] = -event.values[0];
+					accel[1] = -event.values[1];
+					break;
+				case 270:
+					// x = y && y = -x
+					accel[0] = event.values[1];
+					accel[1] = -event.values[0];
+					break;
+				case 0:
+				default:
+					accel[0] = event.values[0];
+					accel[1] = event.values[1];
+				}
+
 				accel[2] = event.values[2];
-				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
-						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+				accel[3] = (float) Math.sqrt((float) (Math.pow(accel[0], 2)
+						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y] || 
-					dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL] ||
-					dfm.enabledFields[HEADING_DEG] || dfm.enabledFields[HEADING_RAD]) {
-				
+			if (dfm.enabledFields[Fields.MAG_X]
+					|| dfm.enabledFields[Fields.MAG_Y]
+					|| dfm.enabledFields[Fields.MAG_Z]
+					|| dfm.enabledFields[Fields.MAG_TOTAL]
+					|| dfm.enabledFields[Fields.HEADING_DEG]
+					|| dfm.enabledFields[Fields.HEADING_RAD]) {
+
 				rawMag = event.values.clone();
+
+				switch (rotation) {
+				case 90:
+					// x = -y && y = x
+					mag[0] = -event.values[1];
+					mag[1] = event.values[0];
+					break;
+				case 180:
+					// x = -x && y = -y
+					mag[0] = -event.values[0];
+					mag[1] = -event.values[1];
+					break;
+				case 270:
+					// x = y && y = -x
+					mag[0] = event.values[1];
+					mag[1] = -event.values[0];
+					break;
+				case 0:
+				default:
+					mag[0] = event.values[0];
+					mag[1] = event.values[1];
+				}
+
+				mag[2] = event.values[2];
 
 				float rotation[] = new float[9];
 
-				
 				if (SensorManager.getRotationMatrix(rotation, null, rawAccel,
 						rawMag)) {
 					orientation = new float[3];
@@ -749,22 +592,22 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 
 		} else if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
-			if (dfm.enabledFields[TEMPERATURE_C] || dfm.enabledFields[TEMPERATURE_F] 
-					|| dfm.enabledFields[TEMPERATURE_K])
+			if (dfm.enabledFields[Fields.TEMPERATURE_C]
+					|| dfm.enabledFields[Fields.TEMPERATURE_F]
+					|| dfm.enabledFields[Fields.TEMPERATURE_K])
 				temperature = toThou.format(event.values[0]);
 		} else if (event.sensor.getType() == Sensor.TYPE_PRESSURE) {
-			if (dfm.enabledFields[PRESSURE])
+			if (dfm.enabledFields[Fields.PRESSURE])
 				pressure = toThou.format(event.values[0]);
 		} else if (event.sensor.getType() == Sensor.TYPE_LIGHT) {
-			if (dfm.enabledFields[LIGHT])
-			light = toThou.format(event.values[0]);
+			if (dfm.enabledFields[Fields.LIGHT])
+				light = toThou.format(event.values[0]);
 		}
 	}
 
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;
-		roughLoc = location;
 	}
 
 	@Override
@@ -779,701 +622,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
-	@SuppressWarnings("deprecation")
-	protected Dialog onCreateDialog(final int id) {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		Dialog dialog;// = builder.setView(new View(this)).create();
-
-		// dialog.show();
-
-		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-
-		switch (id) {
-		case MENU_ITEM_SETUP:
-
-			dialog = getSavePrompt(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case DIALOG_OK:
-
-						partialSessionName = sessionName.getText().toString();
-						setupDone = true;
-						String showSessionName;
-						if (partialSessionName.length() > 15) {
-							showSessionName = partialSessionName.substring(0, 15) + "...";
-						} else {
-							showSessionName = partialSessionName;
-						}
-						session.setText("Session Name: " + showSessionName);
-						if (pictures.size() > 0)
-							pushPicture();
-						if (videos.size() > 0)
-							pushVideo();
-						break;
-					case DIALOG_CANCELED:
-						if (pictures.size() > 0)
-							pushPicture();
-						if (videos.size() > 0)
-							pushVideo();
-						break;
-					}
-
-				}
-			}, "Configure Options");
-			dialog.setCancelable(true);
-			dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					if (pictures.size() > 0)
-						pushPicture();
-					if (videos.size() > 0)
-						pushVideo();
-				}
-			});
-
-			sessionName.setText(partialSessionName);
-			break;
-
-		case MENU_ITEM_LOGIN:
-			LoginActivity la = new LoginActivity(this);
-			dialog = la.getDialog(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case LoginActivity.LOGIN_SUCCESSFULL:
-						final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-								DataCollector.mContext, DataCollector.mContext
-										.getSharedPreferences("USER_INFO",
-												Context.MODE_PRIVATE));
-						String loginName = mPrefs.getString("username", "");
-						if (loginName.length() >= 18)
-							loginName = loginName.substring(0, 18) + "...";
-						loginInfo.setText("Username: "
-								+ loginName);
-						//loginInfo.setTextColor(Color.GREEN);
-						successLogin = true;
-						w.make("Login successful", Toast.LENGTH_LONG, "check");
-						break;
-					case LoginActivity.LOGIN_CANCELED:
-						break;
-					case LoginActivity.LOGIN_FAILED:
-						successLogin = false;
-						showDialog(MENU_ITEM_LOGIN);
-						break;
-					}
-				}
-			});
-			break;
-
-		case SAVE_DATA:
-
-			dialog = getSavePrompt(new Handler() {
-				public void handleMessage(Message msg) {
-					switch (msg.what) {
-					case DIALOG_OK:
-						if (len == 0 || len2 == 0)
-							w.make("There is no data to upload!",
-									Toast.LENGTH_LONG, "x");
-						showDialog(DIALOG_DESCRIPTION);
-						partialSessionName = sessionName.getText().toString();
-						break;
-					case DIALOG_CANCELED:
-						break;
-					}
-
-				}
-			}, "Final Step");
-			sessionName.setText(partialSessionName);
-			break;
-		case DIALOG_SUMMARY:
-
-			mediaCount = 0;
-			elapsedMillis = totalMillis;
-			elapsedSeconds = elapsedMillis / 1000;
-			elapsedMillis %= 1000;
-			elapsedMinutes = elapsedSeconds / 60;
-			elapsedSeconds %= 60;
-
-			if (elapsedSeconds < 10) {
-				s_elapsedSeconds = "0" + elapsedSeconds;
-			} else {
-				s_elapsedSeconds = "" + elapsedSeconds;
-			}
-
-			if (elapsedMillis < 10) {
-				s_elapsedMillis = "00" + elapsedMillis;
-			} else if (elapsedMillis < 100) {
-				s_elapsedMillis = "0" + elapsedMillis;
-			} else {
-				s_elapsedMillis = "" + elapsedMillis;
-			}
-
-			if (elapsedMinutes < 10) {
-				s_elapsedMinutes = "0" + elapsedMinutes;
-			} else {
-				s_elapsedMinutes = "" + elapsedMinutes;
-			}
-
-			String appendMe = "";
-			if (sdCardError)
-				appendMe = "File not written to SD Card.";
-			else
-				appendMe = "Filename: \n" + sdFileName;
-
-			builder.setTitle("Session Summary")
-					.setMessage(
-							"Elapsed time: " + s_elapsedMinutes + ":"
-									+ s_elapsedSeconds + "." + s_elapsedMillis
-									+ "\n" + "Data points: " + dataPointCount
-									+ "\n" + "End date and time: \n"
-									+ dateString + "\n" + appendMe)
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-									picCount.setText(getString(R.string.picAndVidCount)
-											+ mediaCount);
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-			break;
-
-		case DIALOG_CHOICE:
-
-			builder.setTitle("Select An Action:")
-					.setMessage(
-							"Would you like to upload your data and media to iSENSE?")
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									dialoginterface.dismiss();
-
-									if (len == 0 || len2 == 0)
-										w.make("There is no data to upload!",
-												Toast.LENGTH_LONG, "x");
-									else {
-
-										String isValid = experimentInput
-												.getText().toString();
-										if (successLogin
-												&& (isValid.length() > 0)) {
-											// executeIsenseTask = true;
-											dialoginterface.dismiss();
-											new Task().execute();
-										} else {
-											showDialog(DIALOG_NO_ISENSE);
-										}
-
-									}
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-
-									dialoginterface.dismiss();
-									if (!choiceViaMenu)
-										showDialog(DIALOG_SUMMARY);
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_NO_ISENSE:
-
-			builder.setTitle("Cannot Upload to iSENSE")
-					.setMessage(
-							"You are either not logged into iSENSE, or you have not provided a valid Experiment ID to upload your data to. "
-									+ "You will be returned to the main screen, but you may go to Menu -> Upload to upload this data set once you log in "
-									+ "to iSENSE and provide a valid Experiment ID.  You are permitted to continue recording data; however if "
-									+ "you choose to do so, you will not be able to upload the previous data set to iSENSE afterwards.")
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-									if (!choiceViaMenu)
-										showDialog(DIALOG_SUMMARY);
-								}
-							}).setCancelable(true);
-
-			dialog = builder.create();
-
-			break;
-
-		case RECORDING_STOPPED:
-
-			throughHandler = false;
-
-			builder.setTitle("Time Up")
-					.setMessage(
-							"You have been recording data for more than 10 minutes.  For the sake of memory, we have capped your maximum "
-									+ "recording time at 10 minutes and have stopped recording for you.  Press \"Okay\" to continue.")
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface, int i) {
-									dialoginterface.dismiss();
-									showDialog(DIALOG_DESCRIPTION);
-								}
-							}).setCancelable(false);
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_NO_GPS:
-
-			builder.setTitle("No GPS Provider Found")
-					.setMessage(
-							"Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?")
-					.setCancelable(false)
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-									startActivity(new Intent(
-											Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.cancel();
-								}
-							});
-
-			dialog = builder.create();
-
-			break;
-
-		case DIALOG_FORCE_STOP:
-
-			builder.setTitle("Data Recording Halted")
-					.setMessage(
-							"You exited the app while data was still being recorded.  Data has stopped recording.")
-					.setCancelable(false)
-					.setPositiveButton("Okay",
-							new DialogInterface.OnClickListener() {
-								public void onClick(
-										DialogInterface dialoginterface,
-										final int id) {
-									dialoginterface.dismiss();
-									startStop.performLongClick();
-								}
-							});
-
-			dialog = builder.create();
-
-			break;
-		
-		case DIALOG_DESCRIPTION:
-	    	LinearLayout layout = new LinearLayout(this);
-	        layout.setOrientation(LinearLayout.VERTICAL);
-	        layout.setGravity(Gravity.CENTER_HORIZONTAL);
-	        final EditText input = new EditText(this);
-	        input.setSingleLine(true);
-	        input.setKeyListener(DigitsKeyListener.getInstance(
-	        		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,!?01234567879()[]"));
-	        input.setInputType(InputType.TYPE_CLASS_TEXT);
-	        layout.setPadding(5, 0, 5, 0);
-	        layout.addView(input);
-	    	
-	    	final AlertDialog d = new AlertDialog.Builder(mContext)
-            .setTitle("Step 3:")
-            .setMessage("Enter a session description (or leave blank if you'd like an automatically generated description).")
-            .setCancelable(false)
-            .setView(layout)
-            .setPositiveButton("Upload To iSENSE",
-                    new Dialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface d, int which) {
-                            //Do nothing here. We override the onclick
-                        }
-                    })
-            .setNegativeButton("Cancel", null)
-            .create();
-
-	    	d.setOnShowListener(new DialogInterface.OnShowListener() {
-
-                @Override
-                public void onShow(DialogInterface dialog) {
-
-                    Button b = d.getButton(AlertDialog.BUTTON_POSITIVE);
-                    b.setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View view) {
-                        	d.dismiss();
-                        	sessionDescription = input.getText().toString();
-                        	String isValid = experimentInput
-									.getText().toString();
-							if (successLogin
-									&& (isValid.length() > 0)) {
-								// executeIsenseTask = true;
-								new Task().execute();
-							} else {
-								showDialog(DIALOG_NO_ISENSE);
-							}
-                        }
-                    });
-                }
-            });
-	           
-	    	dialog = d;
-	    
-	    	break;
-
-		default:
-			dialog = null;
-			break;
-		}
-
-		return apiDialogCheckerCase(dialog, lp, id);
-
-	}
-
-	// Method to create a data-saving prompt with "message" as the message
-	private AlertDialog getSavePrompt(final Handler h, String message) {
-
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-
-		LayoutInflater vi = (LayoutInflater) this
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v = vi.inflate(R.layout.setup, null);
-
-		builder.setView(v);
-
-		sessionName = (EditText) v.findViewById(R.id.sessionName);
-
-		experimentInput = (EditText) v.findViewById(R.id.ExperimentInput);
-		SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-		experimentInput.setText(mPrefs.getString("experiment_id", ""));
-
-		experimentInput.setKeyListener(new NumberKeyListener() {
-			@Override
-			public int getInputType() {
-				return InputType.TYPE_CLASS_PHONE;
-			}
-
-			@Override
-			protected char[] getAcceptedChars() {
-				return new char[] { '0', '1', '2', '3', '4', '5', '6', '7',
-						'8', '9' };
-			}
-		});
-
-		browseButton = (Button) v.findViewById(R.id.BrowseButton);
-		browseButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				if (!rapi.isConnectedToInternet()) {
-					w.make("You must enable wifi or mobile connectivity to do this.",
-							Toast.LENGTH_SHORT, "x");
-				} else {
-
-					Intent experimentIntent = new Intent(
-							getApplicationContext(), Experiments.class);
-					experimentIntent.putExtra(
-							"edu.uml.cs.isense.amusement.experiments.propose",
-							EXPERIMENT_CODE);
-
-					startActivityForResult(experimentIntent, EXPERIMENT_CODE);
-				}
-
-			}
-
-		});
-
-		Button b = (Button) v.findViewById(R.id.pictureButton);
-
-		b.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues values = new ContentValues();
-
-					imageUri = getContentResolver().insert(
-							MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-							values);
-
-					Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-					intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-					intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
-
-				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to take pictures.",
-							Toast.LENGTH_LONG, "x");
-				}
-
-			}
-
-		});
-
-		Button bv = (Button) v.findViewById(R.id.videoButton);
-
-		bv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues valuesVideos = new ContentValues();
-
-					videoUri = getContentResolver().insert(
-							MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-							valuesVideos);
-
-					Intent intentVid = new Intent(
-							MediaStore.ACTION_VIDEO_CAPTURE);
-					intentVid.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-					intentVid.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intentVid, CAMERA_VID_REQUESTED);
-
-				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to record videos.",
-							Toast.LENGTH_LONG, "x");
-				}
-			}
-		});
-
-		builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-					}
-				})
-				.setNegativeButton("Cancel",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(
-									DialogInterface dialoginterface, int i) {
-							}
-						}).setCancelable(false);
-
-		final AlertDialog ad = builder.create();
-		ad.setOnShowListener(new DialogInterface.OnShowListener() {
-			@Override
-			public void onShow(DialogInterface dialog) {
-				Button positive = ad.getButton(DialogInterface.BUTTON_POSITIVE);
-				positive.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						boolean pass = true;
-
-						if (sessionName.getText().length() == 0) {
-							sessionName.setError("Enter a Name");
-							pass = false;
-						}
-						if (experimentInput.getText().length() == 0) {
-							experimentInput.setError("Enter an Experiment");
-							pass = false;
-						}
-						
-						if (pass) {
-
-							nameOfSession = sessionName.getText().toString();
-
-							new SensorCheckTask().execute();
-
-							SharedPreferences mPrefs = getSharedPreferences(
-									"EID", 0);
-							SharedPreferences.Editor mEditor = mPrefs.edit();
-							mEditor.putString("experiment_id",
-									experimentInput.getText().toString())
-									.commit();
-
-							final Message dialogOk = Message.obtain();
-							dialogOk.setTarget(h);
-							dialogOk.what = DIALOG_OK;
-
-							dialogOk.sendToTarget();
-
-							ad.dismiss();
-						}
-					}
-				});
-
-				Button negative = ad.getButton(DialogInterface.BUTTON_NEGATIVE);
-				negative.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						final Message dialogOk = Message.obtain();
-						dialogOk.setTarget(h);
-						dialogOk.what = DIALOG_CANCELED;
-						dialogOk.sendToTarget();
-
-						ad.dismiss();
-					}
-				});
-			}
-		});
-
-		return ad;
-	}
-
-	// Converts the captured picture's uri to a file that is save-able to the SD
-	// Card
-	@SuppressWarnings("deprecation")
-	public static File convertImageUriToFile(Uri imageUri, Activity activity) {
-
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-
-			String[] proj = { MediaStore.Images.Media.DATA,
-					MediaStore.Images.Media._ID,
-					MediaStore.Images.ImageColumns.ORIENTATION };
-			String selection = null;
-			String[] selectionArgs = null;
-			String sortOrder = null;
-
-			CursorLoader cursorLoader = new CursorLoader(mContext, imageUri,
-					proj, selection, selectionArgs, sortOrder);
-
-			Cursor cursor = cursorLoader.loadInBackground();
-
-			int file_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			int orientation_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-			if (cursor.moveToFirst()) {
-				@SuppressWarnings("unused")
-				String orientation = cursor.getString(orientation_ColumnIndex);
-				return new File(cursor.getString(file_ColumnIndex));
-			}
-			return null;
-
-		} else {
-
-			Cursor cursor = null;
-			try {
-				String[] proj = { MediaStore.Images.Media.DATA,
-						MediaStore.Images.Media._ID,
-						MediaStore.Images.ImageColumns.ORIENTATION };
-				cursor = activity.managedQuery(imageUri, proj, // Which columns
-																// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
-						null); // Order-by clause (ascending by name)
-				int file_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-				int orientation_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-				if (cursor.moveToFirst()) {
-					@SuppressWarnings("unused")
-					String orientation = cursor
-							.getString(orientation_ColumnIndex);
-					return new File(cursor.getString(file_ColumnIndex));
-				}
-				return null;
-			} finally {
-				if (cursor != null) {
-					cursor.close();
-				}
-			}
-		}
-	}
-
-	// Converts the recorded video's uri to a file that is save-able to the SD
-	// Card
-	@SuppressWarnings("deprecation")
-	public static File convertVideoUriToFile(Uri videoUri, Activity activity) {
-
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-
-			String[] proj = { MediaStore.Video.Media.DATA,
-					MediaStore.Video.Media._ID };
-			String selection = null;
-			String[] selectionArgs = null;
-			String sortOrder = null;
-
-			CursorLoader cursorLoader = new CursorLoader(mContext, videoUri,
-					proj, selection, selectionArgs, sortOrder);
-
-			Cursor cursor = cursorLoader.loadInBackground();
-			int file_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-			if (cursor.moveToFirst()) {
-				return new File(cursor.getString(file_ColumnIndex));
-			}
-			return null;
-
-		} else {
-
-			Cursor cursor = null;
-
-			try {
-				String[] proj = { MediaStore.Video.Media.DATA,
-						MediaStore.Video.Media._ID };
-				cursor = activity.managedQuery(videoUri, proj, // Which columns
-																// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
-						null); // Order-by clause (ascending by name)
-				int file_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-				if (cursor.moveToFirst()) {
-					return new File(cursor.getString(file_ColumnIndex));
-				}
-				return null;
-			} finally {
-				if (cursor != null) {
-					cursor.close();
-				}
-			}
-		}
-
-	}
-
 	// Performs tasks after returning to main UI from previous activities
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == CAMERA_PIC_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				File f = convertImageUriToFile(imageUri, this);
-				pictures.add(f);
-				mediaCount++;
-				picCount.setText(getString(R.string.picAndVidCount)
-						+ mediaCount);
-			}
-		} else if (requestCode == CAMERA_VID_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				File f = convertVideoUriToFile(videoUri, this);
-				videos.add(f);
-				mediaCount++;
-				picCount.setText("" + getString(R.string.picAndVidCount)
-						+ mediaCount);
-			}
-		} else if (requestCode == EXPERIMENT_CODE) {
-			if (resultCode == Activity.RESULT_OK) {
-				int eid = data.getExtras().getInt(
-						"edu.uml.cs.isense.pictures.experiments.exp_id");
-				experimentInput.setText("" + eid);
-			}
-		} else if (requestCode == SYNC_TIME_REQUESTED) {
+		if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
 				SharedPreferences mPrefs = getSharedPreferences("time_offset",
@@ -1481,30 +635,92 @@ public class DataCollector extends Activity implements SensorEventListener,
 				SharedPreferences.Editor mEditor = mPrefs.edit();
 				mEditor.putLong("timeOffset", timeOffset);
 				mEditor.commit();
-			} else if (resultCode == RESULT_CANCELED) {
-				// oh no they canceled!
 			}
-		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
+
+		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				if (ChooseSensorDialog.acceptedFields.isEmpty()) {
-					showDialog(MENU_ITEM_SETUP);
-				} else if (!ChooseSensorDialog.compatible) {
-					showDialog(MENU_ITEM_SETUP);
-				} else {
-					acceptedFields = ChooseSensorDialog.acceptedFields;
-					getEnabledFields();
+
+				w.make("Login successful", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
+
+				if (manageUploadQueueAfterLogin) {
+					manageUploadQueueAfterLogin = false;
+					manageUploadQueue();
 				}
+
 			} else if (resultCode == RESULT_CANCELED) {
-				setupDone = false;
+				if (manageUploadQueueAfterLogin) {
+					manageUploadQueueAfterLogin = false;
+					manageUploadQueue();
+				}
+			} else if (resultCode == Login.RESULT_ERROR) {
+
+				Intent i = new Intent(mContext, Login.class);
+				startActivityForResult(i, LOGIN_REQUESTED);
+
+			}
+
+		} else if (requestCode == GPS_REQUESTED) {
+			showGpsDialog = true;
+			if (resultCode == RESULT_OK) {
+				startActivity(new Intent(
+						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+			}
+
+		} else if (requestCode == FORCE_STOP_REQUESTED) {
+			step2.performLongClick();
+
+		} else if (requestCode == RECORDING_STOPPED_REQUESTED) {
+			Intent iDescription = new Intent(mContext, Description.class);
+			startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
+
+		} else if (requestCode == DESCRIPTION_REQUESTED) {
+
+			step3.setText(getResources().getString(R.string.step3));
+			disableStep2();
+
+			if (resultCode == RESULT_OK) {
+				dataSetDescription = data.getStringExtra("description");
+				new SaveDataTask().execute();
+
+			} else if (resultCode == RESULT_CANCELED) {
+				w.make("Data set deleted", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
+				OrientationManager.enableRotation((Activity) mContext);
+			}
+
+		} else if (requestCode == QUEUE_UPLOAD_REQUESTED) {
+
+			boolean success = uq.buildQueueFromFile();
+			if (!success) {
+				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
+			}
+
+		} else if (requestCode == STEP_1_SETUP_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+
+				if (data != null) {
+					dataSetName = data.getStringExtra(STEP_1_DATASET_NAME);
+					sampleInterval = data.getLongExtra(STEP_1_SAMPLE_INTERVAL,
+							Step1Setup.S_INTERVAL);
+					recordingLength = data.getLongExtra(STEP_1_TEST_LENGTH,
+							Step1Setup.TEST_LENGTH);
+					enableStep2();
+					new GetDfmOrderTask().execute();
+					// initDfm();
+				}
+			}
+		} else if (requestCode == CAN_LOGIN_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				Intent iLogin = new Intent(mContext, Login.class);
+				startActivityForResult(iLogin, LOGIN_REQUESTED);
+			} else if (resultCode == RESULT_CANCELED) {
+				if (manageUploadQueueAfterLogin) {
+					manageUploadQueueAfterLogin = false;
+					manageUploadQueue();
+				}
 			}
 		}
-
-	}
-
-	// Assists with differentiating between displays for dialogues
-	@SuppressWarnings("deprecation")
-	private static int getApiLevel() {
-		return Integer.parseInt(android.os.Build.VERSION.SDK);
 	}
 
 	// Calls the rapi primitives for actual uploading
@@ -1512,81 +728,61 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		@Override
 		public void run() {
-			status400 = false;
-			int sessionId = -1;
-			String city = "", state = "", country = "", addr = "";
-			List<Address> address = null;
 
-			try {
-				if (roughLoc != null) {
-					address = new Geocoder(DataCollector.this,
-							Locale.getDefault()).getFromLocation(
-							roughLoc.getLatitude(), roughLoc.getLongitude(), 1);
-					if (address.size() > 0) {
-						city = address.get(0).getLocality();
-						state = address.get(0).getAdminArea();
-						country = address.get(0).getCountryName();
-						addr = address.get(0).getAddressLine(0);
-					}
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
+			// Prepare description for data set
 			String description;
-			if (sessionDescription.equals(""))
-				description = "Automated Submission Through Android Data Collection App";
+			if (dataSetDescription.equals(""))
+				description = "Automated Submission Through Android Data Collector App";
 			else
-				description = sessionDescription;
+				description = dataSetDescription;
 
-			SharedPreferences mPrefs = getSharedPreferences("EID", 0);
-			String eid = mPrefs.getString("experiment_id", "");
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String projID = mPrefs.getString("project_id", "");
 
-			if (address == null || address.size() <= 0) {
-				sessionId = rapi.createSession(eid, nameOfSession,
-						description, "N/A",
-						"N/A", "United States");
-			} else {
-				sessionId = rapi.createSession(eid, nameOfSession,
-						description, addr, city
-								+ ", " + state, country);
-			}
-			
-			sessionDescription = "";
+			// Reset the description
+			dataSetDescription = "";
 
-			// createSession Success Check
-			if (sessionId == -1) {
-				uploadSuccess = false;
-				return;
-			}
+			// Start to upload media and data
+			int pic = MediaManager.pictureArray.size();
 
-			// Experiment Closed Checker
-			if (sessionId == -400) {
-				status400 = true;
-			} else {
-				status400 = false;
-				uploadSuccess = rapi.putSessionData(sessionId, experimentInput
-						.getText().toString(), dataSet);
-				if (!uploadSuccess)
-					return;
+			// Check for media
+			if (pic != 0) {
 
-				int pic = pictureArray.size();
+				// Associates latest picture with the current dataSet, then
+				// associates rest
+				// to project
+				boolean firstSave = true;
 
 				while (pic > 0) {
-					if (nameOfSession.equals(""))
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, "*Session Name Not Provided*",
-								"N/A");
-					else
-						rapi.uploadPictureToSession(pictureArray.get(pic - 1),
-								eid, sessionId, sessionName.getText()
-										.toString(), "N/A");
+
+					// First run through, save data with the picture
+					if (firstSave) {
+						QDataSet ds = new QDataSet(QDataSet.Type.BOTH,
+								dataSetName, description, projID,
+								dataSet.toString(),
+								MediaManager.pictureArray.get(pic - 1));
+						uq.addDataSetToQueue(ds);
+						firstSave = false;
+
+						// Next set of runs, save the remaining pictures
+					} else {
+						QDataSet dsp = new QDataSet(QDataSet.Type.PIC,
+								dataSetName, description, projID, null,
+								MediaManager.pictureArray.get(pic - 1));
+						uq.addDataSetToQueue(dsp);
+					}
 
 					pic--;
-
 				}
 
-				pictureArray.clear();
+				// When finished, clear out the media array
+				MediaManager.pictureArray.clear();
+
+				// Else if no pictures, just save data
+			} else {
+				QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
+						description, projID, dataSet.toString(), null);
+				uq.addDataSetToQueue(ds);
 			}
 
 		}
@@ -1594,17 +790,18 @@ public class DataCollector extends Activity implements SensorEventListener,
 	};
 
 	// Control task for uploading data
-	private class Task extends AsyncTask<Void, Integer, Void> {
+	private class SaveDataTask extends AsyncTask<Void, Integer, Void> {
 
 		@Override
 		protected void onPreExecute() {
 
+			OrientationManager.disableRotation(DataCollector.this);
+
 			dia = new ProgressDialog(DataCollector.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data are saved...");
 			dia.setCancelable(false);
 			dia.show();
-
 		}
 
 		@Override
@@ -1616,34 +813,29 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected void onPostExecute(Void voids) {
-
 			dia.setMessage("Done");
 			dia.cancel();
 
-			len = 0;
-			len2 = 0;
-			mediaCount = 0;
-			session.setText(getString(R.string.session));
+			OrientationManager.enableRotation(DataCollector.this);
 
-			if (status400)
-				w.make("Your data cannot be uploaded to this experiment.  It has been closed.",
-						Toast.LENGTH_LONG, "x");
-			else if (!uploadSuccess)
-				w.make("An error occured during upload.  Please check internet connectivity.",
-						Toast.LENGTH_LONG, "x");
-			else
-				w.make("Upload Success", Toast.LENGTH_SHORT, "check");
+			MediaManager.mediaCount = 0;
 
-			picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
-			showDialog(DIALOG_SUMMARY);
+			dataSetName = "";
+			recordingLength = TEST_LENGTH;
+			sampleInterval = S_INTERVAL;
 
+			showSummary();
+
+			w.make("Your data set has been saved", Waffle.LENGTH_SHORT,
+					Waffle.IMAGE_CHECK);
 		}
+
 	}
 
-	public void setTime(int seconds) {
+	// Updates time on main UI
+	public static void setTime(int seconds) {
 		int min = seconds / 60;
 		int secInt = seconds % 60;
 
@@ -1653,103 +845,37 @@ public class DataCollector extends Activity implements SensorEventListener,
 		else
 			sec = "" + secInt;
 
-		time.setText("Time Elapsed: " + min + ":" + sec);
-	}
-
-	// Everything needed to be initialized for onCreate
-	@SuppressWarnings("deprecation")
-	private void initVars() {
-
-		mScreen = (LinearLayout) findViewById(R.id.mainScreen);
-		isenseLogo = (ImageView) findViewById(R.id.ImageViewLogo);
-		mHandler = new Handler();
-
-		Display deviceDisplay = getWindowManager().getDefaultDisplay();
-		mwidth = deviceDisplay.getWidth();
-
-		rapi = RestAPI
-				.getInstance(
-						(ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE),
-						getApplicationContext());
-
-		pictures = new ArrayList<File>();
-		videos = new ArrayList<File>();
-
-		startStop = (Button) findViewById(R.id.startStop);
-		
-		session = (TextView) findViewById(R.id.sessionName);
-		time    = (TextView) findViewById(R.id.time);
-
-		picCount = (TextView) findViewById(R.id.pictureCount);
-		picCount.setText(getString(R.string.picAndVidCount) + mediaCount);
-
-		loginInfo = (TextView) findViewById(R.id.loginInfo);
-		loginInfo.setText(R.string.notLoggedIn);
-		//loginInfo.setTextColor(Color.RED);
-
-		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-		w = new Waffle(this);
-		f = new Fields();
-	}
-
-	// Takes care of everything to do with EULA
-	private void displayEula() {
-
-		AlertDialog.Builder adb = new SimpleEula(this).show();
-		if (adb != null) {
-			Dialog dialog = adb.create();
-			dialog.show();
-
-			apiTabletDisplay(dialog);
-		}
-	}
-
-	// apiTabletDisplay for Dialog Building on Tablets
-	static boolean apiTabletDisplay(Dialog dialog) {
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-			dialog.show();
-
-			WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-
-			lp.copyFrom(dialog.getWindow().getAttributes());
-			lp.width = mwidth;
-			lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-			lp.gravity = Gravity.CENTER_VERTICAL;
-			lp.dimAmount = 0.7f;
-
-			dialog.getWindow().setAttributes(lp);
-			dialog.getWindow().addFlags(
-					WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
-			return true;
-		} else
-			return false;
-
+		step3.setText("Time Elapsed: " + min + ":" + sec
+				+ "\nData Point Count: " + dataPointCount);
 	}
 
 	// Deals with login and UI display
 	void login() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences("USER_INFO",
-						Context.MODE_PRIVATE));
-		boolean success = rapi.login(mPrefs.getString("username", ""),
-				mPrefs.getString("password", ""));
-		if (success) {
-			String loginName = mPrefs.getString("username", "");
-			if (loginName.length() >= 18)
-				loginName = loginName.substring(0, 18) + "...";
-			loginInfo.setText("Username: "
-					+ loginName);
-			//loginInfo.setTextColor(Color.GREEN);
-			successLogin = true;
+		new LoginTask().execute();
+	}
+
+	// Attempts to login with current user information
+	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					DataCollector.mContext,
+					DataCollector.mContext.getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							Context.MODE_PRIVATE));
+
+			boolean success = api
+					.createSession(
+							mPrefs.getString(
+									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+									""),
+							mPrefs.getString(
+									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+									""));
+			return success;
 		}
+
 	}
 
 	// Gets the milliseconds since Epoch
@@ -1761,65 +887,57 @@ public class DataCollector extends Activity implements SensorEventListener,
 		return (((long) c.getTimeInMillis()) + timeOffset);
 	}
 
-	// Deals with Dialog creation whether api is tablet or not
-	@SuppressWarnings("deprecation")
-	Dialog apiDialogCheckerCase(Dialog dialog, LayoutParams lp, final int id) {
-		if (apiTabletDisplay(dialog)) {
-
-			dialog.setOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					removeDialog(id);
-				}
-			});
-			return null;
-
-		} else {
-
-			dialog.setOnDismissListener(new OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					removeDialog(id);
-				}
-			});
-
-			return dialog;
-		}
-	}
-
 	// Registers Sensors
+	@SuppressLint("InlinedApi")
 	private void registerSensors() {
-		if (mSensorManager != null && setupDone && dfm != null) {
-			
-			if (dfm.enabledFields[ACCEL_X] || dfm.enabledFields[ACCEL_Y] || 
-					dfm.enabledFields[ACCEL_Z] || dfm.enabledFields[ACCEL_TOTAL]) {
+
+		if (mSensorManager != null) {
+
+			if (dfm == null)
+				initDfm();
+
+			if (dfm.enabledFields[Fields.ACCEL_X]
+					|| dfm.enabledFields[Fields.ACCEL_Y]
+					|| dfm.enabledFields[Fields.ACCEL_Z]
+					|| dfm.enabledFields[Fields.ACCEL_TOTAL]) {
 				mSensorManager.registerListener(DataCollector.this,
-						mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+						mSensorManager
+								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
-			
-			if (dfm.enabledFields[MAG_X] || dfm.enabledFields[MAG_Y] || 
-					dfm.enabledFields[MAG_Z] || dfm.enabledFields[MAG_TOTAL] ||
-					dfm.enabledFields[HEADING_DEG] || dfm.enabledFields[HEADING_RAD]) {
-				mSensorManager.registerListener(DataCollector.this, 
-						mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+
+			if (dfm.enabledFields[Fields.MAG_X]
+					|| dfm.enabledFields[Fields.MAG_Y]
+					|| dfm.enabledFields[Fields.MAG_Z]
+					|| dfm.enabledFields[Fields.MAG_TOTAL]
+					|| dfm.enabledFields[Fields.HEADING_DEG]
+					|| dfm.enabledFields[Fields.HEADING_RAD]) {
+				mSensorManager.registerListener(DataCollector.this,
+						mSensorManager
+								.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
-			
-			if (dfm.enabledFields[TEMPERATURE_C] || dfm.enabledFields[TEMPERATURE_F] ||
-					dfm.enabledFields[TEMPERATURE_K] || dfm.enabledFields[ALTITUDE]) {
-				mSensorManager.registerListener(DataCollector.this, 
-						mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
-						SensorManager.SENSOR_DELAY_FASTEST);
+
+			if (dfm.enabledFields[Fields.TEMPERATURE_C]
+					|| dfm.enabledFields[Fields.TEMPERATURE_F]
+					|| dfm.enabledFields[Fields.TEMPERATURE_K]
+					|| dfm.enabledFields[Fields.ALTITUDE]) {
+				mSensorManager
+						.registerListener(
+								DataCollector.this,
+								mSensorManager
+										.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE),
+								SensorManager.SENSOR_DELAY_FASTEST);
 			}
-			
-			if (dfm.enabledFields[PRESSURE] || dfm.enabledFields[ALTITUDE]) {
+
+			if (dfm.enabledFields[Fields.PRESSURE]
+					|| dfm.enabledFields[Fields.ALTITUDE]) {
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
-			
-			if (dfm.enabledFields[LIGHT]) {
+
+			if (dfm.enabledFields[Fields.LIGHT]) {
 				mSensorManager.registerListener(DataCollector.this,
 						mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
 						SensorManager.SENSOR_DELAY_FASTEST);
@@ -1829,9 +947,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Calculates Altitude from Temperature and Pressure if Possible
-	private String calcAltitude() {
-		if ((dfm.enabledFields[TEMPERATURE_C] || dfm.enabledFields[TEMPERATURE_F] 
-				|| dfm.enabledFields[TEMPERATURE_K]) && dfm.enabledFields[PRESSURE]) {
+	private static String calcAltitude() {
+		if ((dfm.enabledFields[Fields.TEMPERATURE_C]
+				|| dfm.enabledFields[Fields.TEMPERATURE_F] || dfm.enabledFields[Fields.TEMPERATURE_K])
+				&& dfm.enabledFields[Fields.PRESSURE]) {
+
 			if (pressure.equals("") || temperature.equals("")) {
 				return "";
 			} else {
@@ -1843,90 +963,937 @@ public class DataCollector extends Activity implements SensorEventListener,
 				String altitude = toThou.format(temp);
 				return altitude;
 			}
-		} else return "";
+
+		} else
+			return "";
 	}
 
-	// Task for checking sensor availability along with enabling/disabling
-	private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
+	private void setUpDFMWithAllFields() {
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		mEdit.putString("project_id", "-1").commit();
+
+		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
+				"project_id", "-1")), api, mContext, f);
+		dfm.getOrder();
+
+		for (int i = 0; i < Fields.NUM_FIELDS; i++)
+			dfm.enabledFields[i] = true;
+
+		String acceptedFields = getResources().getString(R.string.time) + ","
+				+ getResources().getString(R.string.accel_x) + ","
+				+ getResources().getString(R.string.accel_y) + ","
+				+ getResources().getString(R.string.accel_z) + ","
+				+ getResources().getString(R.string.accel_total) + ","
+				+ getResources().getString(R.string.latitude) + ","
+				+ getResources().getString(R.string.longitude) + ","
+				+ getResources().getString(R.string.magnetic_x) + ","
+				+ getResources().getString(R.string.magnetic_y) + ","
+				+ getResources().getString(R.string.magnetic_z) + ","
+				+ getResources().getString(R.string.magnetic_total) + ","
+				+ getResources().getString(R.string.heading_deg) + ","
+				+ getResources().getString(R.string.heading_rad) + ","
+				+ getResources().getString(R.string.temperature_c) + ","
+				+ getResources().getString(R.string.pressure) + ","
+				+ getResources().getString(R.string.altitude) + ","
+				+ getResources().getString(R.string.luminous_flux) + ","
+				+ getResources().getString(R.string.temperature_f) + ","
+				+ getResources().getString(R.string.temperature_k);
+
+		mEdit.putString("accepted_fields", acceptedFields).commit();
+	}
+
+	private void initDfm() {
+
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String projectInput = mPrefs.getString("project_id", "");
+
+		if (projectInput.equals("-1")) {
+			setUpDFMWithAllFields();
+		} else {
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f);
+			dfm.getOrder();
+
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+			getEnabledFields();
+
+		}
+	}
+
+	private void initDfmWithExternalAsyncTask() {
+
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		String projectInput = mPrefs.getString("project_id", "");
+
+		if (projectInput.equals("-1")) {
+			setUpDFMWithAllFields();
+		} else {
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f);
+
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+
+			dfm.setOrder(fields);
+
+			getEnabledFields();
+
+		}
+	}
+
+	// (currently 2 of these methods exist - one also in step1setup)
+	private void getEnabledFields() {
+
+		try {
+			for (String s : acceptedFields) {
+				if (s.length() != 0)
+					break;
+			}
+		} catch (NullPointerException e) {
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+		}
+
+		for (String s : acceptedFields) {
+			if (s.equals(getString(R.string.time)))
+				dfm.enabledFields[Fields.TIME] = true;
+
+			else if (s.equals(getString(R.string.accel_x)))
+				dfm.enabledFields[Fields.ACCEL_X] = true;
+
+			else if (s.equals(getString(R.string.accel_y)))
+				dfm.enabledFields[Fields.ACCEL_Y] = true;
+
+			else if (s.equals(getString(R.string.accel_z)))
+				dfm.enabledFields[Fields.ACCEL_Z] = true;
+
+			else if (s.equals(getString(R.string.accel_total)))
+				dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
+
+			else if (s.equals(getString(R.string.latitude)))
+				dfm.enabledFields[Fields.LATITUDE] = true;
+
+			else if (s.equals(getString(R.string.longitude)))
+				dfm.enabledFields[Fields.LONGITUDE] = true;
+
+			else if (s.equals(getString(R.string.magnetic_x)))
+				dfm.enabledFields[Fields.MAG_X] = true;
+
+			else if (s.equals(getString(R.string.magnetic_y)))
+				dfm.enabledFields[Fields.MAG_Y] = true;
+
+			else if (s.equals(getString(R.string.magnetic_z)))
+				dfm.enabledFields[Fields.MAG_Z] = true;
+
+			else if (s.equals(getString(R.string.magnetic_total)))
+				dfm.enabledFields[Fields.MAG_TOTAL] = true;
+
+			else if (s.equals(getString(R.string.heading_deg)))
+				dfm.enabledFields[Fields.HEADING_DEG] = true;
+
+			else if (s.equals(getString(R.string.heading_rad)))
+				dfm.enabledFields[Fields.HEADING_RAD] = true;
+
+			else if (s.equals(getString(R.string.temperature_c)))
+				dfm.enabledFields[Fields.TEMPERATURE_C] = true;
+
+			else if (s.equals(getString(R.string.temperature_f)))
+				dfm.enabledFields[Fields.TEMPERATURE_F] = true;
+
+			else if (s.equals(getString(R.string.temperature_k)))
+				dfm.enabledFields[Fields.TEMPERATURE_K] = true;
+
+			else if (s.equals(getString(R.string.pressure)))
+				dfm.enabledFields[Fields.PRESSURE] = true;
+
+			else if (s.equals(getString(R.string.altitude)))
+				dfm.enabledFields[Fields.ALTITUDE] = true;
+
+			else if (s.equals(getString(R.string.luminous_flux)))
+				dfm.enabledFields[Fields.LIGHT] = true;
+
+		}
+	}
+
+	private void getFieldsFromPrefsString(String fieldList) {
+
+		String[] fields = fieldList.split(",");
+		acceptedFields = new LinkedList<String>();
+
+		for (String f : fields) {
+			acceptedFields.add(f);
+		}
+	}
+
+	// Prompts the user to upload the rest of their content
+	// upon successful upload of data
+	private void manageUploadQueue() {
+
+		if (!uq.emptyQueue()) {
+			throughUploadMenuItem = false;
+			Intent i = new Intent().setClass(mContext, QueueLayout.class);
+			i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
+			startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
+		} else {
+			if (throughUploadMenuItem) {
+				throughUploadMenuItem = false;
+				w.make("There is no data to upload", Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
+			}
+		}
+
+	}
+
+	// UI variables initialized for onCreate
+	private void initMainUI() {
+		isenseLogo = (ImageView) findViewById(R.id.isenseLogo);
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
+			isenseLogo.setVisibility(View.GONE);
+		}
+
+		step1 = (Button) findViewById(R.id.auto_step1);
+		step1.setText(getResources().getString(R.string.step1));
+		step2 = (Button) findViewById(R.id.auto_step2);
+		step2.setText(getResources().getString(R.string.step2));
+		disableStep2();
+		step3 = (Button) findViewById(R.id.auto_step3);
+		step3.setText(getResources().getString(R.string.step3));
+		if (uq != null)
+			if (uq.emptyQueue())
+				disableStep3();
+			else
+				enableStep3();
+	}
+
+	// UI variables to re-initialize onConfigurationChange
+	private void reInitMainUI() {
+		isenseLogo = (ImageView) findViewById(R.id.isenseLogo);
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
+			isenseLogo.setVisibility(View.GONE);
+		}
+
+		step1 = (Button) findViewById(R.id.auto_step1);
+		step1.setText(getResources().getString(R.string.step1));
+		step2 = (Button) findViewById(R.id.auto_step2);
+		step2.setText(getResources().getString(R.string.step2));
+		if (dataSetName.equals(""))
+			disableStep2();
+		step3 = (Button) findViewById(R.id.auto_step3);
+		step3.setText(getResources().getString(R.string.step3));
+		if (uq != null)
+			if (uq.emptyQueue())
+				disableStep3();
+			else
+				enableStep3();
+	}
+
+	// Variables needed to be initialized for onCreate
+	private void initVars() {
+		api = API.getInstance(getApplicationContext());
+		api.useDev(Welcome.useDev);
+
+		uq = new UploadQueue("datacollector", mContext, api);
+		uq.buildQueueFromFile();
+
+		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+		dataSetName = "";
+		sampleInterval = S_INTERVAL;
+		recordingLength = TEST_LENGTH;
+
+		w = new Waffle(this);
+		f = new Fields();
+
+		accel = new float[4];
+		orientation = new float[3];
+		rawAccel = new float[3];
+		rawMag = new float[3];
+		mag = new float[3];
+
+		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
+
+		initLocations();
+	}
+
+	// Variables to re-initialize for onConfigurationChange
+	private void reInitVars() {
+		api = API.getInstance(getApplicationContext());
+		api.useDev(Welcome.useDev);
+
+		uq = new UploadQueue("datacollector", mContext, api);
+		uq.buildQueueFromFile();
+
+		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+		w = new Waffle(this);
+		f = new Fields();
+
+		accel = new float[4];
+		orientation = new float[3];
+		rawAccel = new float[3];
+		rawMag = new float[3];
+		mag = new float[3];
+
+		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
+
+		initLocations();
+	}
+
+	@Override
+	protected void onStart() {
+		if (mLocationManager != null)
+			initLocations();
+		super.onStart();
+	}
+
+	// Everything that needs to be assigned in onCreate()
+	private void assignVars() {
+		// Set all the login info
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				DataCollector.mContext,
+				DataCollector.mContext.getSharedPreferences(
+						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+						Context.MODE_PRIVATE));
+
+		if (!(mPrefs.getString(
+				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+				.equals("")))
+			login();
+
+		// Add listener
+		setStepButtonListeners();
+	}
+
+	// Allows for GPS to be recorded
+	public void initLocations() {
+		Criteria c = new Criteria();
+		c.setAccuracy(Criteria.ACCURACY_FINE);
+
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+			mLocationManager.requestLocationUpdates(
+					mLocationManager.getBestProvider(c, true), 0, 0,
+					DataCollector.this);
+		} else {
+			if (showGpsDialog) {
+				Intent iNoGps = new Intent(mContext, NoGps.class);
+				startActivityForResult(iNoGps, GPS_REQUESTED);
+				showGpsDialog = false;
+			}
+		}
+
+		loc = new Location(mLocationManager.getBestProvider(c, true));
+	}
+
+	// Simulates a stop if the service finishes
+	public static void serviceHasStopped() {
+		mHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				if (running)
+					step2.performLongClick();
+			}
+		});
+	}
+
+	// Displays description dialog when data is done recording
+	public void displayDescription() {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss",
+				Locale.US);
+		Date dt = new Date();
+		dateString = sdf.format(dt);
+		//dataSetName += " - " + dateString;
+
+		// absolutely ensure the timer resets to 0
+		setTime(0);
+
+		Intent iDescription = new Intent(mContext, Description.class);
+		startActivityForResult(iDescription, DESCRIPTION_REQUESTED);
+
+		if (terminateThroughPowerOff) {
+			terminateThroughPowerOff = false;
+			Intent iForceStop = new Intent(mContext, ForceStop.class);
+			startActivity(iForceStop);
+		}
+	}
+
+	// Code for registering sensors and preparing to poll data
+	public void setUpSensorsForRecording() {
+
+		// initDfm();
+		registerSensors();
+
+		rotation = getRotation(mContext);
+		dataSet = new JSONArray();
+		elapsedMillis = 0;
+		totalMillis = 0;
+		dataPointCount = 0;
+		beginWrite = true;
+		sdCardError = false;
+
+		currentTime = getUploadTime();
+	}
+
+	// Code for polling sensors for data periodically - called by service
+	public static void pollForData() {
+		// TODO should there be a new Fields object for each row recorded? else
+		// duplicate data
+		// if so, then ensure you set dfm's field objects each time
+
+		dataPointCount++;
+		elapsedMillis += sampleInterval;
+		totalMillis = elapsedMillis;
+
+		if (dfm.enabledFields[Fields.ACCEL_X])
+			f.accel_x = toThou.format(accel[0]);
+		if (dfm.enabledFields[Fields.ACCEL_Y])
+			f.accel_y = toThou.format(accel[1]);
+		if (dfm.enabledFields[Fields.ACCEL_Z])
+			f.accel_z = toThou.format(accel[2]);
+		if (dfm.enabledFields[Fields.ACCEL_TOTAL])
+			f.accel_total = toThou.format(accel[3]);
+		if (dfm.enabledFields[Fields.LATITUDE])
+			f.latitude = loc.getLatitude();
+		if (dfm.enabledFields[Fields.LONGITUDE])
+			f.longitude = loc.getLongitude();
+		if (dfm.enabledFields[Fields.HEADING_DEG])
+			f.angle_deg = toThou.format(orientation[0]);
+		if (dfm.enabledFields[Fields.HEADING_RAD])
+			if (!f.angle_deg.equals(""))
+				f.angle_rad = toThou
+						.format((Double.parseDouble(f.angle_deg) * (Math.PI / 180)));
+			else
+				f.angle_rad = "";
+		if (dfm.enabledFields[Fields.MAG_X])
+			f.mag_x = toThou.format(mag[0]);
+		if (dfm.enabledFields[Fields.MAG_Y])
+			f.mag_y = toThou.format(mag[1]);
+		if (dfm.enabledFields[Fields.MAG_Z])
+			f.mag_z = toThou.format(mag[2]);
+		if (dfm.enabledFields[Fields.MAG_TOTAL])
+			f.mag_total = toThou.format(Math.sqrt(Math.pow(mag[0], 2)
+					+ Math.pow(mag[1], 2) + Math.pow(mag[2], 2)));
+		if (dfm.enabledFields[Fields.TIME])
+			f.timeMillis = currentTime + elapsedMillis;
+		if (dfm.enabledFields[Fields.TEMPERATURE_C])
+			f.temperature_c = temperature;
+		if (dfm.enabledFields[Fields.TEMPERATURE_F])
+			if (!temperature.equals(""))
+				f.temperature_f = ""
+						+ ((Double.parseDouble(temperature) * 1.8) + 32);
+			else
+				f.temperature_f = "";
+		if (dfm.enabledFields[Fields.TEMPERATURE_K])
+			if (!temperature.equals(""))
+				f.temperature_k = ""
+						+ (Double.parseDouble(temperature) + 273.15);
+			else
+				f.temperature_k = "";
+		if (dfm.enabledFields[Fields.PRESSURE])
+			f.pressure = pressure;
+		if (dfm.enabledFields[Fields.ALTITUDE])
+			f.altitude = calcAltitude();
+		if (dfm.enabledFields[Fields.LIGHT])
+			f.lux = light;
+
+		if (currentProjID != -1)
+			dataSet.put(dfm.putData());
+		else
+			dataSet.put(dfm.putDataForNoProjectID());
+
+		data = dfm.writeSdCardLine();
+
+		if (writeCSVFile) {
+			if (beginWrite) {
+				String header = dfm.writeHeaderLine();
+				writeToSDCard(header, 's');
+				writeToSDCard(data, 'u');
+			} else {
+				writeToSDCard(data, 'u');
+			}
+		}
+	}
+
+	// All the code for the main button!
+	public void setStepButtonListeners() {
+		step1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Intent iSetup = new Intent(mContext, Step1Setup.class);
+				startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
+			}
+		});
+
+		step2.setOnLongClickListener(new OnLongClickListener() {
+
+			@SuppressLint("NewApi")
+			@Override
+			public boolean onLongClick(View arg0) {
+				if (!running) {
+					if (dataSetName.equals("")
+							|| ((1000 / sampleInterval) * recordingLength) > Step1Setup.MAX_DATA_POINTS) {
+						w.make("Some data not found - please setup again",
+								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+						Intent iSetup = new Intent(mContext, Step1Setup.class);
+						startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
+					} else {
+
+						setUpRecordingDescription();
+
+						// get csv order (not used if project is -1: perhaps add
+						// that check here?)
+						dfm.getProjectFieldsAndSetCSVOrder();
+
+						// start running task
+						running = true;
+
+						OrientationManager.disableRotation((Activity) mContext);
+
+						SharedPreferences mPrefs = getSharedPreferences(
+								"PROJID", 0);
+						String projectInput = mPrefs
+								.getString("project_id", "");
+						if (projectInput.equals("-1"))
+							writeCSVFile = false;
+						else
+							writeCSVFile = true;
+						currentProjID = Integer.parseInt(projectInput);
+
+						getWindow().addFlags(
+								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+						setMenuStatus(false);
+
+						step2.setText(R.string.stopString);
+						step2.setTextColor(Color.parseColor("#008800"));
+
+						setUpSensorsForRecording();
+
+						vibrator.vibrate(300);
+						mMediaPlayer.setLooping(false);
+						mMediaPlayer.start();
+
+						isenseLogo
+								.setImageResource(R.drawable.rsense_logo_recording);
+						isenseLogo.setBackgroundColor(Color
+								.parseColor("#003300"));
+						setActionBarRecording();
+
+						if (android.os.Build.VERSION.SDK_INT >= 11) {
+							final LinearLayout ll = (LinearLayout) findViewById(R.id.automatic_bright_flash);
+							ll.setAlpha(1.0f);
+							AlphaAnimation flash = new AlphaAnimation(1.0f,
+									0.0f);
+							flash.setDuration(500);
+							flash.setAnimationListener(new AnimationListener() {
+								@SuppressLint("NewApi")
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									ll.setAlpha(0.0f);
+								}
+
+								@Override
+								public void onAnimationRepeat(
+										Animation animation) {
+								}
+
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+							});
+							ll.startAnimation(flash);
+						}
+
+						Intent iService = new Intent(mContext,
+								DataCollectorService.class);
+						iService.putExtra(DataCollectorService.SRATE,
+								sampleInterval);
+						iService.putExtra(DataCollectorService.REC_LENGTH,
+								recordingLength);
+						startService(iService);
+
+						return running;
+
+					}
+
+					running = false;
+					return running;
+
+				} else {
+					vibrator.vibrate(300);
+					mMediaPlayer.setLooping(false);
+					mMediaPlayer.start();
+
+					stopService(new Intent(mContext, DataCollectorService.class));
+
+					isenseLogo.setImageResource(R.drawable.rsense_logo);
+					isenseLogo.setBackgroundColor(Color.parseColor("#000033"));
+					setActionBarNormal();
+
+					step1.setVisibility(View.VISIBLE);
+					step2.setTextColor(Color.parseColor("#0066FF"));
+					step3.setVisibility(View.VISIBLE);
+
+					running = false;
+
+					getWindow().clearFlags(
+							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+					OrientationManager.enableRotation((Activity) mContext);
+
+					if (writeCSVFile)
+						writeToSDCard(null, 'f');
+
+					setMenuStatus(true);
+
+					step2.setText(R.string.step2);
+					setTime(0);
+
+					if (writeCSVFile && sdCardError)
+						w.make("Could not write file to SD Card",
+								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
+
+					displayDescription();
+
+					bringBackStep1And3();
+
+					return running;
+				}
+
+			}
+
+		});
+
+		step3.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						DataCollector.mContext,
+						DataCollector.mContext.getSharedPreferences(
+								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+								Context.MODE_PRIVATE));
+
+				if ((mPrefs.getString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+						"").equals(""))) {
+					if (api.hasConnectivity()) {
+						manageUploadQueueAfterLogin = true;
+						Intent iCanLogin = new Intent(mContext, CanLogin.class);
+						startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);
+					} else {
+						manageUploadQueue();
+						Intent iNeedConnectivity = new Intent(mContext,
+								NeedConnectivity.class);
+						startActivity(iNeedConnectivity);
+					}
+				} else {
+					manageUploadQueue();
+				}
+			}
+		});
+	}
+
+	// Used to adjust for sensor data
+	public int getRotation(Context context) {
+		@SuppressWarnings("deprecation")
+		final int rotation = ((WindowManager) context
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
+				.getOrientation();
+
+		switch (rotation) {
+
+		case Surface.ROTATION_0:
+			return 0;
+
+		case Surface.ROTATION_90:
+			return 90;
+
+		case Surface.ROTATION_180:
+			return 180;
+
+		default:
+			return 270;
+
+		}
+	}
+
+	private void showSummary() {
+
+		elapsedMillis = totalMillis;
+		elapsedSeconds = elapsedMillis / 1000;
+		elapsedMillis %= 1000;
+		elapsedMinutes = elapsedSeconds / 60;
+		elapsedSeconds %= 60;
+
+		if (elapsedSeconds < 10) {
+			s_elapsedSeconds = "0" + elapsedSeconds;
+		} else {
+			s_elapsedSeconds = "" + elapsedSeconds;
+		}
+
+		if (elapsedMillis < 10) {
+			s_elapsedMillis = "00" + elapsedMillis;
+		} else if (elapsedMillis < 100) {
+			s_elapsedMillis = "0" + elapsedMillis;
+		} else {
+			s_elapsedMillis = "" + elapsedMillis;
+		}
+
+		if (elapsedMinutes < 10) {
+			s_elapsedMinutes = "0" + elapsedMinutes;
+		} else {
+			s_elapsedMinutes = "" + elapsedMinutes;
+		}
+
+		String appendMe = "";
+		if (sdCardError)
+			appendMe = "File not written to SD Card.";
+		else {
+			if (sdFileName.equals(""))
+				appendMe = "";
+			else
+				appendMe = "Filename: \n" + sdFileName;
+		}
+
+		Intent iSummary = new Intent(mContext, Summary.class);
+		iSummary.putExtra("millis", s_elapsedMillis)
+				.putExtra("seconds", s_elapsedSeconds)
+				.putExtra("minutes", s_elapsedMinutes)
+				.putExtra("append", appendMe).putExtra("date", dateString)
+				.putExtra("points", "" + dataPointCount);
+
+		startActivity(iSummary);
+
+		// Reset the sdFileName
+		sdFileName = "";
+	}
+
+	// Loads the main screen
+	private class LoadingMainTask extends AsyncTask<Void, Integer, Void> {
+		Runnable loadingThread;
 
 		@Override
 		protected void onPreExecute() {
+			preLoad = true;
+			inPausedState = true;
+			mHandler = new Handler();
+			loadingThread = new Runnable() {
+
+				@Override
+				public void run() {
+					// Initializes everything we can
+					initVars();
+				}
+
+			};
+
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+
+			mHandler.post(loadingThread);
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			inPausedState = false;
+			OrientationManager.enableRotation(DataCollector.this);
+
+			preLoad = false;
+			useMenu = true;
+
+			if (mMenu != null) {
+				// onPrepareOptionsMenu(mMenu);
+				setMenuStatus(true);
+			}
+
+			setContentView(R.layout.automatic_concept);
+			initMainUI();
+			assignVars();
+
+			super.onPostExecute(result);
+		}
+
+	}
+
+	// Get DFM order
+	private class GetDfmOrderTask extends AsyncTask<Void, Integer, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			OrientationManager.disableRotation(DataCollector.this);
 
 			dia = new ProgressDialog(DataCollector.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Gathering experiment fields...");
+			dia.setMessage("Loading...");
 			dia.setCancelable(false);
 			dia.show();
-
 		}
 
 		@Override
-		protected Void doInBackground(Void... voids) {
+		protected Void doInBackground(Void... params) {
 
-			dfm = new DataFieldManager(Integer
-					.parseInt(experimentInput.getText()
-							.toString()), rapi, mContext, f);
-			dfm.getOrder();
-
-			sc = dfm.checkCompatibility();
-
-			publishProgress(100);
+			initDfmWithExternalAsyncTask();
 			return null;
-
 		}
 
 		@Override
-		protected void onPostExecute(Void voids) {
-
+		protected void onPostExecute(Void result) {
 			dia.setMessage("Done");
-			dia.cancel();
+			if (dia != null && dia.isShowing())
+				dia.cancel();
 
-			Intent i = new Intent(mContext, ChooseSensorDialog.class);
-			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
-			
+			OrientationManager.enableRotation(DataCollector.this);
+
+			// what is dfm order is 0?
+
+			super.onPostExecute(result);
+		}
+
+	}
+
+	// allows for menu to be turned off when necessary
+	@SuppressLint("NewApi")
+	private void setMenuStatus(boolean enabled) {
+		useMenu = enabled;
+
+		if (mMenu != null) {
+			menuLogin.setEnabled(enabled);
+			menuMedia.setEnabled(enabled);
+			menuSync.setEnabled(enabled);
+
+			// if (enabled) {
+			// MenuItem item = mMenu.findItem(R.id.menu_item_login);
+			// item.setVisible(true);
+			// item = mMenu.findItem(R.id.menu_item_media);
+			// item.setVisible(true);
+			// item = mMenu.findItem(R.id.menu_item_sync);
+			// item.setVisible(true);
+			// super.onPrepareOptionsMenu(mMenu);
+			// } else {
+			// MenuItem item = mMenu.findItem(R.id.menu_item_login);
+			// item.setVisible(false);
+			// item = mMenu.findItem(R.id.menu_item_media);
+			// item.setVisible(false);
+			// item = mMenu.findItem(R.id.menu_item_sync);
+			// item.setVisible(false);
+			// super.onPrepareOptionsMenu(mMenu);
+			// }
+
+		}
+
+		if (useMenu && android.os.Build.VERSION.SDK_INT >= 11)
+			invalidateOptionsMenu();
+	}
+
+	private void enableStep1() {
+		step1.setEnabled(true);
+		step1.setTextColor(Color.parseColor("#0066FF"));
+	}
+
+	private void disableStep2() {
+		step2.setEnabled(false);
+		step2.setTextColor(Color.parseColor("#666666"));
+	}
+
+	private void enableStep2() {
+		step2.setEnabled(true);
+		step2.setTextColor(Color.parseColor("#0066FF"));
+	}
+
+	private void disableStep3() {
+		step3.setEnabled(false);
+		step3.setTextColor(Color.parseColor("#666666"));
+	}
+
+	private void enableStep3() {
+		step3.setEnabled(true);
+		step3.setTextColor(Color.parseColor("#0066FF"));
+	}
+
+	private void setUpRecordingDescription() {
+		step1.setEnabled(false);
+		step1.setBackgroundColor(Color.TRANSPARENT);
+		step1.setTextColor(Color.parseColor("#555555"));
+		step1.setText("Recording data for \"" + dataSetName
+				+ "\" at a sample interval of " + sampleInterval + " ms for "
+				+ recordingLength + " sec.");
+
+		step3.setEnabled(false);
+		step3.setBackgroundColor(Color.TRANSPARENT);
+		step3.setTextColor(Color.parseColor("#555555"));
+		step3.setText("Time Elapsed: 0:00\nData Point Count: 0");
+	}
+
+	private void bringBackStep1And3() {
+		enableStep1();
+		disableStep2();
+
+		// turn step 3 back, but don't enable it
+		step3.setBackgroundResource(R.drawable.button_rsense);
+		step3.setTextColor(Color.parseColor("#0066FF"));
+
+		step1.setBackgroundResource(R.drawable.button_rsense);
+		step1.setText(getResources().getString(R.string.step1));
+		step3.setText(getResources().getString(R.string.step3));
+	}
+
+	@SuppressLint("NewApi")
+	private void setActionBarNormal() {
+		// Action bar customization for API >= 14
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
+			ActionBar bar = getActionBar();
+			bar.setBackgroundDrawable(new ColorDrawable(Color
+					.parseColor("#111133")));
+			bar.setIcon(getResources()
+					.getDrawable(R.drawable.rsense_logo_right));
+			bar.setDisplayShowTitleEnabled(false);
+			int actionBarTitleId = Resources.getSystem().getIdentifier(
+					"action_bar_title", "id", "android");
+			if (actionBarTitleId > 0) {
+				TextView title = (TextView) findViewById(actionBarTitleId);
+				if (title != null) {
+					title.setTextColor(Color.WHITE);
+					title.setTextSize(24.0f);
+				}
+			}
 		}
 	}
-	
-	private void getEnabledFields() {
-		for (String s : acceptedFields) {
-			if (s.equals(getString(R.string.time)))
-				dfm.enabledFields[TIME] = true;
-			if (s.equals(getString(R.string.accel_x)))
-				dfm.enabledFields[ACCEL_X] = true;
-			if (s.equals(getString(R.string.accel_y)))
-				dfm.enabledFields[ACCEL_Y] = true;
-			if (s.equals(getString(R.string.accel_z)))
-				dfm.enabledFields[ACCEL_Z] = true;
-			if (s.equals(getString(R.string.accel_total)))
-				dfm.enabledFields[ACCEL_TOTAL] = true;
-			if (s.equals(getString(R.string.latitude)))
-				dfm.enabledFields[LATITUDE] = true;
-			if (s.equals(getString(R.string.longitude)))
-				dfm.enabledFields[LONGITUDE] = true;
-			if (s.equals(getString(R.string.magnetic_x)))
-				dfm.enabledFields[MAG_X] = true;
-			if (s.equals(getString(R.string.magnetic_y)))
-				dfm.enabledFields[MAG_Y] = true;
-			if (s.equals(getString(R.string.magnetic_z)))
-				dfm.enabledFields[MAG_Z] = true;
-			if (s.equals(getString(R.string.magnetic_total)))
-				dfm.enabledFields[MAG_TOTAL] = true;
-			if (s.equals(getString(R.string.heading_deg)))
-				dfm.enabledFields[HEADING_DEG] = true;
-			if (s.equals(getString(R.string.heading_rad)))
-				dfm.enabledFields[HEADING_RAD] = true;
-			if (s.equals(getString(R.string.temperature_c)))
-				dfm.enabledFields[TEMPERATURE_C] = true;
-			if (s.equals(getString(R.string.temperature_f)))
-				dfm.enabledFields[TEMPERATURE_F] = true;
-			if (s.equals(getString(R.string.temperature_k)))
-				dfm.enabledFields[TEMPERATURE_K] = true;
-			if (s.equals(getString(R.string.pressure)))
-				dfm.enabledFields[PRESSURE] = true;
-			if (s.equals(getString(R.string.altitude)))
-				dfm.enabledFields[ALTITUDE] = true;
-			if (s.equals(getString(R.string.luminous_flux)))
-				dfm.enabledFields[LIGHT] = true;
+
+	@SuppressLint("NewApi")
+	private void setActionBarRecording() {
+		// Action bar customization for API >= 14
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
+			ActionBar bar = getActionBar();
+			bar.setBackgroundDrawable(new ColorDrawable(Color
+					.parseColor("#07420E")));
+			bar.setIcon(getResources().getDrawable(
+					R.drawable.rsense_logo_recording_right));
+			bar.setDisplayShowTitleEnabled(false);
+			int actionBarTitleId = Resources.getSystem().getIdentifier(
+					"action_bar_title", "id", "android");
+			if (actionBarTitleId > 0) {
+				TextView title = (TextView) findViewById(actionBarTitleId);
+				if (title != null) {
+					title.setTextColor(Color.WHITE);
+					title.setTextSize(24.0f);
+				}
+			}
 		}
 	}
 

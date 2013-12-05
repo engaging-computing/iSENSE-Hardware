@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/check_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:background="@drawable/listelement_bkgd_changer"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:weightSum="3"
+    tools:ignore="Overdraw" >
+
+    <EditText
+        android:id="@+id/project_field_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".6"
+        android:hint="@string/field_name"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/project_field_units"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.05"
+        android:textSize="15sp"
+        android:hint="@string/units" />
+
+    <ImageView
+        android:id="@+id/project_field_x"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:layout_weight="1.35"
+        android:contentDescription="@string/blank_desc"
+        android:scaleType="fitCenter"
+        android:src="@drawable/x_icon" />
+
+</LinearLayout>

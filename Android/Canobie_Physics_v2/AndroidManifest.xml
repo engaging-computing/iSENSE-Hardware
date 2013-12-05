@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.uml.cs.isense.canobiev2"
+    android:versionCode="8"
+    android:versionName="2.1" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/display_name" >
+        <activity
+            android:name=".AmusementPark"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/display_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="Login"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".experiment.BrowseExperiments"
+            android:label="Experiments"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SyncTime"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="SyncTime"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".MediaManager"
+            android:label="Media Manager"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".Summary"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Session Summary"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" />
+        <activity
+            android:name=".ChooseSensorDialog"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="Choose Compatible Sensors"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" />
+        
+        
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueLayout"
+            android:label="Upload Data"
+            android:theme="@style/theme_queue_layout" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueAlter"
+            android:label="Alter Data Set"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditData"
+            android:label="Edit Data"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditRename"
+            android:label="Rename Data Set"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.exp.BrowseExperiments"
+            android:label="Experiments"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.exp.NoQR"
+            android:label="No QR Code Scanner Found"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.exp.Setup"
+            android:label="Select an Experiment"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/theme_dialog_white" />
+    </application>
+
+</manifest>

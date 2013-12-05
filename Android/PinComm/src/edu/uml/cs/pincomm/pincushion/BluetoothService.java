@@ -7,11 +7,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -313,13 +315,18 @@ public class BluetoothService {
 		private final BluetoothSocket mmSocket;
 		private final BluetoothDevice mmDevice;
 
+		@SuppressLint("NewApi")
 		public ConnectThread(BluetoothDevice device) {
 			mmDevice = device;
 			BluetoothSocket tmp = null;
 
 			// Get a BluetoothSocket for a connection with the given BluetoothDevice
 			try {
-				tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+				if(Build.VERSION.SDK_INT >= 10) {
+					tmp = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
+				} else {
+					tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+				}
 			} catch (IOException e) {
 				Log.e(TAG, "create() failed", e);
 			}

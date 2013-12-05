@@ -4,7 +4,15 @@
 
 #	Useless Mac files
 
-*.DS_store
+*.DS_Store
 
 #	Backup Files
 *.*~
+
+#	Eclipse files
+.classpath
+.project
+.settings
+
+Android/rSENSETest/bin/
+Android/rSENSETest/gen/

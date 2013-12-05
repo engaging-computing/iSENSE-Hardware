@@ -10,25 +10,138 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_launch" >
 
-        <ImageButton
-            android:id="@+id/pinpoint_select_btn"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/nopptbtn" />
-
-        <ImageView
-            android:id="@+id/mySpin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/pinpoint_select_btn"
-            android:layout_alignLeft="@+id/pinpoint_select_btn"
-            android:layout_marginBottom="-114dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/superspin"
-            android:visibility="gone" />
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:id="@+id/lastPptLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_stateselector"
+                android:clickable="true"
+                android:padding="10dp" >
+
+                <ImageButton
+                    android:id="@+id/pinpoint_select_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/nopptbtn" />
+
+                <ImageView
+                    android:id="@+id/mySpin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/superspin"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/launchStatusTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/pinpoint_select_btn"
+                    android:text="@string/launch_reconnect"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/lastPptName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/launchStatusTxt"
+                    android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@id/pinpoint_select_btn"
+                    android:text="PINPoint +1413"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/otherPptLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_stateselector"
+                android:clickable="true"
+                android:padding="10dp" >
+
+                <ImageButton
+                    android:id="@+id/otherpinpoint_select_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/nopptbtn" />
+
+                <ImageView
+                    android:id="@+id/mySpinOther"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/superspin"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/otherlaunchStatusTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/otherpinpoint_select_btn"
+                    android:text="@string/launch_other"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/card"
+            android:padding="15dp" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/name_label"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/et_groupName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="2"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+                android:hint="@string/name_label"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords"
+                android:maxLength="100"
+                android:singleLine="true" >
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/btn_setName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/namebtn_label" />
+        </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
@@ -87,9 +200,9 @@
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
-                    android:inputType="textCapWords"
-                    android:maxLength="20"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+                    android:inputType="textCapWords"
+                    android:maxLength="100"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
         </LinearLayout>
@@ -105,16 +218,16 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp" >
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
                 <ScrollView
                     android:id="@+id/scrollView1"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="4">
+                    android:layout_weight="4" >
 
                     <LinearLayout
                         android:id="@+id/linearLayout1"

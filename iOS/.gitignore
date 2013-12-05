@@ -1,0 +1,7 @@
+# Build files
+
+*/build
+
+/project.xcworkspace/xcuserdata/*.xcuserdatad/UserInterfaceState.xcuserstate
+/Data_Collector/Data_Collector.xcodeproj/project.xcworkspace/xcuserdata/jpoulin.xcuserdatad/UserInterfaceState.xcuserstate
+/Data_Collector/Data_Collector.xcodeproj/project.xcworkspace/xcuserdata/csadmin.xcuserdatad/UserInterfaceState.xcuserstate

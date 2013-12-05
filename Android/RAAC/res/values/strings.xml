@@ -1,27 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="wifi_page">WiFi Disabled</string>
     <string name="app_name">Science of Rivers</string>
+    <string name="display_name">iS Science of Rivers</string>
     <string name="button_scan">Scan for Devices</string>
-	<string name="title_paired_devices">Paired Devices</string>
+    <string name="title_paired_devices">Paired Devices</string>
     <string name="title_other_devices">Other Available Devices</string>
     <string name="none_paired">No paired devices found</string>
     <string name="scanning">Scanning&#8230;</string>
     <string name="select_device">Select a device to connect</string>
     <string name="none_found">No devices found</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Abort Mission!</string>
+    
     <string name="menu_connect">Connect a PINPoint</string>
     <string name="menu_settime">Sync PINPoint Time</string>
-    <string name="menu_setsensors">Select Sensors</string>
+    <string name="menu_setsensors">Select Sensor</string>
     <string name="menu_login">Retry Login</string>
-    <string name="menu_experiment">Set Experiment</string>
+    <string name="menu_experiment">Set Project</string>
+    <string name="menu_prefs">Preferences</string>
+    
     <string name="minval">Minimum</string>
     <string name="maxval">Maximum</string>
     <string name="aveval">Average/Mean</string>
     <string name="medval">Median</string>
     <string name="view_page">View Data on iSENSE</string>
-    <string name="change_eid">Change Experiment ID</string>
+    <string name="set_name">Set Name</string>
     <string name="tenPoints"><b><u>Last Ten Measurements</u></b></string>
     <string name="upload">Upload Data</string>
     <string name="retrieve_data">Retrieve Data</string>
+    
+    <string name="prefs_label_expr">Project Settings</string>
+    <string name="prefs_label_conn">Connection Settings</string>
+    <string name="prefs_label">Settings</string>
+    <string name="prefs_expid_title">Project ID</string>
+    <string name="prefs_expid_desc">The ID number of the project on iSENSE that you want to upload data to</string>
+    <string name="prefs_gname_title">Group Name</string>
+    <string name="prefs_gname_desc">The name of your project group</string>
+    <string name="prefs_auto_title">Auto-Upload</string>
+    <string name="prefs_auto_desc">Automatically pull data and upload it to iSENSE after connecting to a PINPoint</string>
+    <string name="prefs_auto2_title">Auto-Connect</string>
+    <string name="prefs_auto2_desc">Connect to the default PINPoint without showing the device list, if it is present</string>
+    <string name="prefs_defmac_title">Default PINPoint</string>
+    <string name="prefs_defmac_desc">MAC Address of the default PINPoint. If blank, the next connection will be set as the default. Don\'t change unless you know what you\'re doing!</string>
+    <string name="prefs_cleardef_title">Clear Default PINPoint</string>
+    <string name="prefs_cleardef_desc">Removes default PINPoint from settings.</string>
+    
+    <string name="namediag_label">Please enter a group name</string>
+    <string name="name_label">Your First Names</string>
+    <string name="namebtn_label">Set Names</string>
+    
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    
+    <string name="sensors_message">Please select which type of sensor your PINPoint has plugged into it</string>
+    <string name="sensor_temp">Vernier Stainless Steel Temperature Probe</string>
+    <string name="sensor_ph">Vernier pH Sensor</string>
+    
+   	<string name="launch_reconnect">Reconnect to last PINPoint</string>
+   	<string name="launch_other">Connect to a different PINPoint</string>
+
 </resources>

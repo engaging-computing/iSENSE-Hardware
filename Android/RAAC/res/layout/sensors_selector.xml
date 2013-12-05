@@ -5,105 +5,56 @@
     android:clickable="false"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/sensors_message"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="0dp"
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp" >
+
+        <RadioButton
+            android:id="@+id/radioTemp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".33"
-            android:text="BTA 1:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:checked="true"
+            android:text="@string/sensor_temp" />
 
-        <Spinner
-            android:id="@+id/btaSpin1"
-            android:layout_width="0dp"
+        <RadioButton
+            android:id="@+id/radioPh"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight=".66" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".33"
-            android:text="BTA 2:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <Spinner
-            android:id="@+id/btaSpin2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".66" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".33"
-            android:text="Minijack 1:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <Spinner
-            android:id="@+id/miniSpin1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".66" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".33"
-            android:text="Minijack 2:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <Spinner
-            android:id="@+id/miniSpin2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".66" />
-    </LinearLayout>
+            android:text="@string/sensor_ph" />
+    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_marginTop="10dp">
-
-        <Button
-            android:id="@+id/btn_okay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="OK" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
 
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel" />
-
+            android:text="@string/cancel" />
+        
+        <Button
+            android:id="@+id/btn_okay"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/ok" />
     </LinearLayout>
 
 </LinearLayout>

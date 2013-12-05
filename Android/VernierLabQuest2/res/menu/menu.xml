@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/labquest_settings"
+        android:orderInCategory="100"
+        android:title="@string/labquest_settings"/>
+    <item
+        android:id="@+id/isense_settings"
+        android:orderInCategory="200"
+        android:title="@string/isense_settings"/>
+
+</menu>

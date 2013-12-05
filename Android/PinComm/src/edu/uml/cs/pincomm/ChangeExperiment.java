@@ -102,7 +102,7 @@ class LoadExperimentListTask extends AsyncTask<Integer, Void, ArrayList<Experime
 	protected ArrayList<Experiment> doInBackground(Integer... params) {
 
 		rapi = RestAPI.getInstance();
-		return rapi.getExperiments(params[0], 10, "browse", "");
+		return rapi.getExperiments(params[0], 10, "", "recent");
 
 	}
 
@@ -119,6 +119,8 @@ class LoadExperimentListTask extends AsyncTask<Integer, Void, ArrayList<Experime
 			currRow.setLastMod("Last modified "+exp.timemodified);
 			if(i%2 != 0) {
 				currRow.setBackgroundColor(res.getColor(R.color.rowcols));
+			} else {
+				currRow.setLayoutBg(res.getColor(R.color.rowcols2));
 			}
 			if((""+exp.experiment_id).equals(myAct.prefs.getString("isense_expId", "0"))) {
 				currRow.setBackgroundColor(res.getColor(R.color.rowcolselected));

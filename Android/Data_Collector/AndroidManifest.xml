@@ -1,44 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="edu.uml.cs.isense.collector"
-      android:versionCode="2"
-      android:versionName="1.1">
-      
- 	  <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="15"/>
-    
-      <uses-permission android:name="android.permission.VIBRATE"/>
-      <uses-permission android:name="android.permission.INTERNET" />
-      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-      <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-      <uses-permission android:name="android.permission.CONTROL_LOCATION_UPDATES"/>
-      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-      <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
-	  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	  <uses-permission android:name="android.permission.WAKE_LOCK"/>
-	  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	  
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".DataCollector"
-                  android:label="@string/app_name"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="edu.uml.cs.isense.collector"
+    android:versionCode="28"
+    android:versionName="3.5.2" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="19" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/display_name" >
+        <activity
+            android:name="edu.uml.cs.isense.collector.splash.Welcome"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/display_name"
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"
-        		  android:label="Login" />
-        <activity android:name=".Experiments"
-                  android:label="Experiments" />
-        <activity android:name=".SyncTime"
-                  android:label="SyncTime"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden" />
-        <activity android:name=".ChooseSensorDialog"
-                  android:label="Step 2: Select Fields"
-                  android:theme="@style/theme_dialog_black" />
+        <activity
+            android:name=".splash.ProjectCreate"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Create New Project"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".splash.SelectMode"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Select Mode"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".DataCollector"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Automatic"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ManualEntry"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="Manual"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="edu.uml.cs.isense.sync.SyncTime"
+            android:label="Synchronize Time"
+            android:theme="@style/AppTheme"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name=".dialogs.MediaManager"
+            android:label="Media Manager"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".dialogs.Summary"
+            android:label="Data Summary"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".dialogs.NoGps"
+            android:label="No GPS Found"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".dialogs.ForceStop"
+            android:label="Data Recording Halted"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".dialogs.Description"
+            android:label="Enter Data Set Description"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.sync.TimeSent"
+            android:label="Time Sent"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.sync.TimeReceived"
+            android:label="Time Received"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.sync.TimeFailed"
+            android:label="Connection Timed Out"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.sync.TimeReset"
+            android:label="Time Reset"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name=".dialogs.CanLogin"
+            android:label="Would You Like to Login?"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".dialogs.NeedConnectivity"
+            android:label="Connectivity Not Found"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name=".dialogs.Step1Setup"
+            android:label="Step 1: Setup"
+            android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueLayout"
+            android:label="Upload Data"
+            android:theme="@style/theme_queue_layout"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueAlter"
+            android:label="Alter Data Set"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditData"
+            android:label="Edit Data"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditRename"
+            android:label="Rename Data Set"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
+            android:label="Delete Selected Data Sets"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.BrowseProjects"
+            android:label="Projects"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.NoQR"
+            android:label="No QR Code Scanner Found"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.Setup"
+            android:label="Select a Project"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.NoInitialProject"
+            android:label="No Associated Projects"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.supplements.FileBrowser"
+            android:label="Select a File"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.EnterName"
+            android:label="@string/enter_name_prompt"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.Login"
+            android:label="@string/login_prompt"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.LoginError"
+            android:label="@string/login_error_prompt"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
 
+        <service android:name="edu.uml.cs.isense.collector.DataCollectorService" >
+        </service>
     </application>
+
 </manifest>

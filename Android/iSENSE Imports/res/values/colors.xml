@@ -1,0 +1,7 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <color name="navy_light">#608CBF</color>
+    <color name="blue_light">#A1D3FF</color>
+    <color name="blue_lighter">#C7E5FF</color>
+
+</resources>

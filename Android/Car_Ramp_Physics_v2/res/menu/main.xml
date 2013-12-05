@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/upload"
+        android:showAsAction="ifRoom"
+        android:title="@string/upload">
+    </item>
+    <item
+        android:id="@+id/record_length"
+        android:showAsAction="ifRoom"
+        android:title="@string/record_length">
+    </item>
+    <item
+        android:id="@+id/experiment_select"
+        android:showAsAction="ifRoom"
+        android:title="@string/chooseExperimentTitle">
+    </item>
+    <item
+        android:id="@+id/login"
+        android:showAsAction="ifRoom"
+        android:title="@string/login_title">
+    </item>
+    <item
+        android:id="@+id/changename"
+        android:showAsAction="ifRoom"
+        android:title="@string/changename">
+    </item>
+    <item
+        android:id="@+id/about_app"
+        android:showAsAction="ifRoom"
+        android:title="@string/about_title">
+    </item>
+    <item
+        android:id="@+id/reset"
+        android:showAsAction="ifRoom"
+        android:title="@string/reset">
+    </item>
+
+</menu>
