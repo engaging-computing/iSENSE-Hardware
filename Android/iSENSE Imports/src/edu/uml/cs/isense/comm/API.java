@@ -318,7 +318,7 @@ public class API {
 
 	/**
 	 * Retrieves a list of users on iSENSE
-	 * This is an authenticated function and requires that the createSession function was called earlier
+	 * This is an admin only function and requires that the current user be an admin
 	 * 
 	 * @param page Which page of users to start the request from
 	 * @param perPage How many users per page to perform the search with
@@ -330,9 +330,9 @@ public class API {
 		ArrayList<RPerson> people = new ArrayList<RPerson>();
 		try {
 			String sortMode = descending ? "DESC" : "ASC";
-			// TODO use the auth token in the request! Otherwise the comment is a lie and the function won't work.
-			String reqResult = makeRequest(baseURL, "users", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+			String reqResult = makeRequest(baseURL, "users", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
 					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
+			System.out.println(reqResult);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -789,6 +789,7 @@ public class API {
 
 			mstat = urlConnection.getResponseCode();
 			InputStream in;
+			System.out.println("Status: "+mstat);
 			if(mstat>=200 && mstat < 300) {
 				in = new BufferedInputStream(urlConnection.getInputStream());
 			} else {
