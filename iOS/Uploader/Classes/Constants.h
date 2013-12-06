@@ -138,4 +138,7 @@
 // to get matched fields
 #define kFIELD_PREF_STRING @"field_prefs_for_proj_"
 
+// to get the useDev flag
+#define kUSE_DEV @"use_dev_flag"
+
 #endif

@@ -104,7 +104,7 @@ dataToBeOrdered, backFromQueue, f, fields;
     
     // API setup
     api = [API getInstance];
-    [api useDev:TRUE];
+    [api useDev:[prefs boolForKey:kUSE_DEV]];
     
     // Initializes an Assortment of Variables
     motionManager = [[CMMotionManager alloc] init];
