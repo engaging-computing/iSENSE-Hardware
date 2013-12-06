@@ -326,12 +326,14 @@
             NSString *projIDString = [[actionSheet textFieldAtIndex:0] text];
             projID = [projIDString intValue];
             
-            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-            [cell setProjID:projIDString];
-            [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
+//            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+//            [cell setProjID:projIDString];
+//            [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setInteger:projID forKey:KEY_PROJECT_ID];
+            
+            [self launchFieldMatchingViewControllerFromBrowse:FALSE];
         }
         
     } else if (actionSheet.tag == QUEUE_CHANGE_DESC) {
@@ -349,16 +351,19 @@
 -(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
 
     projID = project.intValue;
+    
+    if (projID != 0) {
+//        QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+//        
+//        [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
+//        [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
+//        [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:project];
         
-    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-    
-    [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
-    [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
-    [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:project];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setInteger:projID forKey:KEY_PROJECT_ID];
-    
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setInteger:projID forKey:KEY_PROJECT_ID];
+        
+        [self launchFieldMatchingViewControllerFromBrowse:TRUE];
+    }
 }
 
 - (BOOL) handleNewQRCode:(NSURL *)url {
@@ -534,6 +539,57 @@
         default:
             return YES;
     }
+}
+
+- (void) launchFieldMatchingViewControllerFromBrowse:(bool)fromBrowse {
+    // get the fields to field match
+    DataFieldManager *dfm = [[DataFieldManager alloc] initWithProjID:projID API:api andFields:nil];
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading fields..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("step_1_setup_loading_project_fields", NULL);
+    dispatch_async(queue, ^{
+        [dfm getOrder];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // set an observer for the field matched array caught from FieldMatching
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
+            
+            // launch the field matching dialog
+            FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithMatchedFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
+            fmvc.title = @"Field Matching";
+            
+            if (fromBrowse) {
+                double delayInSeconds = 0.1;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    [self.navigationController pushViewController:fmvc animated:YES];
+                });
+            } else
+                [self.navigationController pushViewController:fmvc animated:YES];
+            
+            if (fromBrowse) [NSThread sleepForTimeInterval:1.0];
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+            
+        });
+    });
+}
+
+- (void) retrieveFieldMatchedArray:(NSNotification *)obj {
+    NSMutableArray *fieldMatch =  (NSMutableArray *)[obj object];
+    if (fieldMatch != nil) {
+        // user pressed okay button - set the cell's project and fields
+        QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+        
+        [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
+        [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
+        [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
+        
+        [cell setFields:fieldMatch];
+        [cell.dataSet setFields:fieldMatch];
+        [dataSaver editDataSetWithKey:cell.mKey andChangeFieldsTo:fieldMatch];
+        
+    }
+    // else user canceled
 }
 
 @end

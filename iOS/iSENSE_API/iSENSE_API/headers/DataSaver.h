@@ -28,6 +28,7 @@
 -(id)   removeDataSet:(NSNumber *)key;
 -(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID;
 -(void) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription;
+-(void) editDataSetWithKey:(NSNumber *)key andChangeFieldsTo:(NSMutableArray *)newFields;
 -(bool) upload:(NSString *)parentName;
 -(void) removeAllDataSets;
 -(id)   getDataSet;

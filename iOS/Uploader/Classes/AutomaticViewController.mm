@@ -104,7 +104,7 @@ dataToBeOrdered, backFromQueue, f, fields;
     
     // API setup
     api = [API getInstance];
-    [api useDev:TRUE];
+    [api useDev:[prefs boolForKey:kUSE_DEV]];
     
     // Initializes an Assortment of Variables
     motionManager = [[CMMotionManager alloc] init];
@@ -640,7 +640,7 @@ dataToBeOrdered, backFromQueue, f, fields;
             [ds setPicturePaths:nil];
             [ds setUploadable:[NSNumber numberWithBool:uploadable]];
             [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
-            
+    
             // Add the new data set to the queue
             [dataSaver addDataSet:ds];
             

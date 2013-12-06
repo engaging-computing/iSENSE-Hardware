@@ -20,5 +20,6 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSNumber * hasInitialProj;
 @property (nonatomic, retain) NSString * parentName;
+@property (nonatomic, retain) id fields;
 
 @end

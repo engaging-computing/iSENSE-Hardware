@@ -18,6 +18,9 @@
 #import "QueueConstants.h"
 #import "QueueCell.h"
 
+#import "DataFieldManager.h"
+#import "FieldMatchingViewController.h"
+
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 

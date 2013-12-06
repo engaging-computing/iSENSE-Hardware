@@ -50,6 +50,7 @@
 - (void) viewHasLoaded {
     
     NSLog(@"view has loaded");
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     // allocations
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
@@ -67,7 +68,7 @@
     
     // iSENSE API
     api = [API getInstance];
-    [api useDev:TRUE];
+    [api useDev:[prefs boolForKey:kUSE_DEV]];
     
     if ([api getCurrentUser] != nil)
         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[[api getCurrentUser] username]];
@@ -115,7 +116,6 @@
     // project number
     if (projNum > 0) {
         projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", projNum]];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setValue:[NSString stringWithFormat:@"%d", projNum] forKey:[StringGrabber grabString:@"key_proj_manual"]];
         
         if (browsing == YES) {
@@ -129,7 +129,6 @@
                 [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:FALSE];
         }
     } else {
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         int proj = [prefs integerForKey:kPROJECT_ID_MANUAL];
         if (proj > 0) {
             // we have a global proj to use

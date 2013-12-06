@@ -112,6 +112,15 @@
     
 }
 
+-(void) editDataSetWithKey:(NSNumber *)key andChangeFieldsTo:(NSMutableArray *)newFields {
+    
+    QDataSet *dataSet = [dataQueue objectForKey:key];
+    [dataSet setFields:newFields];
+    
+    [self commitMOCChanges];
+    
+}
+
 // commit changes to the managedObjectContext
 -(BOOL) commitMOCChanges {
     
@@ -156,9 +165,13 @@
             dataSetsToUpload++;
             
             // organize data if no initial project was found
-            if (currentDS.hasInitialProj.boolValue == FALSE)
-                currentDS.data = [DataFieldManager reOrderData:currentDS.data forProjectID:currentDS.projID.intValue API:api andFieldOrder:nil];
-            
+            if (currentDS.hasInitialProj.boolValue == FALSE) {
+                if (currentDS.fields == nil) {
+                    continue;
+                } else {
+                    currentDS.data = [DataFieldManager reOrderData:currentDS.data forProjectID:currentDS.projID.intValue API:api andFieldOrder:currentDS.fields];
+                }
+            }
             
             // upload to iSENSE
             int returnID = -1;
