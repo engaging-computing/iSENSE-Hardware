@@ -70,7 +70,6 @@ public class Main extends Activity implements LocationListener {
 	private static final int EXPERIMENT_REQUESTED = 104;
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
-	private static final int CONTINUOUS_REQUESTED = 107;
 	
 	public static boolean continuous = false;
 	public static int continuousInterval = 1;
@@ -118,6 +117,7 @@ public class Main extends Activity implements LocationListener {
 	private static Camera mCamera;
     private CameraPreview mPreview;
     private FrameLayout preview;
+    
 
 
 	@Override
@@ -127,6 +127,8 @@ public class Main extends Activity implements LocationListener {
 
 		mContext = this;
 
+		useMenu = true;
+		
 		w = new Waffle(mContext);
 
 		f = new Fields();
@@ -157,11 +159,13 @@ public class Main extends Activity implements LocationListener {
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
 		preview = (FrameLayout) findViewById(R.id.camera_preview);
+		preview.getLayoutParams().height = 0;
 		
 		takePicture = (Button) findViewById(R.id.takePicture);
 		takePicture.setOnClickListener(new OnClickListener() {
 
 			// Push take picture button
+			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View v) {
 				// TODO
@@ -209,6 +213,16 @@ public class Main extends Activity implements LocationListener {
 					// Continuously take pictures
 				} else if (continuous == true) { // if continuous == true
 					if (recording == false) {
+						//disable menu
+						useMenu = false;
+						if (android.os.Build.VERSION.SDK_INT >= 11)
+							invalidateOptionsMenu();
+						int dps = 176;
+						
+						final float scale = getResources().getDisplayMetrics().density;
+					    int pixels = (int) (dps * scale + 0.5f);
+						preview.getLayoutParams().height = pixels;
+						
 						takePicture.setBackgroundColor(0xFF00FF00);
 						takePicture.setTextColor(0xFF000000);
 						takePicture.setText("Recording Press to Stop");
@@ -218,18 +232,8 @@ public class Main extends Activity implements LocationListener {
 					
 						safeCameraOpen(0);
 						
-//						Log.d("CameraPreview", "Camera is:" + mCamera.toString());
-//				    	
-//				   	    Camera.Parameters parameters = mCamera.getParameters();
-//				        List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
-//				        int height = sizeList.get(0).height;
-//				        int width = sizeList.get(0).width;
-//				        parameters.setPreviewSize(width, height);
-//				        mCamera.setParameters(parameters);
-						
 						preview.setVisibility(View.VISIBLE);
 						mPreview = new CameraPreview(mContext, mCamera);
-				        
 				        
 				        if (mPreview.getHolder() != null) {
 				        	Log.d("Main","mPreview is " + mPreview.getHolder());
@@ -256,7 +260,6 @@ public class Main extends Activity implements LocationListener {
 	private class continuouslytakephotos extends AsyncTask<Void, Void, Boolean> {
 		Handler mHandler;
 		Runnable updateThread;
-		int i = 0;
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -267,12 +270,24 @@ public class Main extends Activity implements LocationListener {
 
 				@Override
 				public void run() {
+					try {
+					    mCamera.takePicture(null, null, mPicture); // takes a picture
+					} catch (Exception e) {
+						Log.d("CameraMain", "Failed taking picture");
+						e.printStackTrace();
+					}
+					
+					if (picture != null) {
+						Log.d("CameraMain", "Successfully captured picture.");						
+					}
+					
 					curTime = System.currentTimeMillis();
-					queueCount.setText(getResources()
-							.getString(R.string.queueCount) + uq.queueSize());
+					
 					uploader.run();
 					uq.buildQueueFromFile();
-					w.make("Picture saved!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+					w.make("Picture saved!", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+					queueCount.setText(getResources()
+							.getString(R.string.queueCount) + uq.queueSize());
 					mCamera.startPreview();
 				}
 				
@@ -295,45 +310,15 @@ public class Main extends Activity implements LocationListener {
 				String state = Environment.getExternalStorageState();
 				if (Environment.MEDIA_MOUNTED.equals(state)) {
 
-//					final int cameraId = 0;
-//					if (safeCameraOpen(cameraId) == false) {
-//						Log.d("CameraMain", "Failed to open camera.");
-//						Boolean failed = false;
-//						recording = false;
-//						return failed;
-//					}// Open
+					Log.d("CameraMain", "Camera is: " + mCamera.toString());
+					Log.d("CameraMain", "About to try to take a picture.");
 
-					Log.d("CameraMain", "Successfully opened camera.");
-					
-//					runOnUiThread(new Runnable() {
-//
-//						@Override
-//						public void run() {
-							Log.d("CameraMain", "Camera is: " + mCamera.toString());
+					mHandler.post(updateThread);
 
-							
-							Log.d("CameraMain", "About to try to take a picture.");
-							
-							try {
-							    mCamera.takePicture(null, null, mPicture); // takes a picture
-							} catch (Exception e) {
-								Log.d("CameraMain", "Failed taking picture");
-								e.printStackTrace();
-								
-							}
-							
-							if (picture != null) {
-								Log.d("CameraMain", "Successfully captured picture.");						
-							}
-
-							mHandler.post(updateThread);
-						
-							
-				
 				} else {
-					// TODO
 					return null;
 				}
+				
 				//sleep for interval as long as recording is equal to true
 				for(int i = 0; i < continuousInterval && recording == true; i++) {
 					try {
@@ -350,15 +335,22 @@ public class Main extends Activity implements LocationListener {
 			return null;
 		}
 
+		@SuppressLint("NewApi")
 		@Override
 		protected void onPostExecute(Boolean result) {// this method will be running on UI thread
 			super.onPostExecute(result);
+			//enable menu
+			useMenu = true;
+			if (android.os.Build.VERSION.SDK_INT >= 11)
+				invalidateOptionsMenu();
+			
 			Main.takePicture.setText(R.string.takePicContinuous);
 			Main.takePicture.setTextColor(0xFF0066FF);
 			Main.takePicture.setBackgroundResource(R.drawable.button_rsense);
 			
 			OrientationManager.enableRotation(Main.this);
 			
+			preview.getLayoutParams().height = 0;
 			preview.removeView(mPreview);
 			preview.setVisibility(View.INVISIBLE);	
 			
@@ -469,11 +461,38 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	@Override
-	public boolean onCreateOptions(Menu menu) {
+	public boolean onCreateOptionsMenu (Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
 		return true;
 	}
+	
+	/**
+	 * Turns the action bar menu on and off.
+	 * 
+	 * @return Whether or not the menu was prepared successfully.
+	 */
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+
+		if (!useMenu) {
+			menu.getItem(0).setEnabled(false);
+			menu.getItem(1).setEnabled(false);
+			menu.getItem(2).setEnabled(false);
+			menu.getItem(3).setEnabled(false);
+			
+		} 
+		
+		else {
+			menu.getItem(0).setEnabled(true);
+			menu.getItem(1).setEnabled(true);
+			menu.getItem(2).setEnabled(true);
+			menu.getItem(3).setEnabled(true);
+
+		}
+		return true;
+	}
+	
 
 	// menu
 	@Override
@@ -691,11 +710,7 @@ public class Main extends Activity implements LocationListener {
 
 			dataJSON.put(dataRow);
 
-			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText() // data
-																			// set
-																			// to
-																			// be
-																			// uploaded
+			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()
 					.toString() + ": " + descriptionStr,
 					makeThisDatePretty(curTime), experimentNum,
 					dataJSON.toString(), picture);
@@ -959,6 +974,7 @@ public class Main extends Activity implements LocationListener {
 	@Override
 	protected void onPause() {
 		if(recording == true) {
+			recording = false;
 			preview.removeView(mPreview);
 			preview.setVisibility(View.INVISIBLE);
 		}
