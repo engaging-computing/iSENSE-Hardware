@@ -408,9 +408,11 @@ public class Step1Setup extends Activity {
 
 			Intent iFieldMatch = new Intent(mContext, FieldMatching.class);
 			
-			String[] dfmOrderList = dfm.convertOrderToStringArray();
+			String[] dfmOrderList = dfm.convertLinkedListToStringArray(dfm.getOrderList());
+			String[] dfmRealOrderList = dfm.convertLinkedListToStringArray(dfm.getRealOrderList());
 			
 			iFieldMatch.putExtra(FieldMatching.DFM_ORDER_LIST,dfmOrderList);
+			iFieldMatch.putExtra(FieldMatching.DFM_REAL_ORDER_LIST, dfmRealOrderList);
 			startActivityForResult(iFieldMatch, FIELD_MATCHING_REQUESTED);
 		}
 	}
