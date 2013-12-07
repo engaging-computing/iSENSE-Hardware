@@ -258,40 +258,40 @@ public class Main extends Activity implements LocationListener {
 
 	// continuously take pictures in AsyncTask (a seperate thread)
 	private class continuouslytakephotos extends AsyncTask<Void, Void, Boolean> {
-		Handler mHandler;
-		Runnable updateThread;
+//		Handler mHandler;
+//		Runnable updateThread;
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			mHandler = new Handler(); 
-			
-			updateThread = new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-					    mCamera.takePicture(null, null, mPicture); // takes a picture
-					} catch (Exception e) {
-						Log.d("CameraMain", "Failed taking picture");
-						e.printStackTrace();
-					}
-					
-					if (picture != null) {
-						Log.d("CameraMain", "Successfully captured picture.");						
-					}
-					
-					curTime = System.currentTimeMillis();
-					
-					uploader.run();
-					uq.buildQueueFromFile();
-					w.make("Picture saved!", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-					queueCount.setText(getResources()
-							.getString(R.string.queueCount) + uq.queueSize());
-					mCamera.startPreview();
-				}
-				
-			};
+//			mHandler = new Handler(); 
+//			
+//			updateThread = new Runnable() {
+//
+//				@Override
+//				public void run() {
+//					try {
+//					    mCamera.takePicture(null, null, mPicture); // takes a picture
+//					} catch (Exception e) {
+//						Log.d("CameraMain", "Failed taking picture");
+//						e.printStackTrace();
+//					}
+//					
+//					if (picture != null) {
+//						Log.d("CameraMain", "Successfully captured picture.");						
+//					}
+//					
+//					curTime = System.currentTimeMillis();
+//					
+//					uploader.run();
+//					uq.buildQueueFromFile();
+//					w.make("Picture saved!", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+//					queueCount.setText(getResources()
+//							.getString(R.string.queueCount) + uq.queueSize());
+//					mCamera.startPreview();
+//				}
+//				
+//			};
 			// this method will be running on UI thread
 			OrientationManager.disableRotation(Main.this);
 		}
@@ -313,7 +313,40 @@ public class Main extends Activity implements LocationListener {
 					Log.d("CameraMain", "Camera is: " + mCamera.toString());
 					Log.d("CameraMain", "About to try to take a picture.");
 
-					mHandler.post(updateThread);
+				//	mHandler.post(updateThread);
+					
+					runOnUiThread(new Runnable() {
+					    public void run() {
+					    	try {
+							    mCamera.takePicture(null, null, mPicture); // takes a picture
+							} catch (Exception e) {
+								Log.d("CameraMain", "Failed taking picture");
+								e.printStackTrace();
+							}
+							
+							if (picture != null) {
+								Log.d("CameraMain", "Successfully captured picture.");						
+							}
+							
+							
+						
+					    }
+					});
+					
+					curTime = System.currentTimeMillis();
+					uploader.run();
+					uq.buildQueueFromFile();
+					
+					
+					
+					runOnUiThread(new Runnable() {
+					    public void run() {
+					    	w.make("Picture saved!", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+					    	queueCount.setText(getResources()
+									.getString(R.string.queueCount) + uq.queueSize());
+							mCamera.startPreview();
+					    }
+					});
 
 				} else {
 					return null;
@@ -396,16 +429,7 @@ public class Main extends Activity implements LocationListener {
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 
-			Log.d("CameraMain", "PictureCallback");
-			FileOutputStream fos;
-            try {
-              fos = new FileOutputStream("test.jpeg");
-              fos.write(data);
-              fos.close();
-            }  catch (IOException e) {
-              //do something about it
-            }
-
+			
 			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
 
 			if (picture == null) {
@@ -413,6 +437,15 @@ public class Main extends Activity implements LocationListener {
 				return;
 			}
 			
+			Log.d("CameraMain", "PictureCallback");
+            try {
+              FileOutputStream fos = new FileOutputStream(picture);
+              fos.write(data);
+              fos.close();
+            }  catch (IOException e) {
+              //do something about it
+            }
+
 		}
 	};
 
