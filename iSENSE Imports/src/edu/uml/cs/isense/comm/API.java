@@ -225,6 +225,21 @@ public class API {
 		}
 		return -1;
 	}
+	/**
+	 * Deletes a project on iSENSE. Logged in user must have permission on the site to do this
+	 * 
+	 * @param projectId The ID of the project on iSENSE to be deleted
+	 * @return 1 if the deletion succeeds.
+	 */
+	public int deleteProject(int projectId) {
+		try {
+			makeRequest(baseURL, "projects/"+projectId, "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "DELETE", null);
+			return 1;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 	/** 
 	 * Gets all of the fields associated with a project.
