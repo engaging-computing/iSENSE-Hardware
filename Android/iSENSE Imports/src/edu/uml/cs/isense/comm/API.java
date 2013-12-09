@@ -748,13 +748,16 @@ public class API {
 					i = in.read();
 				}
 				String output = bo.toString();
+				System.out.println("Returning: " + output);
 
 				int mediaObjID = Integer.parseInt(output);
 				return mediaObjID;
 				
 			} catch (IOException e) {
+				System.out.println("Returning -1 from IOException in uploadDataSetMedia");
 				return -1;
 			} catch (NumberFormatException e) {
+				System.out.println("Returning -1 from NumberFormatException in uploadDataSetMedia");
 				return -1;
 			} finally {
 				in.close();
@@ -762,6 +765,7 @@ public class API {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("Returning -1 from who knows why in uploadDataSetMedia");
 		return -1;
 	}
 
