@@ -650,6 +650,8 @@ public class API {
 	public int uploadProjectMedia(int projectId, File mediaToUpload) {
 		try {
 			URL url = new URL(baseURL+"/media_objects/saveMedia/project/"+projectId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&non_wys=true");
+			System.out.println("Connect to: " + url);
+			
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
@@ -712,6 +714,8 @@ public class API {
 	public int uploadDataSetMedia(int dataSetId, File mediaToUpload) {
 		try {
 			URL url = new URL(baseURL+"/media_objects/saveMedia/data_set/"+dataSetId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&non_wys=true");
+			System.out.println("Connect to: " + url);
+			
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
@@ -748,7 +752,7 @@ public class API {
 					i = in.read();
 				}
 				String output = bo.toString();
-				System.out.println("Returning: " + output);
+				System.out.println("Returning from uploadDataSetMedia: " + output);
 
 				int mediaObjID = Integer.parseInt(output);
 				return mediaObjID;
