@@ -74,6 +74,7 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     useDev = [prefs boolForKey:kUSE_DEV];
     [api useDev:useDev];
+    
     // will write false to useDev for initial run of app (which is ok because by default we want production)
     [prefs setBool:useDev forKey:kUSE_DEV];
     [prefs synchronize];
@@ -130,7 +131,7 @@
             useDev = !useDev;
             [prefs setBool:useDev forKey:kUSE_DEV];
             [prefs synchronize];
-            [api useDev:useDev];
+            [api useDev:useDev]; NSLog(@"Using dev? %d", useDev);
             taps = 0;
             break;
             

@@ -903,7 +903,7 @@ public class API {
 	 */
 	public String appendedTimeStamp() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
-	            "MM/dd/yy, HH:mm:ss", Locale.US);
+	            "MM/dd/yy, HH:mm:ss.SSS", Locale.US);
 	    Calendar cal = Calendar.getInstance();
 		
 		return " - " + dateFormat.format(cal.getTime());
