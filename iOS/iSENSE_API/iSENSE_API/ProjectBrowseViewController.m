@@ -78,9 +78,8 @@
     [self setCenter:bottomSpinnerBlock forSpinner:projectSpinner];
     [scrollView addSubview:bottomSpinnerBlock];
     
-    // Prepare rapi
+    // Prepare api
     isenseAPI = [API getInstance];
-    [isenseAPI useDev:YES];
     
     // Load the first 10 Projects. (And more if screen size is large.)
     ISenseSearch *newSearch = [[ISenseSearch alloc] init];
