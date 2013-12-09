@@ -387,6 +387,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					data = new JSONObject(uploadSet.getData());
 				} catch (JSONException e) {
 					data = null;
+				} catch (NullPointerException npe) { // TODO - what is causing this npe?
+					data = null;
 				} finally {
 					if (data != null) {
 						dataSetUploadStatus.add(uploadSet.getName() + 
