@@ -644,9 +644,11 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			Intent iFieldMatch = new Intent(mContext, FieldMatching.class);
 
-			String[] dfmOrderList = dfm.convertOrderToStringArray();
+			String[] dfmOrderList = dfm.convertLinkedListToStringArray(dfm.getOrderList());
+			String[] dfmRealOrderList = dfm.convertLinkedListToStringArray(dfm.getRealOrderList());
 
 			iFieldMatch.putExtra(FieldMatching.DFM_ORDER_LIST, dfmOrderList);
+			iFieldMatch.putExtra(FieldMatching.DFM_REAL_ORDER_LIST, dfmRealOrderList);
 			iFieldMatch.putExtra(FieldMatching.SHOULD_BUILD_PREFS_STRING, false);
 			startActivityForResult(iFieldMatch, FIELD_MATCHING_REQUESTED);
 		}

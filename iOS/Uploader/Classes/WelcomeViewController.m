@@ -13,7 +13,7 @@
 
 @implementation WelcomeViewController
 
-@synthesize continueWithProj, selectProjLater;
+@synthesize continueWithProj, selectProjLater, welcomeText;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -69,8 +69,19 @@
     [continueWithProj.titleLabel setTextAlignment:UITextAlignmentCenter];
     [selectProjLater.titleLabel setTextAlignment:UITextAlignmentCenter];
     
-    // Do any additional setup after loading the view from its nib.
+    // init API
     api = [API getInstance];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    useDev = [prefs boolForKey:kUSE_DEV];
+    [api useDev:useDev];
+    // will write false to useDev for initial run of app (which is ok because by default we want production)
+    [prefs setBool:useDev forKey:kUSE_DEV];
+    [prefs synchronize];
+    
+    // add gesture listener to the label (shhh this is a dev secret)
+    UITapGestureRecognizer *devGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(switchDevAndProduction:)];
+    [welcomeText setUserInteractionEnabled:YES];
+    [welcomeText addGestureRecognizer:devGesture];
     
 }
 
@@ -79,18 +90,18 @@
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
     
     NSLog(@"P: %d", projNum);
-
+    
     if (projNum > 0) {
         SelectModeViewController *smvc = [[SelectModeViewController alloc] init];
         smvc.title = @"Select Mode";
-
+        
         NSMutableArray *controllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
         [controllers addObject:smvc];
-            
+        
         [self.navigationController setViewControllers:controllers animated:YES];
-            
+        
     }
-
+    
     projNum = 0;
     
 }
@@ -99,6 +110,33 @@
     
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
+}
+
+- (void) switchDevAndProduction:(id)sender {
+    taps++;
+    NSString *otherMode = (useDev) ? @"production" : @"dev";
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    
+    switch (taps) {
+        case 12:
+            [self.view makeWaffle:[NSString stringWithFormat:@"Two more taps to enter %@ mode", otherMode]];
+            break;
+        case 13:
+            [self.view makeWaffle:[NSString stringWithFormat:@"One more tap to enter %@ mode", otherMode]];
+            break;
+        case 14:
+            [self.view makeWaffle:[NSString stringWithFormat:@"Now in %@ mode", otherMode]];
+            useDev = !useDev;
+            [prefs setBool:useDev forKey:kUSE_DEV];
+            [prefs synchronize];
+            [api useDev:useDev];
+            taps = 0;
+            break;
+            
+        default:
+            break;
+    }
     
 }
 
@@ -147,31 +185,31 @@
             [self.navigationController pushViewController:browseView animated:YES];
             
         } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
-//            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-//                
-//                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-//                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
-//                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
-//                    [dcad setLastController:self];
-//                    [dcad setReturnToClass:DELEGATE_KEY_AUTOMATIC];
-//                    [[UIApplication sharedApplication] openURL:urlp2s];
-//                } else {
-//                    NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
-//                    [[UIApplication sharedApplication] openURL:urlapp];
-//                }
-//                
-//            } else {
-//                
-//                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
-//                                                                  message:nil
-//                                                                 delegate:self
-//                                                        cancelButtonTitle:@"Cancel"
-//                                                        otherButtonTitles:nil];
-//                
-//                [message setAlertViewStyle:UIAlertViewStyleDefault];
-//                [message show];
-//                
-//            }
+            //            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
+            //
+            //                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
+            //                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
+            //                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
+            //                    [dcad setLastController:self];
+            //                    [dcad setReturnToClass:DELEGATE_KEY_AUTOMATIC];
+            //                    [[UIApplication sharedApplication] openURL:urlp2s];
+            //                } else {
+            //                    NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
+            //                    [[UIApplication sharedApplication] openURL:urlapp];
+            //                }
+            //
+            //            } else {
+            //
+            //                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
+            //                                                                  message:nil
+            //                                                                 delegate:self
+            //                                                        cancelButtonTitle:@"Cancel"
+            //                                                        otherButtonTitles:nil];
+            //
+            //                [message setAlertViewStyle:UIAlertViewStyleDefault];
+            //                [message show];
+            //
+            //            }
         }
         
     } else if (actionSheet.tag == PROJ_MANUAL) {
@@ -194,14 +232,14 @@
 - (void) projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
     
     NSLog(@"returning from browse");
-
+    
     if ([project intValue] <= 0) {
         [self.view makeWaffle:@"Invalid project #" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
     } else {
         [self setGlobalProjAndEnableManual:[project intValue] andEnable:TRUE isFromBrowse:TRUE];
         projNum = [project intValue];
     }
-
+    
 }
 
 - (void) setGlobalProjAndEnableManual:(int)projID andEnable:(BOOL)enable isFromBrowse:(BOOL)ifb {
@@ -210,19 +248,18 @@
     
     if (projID <= 0)
         projID = -1;
-        
+    
     [prefs setInteger:projID forKey:kPROJECT_ID];
     [prefs setInteger:projID forKey:kPROJECT_ID_DC];
     [prefs setInteger:projID forKey:kPROJECT_ID_MANUAL];
-    
     [prefs setBool:enable forKey:kENABLE_MANUAL];
     
     if (!ifb) {
         SelectModeViewController *smvc = [[SelectModeViewController alloc] init];
         smvc.title = @"Select Mode";
+      
         [self.navigationController pushViewController:smvc animated:YES];
     }
 }
-
 
 @end

@@ -10,10 +10,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -95,15 +99,23 @@ public class DataWalk extends Activity implements LocationListener,
 	private final String DEFAULT_USERNAME = "mobile";
 	private final String DEFAULT_PASSWORD = "mobile";
 	private final String DEFAULT_PROJECT = "156";
+	private final String DEFAULT_PROJECT_DEV = "25";
+	private int actionBarTapCount = 0;
+	public static boolean useDev = false;
+	private String projectID = "156";
 
 	private String loginName = "";
 	private String loginPass = "";
-	private String projectID = "156";
 	private String projectURL = "";
 	private String dataSetName = "";
 	private String baseprojectURL = "http://isenseproject.org/projects/";
+	private String baseprojectURLDev = "http://rsense-dev.cs.uml.edu/projects/";
 	private int dataSetID = -1;
-	private String emptyProjectId = "156";
+	
+	/* Project Preferences */
+	private static final String PROJ_PREFS_KEY = "proj_prefs_key";
+	private static final String PROJ_ID_PRODUCTION = "proj_id_production";
+	private static final String PROJ_ID_DEV = "proj_id_dev";
 
 	/* Manage Work Flow Between Activities */
 	public static Context mContext;
@@ -162,6 +174,28 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Save current context
 		mContext = this;
+		
+		// Initialize action bar customization for API >= 14
+		if (android.os.Build.VERSION.SDK_INT >= 14) {
+			ActionBar bar = getActionBar();
+			bar.setBackgroundDrawable(new ColorDrawable(Color
+					.parseColor("#111133")));
+			bar.setIcon(getResources()
+					.getDrawable(R.drawable.rsense_logo_right));
+			bar.setDisplayShowTitleEnabled(false);
+			int actionBarTitleId = Resources.getSystem().getIdentifier(
+					"action_bar_title", "id", "android");
+			if (actionBarTitleId > 0) {
+				TextView title = (TextView) findViewById(actionBarTitleId);
+				if (title != null) {
+					title.setTextColor(Color.WHITE);
+					title.setTextSize(24.0f);
+				}
+			}
+					
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
+		}
 
 		// Initialize all the managers.
 		initManagers();
@@ -219,17 +253,10 @@ public class DataWalk extends Activity implements LocationListener,
 				startActivityForResult(iEnterName, NAME_REQUESTED);
 			}
 
+		} else {
+			nameTxtBox.setText(getResources().getString(R.string.name)
+					+ ": " + firstName + " " + lastInitial);
 		}
-
-		// Set the initial default projectID in preferences
-		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
-				Context.MODE_PRIVATE);
-		SharedPreferences.Editor mEdit = mPrefs.edit();
-		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT).commit();
-
-		// Attempt to login with saved credentials, otherwise try default
-		// credentials
-		new AttemptLoginTask().execute();
 
 		/* Starts the code for the main button. */
 		startStop.setOnLongClickListener(new OnLongClickListener() {
@@ -263,12 +290,18 @@ public class DataWalk extends Activity implements LocationListener,
 					// Get user's project #, or the default if there is none
 					// saved
 					SharedPreferences prefs = getSharedPreferences(
-							Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
-					projectID = prefs.getString(Setup.PROJECT_ID,
-							DEFAULT_PROJECT);
+							PROJ_PREFS_KEY, Context.MODE_PRIVATE);
+					if (useDev)
+						projectID = prefs.getString(PROJ_ID_DEV,
+								DEFAULT_PROJECT_DEV);
+					else
+						projectID = prefs.getString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
 
 					// Set the project URL for view data
-					projectURL = baseprojectURL + projectID + "/data_sets/";
+					if (useDev)
+						projectURL = baseprojectURLDev + projectID + "/data_sets/";
+					else
+						projectURL = baseprojectURL + projectID + "/data_sets/";
 
 					// Save the newest DataSet to the Upload Queue if it has at
 					// least 1 point
@@ -299,7 +332,6 @@ public class DataWalk extends Activity implements LocationListener,
 						invalidateOptionsMenu();
 					running = true;
 
-					// TODO THE NAME AND LOGIN KEEP DISAPPEARING!!!!!!!!
 					// Reset the main UI text boxes
 					nameTxtBox
 							.setText("Name: " + firstName + " " + lastInitial);
@@ -331,8 +363,30 @@ public class DataWalk extends Activity implements LocationListener,
 			}
 
 		});
+		
+		// additional initializations that are dependent on whether or not we're on dev
+		onCreateInit();
 
 	}// ends onCreate
+	
+	protected void onCreateInit() {
+		// Set the initial default projectID in preferences
+		SharedPreferences prefs = getSharedPreferences(PROJ_PREFS_KEY, Context.MODE_PRIVATE);
+		if (useDev)
+			projectID = prefs.getString(PROJ_ID_DEV, DEFAULT_PROJECT_DEV);
+		else
+			projectID = prefs.getString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
+		
+		expNumBox.setText("Project Number: " + projectID);
+		
+		
+//		SharedPreferences.Editor mEdit = mPrefs.edit();
+//		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT).commit();
+
+		// Attempt to login with saved credentials, otherwise try default
+		// credentials
+		new AttemptLoginTask().execute();
+	}
 
 	private void initialize() {
 		// Initialize main UI elements
@@ -403,16 +457,16 @@ public class DataWalk extends Activity implements LocationListener,
 		if (api.hasConnectivity()) {
 			if (android.os.Build.VERSION.SDK_INT >= 11)
 				invalidateOptionsMenu();
-			setProjectIdtoUsersChoice();
+			//setProjectIdtoUsersChoice();
 			AutoLogin();
 			// projectID = projectId;
 			// loginNow = false;
-		} else {
-			if (android.os.Build.VERSION.SDK_INT >= 11)
-				invalidateOptionsMenu();
-			// loginNow = true;
-			setProjectIdEmpty();
-		}
+		} //else {
+//			if (android.os.Build.VERSION.SDK_INT >= 11)
+//				invalidateOptionsMenu();
+//			// loginNow = true;
+//			//setProjectIdEmpty();
+//		}
 
 		// Get the last know recording interval
 		mInterval = Integer.parseInt(getSharedPreferences(INTERVAL_PREFS_KEY,
@@ -446,7 +500,7 @@ public class DataWalk extends Activity implements LocationListener,
 		if (mInterval == 1000) {
 			rateBox.setText("Data Recorded Every: 1 second");
 		} else if (mInterval == 60000) {
-			rateBox.setText("Data Recorded Every: 1 Minute");
+			rateBox.setText("Data Recorded Every: 1 minute");
 		} else {
 			rateBox.setText("Data Recorded Every: " + mInterval / 1000
 					+ " seconds");
@@ -465,29 +519,43 @@ public class DataWalk extends Activity implements LocationListener,
 	/**
 	 * Sets the project Id to the one the user specified.
 	 */
-	private void setProjectIdtoUsersChoice() {
-		SharedPreferences prefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
-				Context.MODE_PRIVATE);
-		projectID = prefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT);
-
+	private void setProjectIDFromSetupClass() {
+		// get the projectID from Setup
+		SharedPreferences setupPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
+		if (useDev)
+			projectID = setupPrefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT_DEV);
+		else
+			projectID = setupPrefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT);
 	}
-
+	
 	/**
-	 * Handles Setting the Experiment number equal to -1 when you are not
-	 * connected to the internet.
+	 * sets the project ID to local prefs
 	 */
-
-	private void setProjectIdEmpty() {
-		// Auto-generated method stub
-		projectID = emptyProjectId;
-		// Set the project ID in preferences back to -1
-		SharedPreferences prefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
-				Context.MODE_PRIVATE);
-		SharedPreferences.Editor mEdit = prefs.edit();
-		mEdit.putString(Setup.PROJECT_ID, emptyProjectId);
+	private void setProjectIDForLocalPrefs() {
+		// set the ID to our local prefs
+		SharedPreferences localPrefs = getSharedPreferences(PROJ_PREFS_KEY, Context.MODE_PRIVATE);
+		SharedPreferences.Editor mEdit = localPrefs.edit();
+		if (useDev)
+			mEdit.putString(PROJ_ID_DEV, projectID);
+		else
+			mEdit.putString(PROJ_ID_PRODUCTION, projectID);
 		mEdit.commit();
-
 	}
+
+//	/**
+//	 * Sets project ID to default
+//	 */
+//	private void setProjectIDToDefault() {
+//		// Auto-generated method stub
+//		projectID = DEFAULT_PROJECT;
+//		// Set the project ID in preferences back to -1
+//		SharedPreferences prefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
+//				Context.MODE_PRIVATE);
+//		SharedPreferences.Editor mEdit = prefs.edit();
+//		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+//		mEdit.commit();
+//
+//	}
 
 	/**
 	 * Handles application behavior on back press.
@@ -709,7 +777,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// iSENSE API
 		api = API.getInstance(mContext);
-		api.useDev(false);
+		api.useDev(useDev);
 
 		// Upload Queue
 		uq = new UploadQueue("data_walk", mContext, api);
@@ -754,23 +822,25 @@ public class DataWalk extends Activity implements LocationListener,
 
 			if (api.hasConnectivity()) {
 				if (resultCode == RESULT_OK) {
-					setProjectIdtoUsersChoice();
-
-					if (api.hasConnectivity()) {
-						new GetProjectTask().execute();
-					}
+					
+					setProjectIDFromSetupClass();
+					new GetProjectTask().execute();
+					
 				} else if (resultCode == RESULT_CANCELED) {
-					// This is called when they hit cancel.
-					// In this situation, we want the UI to display the last
-					// project number the user entered.
-					projectID = DEFAULT_PROJECT;
-					// Set the project ID in preferences back to its default
-					// value
-					SharedPreferences prefs = getSharedPreferences(
-							Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
-					SharedPreferences.Editor mEdit = prefs.edit();
-					mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
-					mEdit.commit();
+//					// This is called when they hit cancel.
+//					// In this situation, we want the UI to display the last
+//					// project number the user entered.
+//					if (useDev)
+//						projectID = DEFAULT_PROJECT_DEV;
+//					else
+//						projectID = DEFAULT_PROJECT;
+//					// Set the project ID in preferences back to its default
+//					// value
+//					SharedPreferences prefs = getSharedPreferences(
+//							Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
+//					SharedPreferences.Editor mEdit = prefs.edit();
+//					mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+//					mEdit.commit();
 				}
 			} else {
 				// There is no Internet so menu is disabled, thus the user will
@@ -864,13 +934,16 @@ public class DataWalk extends Activity implements LocationListener,
 				loginPass = DEFAULT_PASSWORD;
 				firstName = "";
 				lastInitial = "";
-				projectID = DEFAULT_PROJECT;
+				if (useDev)
+					projectID = DEFAULT_PROJECT_DEV;
+				else
+					projectID = DEFAULT_PROJECT;
 
 				// Set the project ID in preferences back to its default value
-				SharedPreferences prefs = getSharedPreferences(
-						Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
+				SharedPreferences prefs = getSharedPreferences(PROJ_PREFS_KEY, Context.MODE_PRIVATE);
 				SharedPreferences.Editor mEdit = prefs.edit();
-				mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+				mEdit.putString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
+				mEdit.putString(PROJ_ID_DEV, DEFAULT_PROJECT_DEV);
 				mEdit.commit();
 
 				// Set the default username and password in preferences back to
@@ -1044,6 +1117,29 @@ public class DataWalk extends Activity implements LocationListener,
 		case R.id.classroom:
 			// Shows the classroom settings dialog
 			startActivity(new Intent(this, ClassroomMode.class));
+			return true;
+		
+		case android.R.id.home:
+	    	
+	    	String other = (useDev) ? "production" : "dev";
+	       
+	    	switch (++actionBarTapCount) {
+	    	case 5:
+	    		w.make("2 more taps to enter " + other + " mode");
+	    		break;
+	    	case 6:
+	    		w.make("1 more tap to enter " + other + " mode");
+	    		break;
+	    	case 7:
+	    		w.make("Now in " + other + " mode");
+	    		useDev = !useDev;
+	    		api.useDev(useDev);
+	    		actionBarTapCount = 0;
+	    		onCreateInit();
+	    		break;
+	    	}
+	    	
+	        return true;
 		}
 
 		return false;
@@ -1163,6 +1259,22 @@ public class DataWalk extends Activity implements LocationListener,
 						// Tell the user his/her credentials are wrong
 						w.make("Invalid username or password.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					} else {
+						// reset to default and log in again
+						final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+								DataWalk.mContext,
+								DataWalk.mContext.getSharedPreferences(
+										Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+										Context.MODE_PRIVATE));
+						SharedPreferences.Editor mEditor = mPrefs.edit();
+						mEditor.putString(
+								Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+								DEFAULT_USERNAME);
+						mEditor.putString(
+								Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+								DEFAULT_PASSWORD);
+						mEditor.commit();
+						new AttemptLoginTask().execute();
 					}
 
 				}
@@ -1220,6 +1332,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 				startActivityForResult(new Intent(mContext, Setup.class),
 						PROJECT_REQUESTED);
+			} else {
+				setProjectIDFromSetupClass();
+				setProjectIDForLocalPrefs();
 			}
 		}
 
@@ -1380,7 +1495,6 @@ public class DataWalk extends Activity implements LocationListener,
 						// Store new values into JSON Object
 						dataJSON.put("0", "u " + time);
 						dataJSON.put("1", accel[3]);
-						// Rajia Store new Velocity values into JSON object
 						dataJSON.put("2", velocity);
 						dataJSON.put("3", totalDistance);
 						dataJSON.put("4", loc.getLatitude());
@@ -1416,9 +1530,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 	}
 
-	// Rajia Added this to format numbers
-	// code example lifted from
-	// http://www.java-forums.org/advanced-java/4130-rounding-double-two-decimal-places.htm
+	// formats numbers to 2 decimal points
 	double roundTwoDecimals(double d) {
 		DecimalFormat twoDForm = new DecimalFormat("#.##");
 		return Double.valueOf(twoDForm.format(d));
