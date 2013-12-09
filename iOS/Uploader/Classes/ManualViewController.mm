@@ -761,6 +761,9 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     if (reset) [prefs setInteger:-1 forKey:kPROJECT_ID_MANUAL];
     
+    // always save proj passed in to prefs
+    [prefs setValue:[NSString stringWithFormat:@"%d", projID] forKey:[StringGrabber grabString:@"key_proj_manual"]];
+    
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Retrieving project fields..."];
@@ -1051,7 +1054,7 @@
     projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
     
     bool uploadable = false;
-    if (projNum > 1) uploadable = true;
+    if (projNum > 0) uploadable = true;
     
     QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:dataSetNameInput.text];
@@ -1061,7 +1064,7 @@
     [ds setData:dataJSON];
     [ds setPicturePaths:[imageList copy]];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
+    [ds setHasInitialProj:[NSNumber numberWithBool:(projNum > 0)]];
     // Add the new data set to the queue
     [dataSaver addDataSet:ds];
     NSLog(@"There are %d images in imageList.", imageList.count);
