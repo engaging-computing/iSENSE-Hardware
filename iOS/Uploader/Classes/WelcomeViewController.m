@@ -131,10 +131,16 @@
             useDev = !useDev;
             [prefs setBool:useDev forKey:kUSE_DEV];
             [prefs synchronize];
-            [api useDev:useDev]; NSLog(@"Using dev? %d", useDev);
+            if ([api getCurrentUser] != nil) {
+                dispatch_queue_t queue = dispatch_queue_create("welcome_vc_logging_out", NULL);
+                dispatch_async(queue, ^{
+                    [api deleteSession];
+                    [api useDev:useDev];
+                    NSLog(@"Using dev? %d", useDev);
+                });
+            }
             taps = 0;
             break;
-            
         default:
             break;
     }

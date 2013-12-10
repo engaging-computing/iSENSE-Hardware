@@ -979,7 +979,7 @@
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]]) {
                 
                 long timeStamp = [[NSDate date] timeIntervalSince1970];
-                NSString *currentTime = [[NSString stringWithFormat:@"%ld", timeStamp] stringByAppendingString:@"000"];
+                NSString *currentTime = [[NSString stringWithFormat:@"u %ld", timeStamp] stringByAppendingString:@"000"];
                 [data setValue:currentTime forKey:[NSString stringWithFormat:@"%d", count]];
                 
             } else {
@@ -989,8 +989,8 @@
                 else
                     [data setValue:@"" forKey:[NSString stringWithFormat:@"%d", count]];
             }
+            count++;
         }
-        count++;
     }
 
     NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
