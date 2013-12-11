@@ -175,8 +175,9 @@ dataToBeOrdered, backFromQueue, f, fields;
             dataSetName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
             
             projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
+            NSLog(@"Automatic reading fields for key: %@", [NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projNum]);
             fields = [prefs objectForKey:[NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projNum]];
-            
+                          
             // Set setup_complete key to false again, initialize the keep_step_2_enabled key to on
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
             [prefs setBool:true forKey:[StringGrabber grabString:@"key_step_2_enabled"]];
@@ -295,6 +296,8 @@ dataToBeOrdered, backFromQueue, f, fields;
             dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:f];
             [dfm getOrder];
             [dfm setEnabledFields:fields];
+            if (fields != nil)
+                [dfm setOrder:fields];
             
             /*******/
             

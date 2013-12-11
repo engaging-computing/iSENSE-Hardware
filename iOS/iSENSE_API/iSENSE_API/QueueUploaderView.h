@@ -43,7 +43,6 @@
 - (IBAction) upload:(id)sender;
 
 - (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer;
-- (BOOL) handleNewQRCode:(NSURL *)url;
 - (id)   initWithParentName:(NSString *)parentName;
 
 @property (nonatomic, assign) API *api;

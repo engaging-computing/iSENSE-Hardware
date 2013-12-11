@@ -599,6 +599,9 @@
     if (fieldOrder == nil || fieldOrder.count == 0)
         fieldOrder = [DataFieldManager getOrderForProjID:projectID API:isenseAPI];
     
+    for (int i = 0; i < [fieldOrder count]; i++)
+        NSLog(@"Fields are: %@", [fieldOrder objectAtIndex:i]);
+    
     for (int i = 0; i < len; i++) {
         
         row = [data objectAtIndex:i];
@@ -706,6 +709,10 @@
     }
         
     return outData;
+}
+
+- (void) setOrder:(NSMutableArray *)newOrderFields {
+    order = [[NSMutableArray alloc] initWithArray:newOrderFields];
 }
 
 
