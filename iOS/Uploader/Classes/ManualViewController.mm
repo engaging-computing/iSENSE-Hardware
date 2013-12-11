@@ -50,7 +50,29 @@
 - (void) viewHasLoaded {
     
     NSLog(@"view has loaded");
+    
+    // Check backFromQueue status to inform user of data set upload success or failure
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    backFromQueue = [prefs boolForKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    if (backFromQueue) {
+        int uploaded = [prefs integerForKey:@"key_data_uploaded"];
+        switch (uploaded) {
+            case DATA_NONE_UPLOADED:
+                [self.view makeWaffle:@"No data sets uploaded" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+                break;
+                
+            case DATA_UPLOAD_SUCCESS:
+                [self.view makeWaffle:@"All selected data sets uploaded successfully" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
+                break;
+                
+            case DATA_UPLOAD_FAILED:
+                [self.view makeWaffle:@"At least one data set failed to upload" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+                break;
+        }
+        
+        // Set back_from_queue key to false again
+        [prefs setBool:false forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    }
     
     // allocations
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
@@ -485,6 +507,11 @@
         case MANUAL_MENU_UPLOAD:
             
             if ([dataSaver dataSetCountWithParentName:PARENT_MANUAL] > 0) {
+                NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+                backFromQueue = true;
+                [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+                [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
+                
                 QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
                 queueUploader.title = @"Upload";
                 [self.navigationController pushViewController:queueUploader animated:YES];

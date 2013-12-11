@@ -26,6 +26,8 @@
 	NSString *dataSetName;
     RotationDataSaver *rds;
     
+    BOOL backFromQueue;
+    
     CLLocationManager *locationManager;
     
 }
