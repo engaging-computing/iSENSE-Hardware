@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -168,8 +169,6 @@ public class Main extends Activity implements LocationListener {
 			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View v) {
-				// TODO
-
 				// Check that a group name was entered, and a project was
 				// selected
 				if (name.getText().length() == 0) {
@@ -211,7 +210,7 @@ public class Main extends Activity implements LocationListener {
 					}
 
 					// Continuously take pictures
-				} else if (continuous == true) { // if continuous == true
+				} else if (continuous == true) { 
 					if (recording == false) {
 						//disable menu
 						useMenu = false;
@@ -258,41 +257,10 @@ public class Main extends Activity implements LocationListener {
 
 	// continuously take pictures in AsyncTask (a seperate thread)
 	private class continuouslytakephotos extends AsyncTask<Void, Void, Boolean> {
-//		Handler mHandler;
-//		Runnable updateThread;
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-//			mHandler = new Handler(); 
-//			
-//			updateThread = new Runnable() {
-//
-//				@Override
-//				public void run() {
-//					try {
-//					    mCamera.takePicture(null, null, mPicture); // takes a picture
-//					} catch (Exception e) {
-//						Log.d("CameraMain", "Failed taking picture");
-//						e.printStackTrace();
-//					}
-//					
-//					if (picture != null) {
-//						Log.d("CameraMain", "Successfully captured picture.");						
-//					}
-//					
-//					curTime = System.currentTimeMillis();
-//					
-//					uploader.run();
-//					uq.buildQueueFromFile();
-//					w.make("Picture saved!", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-//					queueCount.setText(getResources()
-//							.getString(R.string.queueCount) + uq.queueSize());
-//					mCamera.startPreview();
-//				}
-//				
-//			};
-			// this method will be running on UI thread
 			OrientationManager.disableRotation(Main.this);
 		}
 
@@ -305,15 +273,31 @@ public class Main extends Activity implements LocationListener {
 			// argument and u can access the parent class' variable url over
 			// here
 			
+			//TODO
 			
 			while (recording) {
+				
+				//sleep for interval as long as recording is equal to true
+				for(int i = 0; i < continuousInterval && recording == true; i++) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						Log.e(getString(R.string.app_name),
+								"failed to sleep while continuously taking pictures");
+						e.printStackTrace();
+					}
+				}
+				
+				//do not take one last picture when user pushes to stop recording
+				if(recording == false) {
+					return null;
+				}
+				
 				String state = Environment.getExternalStorageState();
 				if (Environment.MEDIA_MOUNTED.equals(state)) {
 
 					Log.d("CameraMain", "Camera is: " + mCamera.toString());
 					Log.d("CameraMain", "About to try to take a picture.");
-
-				//	mHandler.post(updateThread);
 					
 					runOnUiThread(new Runnable() {
 					    public void run() {
@@ -327,23 +311,19 @@ public class Main extends Activity implements LocationListener {
 							if (picture != null) {
 								Log.d("CameraMain", "Successfully captured picture.");						
 							}
-							
-							
-						
 					    }
 					});
 					
 					curTime = System.currentTimeMillis();
 					uploader.run();
 					uq.buildQueueFromFile();
-					
-					
-					
+		
 					runOnUiThread(new Runnable() {
 					    public void run() {
 					    	w.make("Picture saved!", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
 					    	queueCount.setText(getResources()
 									.getString(R.string.queueCount) + uq.queueSize());
+					    	mCamera.stopPreview();
 							mCamera.startPreview();
 					    }
 					});
@@ -352,16 +332,7 @@ public class Main extends Activity implements LocationListener {
 					return null;
 				}
 				
-				//sleep for interval as long as recording is equal to true
-				for(int i = 0; i < continuousInterval && recording == true; i++) {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						Log.e(getString(R.string.app_name),
-								"failed to sleep while continuously taking pictures");
-						e.printStackTrace();
-					}
-				}
+				
 			}
 			
 			
@@ -398,7 +369,6 @@ public class Main extends Activity implements LocationListener {
 
 	private boolean safeCameraOpen(int id) {
 		boolean qOpened = false;
-		// TODO
 		try {
 			if (mCamera != null) {
 				mCamera.stopPreview();
@@ -428,16 +398,17 @@ public class Main extends Activity implements LocationListener {
 
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
-
+			//TODO
 			
 			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-
+			
 			if (picture == null) {
             	Log.d("CameraMain", "picture is null");
 				return;
 			}
 			
 			Log.d("CameraMain", "PictureCallback");
+			
             try {
               FileOutputStream fos = new FileOutputStream(picture);
               fos.write(data);
@@ -450,6 +421,7 @@ public class Main extends Activity implements LocationListener {
 	};
 
 	/** Create a File for saving an image or video */
+	@SuppressLint("SimpleDateFormat")
 	private static File getOutputMediaFile(int type) {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
@@ -470,11 +442,12 @@ public class Main extends Activity implements LocationListener {
 		}
 
 		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		File mediaFile;
 		if (type == MEDIA_TYPE_IMAGE) {
 			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "IMG_" + ".jpg");
-			// } else if(type == MEDIA_TYPE_VIDEO) {
+					+ "IMG_" + timeStamp+ ".jpg");
+			// } else if(type == MEDIA_TYPE_VIDEO) {  
 			// mediaFile = new File(mediaStorageDir.getPath() + File.separator +
 			// "VID_"+ timeStamp + ".mp4");
 		} else {
@@ -748,7 +721,7 @@ public class Main extends Activity implements LocationListener {
 					makeThisDatePretty(curTime), experimentNum,
 					dataJSON.toString(), picture);
 
-			System.out.println("experimentNum = " + experimentNum);
+			System.out.println("projectNum = " + experimentNum);
 
 			uq.addDataSetToQueue(ds);
 
