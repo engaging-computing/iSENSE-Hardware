@@ -50,7 +50,29 @@
 - (void) viewHasLoaded {
     
     NSLog(@"view has loaded");
+    
+    // Check backFromQueue status to inform user of data set upload success or failure
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    backFromQueue = [prefs boolForKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    if (backFromQueue) {
+        int uploaded = [prefs integerForKey:@"key_data_uploaded"];
+        switch (uploaded) {
+            case DATA_NONE_UPLOADED:
+                [self.view makeWaffle:@"No data sets uploaded" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+                break;
+                
+            case DATA_UPLOAD_SUCCESS:
+                [self.view makeWaffle:@"All selected data sets uploaded successfully" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
+                break;
+                
+            case DATA_UPLOAD_FAILED:
+                [self.view makeWaffle:@"At least one data set failed to upload" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+                break;
+        }
+        
+        // Set back_from_queue key to false again
+        [prefs setBool:false forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    }
     
     // allocations
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
@@ -158,7 +180,7 @@
                                                                       message:nil
                                                                      delegate:self
                                                             cancelButtonTitle:@"Cancel"
-                                                            otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                                                            otherButtonTitles:@"Enter Project #", @"Browse", nil];
                     message.tag = MANUAL_MENU_PROJECT;
                     [message show];
                     
@@ -473,7 +495,8 @@
                                  destructiveButtonTitle:nil
                                  otherButtonTitles:@"Upload", @"Project", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-	[popupQuery showInView:self.view];
+	//[popupQuery showInView:self.view];
+    [popupQuery showInView:[UIApplication sharedApplication].keyWindow];
 }
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -484,6 +507,11 @@
         case MANUAL_MENU_UPLOAD:
             
             if ([dataSaver dataSetCountWithParentName:PARENT_MANUAL] > 0) {
+                NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+                backFromQueue = true;
+                [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+                [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
+                
                 QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
                 queueUploader.title = @"Upload";
                 [self.navigationController pushViewController:queueUploader animated:YES];
@@ -498,7 +526,7 @@
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                                       otherButtonTitles:@"Enter Project #", @"Browse", nil];
             message.tag = MANUAL_MENU_PROJECT;
             [message show];
             
@@ -561,34 +589,6 @@
             browseView.delegate = self;
             browsing = YES;
             [self.navigationController pushViewController:browseView animated:YES];
-            
-        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
-            
-           if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-        
-               if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-                   NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
-                   Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
-                   [dcad setLastController:self];
-                   [dcad setReturnToClass:DELEGATE_KEY_MANUAL];
-                   [[UIApplication sharedApplication] openURL:urlp2s];
-               } else {
-                   NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
-                   [[UIApplication sharedApplication] openURL:urlapp];
-               }
-           
-           } else {
-            
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
-                                                                  message:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Cancel"
-                                                        otherButtonTitles:nil];
-                
-                [message setAlertViewStyle:UIAlertViewStyleDefault];
-                [message show];
-                
-           }
             
         }
         
@@ -979,7 +979,7 @@
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]]) {
                 
                 long timeStamp = [[NSDate date] timeIntervalSince1970];
-                NSString *currentTime = [[NSString stringWithFormat:@"%ld", timeStamp] stringByAppendingString:@"000"];
+                NSString *currentTime = [[NSString stringWithFormat:@"u %ld", timeStamp] stringByAppendingString:@"000"];
                 [data setValue:currentTime forKey:[NSString stringWithFormat:@"%d", count]];
                 
             } else {
@@ -989,8 +989,8 @@
                 else
                     [data setValue:@"" forKey:[NSString stringWithFormat:@"%d", count]];
             }
+            count++;
         }
-        count++;
     }
 
     NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
@@ -1020,31 +1020,6 @@
     [message addSubview:spinner];
     [spinner startAnimating];
     return message;
-}
-
-- (BOOL) handleNewQRCode:(NSURL *)url {
-    
-    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-    NSString *proj = arr[2];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:proj forKeyPath:[StringGrabber grabString:@"key_proj_manual"]];
-    
-    projNum = [proj intValue];
-    projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", projNum]];
-    
-    if (browsing == YES) {
-        browsing = NO;
-        [self cleanRDSData];
-        [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
-    } else {
-        if (rds != nil && rds.doesHaveData)
-            [self fillDataFieldEntryList:projNum withData:[rds data] andResetGlobal:TRUE];
-        else
-            [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
-    }
-    
-    return YES;
 }
 
 // Save a data set so you don't have to upload it immediately

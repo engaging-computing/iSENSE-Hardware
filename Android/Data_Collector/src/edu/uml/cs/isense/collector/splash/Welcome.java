@@ -132,7 +132,15 @@ public class Welcome extends Activity {
 	    	case 7:
 	    		w.make("Now in " + other + " mode");
 	    		useDev = !useDev;
-	    		api.useDev(useDev);
+	    		if (api.getCurrentUser() != null) {
+	    			Runnable r = new Runnable() {
+	    				public void run() {
+	    					api.deleteSession();
+	    					api.useDev(useDev);
+	    				}
+	    			};
+	    			new Thread(r).start();
+	    		}
 	    		actionBarTapCount = 0;
 	    		break;
 	    	}

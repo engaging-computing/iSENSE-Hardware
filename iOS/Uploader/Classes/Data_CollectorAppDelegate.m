@@ -188,25 +188,25 @@
     }
 }
 
-- (void) setLastController:(UIViewController *)uivc {
-    lastController = uivc;
-}
+//- (void) setLastController:(UIViewController *)uivc {
+//    lastController = uivc;
+//}
+//
+//- (void) setReturnToClass:(int)ret {
+//    returnToClass = ret;
+//}
 
-- (void) setReturnToClass:(int)ret {
-    returnToClass = ret;
-}
-
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    if (returnToClass == DELEGATE_KEY_AUTOMATIC) {
-        StepOneSetup *svc = (StepOneSetup *) lastController;
-        return [svc handleNewQRCode:url];
-    } else if (returnToClass == DELEGATE_KEY_MANUAL) {
-        ManualViewController *mvc = (ManualViewController *) lastController;
-        return [mvc handleNewQRCode:url];
-    } else {
-        QueueUploaderView *qvc = (QueueUploaderView *) lastController;
-        return [qvc handleNewQRCode:url];
-    }
-}
+//- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+//    if (returnToClass == DELEGATE_KEY_AUTOMATIC) {
+//        StepOneSetup *svc = (StepOneSetup *) lastController;
+//        return [svc handleNewQRCode:url];
+//    } else if (returnToClass == DELEGATE_KEY_MANUAL) {
+//        ManualViewController *mvc = (ManualViewController *) lastController;
+//        return [mvc handleNewQRCode:url];
+//    } else {
+//        QueueUploaderView *qvc = (QueueUploaderView *) lastController;
+//        return [qvc handleNewQRCode:url];
+//    }
+//}
 
 @end
