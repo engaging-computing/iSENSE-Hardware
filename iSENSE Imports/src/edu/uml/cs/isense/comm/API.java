@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Random;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -687,9 +688,20 @@ public class API {
 					i = in.read();
 				}
 				String output = bo.toString();
-				
-				int mediaObjID = Integer.parseInt(output);
-				return mediaObjID;
+				System.out.println("Returning from uploadDataSetMedia: " + output);
+				try {
+					JSONObject jobj = new JSONObject(output);
+					int mediaObjID = jobj.getInt("id");
+					return mediaObjID;
+				} catch (JSONException e) {
+					System.out.println("UploadDataSetMedia: exception formatting JSON:");
+					e.printStackTrace();
+					return -1;
+				} catch (Exception e) {
+					System.out.println("UploadDataSetMedia: generic exception:");
+					e.printStackTrace();
+					return -1;
+				}
 			} catch (IOException e) {
 				return -1;
 			}  catch (NumberFormatException e) {
@@ -753,10 +765,19 @@ public class API {
 				}
 				String output = bo.toString();
 				System.out.println("Returning from uploadDataSetMedia: " + output);
-
-				int mediaObjID = Integer.parseInt(output);
-				return mediaObjID;
-				
+				try {
+					JSONObject jobj = new JSONObject(output);
+					int mediaObjID = jobj.getInt("id");
+					return mediaObjID;
+				} catch (JSONException e) {
+					System.out.println("UploadDataSetMedia: exception formatting JSON:");
+					e.printStackTrace();
+					return -1;
+				} catch (Exception e) {
+					System.out.println("UploadDataSetMedia: generic exception:");
+					e.printStackTrace();
+					return -1;
+				}
 			} catch (IOException e) {
 				System.out.println("Returning -1 from IOException in uploadDataSetMedia");
 				return -1;
@@ -913,8 +934,15 @@ public class API {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
 	            "MM/dd/yy, HH:mm:ss.SSS", Locale.US);
 	    Calendar cal = Calendar.getInstance();
+	    
+	    Random r = new Random();
+	    int rMicroseconds = r.nextInt(1000);
+	    String microString = "";
+	    if (rMicroseconds < 10) microString = "00" + rMicroseconds;
+	    else if (rMicroseconds < 100) microString = "0" + rMicroseconds;
+	    else microString = "" + rMicroseconds;
 		
-		return " - " + dateFormat.format(cal.getTime());
+		return " - " + dateFormat.format(cal.getTime()) + microString;
 	}
 
 }
