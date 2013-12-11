@@ -16,12 +16,12 @@
 	UINavigationController *navControl;
     
     // for QR codes
-    UIViewController *lastController;
-    int returnToClass;
+//    UIViewController *lastController;
+//    int returnToClass;
 }
 
-- (void) setLastController:(UIViewController *)uivc;
-- (void) setReturnToClass:(int)ret;
+//- (void) setLastController:(UIViewController *)uivc;
+//- (void) setReturnToClass:(int)ret;
 
 @property (nonatomic, strong) IBOutlet UIWindow *window;
 @property (nonatomic, strong) IBOutlet UINavigationController *navControl;

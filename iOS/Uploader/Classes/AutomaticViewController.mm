@@ -175,6 +175,7 @@ dataToBeOrdered, backFromQueue, f, fields;
             dataSetName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
             
             projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
+            NSLog(@"Automatic reading fields for key: %@", [NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projNum]);
             fields = [prefs objectForKey:[NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projNum]];
             
             // Set setup_complete key to false again, initialize the keep_step_2_enabled key to on

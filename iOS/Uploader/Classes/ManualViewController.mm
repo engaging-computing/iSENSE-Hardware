@@ -158,7 +158,7 @@
                                                                       message:nil
                                                                      delegate:self
                                                             cancelButtonTitle:@"Cancel"
-                                                            otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                                                            otherButtonTitles:@"Enter Project #", @"Browse", nil];
                     message.tag = MANUAL_MENU_PROJECT;
                     [message show];
                     
@@ -498,7 +498,7 @@
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                                       otherButtonTitles:@"Enter Project #", @"Browse", nil];
             message.tag = MANUAL_MENU_PROJECT;
             [message show];
             
@@ -561,34 +561,6 @@
             browseView.delegate = self;
             browsing = YES;
             [self.navigationController pushViewController:browseView animated:YES];
-            
-        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
-            
-           if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-        
-               if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-                   NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
-                   Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
-                   [dcad setLastController:self];
-                   [dcad setReturnToClass:DELEGATE_KEY_MANUAL];
-                   [[UIApplication sharedApplication] openURL:urlp2s];
-               } else {
-                   NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
-                   [[UIApplication sharedApplication] openURL:urlapp];
-               }
-           
-           } else {
-            
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
-                                                                  message:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Cancel"
-                                                        otherButtonTitles:nil];
-                
-                [message setAlertViewStyle:UIAlertViewStyleDefault];
-                [message show];
-                
-           }
             
         }
         
@@ -1020,31 +992,6 @@
     [message addSubview:spinner];
     [spinner startAnimating];
     return message;
-}
-
-- (BOOL) handleNewQRCode:(NSURL *)url {
-    
-    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-    NSString *proj = arr[2];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:proj forKeyPath:[StringGrabber grabString:@"key_proj_manual"]];
-    
-    projNum = [proj intValue];
-    projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", projNum]];
-    
-    if (browsing == YES) {
-        browsing = NO;
-        [self cleanRDSData];
-        [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
-    } else {
-        if (rds != nil && rds.doesHaveData)
-            [self fillDataFieldEntryList:projNum withData:[rds data] andResetGlobal:TRUE];
-        else
-            [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
-    }
-    
-    return YES;
 }
 
 // Save a data set so you don't have to upload it immediately

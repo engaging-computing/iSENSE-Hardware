@@ -260,7 +260,7 @@
                                                      message:nil
                                                     delegate:self
                                            cancelButtonTitle:@"Cancel"
-                                           otherButtonTitles:@"Enter Project #", @"Browse Projects", @"Scan QR Code", nil];
+                                           otherButtonTitles:@"Enter Project #", @"Browse Projects", nil];
                 message.tag = QUEUE_SELECT_PROJ;
                 [message show];
             }
@@ -315,8 +315,6 @@
             browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
             
-        } else if (buttonIndex == OPTION_SCAN_PROJECT_QR) {
-            [self.view makeWaffle:@"Scan QR Code not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
         }
         
     } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
@@ -364,20 +362,6 @@
         
         [self launchFieldMatchingViewControllerFromBrowse:TRUE];
     }
-}
-
-- (BOOL) handleNewQRCode:(NSURL *)url {
-//    
-//    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-//    NSString *exp = arr[2];
-//    
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]]; // if you uncomment this, make a new key_exp_manual
-//    
-//    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-//    [cell setExpNum:exp];
-//    
-    return YES;
 }
 
 // Dispose of any resources that can be recreated.
