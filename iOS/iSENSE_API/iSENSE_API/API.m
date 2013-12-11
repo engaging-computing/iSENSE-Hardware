@@ -909,13 +909,30 @@ static RPerson *currentUser;
  * @return A pretty formatted date and timestamp
  */
 -(NSString *)appendedTimeStamp {
-    NSDate *now = [NSDate date];
     
+    // get time and date
+    NSDate *now = [NSDate date];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
     
-    return [formatter stringFromDate:now];
+    // get seconds and microseconds using c structs
+    struct timeval time;
+    gettimeofday(&time, NULL);
+    int seconds = time.tv_sec % 60;
+    int microseconds = time.tv_usec;
+    NSString *secondStr = (seconds < 10) ? [NSString stringWithFormat:@"0%d", seconds] : [NSString stringWithFormat:@"%d", seconds];
+    
+    // format the timestamp
+    NSString *rawTime = [formatter stringFromDate:now];
+    NSArray *cmp = [rawTime componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+    
+    [formatter setDateFormat:@"HH:mm"];
+    rawTime = [formatter stringFromDate:now];
+    
+    NSString *timeStamp = [NSString stringWithFormat:@"%@ %@:%@.%d", cmp[0], rawTime, secondStr, microseconds];
+    
+    return timeStamp;
 }
 
 @end
