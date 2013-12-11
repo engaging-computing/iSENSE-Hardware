@@ -473,7 +473,8 @@
                                  destructiveButtonTitle:nil
                                  otherButtonTitles:@"Upload", @"Project", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-	[popupQuery showInView:self.view];
+	//[popupQuery showInView:self.view];
+    [popupQuery showInView:[UIApplication sharedApplication].keyWindow];
 }
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {

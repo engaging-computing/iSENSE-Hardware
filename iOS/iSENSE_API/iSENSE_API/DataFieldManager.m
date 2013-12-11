@@ -711,6 +711,10 @@
     return outData;
 }
 
+- (void) setOrder:(NSMutableArray *)newOrderFields {
+    order = [[NSMutableArray alloc] initWithArray:newOrderFields];
+}
+
 
 /******************************************************************/
 
