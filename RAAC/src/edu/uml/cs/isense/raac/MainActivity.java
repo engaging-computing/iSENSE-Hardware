@@ -89,6 +89,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.pinports.exceptions.NoConnectionException;
 import edu.uml.cs.isense.pinports.pincushion.BluetoothService;
 import edu.uml.cs.isense.pinports.pincushion.PinComm;
@@ -170,7 +171,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-		api = API.getInstance(getApplicationContext());
+		api = API.getInstance();
 
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
@@ -406,7 +407,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onStart() {
-		if (!loggedIn && api.hasConnectivity())
+		if (!loggedIn && Connection.hasConnectivity(getApplicationContext()))
 			new PerformLogin().execute();
 		super.onStart();
 	}
@@ -456,7 +457,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			if (loggedIn)
 				Toast.makeText(MainActivity.this, "Already logged in!",
 						Toast.LENGTH_SHORT).show();
-			else if (api.hasConnectivity())
+			else if (Connection.hasConnectivity(getApplicationContext()))
 				new PerformLogin().execute();
 		} else if (item.getItemId() == R.id.menu_settings) {
 			Intent i = new Intent(this, Preferences.class);
@@ -1112,7 +1113,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 
-			if (!loggedIn && api.hasConnectivity())
+			if (!loggedIn && Connection.hasConnectivity(mContext))
 				new PerformLogin().execute();
 
 			if (loggedIn) {
