@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -116,6 +117,7 @@ public class Main extends Activity implements LocationListener {
 	private static Camera mCamera;
     private CameraPreview mPreview;
     private FrameLayout preview;
+    
 
 
 	@Override
@@ -157,6 +159,7 @@ public class Main extends Activity implements LocationListener {
 		queueCount = (TextView) findViewById(R.id.queueCountLabel);
 
 		preview = (FrameLayout) findViewById(R.id.camera_preview);
+		preview.getLayoutParams().height = 0;
 		
 		takePicture = (Button) findViewById(R.id.takePicture);
 		takePicture.setOnClickListener(new OnClickListener() {
@@ -165,8 +168,6 @@ public class Main extends Activity implements LocationListener {
 			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View v) {
-				// TODO
-
 				// Check that a group name was entered, and a project was
 				// selected
 				if (name.getText().length() == 0) {
@@ -208,12 +209,17 @@ public class Main extends Activity implements LocationListener {
 					}
 
 					// Continuously take pictures
-				} else if (continuous == true) { // if continuous == true
+				} else if (continuous == true) { 
 					if (recording == false) {
 						//disable menu
 						useMenu = false;
 						if (android.os.Build.VERSION.SDK_INT >= 11)
 							invalidateOptionsMenu();
+						int dps = 176;
+						
+						final float scale = getResources().getDisplayMetrics().density;
+					    int pixels = (int) (dps * scale + 0.5f);
+						preview.getLayoutParams().height = pixels;
 						
 						takePicture.setBackgroundColor(0xFF00FF00);
 						takePicture.setTextColor(0xFF000000);
@@ -250,30 +256,10 @@ public class Main extends Activity implements LocationListener {
 
 	// continuously take pictures in AsyncTask (a seperate thread)
 	private class continuouslytakephotos extends AsyncTask<Void, Void, Boolean> {
-		Handler mHandler;
-		Runnable updateThread;
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			mHandler = new Handler(); 
-			
-			updateThread = new Runnable() {
-
-				@Override
-				public void run() {
-					curTime = System.currentTimeMillis();
-					
-					uploader.run();
-					uq.buildQueueFromFile();
-					w.make("Picture saved!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-					queueCount.setText(getResources()
-							.getString(R.string.queueCount) + uq.queueSize());
-					mCamera.startPreview();
-				}
-				
-			};
-			// this method will be running on UI thread
 			OrientationManager.disableRotation(Main.this);
 		}
 
@@ -286,50 +272,10 @@ public class Main extends Activity implements LocationListener {
 			// argument and u can access the parent class' variable url over
 			// here
 			
+			//TODO
 			
 			while (recording) {
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-//					final int cameraId = 0;
-//					if (safeCameraOpen(cameraId) == false) {
-//						Log.d("CameraMain", "Failed to open camera.");
-//						Boolean failed = false;
-//						recording = false;
-//						return failed;
-//					}// Open
-
-					Log.d("CameraMain", "Successfully opened camera.");
-					
-//					runOnUiThread(new Runnable() {
-//
-//						@Override
-//						public void run() {
-							Log.d("CameraMain", "Camera is: " + mCamera.toString());
-
-							
-							Log.d("CameraMain", "About to try to take a picture.");
-							
-							try {
-							    mCamera.takePicture(null, null, mPicture); // takes a picture
-							} catch (Exception e) {
-								Log.d("CameraMain", "Failed taking picture");
-								e.printStackTrace();
-								
-							}
-							
-							if (picture != null) {
-								Log.d("CameraMain", "Successfully captured picture.");						
-							}
-
-							mHandler.post(updateThread);
-						
-							
 				
-				} else {
-					// TODO
-					return null;
-				}
 				//sleep for interval as long as recording is equal to true
 				for(int i = 0; i < continuousInterval && recording == true; i++) {
 					try {
@@ -340,6 +286,52 @@ public class Main extends Activity implements LocationListener {
 						e.printStackTrace();
 					}
 				}
+				
+				//do not take one last picture when user pushes to stop recording
+				if(recording == false) {
+					return null;
+				}
+				
+				String state = Environment.getExternalStorageState();
+				if (Environment.MEDIA_MOUNTED.equals(state)) {
+
+					Log.d("CameraMain", "Camera is: " + mCamera.toString());
+					Log.d("CameraMain", "About to try to take a picture.");
+					
+					runOnUiThread(new Runnable() {
+					    public void run() {
+					    	try {
+							    mCamera.takePicture(null, null, mPicture); // takes a picture
+							} catch (Exception e) {
+								Log.d("CameraMain", "Failed taking picture");
+								e.printStackTrace();
+							}
+							
+							if (picture != null) {
+								Log.d("CameraMain", "Successfully captured picture.");						
+							}
+					    }
+					});
+					
+					curTime = System.currentTimeMillis();
+					uploader.run();
+					uq.buildQueueFromFile();
+		
+					runOnUiThread(new Runnable() {
+					    public void run() {
+					    	w.make("Picture saved!", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+					    	queueCount.setText(getResources()
+									.getString(R.string.queueCount) + uq.queueSize());
+					    	mCamera.stopPreview();
+							mCamera.startPreview();
+					    }
+					});
+
+				} else {
+					return null;
+				}
+				
+				
 			}
 			
 			
@@ -361,6 +353,7 @@ public class Main extends Activity implements LocationListener {
 			
 			OrientationManager.enableRotation(Main.this);
 			
+			preview.getLayoutParams().height = 0;
 			preview.removeView(mPreview);
 			preview.setVisibility(View.INVISIBLE);	
 			
@@ -375,7 +368,6 @@ public class Main extends Activity implements LocationListener {
 
 	private boolean safeCameraOpen(int id) {
 		boolean qOpened = false;
-		// TODO
 		try {
 			if (mCamera != null) {
 				mCamera.stopPreview();
@@ -405,28 +397,30 @@ public class Main extends Activity implements LocationListener {
 
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
-
+			//TODO
+			
+			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+			
+			if (picture == null) {
+            	Log.d("CameraMain", "picture is null");
+				return;
+			}
+			
 			Log.d("CameraMain", "PictureCallback");
-			FileOutputStream fos;
+			
             try {
-              fos = new FileOutputStream("test.jpeg");
+              FileOutputStream fos = new FileOutputStream(picture);
               fos.write(data);
               fos.close();
             }  catch (IOException e) {
               //do something about it
             }
 
-			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
-
-			if (picture == null) {
-            	Log.d("CameraMain", "picture is null");
-				return;
-			}
-			
 		}
 	};
 
 	/** Create a File for saving an image or video */
+	@SuppressLint("SimpleDateFormat")
 	private static File getOutputMediaFile(int type) {
 		// To be safe, you should check that the SDCard is mounted
 		// using Environment.getExternalStorageState() before doing this.
@@ -447,11 +441,12 @@ public class Main extends Activity implements LocationListener {
 		}
 
 		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		File mediaFile;
 		if (type == MEDIA_TYPE_IMAGE) {
 			mediaFile = new File(mediaStorageDir.getPath() + File.separator
-					+ "IMG_" + ".jpg");
-			// } else if(type == MEDIA_TYPE_VIDEO) {
+					+ "IMG_" + timeStamp+ ".jpg");
+			// } else if(type == MEDIA_TYPE_VIDEO) {  
 			// mediaFile = new File(mediaStorageDir.getPath() + File.separator +
 			// "VID_"+ timeStamp + ".mp4");
 		} else {
@@ -720,16 +715,12 @@ public class Main extends Activity implements LocationListener {
 
 			dataJSON.put(dataRow);
 
-			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText() // data
-																			// set
-																			// to
-																			// be
-																			// uploaded
+			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()
 					.toString() + ": " + descriptionStr,
 					makeThisDatePretty(curTime), experimentNum,
 					dataJSON.toString(), picture);
 
-			System.out.println("experimentNum = " + experimentNum);
+			System.out.println("projectNum = " + experimentNum);
 
 			uq.addDataSetToQueue(ds);
 

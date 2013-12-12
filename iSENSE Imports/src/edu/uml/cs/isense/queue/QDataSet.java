@@ -168,7 +168,9 @@ public class QDataSet implements Serializable {
 				break;
 
 			case BOTH:
+				System.out.println("Calling Upload Dataset");
 				dataSetID = uploadData();
+				System.out.println("Calling Upload Dataset Media");
 				dataSetID = UploadQueue.getAPI().uploadDataSetMedia(dataSetID, picture);
 				System.out.println("New id = " + dataSetID);
 				break;
