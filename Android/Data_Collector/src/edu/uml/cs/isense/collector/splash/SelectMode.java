@@ -24,6 +24,7 @@ import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.supplements.FileBrowser;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
@@ -51,7 +52,7 @@ public class SelectMode extends Activity {
 
 		mContext = this;
 		w = new Waffle(mContext);
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
@@ -99,8 +100,14 @@ public class SelectMode extends Activity {
 		csvUploader.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent iFileBrowse = new Intent(mContext, FileBrowser.class);
-				startActivityForResult(iFileBrowse, UPLOAD_CSV_REQUESTED);
+				if (!Connection.hasConnectivity(mContext))
+					w.make("You need to have internet connectivity to do this",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+				else {
+					Intent iFileBrowse = new Intent(mContext, FileBrowser.class);
+					startActivityForResult(iFileBrowse, UPLOAD_CSV_REQUESTED);
+				}
+				
 			}
 		});
 		String csvUploaderText = "<font COLOR=\"#0066FF\">"
@@ -144,7 +151,7 @@ public class SelectMode extends Activity {
 					return;
 				}
 
-				if (!api.hasConnectivity()) {
+				if (!Connection.hasConnectivity(mContext)) {
 					w.make("Cannot upload a .csv file with no internet connectivity",
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;

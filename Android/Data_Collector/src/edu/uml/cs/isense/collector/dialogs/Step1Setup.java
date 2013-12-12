@@ -65,7 +65,7 @@ public class Step1Setup extends Activity {
 
 		mContext = this;
 		w = new Waffle(this);
-		api = API.getInstance(getApplicationContext());
+		api = API.getInstance();
 		f = new Fields();
 		mPrefs = getSharedPreferences("PROJID", 0);
 		mEdit = mPrefs.edit();

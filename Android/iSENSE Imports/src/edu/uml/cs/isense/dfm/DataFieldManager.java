@@ -80,7 +80,7 @@ public class DataFieldManager extends Application {
 	// Static class function strictly for getting the field order of any
 	// project.  To only be used internally.
 	private static LinkedList<String> getOrder(int projID, API api, Context c) {
-		api = API.getInstance(c);
+		api = API.getInstance();
 		DataFieldManager d = new DataFieldManager(projID, api, c, null);
 		d.getOrderWithExternalAsyncTask();
 		return d.order;

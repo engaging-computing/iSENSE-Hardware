@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
 /**
@@ -53,7 +54,7 @@ public class Login extends Activity {
 		setContentView(R.layout.login_dialog);
 
 		baseContext = getBaseContext();
-		api = API.getInstance(baseContext);
+		api = API.getInstance();
 
 		username = (EditText) findViewById(R.id.edittext_username);
 		password = (EditText) findViewById(R.id.edittext_password);
@@ -101,7 +102,7 @@ public class Login extends Activity {
 	 */
 	private void showFailure() {
 
-		if (api.hasConnectivity()) {
+		if (Connection.hasConnectivity(baseContext)) {
 			message = MESSAGE_UNKNOWN_USER;
 		} else {
 			message = MESSAGE_NO_CONNECTION;
