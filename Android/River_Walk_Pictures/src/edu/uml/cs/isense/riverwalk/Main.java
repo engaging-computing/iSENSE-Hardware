@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -39,7 +38,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -47,6 +45,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -134,7 +133,7 @@ public class Main extends Activity implements LocationListener {
 
 		f = new Fields();
 
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(true);
 
 		uq = new UploadQueue("generalpictures", mContext, api);
@@ -679,7 +678,7 @@ public class Main extends Activity implements LocationListener {
 													// to be uploaded
 			JSONObject dataRow = new JSONObject();
 
-			if (!api.hasConnectivity()) {
+			if (!Connection.hasConnectivity(mContext)) {
 				experimentNum = "-1";
 			}
 
@@ -890,7 +889,7 @@ public class Main extends Activity implements LocationListener {
 			return;
 		}
 
-		if (api.hasConnectivity()) {
+		if (Connection.hasConnectivity(mContext)) {
 			new LoginTask().execute();
 
 		}

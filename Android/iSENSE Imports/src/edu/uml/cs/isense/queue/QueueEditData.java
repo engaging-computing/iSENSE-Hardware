@@ -53,7 +53,7 @@ public class QueueEditData extends Activity {
 		
 		fieldOrder = new ArrayList<RProjectField>();
 
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 
 		okay = (Button) findViewById(R.id.queueedit_data_okay);
 		cancel = (Button) findViewById(R.id.queueedit_data_cancel);

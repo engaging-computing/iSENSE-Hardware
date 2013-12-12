@@ -61,6 +61,7 @@ import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.proj.Setup;
@@ -127,7 +128,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		mContext = this;
 
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(Welcome.useDev);
 
 		// Action bar customization for API >= 14
@@ -304,7 +305,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void fillDataFieldEntryList(int projID) {
 
 		if (fieldOrder.size() == 0) {
-			if (api.hasConnectivity()) {
+			if (Connection.hasConnectivity(mContext)) {
 				w.make("Project not found or has no fields",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
