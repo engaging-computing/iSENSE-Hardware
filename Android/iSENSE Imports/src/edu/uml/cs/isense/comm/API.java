@@ -1,5 +1,3 @@
-// VERSION 3.1c
-
 package edu.uml.cs.isense.comm;
 
 import java.io.BufferedInputStream;
@@ -49,6 +47,10 @@ import edu.uml.cs.isense.objects.RTutorial;
  */
 
 public class API {
+	private String version_major = "3";
+	private String version_minor = "1c";
+	private String version;
+	
 	private static API instance = null;
 	private String baseURL = "";
 	private final String publicURL = "http://129.63.16.128";
@@ -927,6 +929,16 @@ public class API {
 	    else microString = "" + rMicroseconds;
 		
 		return " - " + dateFormat.format(cal.getTime()) + microString;
+	}
+	
+	/**
+	 * Gets the current API version
+	 * 
+	 * @return API version in MAJOR.MINOR format
+	 */
+	public String getVersion() {
+		version = version_major + "." + version_minor;		
+		return version;
 	}
 
 }
