@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.PixelFormat;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,6 +33,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
     	 
+    	// Set android picture size (continuous pictures only)
+    	Parameters parameters = mCamera.getParameters();
+    	parameters.setPictureSize(2048, 1232);
+    	mCamera.setParameters(parameters);
     	
     	if (holder == null){
     		Log.d("surfaceCreated", "holder is null");
