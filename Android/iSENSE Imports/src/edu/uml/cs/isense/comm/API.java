@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Random;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -29,9 +30,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
@@ -49,11 +47,14 @@ import edu.uml.cs.isense.objects.RTutorial;
  */
 
 public class API {
+	private String version_major = "3";
+	private String version_minor = "1c";
+	private String version;
+	
 	private static API instance = null;
 	private String baseURL = "";
 	private final String publicURL = "http://129.63.16.128";
 	private final String devURL = "http://129.63.16.30";
-	private Context context;
 	String authToken = "";
 	RPerson currentUser;
 	
@@ -77,11 +78,10 @@ public class API {
 	 * 
 	 * @return current or new API
 	 */
-	public static API getInstance(Context c) {
+	public static API getInstance() {
 		if(instance == null) {
 			instance = new API();
 		}
-		instance.context = c;
 		return instance;
 	}
 
@@ -94,7 +94,8 @@ public class API {
 	 */
 	public boolean createSession(String username, String password) {
 		try {
-			String result = makeRequest(baseURL, "login", "username_or_email="+URLEncoder.encode(username, "UTF-8")+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
+			String result = makeRequest(baseURL, "login", "username_or_email="+URLEncoder.encode(username, "UTF-8")
+					+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
 			System.out.println(result);
 			JSONObject j =  new JSONObject(result);
 			
@@ -650,6 +651,8 @@ public class API {
 	public int uploadProjectMedia(int projectId, File mediaToUpload) {
 		try {
 			URL url = new URL(baseURL+"/media_objects/saveMedia/project/"+projectId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&non_wys=true");
+			System.out.println("Connect to: " + url);
+			
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
@@ -685,9 +688,20 @@ public class API {
 					i = in.read();
 				}
 				String output = bo.toString();
-				
-				int mediaObjID = Integer.parseInt(output);
-				return mediaObjID;
+				System.out.println("Returning from uploadDataSetMedia: " + output);
+				try {
+					JSONObject jobj = new JSONObject(output);
+					int mediaObjID = jobj.getInt("id");
+					return mediaObjID;
+				} catch (JSONException e) {
+					System.err.println("UploadProjectMedia: exception formatting JSON:");
+					e.printStackTrace();
+					return -1;
+				} catch (Exception e) {
+					System.err.println("UploadProjectMedia: generic exception:");
+					e.printStackTrace();
+					return -1;
+				}
 			} catch (IOException e) {
 				return -1;
 			}  catch (NumberFormatException e) {
@@ -712,6 +726,8 @@ public class API {
 	public int uploadDataSetMedia(int dataSetId, File mediaToUpload) {
 		try {
 			URL url = new URL(baseURL+"/media_objects/saveMedia/data_set/"+dataSetId+"?authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&non_wys=true");
+			System.out.println("Connect to: " + url);
+			
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setDoOutput(true);
 			connection.setRequestMethod("POST");
@@ -748,13 +764,25 @@ public class API {
 					i = in.read();
 				}
 				String output = bo.toString();
-
-				int mediaObjID = Integer.parseInt(output);
-				return mediaObjID;
-				
+				System.out.println("Returning from uploadDataSetMedia: " + output);
+				try {
+					JSONObject jobj = new JSONObject(output);
+					int mediaObjID = jobj.getInt("id");
+					return mediaObjID;
+				} catch (JSONException e) {
+					System.err.println("UploadDataSetMedia: exception formatting JSON:");
+					e.printStackTrace();
+					return -1;
+				} catch (Exception e) {
+					System.err.println("UploadDataSetMedia: generic exception:");
+					e.printStackTrace();
+					return -1;
+				}
 			} catch (IOException e) {
+				System.out.println("Returning -1 from IOException in uploadDataSetMedia");
 				return -1;
 			} catch (NumberFormatException e) {
+				System.out.println("Returning -1 from NumberFormatException in uploadDataSetMedia");
 				return -1;
 			} finally {
 				in.close();
@@ -762,6 +790,7 @@ public class API {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("Returning -1 from who knows why in uploadDataSetMedia");
 		return -1;
 	}
 
@@ -853,20 +882,6 @@ public class API {
 	}
 
 	/**
-	 * Returns status on whether you are connected to the Internet.
-	 * 
-	 * @return current connection status
-	 */
-	public boolean hasConnectivity() {
-
-		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-		NetworkInfo info = cm.getActiveNetworkInfo();
-		return (info != null && info.isConnected());
-
-	}
-
-	/**
 	 * Reformats a row-major JSONObject into a column-major one
 	 * 
 	 * @param original The row-major formatted JSONObject
@@ -901,12 +916,29 @@ public class API {
 	 *
 	 * @return A pretty formatted date and timestamp
 	 */
-	public String appendedTimeStamp() {
+	private String appendedTimeStamp() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
-	            "MM/dd/yy, HH:mm:ss", Locale.US);
+	            "MM/dd/yy, HH:mm:ss.SSS", Locale.US);
 	    Calendar cal = Calendar.getInstance();
+	    
+	    Random r = new Random();
+	    int rMicroseconds = r.nextInt(1000);
+	    String microString = "";
+	    if (rMicroseconds < 10) microString = "00" + rMicroseconds;
+	    else if (rMicroseconds < 100) microString = "0" + rMicroseconds;
+	    else microString = "" + rMicroseconds;
 		
-		return " - " + dateFormat.format(cal.getTime());
+		return " - " + dateFormat.format(cal.getTime()) + microString;
+	}
+	
+	/**
+	 * Gets the current API version
+	 * 
+	 * @return API version in MAJOR.MINOR format
+	 */
+	public String getVersion() {
+		version = version_major + "." + version_minor;		
+		return version;
 	}
 
 }

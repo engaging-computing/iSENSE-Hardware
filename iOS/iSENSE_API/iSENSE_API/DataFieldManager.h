@@ -38,6 +38,7 @@
 - (NSMutableDictionary *) putData;
 - (NSMutableArray *) putDataForNoProjectID;
 + (NSMutableArray *) reOrderData:(NSMutableArray *)data forProjectID:(int)projectID API:(API *)isenseAPI andFieldOrder:(NSMutableArray *)fieldOrder;
+- (void) setOrder:(NSMutableArray *)newOrderFields;
 
 /* old methods */
 - (void) setEnabledField:(bool)value atIndex:(int)index;

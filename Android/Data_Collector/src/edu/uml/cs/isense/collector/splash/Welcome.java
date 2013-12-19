@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -42,7 +43,7 @@ public class Welcome extends Activity {
 
 		mContext = this;
 		w = new Waffle(mContext);
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(useDev);
 		
 		mPrefs = getSharedPreferences("PROJID_WELCOME", 0);
@@ -74,7 +75,7 @@ public class Welcome extends Activity {
 		selectProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (!api.hasConnectivity())
+				if (!Connection.hasConnectivity(mContext))
 					w.make("You need to have internet connectivity to do this",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				else {
@@ -92,7 +93,7 @@ public class Welcome extends Activity {
 		createProject.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (!api.hasConnectivity())
+				if (!Connection.hasConnectivity(mContext))
 					w.make("You need to have internet connectivity to do this",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				else {
@@ -132,7 +133,15 @@ public class Welcome extends Activity {
 	    	case 7:
 	    		w.make("Now in " + other + " mode");
 	    		useDev = !useDev;
-	    		api.useDev(useDev);
+	    		if (api.getCurrentUser() != null) {
+	    			Runnable r = new Runnable() {
+	    				public void run() {
+	    					api.deleteSession();
+	    					api.useDev(useDev);
+	    				}
+	    			};
+	    			new Thread(r).start();
+	    		}
 	    		actionBarTapCount = 0;
 	    		break;
 	    	}

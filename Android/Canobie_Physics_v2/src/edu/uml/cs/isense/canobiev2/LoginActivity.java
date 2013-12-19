@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.canobiev2;
 
+import android.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
 public class LoginActivity extends Activity {
@@ -38,7 +40,7 @@ public class LoginActivity extends Activity {
 
 		mContext = this;
 
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 
 		username = (EditText) findViewById(R.id.usernameInput);
 		password = (EditText) findViewById(R.id.passwordInput);
@@ -71,7 +73,7 @@ public class LoginActivity extends Activity {
 
 	private void showFailure() {
 
-		if (api.hasConnectivity()) {
+		if (Connection.hasConnectivity(mContext)) {
 			message = unknownUser;
 		} else {
 			message = noConnection;

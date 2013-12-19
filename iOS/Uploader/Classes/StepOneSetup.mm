@@ -271,7 +271,7 @@
                                          message:nil
                                         delegate:self
                                cancelButtonTitle:@"Cancel"
-                               otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                               otherButtonTitles:@"Enter Project #", @"Browse", nil];
     message.tag = MENU_PROJECT;
     [message show];
 }
@@ -324,32 +324,6 @@
             browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
             
-        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
-            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-                
-                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
-                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
-                    [dcad setLastController:self];
-                    [dcad setReturnToClass:DELEGATE_KEY_AUTOMATIC];
-                    [[UIApplication sharedApplication] openURL:urlp2s];
-                } else {
-                    NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
-                    [[UIApplication sharedApplication] openURL:urlapp];
-                }
-                
-            } else {
-                
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
-                                                                  message:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Cancel"
-                                                        otherButtonTitles:nil];
-                
-                [message setAlertViewStyle:UIAlertViewStyleDefault];
-                [message show];
-                
-            }
         }
         
     } else if (actionSheet.tag == PROJ_MANUAL) {
@@ -570,29 +544,6 @@
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
-}
-
-- (BOOL) handleNewQRCode:(NSURL *)url {
-    
-//    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-//    NSString *exp = arr[2];
-//    
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_proj_automatic"]];
-//
-//    projNumInteger = [exp integerValue];
-//    
-//    NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", exp];
-//    [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
-//    
-//    [self rememberPrefs];
-//    
-//    // launch the sensor selection dialog
-//    SensorSelection *ssView = [[SensorSelection alloc] init];
-//    ssView.title = @"Sensor Selection";
-//    [self.navigationController pushViewController:ssView animated:YES];
-    
-    return YES;
 }
 
 - (void) rememberPrefs {

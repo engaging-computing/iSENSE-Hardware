@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.FieldMatching;
 import edu.uml.cs.isense.dfm.Fields;
@@ -148,7 +149,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		mContext = this;
 		w = new Waffle(mContext);
 
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 
 		cfd = new CachedFieldDatabase();
 
@@ -225,7 +226,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		if (id == R.id.upload) {
 
 			if (allSelectedDataSetsHaveProjects()) {
-				if (!api.hasConnectivity()) {
+				if (!Connection.hasConnectivity(mContext)) {
 					w.make("No internet connection found", Waffle.IMAGE_X);
 					return;
 				}
@@ -387,6 +388,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					data = new JSONObject(uploadSet.getData());
 				} catch (JSONException e) {
 					data = null;
+				} catch (NullPointerException npe) { // TODO - what is causing this npe?
+					data = null;
 				} finally {
 					if (data != null) {
 						dataSetUploadStatus.add(uploadSet.getName() + 
@@ -476,7 +479,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 				case QueueAlter.SELECT_PROJECT:
 
-					if (api.hasConnectivity()) {
+					if (Connection.hasConnectivity(mContext)) {
 						Intent iProj = new Intent(mContext, Setup.class);
 						iProj.putExtra("from_where", "queue");
 						startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
@@ -644,9 +647,11 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			Intent iFieldMatch = new Intent(mContext, FieldMatching.class);
 
-			String[] dfmOrderList = dfm.convertOrderToStringArray();
+			String[] dfmOrderList = dfm.convertLinkedListToStringArray(dfm.getOrderList());
+			String[] dfmRealOrderList = dfm.convertLinkedListToStringArray(dfm.getRealOrderList());
 
 			iFieldMatch.putExtra(FieldMatching.DFM_ORDER_LIST, dfmOrderList);
+			iFieldMatch.putExtra(FieldMatching.DFM_REAL_ORDER_LIST, dfmRealOrderList);
 			iFieldMatch.putExtra(FieldMatching.SHOULD_BUILD_PREFS_STRING, false);
 			startActivityForResult(iFieldMatch, FIELD_MATCHING_REQUESTED);
 		}

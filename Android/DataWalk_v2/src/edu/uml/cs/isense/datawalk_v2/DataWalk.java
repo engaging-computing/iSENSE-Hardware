@@ -44,6 +44,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.ClassroomMode;
 import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.credentials.Login;
@@ -216,7 +217,7 @@ public class DataWalk extends Activity implements LocationListener,
 				if (namePrefs
 						.getBoolean(
 								EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
-								true) && api.hasConnectivity()) {
+								true) && Connection.hasConnectivity(mContext)) {
 					RPerson user = api.getCurrentUser();
 					if (user != null) {
 						firstName = user.name;
@@ -454,7 +455,7 @@ public class DataWalk extends Activity implements LocationListener,
 		// have connectivity
 		// if we have connectivity: user can change ProjectNumber, set it
 		// originally to the user's last choice, and automatically login
-		if (api.hasConnectivity()) {
+		if (Connection.hasConnectivity(this)) {
 			if (android.os.Build.VERSION.SDK_INT >= 11)
 				invalidateOptionsMenu();
 			//setProjectIdtoUsersChoice();
@@ -776,7 +777,7 @@ public class DataWalk extends Activity implements LocationListener,
 		w = new Waffle(mContext);
 
 		// iSENSE API
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(useDev);
 
 		// Upload Queue
@@ -820,7 +821,7 @@ public class DataWalk extends Activity implements LocationListener,
 			// actually valid.
 		} else if (requestCode == PROJECT_REQUESTED) {
 
-			if (api.hasConnectivity()) {
+			if (Connection.hasConnectivity(mContext)) {
 				if (resultCode == RESULT_OK) {
 					
 					setProjectIDFromSetupClass();
@@ -1133,7 +1134,15 @@ public class DataWalk extends Activity implements LocationListener,
 	    	case 7:
 	    		w.make("Now in " + other + " mode");
 	    		useDev = !useDev;
-	    		api.useDev(useDev);
+	    		if (api.getCurrentUser() != null) {
+	    			Runnable r = new Runnable() {
+	    				public void run() {
+	    					api.deleteSession();
+	    					api.useDev(useDev);
+	    				}
+	    			};
+	    			new Thread(r).start();
+	    		}
 	    		actionBarTapCount = 0;
 	    		onCreateInit();
 	    		break;
@@ -1187,7 +1196,7 @@ public class DataWalk extends Activity implements LocationListener,
 		protected Void doInBackground(Void... arg0) {
 
 			// If we have connectivity, try to login to iSENSE
-			if (connect = api.hasConnectivity()) {
+			if (connect = Connection.hasConnectivity(mContext)) {
 				success = api.createSession(loginName, loginPass);
 			}
 

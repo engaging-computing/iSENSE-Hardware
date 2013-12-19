@@ -19,5 +19,6 @@
 @dynamic name;
 @dynamic hasInitialProj;
 @dynamic parentName;
+@dynamic fields;
 
 @end

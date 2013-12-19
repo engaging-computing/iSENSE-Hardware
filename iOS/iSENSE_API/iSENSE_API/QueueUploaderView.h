@@ -18,6 +18,9 @@
 #import "QueueConstants.h"
 #import "QueueCell.h"
 
+#import "DataFieldManager.h"
+#import "FieldMatchingViewController.h"
+
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVCaptureDevice.h>
 
@@ -40,7 +43,6 @@
 - (IBAction) upload:(id)sender;
 
 - (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer;
-- (BOOL) handleNewQRCode:(NSURL *)url;
 - (id)   initWithParentName:(NSString *)parentName;
 
 @property (nonatomic, assign) API *api;
