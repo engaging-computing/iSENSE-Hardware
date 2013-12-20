@@ -35,7 +35,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     	 
     	// Set android picture size (continuous pictures only)
     	Parameters parameters = mCamera.getParameters();
-    	parameters.setPictureSize(2048, 1232);
+    	parameters.setPictureSize(2048, 1536);
     	mCamera.setParameters(parameters);
     	
     	if (holder == null){
