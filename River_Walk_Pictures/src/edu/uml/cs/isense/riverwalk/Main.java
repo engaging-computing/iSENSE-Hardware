@@ -1,12 +1,12 @@
 package edu.uml.cs.isense.riverwalk;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -42,7 +43,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -50,6 +50,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -137,7 +138,7 @@ public class Main extends Activity implements LocationListener {
 
 		f = new Fields();
 
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(true);
 
 		uq = new UploadQueue("generalpictures", mContext, api);
@@ -204,22 +205,10 @@ public class Main extends Activity implements LocationListener {
 						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-						
-						Bitmap bmp;
-						try {
-							bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
-							int h = 2048; // height in pixels
-							int w = 1232; // width in pixels    
-							Bitmap scaled = Bitmap.createScaledBitmap(bmp, h, w, true);
-							//imageUri = scaled;
-						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
 
 						OrientationManager.disableRotation(Main.this);
 						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+						
 					} else {
 						w.make("Cannot write to external storage.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
@@ -430,7 +419,8 @@ public class Main extends Activity implements LocationListener {
               fos.write(data);
               fos.close();
             }  catch (IOException e) {
-              //do something about it
+            	Log.e("onPictureTaken in main",
+						"failed to save picture");
             }
 
 		}
@@ -607,6 +597,22 @@ public class Main extends Activity implements LocationListener {
 	@SuppressLint("NewApi")
 	public static File convertImageUriToFile(Uri imageUri) {
 
+		Bitmap bmp = null;
+		Bitmap scaled = null;
+		try {
+			bmp = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(imageUri));
+			int h = 1536;  // height in pixels
+			int w = 2048; // width in pixels    
+			scaled = Bitmap.createScaledBitmap(bmp, h, w, true);
+			//imageUri = scaled;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
 		int apiLevel = getApiLevel();
 		if (apiLevel >= 11) {
 
@@ -629,7 +635,37 @@ public class Main extends Activity implements LocationListener {
 			if (cursor.moveToFirst()) {
 				@SuppressWarnings("unused")
 				String orientation = cursor.getString(orientation_ColumnIndex);
-				return new File(cursor.getString(file_ColumnIndex));
+				
+				//create a file to write bitmap data
+				File f = new File(cursor.getString(file_ColumnIndex));
+				//Convert bitmap to byte array
+		
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				scaled.compress(CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+				byte[] bitmapdata = bos.toByteArray();
+				try {
+					bos.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				//write the bytes in file
+				FileOutputStream fos;
+				try {
+					fos = new FileOutputStream(f);
+					fos.write(bitmapdata);
+					fos.close();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				return f;
+
 			}
 			return null;
 
@@ -695,7 +731,7 @@ public class Main extends Activity implements LocationListener {
 													// to be uploaded
 			JSONObject dataRow = new JSONObject();
 
-			if (!api.hasConnectivity()) {
+			if (!Connection.hasConnectivity(mContext)) {
 				experimentNum = "-1";
 			}
 
@@ -767,6 +803,7 @@ public class Main extends Activity implements LocationListener {
 
 			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
+
 				picture = convertImageUriToFile(imageUri);
 
 				uq.buildQueueFromFile();
@@ -906,7 +943,7 @@ public class Main extends Activity implements LocationListener {
 			return;
 		}
 
-		if (api.hasConnectivity()) {
+		if (Connection.hasConnectivity(mContext)) {
 			new LoginTask().execute();
 
 		}
