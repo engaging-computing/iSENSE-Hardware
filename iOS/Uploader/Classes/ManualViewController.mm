@@ -278,12 +278,12 @@
             if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
                 if (keyboardDismissProper)
                     [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + KEY_OFFSET_SCROLL_PORT_IPHONE)];
-                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_PORT_IPHONE,
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_PORT_IPHONE+15,
                                               self.view.frame.size.width, self.view.frame.size.height);
             } else {
                 if (keyboardDismissProper)
-                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + KEY_OFFSET_SCROLL_LAND_IPHONE)];
-                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_LAND_IPHONE,
+                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + KEY_OFFSET_SCROLL_LAND_IPHONE-60)];
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_LAND_IPHONE+40,
                                              self.view.frame.size.width, self.view.frame.size.height);
             }
         }
@@ -315,7 +315,7 @@
                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_PORT_IPHONE)];
                 } else {
                     if(!keyboardDismissProper)
-                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPHONE)];
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPHONE+60)];
                 }
             }
         } else {
@@ -821,7 +821,7 @@
                     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT_IPAD)];
                     else
-                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT_IPHONE)];
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT_IPHONE)];
                 } else {
                     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - LANDSCAPE_BOTTOM_CUT_IPAD)];
@@ -949,9 +949,9 @@
             }
         } else {
             if (type == UI_FIELDNAME) {
-                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_LABEL_HEIGHT);
+                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE-100, SCROLLVIEW_LABEL_HEIGHT);
             } else {
-                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_TEXT_HEIGHT);
+                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE-100, SCROLLVIEW_TEXT_HEIGHT);
             }
         }
     }
