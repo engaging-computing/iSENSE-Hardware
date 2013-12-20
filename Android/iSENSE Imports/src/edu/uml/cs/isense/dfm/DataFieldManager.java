@@ -203,7 +203,7 @@ public class DataFieldManager extends Application {
 	 * 
 	 * @return The row of data in the form of a JSONObject.
 	 */
-	public JSONObject putData() {
+	public JSONObject putData() { // TODO with API upload update... figure this out. maybe some type of ID array
 
 		JSONObject dataJSON = new JSONObject();
 
@@ -714,7 +714,7 @@ public class DataFieldManager extends Application {
 	 * 		
 	 */
 	public static String reOrderData(JSONArray data, String projID, API api,
-			Context c, LinkedList<String> fieldOrder) {
+			Context c, LinkedList<String> fieldOrder) { // TODO with the API upload update, label fields with their field_id instead
 		JSONArray row, outData = new JSONArray();
 		JSONObject outRow;
 		int len = data.length();
@@ -923,7 +923,7 @@ public class DataFieldManager extends Application {
 		}
 		
 	}
-
+	// TODO with API upload update, going to need to figure out how to track field_id
 	private void getProjectFieldOrder() {
 		for (RProjectField field : projFields) {
 

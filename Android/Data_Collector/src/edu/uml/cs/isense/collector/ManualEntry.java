@@ -323,7 +323,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		projectLabel.setText(getResources().getString(R.string.usingProject)
 				+ projID);
 
-		int tagIndex = 0;
+		int tagIndex = 0; // TODO with API update for uploading data, use field.field_id instead of tagIndex
 
 		for (RProjectField projField : fieldOrder) {
 

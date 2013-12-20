@@ -481,10 +481,11 @@
 }
 
 - (IBAction) mediaOnClick:(id)sender {
-    
+    [self.view makeWaffle:@"Feature to be implemented in future release" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
+    /*
     if (![self startCameraControllerFromViewController:self usingDelegate:self])
         [self.view makeWaffle:@"No camera found." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-
+     */
 }
 
 - (IBAction) displayMenu:(id)sender {
