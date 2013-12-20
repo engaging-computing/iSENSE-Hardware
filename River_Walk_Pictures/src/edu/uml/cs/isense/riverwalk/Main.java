@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.riverwalk;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
@@ -203,9 +205,18 @@ public class Main extends Activity implements LocationListener {
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 						
-//						int h = 48; // height in pixels
-//						int w = 48; // width in pixels    
-//						Bitmap scaled = Bitmap.createScaledBitmap(largeBitmap, h, w, true);
+						Bitmap bmp;
+						try {
+							bmp = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+							int h = 2048; // height in pixels
+							int w = 1232; // width in pixels    
+							Bitmap scaled = Bitmap.createScaledBitmap(bmp, h, w, true);
+							//imageUri = scaled;
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
 
 						OrientationManager.disableRotation(Main.this);
 						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
