@@ -40,9 +40,11 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -167,6 +169,9 @@ public class Main extends Activity implements LocationListener {
 		preview.getLayoutParams().height = 0;
 		
 		takePicture = (Button) findViewById(R.id.takePicture);
+		if(continuous == true){
+			takePicture.setText(R.string.takePicContinuous);
+		}
 		takePicture.setOnClickListener(new OnClickListener() {
 
 			// Push take picture button
@@ -213,6 +218,8 @@ public class Main extends Activity implements LocationListener {
 						w.make("Cannot write to external storage.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					}
+					
+					OrientationManager.enableRotation(Main.this);
 
 					// Continuously take pictures
 				} else if (continuous == true) { 
@@ -277,9 +284,7 @@ public class Main extends Activity implements LocationListener {
 			// do your long running http tasks here,you dont want to pass
 			// argument and u can access the parent class' variable url over
 			// here
-			
-			//TODO
-			
+						
 			while (recording) {
 				
 				//sleep for interval as long as recording is equal to true
@@ -369,6 +374,8 @@ public class Main extends Activity implements LocationListener {
 //			mCamera.stopPreview();
 			mCamera.release();
 			mCamera = null;
+			
+			OrientationManager.enableRotation(Main.this);
 		}
 	}
 
@@ -388,6 +395,17 @@ public class Main extends Activity implements LocationListener {
 			Log.d("CameraMain", "Camera info cameras " + c.toString());
 			mCamera = Camera.open(id);
 			
+			Display display = getWindowManager().getDefaultDisplay();
+			int rotation = display.getRotation();
+			
+			if (rotation == Surface.ROTATION_0){
+		        mCamera.setDisplayOrientation(90);
+			} else if (rotation == Surface.ROTATION_90) {
+				mCamera.setDisplayOrientation(0);
+			} else if (rotation == Surface.ROTATION_270) {
+				mCamera.setDisplayOrientation(180);
+			}
+			
 			Log.d("CameraMain", "Camera is: " + mCamera.toString());
 			qOpened = (mCamera != null);
 		} catch (Exception e) {
@@ -403,7 +421,6 @@ public class Main extends Activity implements LocationListener {
 
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
-			//TODO
 			
 			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
 			
@@ -462,6 +479,7 @@ public class Main extends Activity implements LocationListener {
 
 		return mediaFile;
 	}
+	
 
 	// double tap back button to exit
 	@Override
@@ -606,7 +624,6 @@ public class Main extends Activity implements LocationListener {
 			scaled = Bitmap.createScaledBitmap(bmp, h, w, true);
 			//imageUri = scaled;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -646,7 +663,6 @@ public class Main extends Activity implements LocationListener {
 				try {
 					bos.close();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
@@ -657,10 +673,8 @@ public class Main extends Activity implements LocationListener {
 					fos.write(bitmapdata);
 					fos.close();
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
