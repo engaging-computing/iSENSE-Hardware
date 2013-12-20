@@ -21,6 +21,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
@@ -200,6 +201,10 @@ public class Main extends Activity implements LocationListener {
 						Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+						
+//						int h = 48; // height in pixels
+//						int w = 48; // width in pixels    
+//						Bitmap scaled = Bitmap.createScaledBitmap(largeBitmap, h, w, true);
 
 						OrientationManager.disableRotation(Main.this);
 						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
