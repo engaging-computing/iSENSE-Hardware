@@ -141,7 +141,9 @@ public class Welcome extends Activity {
 	    				}
 	    			};
 	    			new Thread(r).start();
-	    		}
+	    		} else
+	    			api.useDev(useDev);
+	    		
 	    		actionBarTapCount = 0;
 	    		break;
 	    	}
