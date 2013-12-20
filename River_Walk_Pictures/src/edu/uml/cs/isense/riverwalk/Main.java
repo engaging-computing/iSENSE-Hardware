@@ -413,7 +413,8 @@ public class Main extends Activity implements LocationListener {
               fos.write(data);
               fos.close();
             }  catch (IOException e) {
-              //do something about it
+            	Log.e("onPictureTaken in main",
+						"failed to save picture");
             }
 
 		}
