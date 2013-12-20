@@ -1,10 +1,8 @@
 package edu.uml.cs.isense.riverwalk.dialogs;
 
 import java.io.IOException;
-import java.util.List;
 
 import android.content.Context;
-import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.util.Log;
@@ -20,7 +18,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 	public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
-        mCamera.setDisplayOrientation(90);
+        
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
         mHolder = getHolder();

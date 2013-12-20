@@ -43,7 +43,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:paddingTop="12dip"
+                    android:paddingTop="12dp"
+                    android:paddingBottom = "15dp"
                     android:text="@string/firstName"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
@@ -60,14 +61,14 @@
                     android:singleLine="true"
                     android:textColor="@android:color/black"
                     android:textCursorDrawable="@null" />
-                
+
                  <FrameLayout
-			    android:id="@+id/camera_preview"
-			    android:layout_width="176dp"
-			    android:layout_height="144dp"
-			    android:layout_gravity="center"
-			    android:layout_below="@+id/name"/>   
-			    
+                     android:id="@+id/camera_preview"
+                     android:layout_width="176dp"
+                     android:layout_height="144dp"
+                     android:layout_below="@+id/nameLabel"
+                     android:layout_centerHorizontal="true" >
+                 </FrameLayout>
                  
             </RelativeLayout>
 
