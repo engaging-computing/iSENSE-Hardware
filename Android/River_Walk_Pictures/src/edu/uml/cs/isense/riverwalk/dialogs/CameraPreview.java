@@ -31,11 +31,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
-    	 
+    	
     	// Set android picture size (continuous pictures only)
-    	Parameters parameters = mCamera.getParameters();
-    	parameters.setPictureSize(2048, 1536);
-    	mCamera.setParameters(parameters);
+    	setBestPictureSize();
     	
     	if (holder == null){
     		Log.d("surfaceCreated", "holder is null");
@@ -50,6 +48,48 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
         
 
+    }
+    
+    /**
+     * Try to get the best picture size with width or height 
+     * no greater than 1024.
+     */
+    private void setBestPictureSize() {
+    	
+    	final int MAX = 1024;
+    	int mHeight = 0, mWidth = 0;
+    	
+    	Parameters parameters = mCamera.getParameters();
+
+    	for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+    		int h = size.height, w = size.width;
+    		
+    		// If we don't have a height/width yet, use this one by default and continue
+    		if (mHeight == 0 || mWidth == 0) {
+    			mHeight = h;
+    			mWidth  = w;
+    			continue;
+    		}
+    		
+    		// If this height/width is better but still under MAX, use it
+    		if ((h <= MAX && w <= MAX) && (h >= mHeight || w >= mWidth)) {
+    			mHeight = h;
+    			mWidth  = w;
+    			continue;
+    		}
+    		
+    		// To make this loop sane, once we get past 2*MAX, stop the loop just
+    		// in case we have many, many greater sizes that we don't care about.
+    		if (h >= (2*MAX) || w >= (2*MAX))
+    			break;
+    		
+    	}
+    	
+    	System.out.println("Width: " + mWidth + ", Height: " + mHeight);
+    	
+    	// Finally, set our camera to use the best supported size we found
+    	parameters.setPictureSize(mWidth, mHeight);
+    	mCamera.setParameters(parameters);
     }
 
     @Override

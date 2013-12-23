@@ -255,22 +255,6 @@ static RPerson *currentUser;
 }
 
 /**
- * Returns the correct string according to the given SortType.
- *
- * @param sort
- * @return NSString of SortType
- */
--(NSString *)getSortType:(SortType)sort {
-    switch (sort) {
-        case SORT_RATING: return @"RATING";
-        case CREATED_AT_DESC: return @"created_at%20DESC";
-        case CREATED_AT_ASC: return @"created_at%20ASC";
-        case UPDATED_AT_DESC: return @"updated_at%20DESC";
-        case UPDATED_AT_ASC: return @"updated_at%20ASC";
-    }
-}
-
-/**
  * 	Retrieves multiple projects off of iSENSE.
  *
  * @param page Which page of results to start from. 1-indexed
@@ -282,9 +266,29 @@ static RPerson *currentUser;
 -(NSArray *)getProjectsAtPage:(int)page withPageLimit:(int)perPage withFilter:(SortType)sort andQuery:(NSString *)search {
     NSMutableArray *results = [[NSMutableArray alloc] init];
     
-    NSString *sortMode = [self getSortType:sort];
+    NSString *sortMode = [[NSString alloc] init];
+    NSString *order = [[NSString alloc] init];
+    switch (sort) {
+        case CREATED_AT_DESC:
+            sortMode = @"created_at";
+            order = @"DESC";
+            break;
+        case CREATED_AT_ASC:
+            sortMode = @"created_at";
+            order = @"ASC";
+            break;
+        case UPDATED_AT_DESC:
+            sortMode = @"updated_at";
+            order = @"DESC";
+            break;
+        case UPDATED_AT_ASC:
+            sortMode = @"updated_at";
+            order = @"ASC";
+            break;
+    }
     
-    NSString *parameters = [NSString stringWithFormat:@"page=%d&per_page=%d&sort=%s&search=%s", page, perPage, sortMode.UTF8String, search.UTF8String];
+    NSString *parameters = [NSString stringWithFormat:@"page=%d&per_page=%d&sort=%s&order=%s&search=%s",
+                            page, perPage, sortMode.UTF8String, order.UTF8String, search.UTF8String];
     NSArray *reqResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET andPostData:nil];
     
     for (NSDictionary *innerProjJSON in reqResult) {
@@ -321,8 +325,10 @@ static RPerson *currentUser;
     
     NSMutableArray *tutorials = [[NSMutableArray alloc] init];
     
-    NSString *sortMode = descending ? @"DESC" : @"ASC";
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
+    NSString *sortMode = @"created_at";
+    NSString *order = descending ? @"DESC" : @"ASC";
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&order=%s&search=%s",
+                            [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, order.UTF8String, search.UTF8String];
 
     NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"tutorials" withParameters:parameters withRequestType:GET andPostData:nil];
     for (int i = 0; i < results.count; i++) {
@@ -933,6 +939,16 @@ static RPerson *currentUser;
     NSString *timeStamp = [NSString stringWithFormat:@"%@ %@:%@.%d", cmp[0], rawTime, secondStr, microseconds];
     
     return timeStamp;
+}
+
+/**
+ * Gets the current version of the production iSENSE website that this
+ * API has been minimally confirmed to work for
+ *
+ * @return The version of iSENSE in MAJOR.MINOR version format
+ */
+-(NSString *) getVersion {
+    return [NSString stringWithFormat:@"%@.%@", VERSION_MAJOR, VERSION_MINOR];
 }
 
 @end

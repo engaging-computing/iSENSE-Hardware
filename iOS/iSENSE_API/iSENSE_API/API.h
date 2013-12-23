@@ -17,8 +17,12 @@
 #import <MobileCoreServices/UTType.h>
 #import <sys/time.h>
 
+// Version number of the API tested and passed on this version
+// number of the production iSENSE website.
+#define VERSION_MAJOR @"3"
+#define VERSION_MINOR @"1c"
+
 typedef enum {
-    SORT_RATING,
     CREATED_AT_DESC,
     CREATED_AT_ASC,
     UPDATED_AT_DESC,
@@ -67,8 +71,8 @@ typedef enum {
 -(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
 -(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
 
-/* Convenience Method for Uploading */
+/* Other methods */
 -(NSDictionary *)rowsToCols:(NSDictionary *)original;
-
+-(NSString *) getVersion;
 
 @end

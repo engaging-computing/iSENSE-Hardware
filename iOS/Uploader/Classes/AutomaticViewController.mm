@@ -551,10 +551,10 @@ dataToBeOrdered, backFromQueue, f, fields;
             
         // Media
         case 1:
-            [self.view makeWaffle:@"This feature is currently disabled."
+            [self.view makeWaffle:@"Feature to be implemented in future release"
                          duration:WAFFLE_LENGTH_SHORT
                          position:WAFFLE_BOTTOM
-                            image:WAFFLE_RED_X];
+                            image:WAFFLE_WARNING];
             
 		default:
 			break;
