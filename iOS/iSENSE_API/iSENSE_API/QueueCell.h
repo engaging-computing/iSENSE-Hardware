@@ -18,6 +18,8 @@
 - (void) setProjID:(NSString *)projID;
 - (void) setDesc:(NSString *)desc;
 - (BOOL) dataSetHasInitialProject;
+- (void) setFields:(NSMutableArray *)fields;
+- (NSMutableArray *) getFields;
 
 @property (nonatomic, assign) IBOutlet UILabel *nameAndDate;
 @property (nonatomic, assign) IBOutlet UILabel *dataType;

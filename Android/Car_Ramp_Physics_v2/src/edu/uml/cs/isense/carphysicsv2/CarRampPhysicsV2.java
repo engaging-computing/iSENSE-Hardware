@@ -18,11 +18,8 @@
 package edu.uml.cs.isense.carphysicsv2;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -58,6 +55,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
@@ -128,8 +126,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private int elapsedMillis = 0;
 
-	private String dateString;
-
 	DecimalFormat toThou = new DecimalFormat("######0.000");
 
 	ArrayList<Double> accelerX;
@@ -191,7 +187,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		saved = savedInstanceState;
 		mContext = this;
 
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(useDev);
 		if (useDev) {
 			baseSessionUrl = VIS_URL_DEV;
@@ -221,8 +217,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_USER).commit();
 		}
 
-		dateString = "";
-
 		mHandler = new Handler();
 
 		startStop = (Button) findViewById(R.id.startStop);
@@ -242,7 +236,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		}
 
-		if (!api.hasConnectivity() && !saveMode) {
+		if (!Connection.hasConnectivity(mContext) && !saveMode) {
 			startActivityForResult(new Intent(mContext, SaveModeDialog.class),
 					SAVE_MODE_REQUESTED);
 		}
@@ -268,7 +262,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		}
 
-		if (!api.hasConnectivity()) {
+		if (!Connection.hasConnectivity(mContext)) {
 			experimentNumber = "-1";
 			System.out.println("Logtastic");
 		}
@@ -322,7 +316,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				mMediaPlayer.setLooping(false);
 				mMediaPlayer.start();
 
-				if (!api.hasConnectivity() && !saveMode) {
+				if (!Connection.hasConnectivity(mContext) && !saveMode) {
 					startActivityForResult(new Intent(mContext,
 							SaveModeDialog.class), SAVE_MODE_REQUESTED);
 					return false;
@@ -694,7 +688,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		}
 
-		if (!api.hasConnectivity()) {
+		if (!Connection.hasConnectivity(mContext)) {
 			experimentNumber = "-1";
 			System.out.println("Logtastic");
 		}
@@ -1275,7 +1269,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				}
 			} else {
-				if (!api.hasConnectivity()) {
+				if (!Connection.hasConnectivity(mContext)) {
 					startActivityForResult(new Intent(mContext,
 							SaveModeDialog.class), SAVE_MODE_REQUESTED);
 				} else {
@@ -1292,14 +1286,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			int dataSetID = -1;
 
-			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss",
-					Locale.ENGLISH);
-			Date dt = new Date();
-			dateString = sdf.format(dt);
+			nameOfSession = firstName + " " + lastInitial;
 
-			nameOfSession = firstName + " " + lastInitial + ". - " + dateString;
-
-			if (api.hasConnectivity()) {
+			if (Connection.hasConnectivity(mContext)) {
 
 				dataSetID = CarRampPhysicsV2.upload(api, mContext);
 				Log.d("fantagstag", "Data Set: " + dataSetID);
@@ -1618,7 +1607,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						Waffle.IMAGE_CHECK);
 
 			} else {
-				if (api.hasConnectivity())
+				if (Connection.hasConnectivity(mContext))
 					w.make("Login failed!", Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 			}
 		}
@@ -1629,7 +1618,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			if (api.hasConnectivity()) {
+			if (Connection.hasConnectivity(mContext)) {
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 						CarRampPhysicsV2.mContext,
 						CarRampPhysicsV2.mContext.getSharedPreferences(

@@ -98,6 +98,7 @@ static RPerson *currentUser;
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withRequestType:POST andPostData:nil];
 
     authenticityToken = [result objectForKey:@"authenticity_token"];
+    NSLog(@"API: Auth token from login: %@", authenticityToken);
     
     if (authenticityToken) {
         currentUser = [self getUserWithUsername:username];
@@ -503,6 +504,9 @@ static RPerson *currentUser;
  */
 -(int)uploadDataSetWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
     
+    // append a timestamp to the name of the data set
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
+    
     NSArray *fields = [self getProjectFieldsWithId:projectId];
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
@@ -557,6 +561,9 @@ static RPerson *currentUser;
  * @return The ID of the data set created on iSENSE
  */-(int)uploadCSVWithId:(int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name {
     
+    // append a timestamp to the name of the data set
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
+     
     // Make sure there aren't any illegal characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
 
@@ -623,6 +630,9 @@ static RPerson *currentUser;
  * @return The media object ID for the media uploaded or -1 if upload fails
  */
 -(int)uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
+    
+    // append a timestamp to the name of the data set
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
        
     // Make sure there aren't any illegal characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
@@ -690,6 +700,9 @@ static RPerson *currentUser;
  * @return The media object ID for the media uploaded or -1 if upload fails
  */
 -(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
+    
+    // append a timestamp to the name of the data set
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
     
     // Make sure there aren't any illegal characters in the name
     name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
@@ -809,6 +822,9 @@ static RPerson *currentUser;
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         [request setValue:[NSString stringWithFormat:@"%d", postData.length] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:postData];
+        
+        NSString *LOG_STR = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
+        NSLog(@"API: posting data:\n%@", LOG_STR);
     }
     
     NSError *requestError;
@@ -884,6 +900,39 @@ static RPerson *currentUser;
     news.content = [results objectForKey:@"content"];
     
     return news;
+}
+
+/**
+ * Creates a unique date and timestamp used to append to data sets uploaded to the iSENSE
+ * website to ensure every data set has a unique identifier.
+ *
+ * @return A pretty formatted date and timestamp
+ */
+-(NSString *)appendedTimeStamp {
+    
+    // get time and date
+    NSDate *now = [NSDate date];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterShortStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    
+    // get seconds and microseconds using c structs
+    struct timeval time;
+    gettimeofday(&time, NULL);
+    int seconds = time.tv_sec % 60;
+    int microseconds = time.tv_usec;
+    NSString *secondStr = (seconds < 10) ? [NSString stringWithFormat:@"0%d", seconds] : [NSString stringWithFormat:@"%d", seconds];
+    
+    // format the timestamp
+    NSString *rawTime = [formatter stringFromDate:now];
+    NSArray *cmp = [rawTime componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+    
+    [formatter setDateFormat:@"HH:mm"];
+    rawTime = [formatter stringFromDate:now];
+    
+    NSString *timeStamp = [NSString stringWithFormat:@"%@ %@:%@.%d", cmp[0], rawTime, secondStr, microseconds];
+    
+    return timeStamp;
 }
 
 @end

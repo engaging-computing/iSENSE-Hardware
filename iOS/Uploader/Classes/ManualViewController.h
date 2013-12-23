@@ -26,6 +26,8 @@
 	NSString *dataSetName;
     RotationDataSaver *rds;
     
+    BOOL backFromQueue;
+    
     CLLocationManager *locationManager;
     
 }
@@ -51,7 +53,6 @@
 - (void)   cleanRDSData;
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
-- (BOOL)   handleNewQRCode:(NSURL *)url;
 
 - (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description;
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation;
@@ -72,7 +73,6 @@
 @property (nonatomic, strong) UITextField           *lastField;
 
 // Non-UI Properties
-@property (nonatomic, copy)   NSString               *qrResults;
 @property (nonatomic, strong) CLLocationManager      *locationManager;
 @property (nonatomic, assign) int                     projNum;
 @property (nonatomic, assign) bool                    keyboardDismissProper;

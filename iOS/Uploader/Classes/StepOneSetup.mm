@@ -126,19 +126,19 @@
         selectProj.alpha = 0.5;
     } else {
         // search for local proj
-        NSString *defaultExp = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
-        if ([defaultExp length] != 0) {
-            if ([defaultExp isEqualToString:@"-1"]) {
+        NSString *defaultProj = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
+        if ([defaultProj length] != 0) {
+            if ([defaultProj isEqualToString:@"-1"]) {
                 selectLater.on = true;
                 selectProj.enabled = NO;
                 selectProj.alpha = 0.5;
             } else {
-                NSString *newProjLabel = [NSString stringWithFormat:@" (currently %@)", defaultExp];
+                NSString *newProjLabel = [NSString stringWithFormat:@" (currently %@)", defaultProj];
                 [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newProjLabel]];
                 selectLater.on = false;
             }
         } else {
-            if (defaultExp == NULL) {
+            if (defaultProj == NULL) {
                 selectLater.on = false;
                 selectProj.enabled = YES;
                 selectProj.alpha = 1.0;
@@ -147,6 +147,15 @@
                 selectProj.enabled = NO;
                 selectProj.alpha = 0.5;
             }
+        }
+    }
+    
+    returnFields = [[NSMutableArray alloc] init];
+    NSString *proj = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
+    if ([proj intValue] > 0) {
+        NSMutableArray *fields = [self getFieldsFromPrefsForProj:[proj intValue]];
+        if (fields != nil && [fields count] != 0) {
+            [returnFields addObjectsFromArray:fields];
         }
     }
     
@@ -162,7 +171,7 @@
     bool ready = true;
     
     if ([[sessionName text] length] == 0) {
-        [self.view makeWaffle:@"Please enter a session name first"
+        [self.view makeWaffle:@"Please enter a data set name first"
                     duration:WAFFLE_LENGTH_LONG
                     position:WAFFLE_BOTTOM
                        image:WAFFLE_WARNING];
@@ -202,26 +211,29 @@
     }
     
     if (!selectLater.on) {
-        NSString *eid = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]];
+        NSString *projID = [prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]]; // TODO or check global proj?
         
-        if (eid == NULL || [eid isEqualToString:@""] || [eid isEqualToString:@"-1"]) {
+        if (projID == NULL || [projID isEqualToString:@""] || [projID isEqualToString:@"-1"]) {
             if (ready == true)
-                [self.view makeWaffle:@"Please select an experiment"
+                [self.view makeWaffle:@"Please select a project"
                             duration:WAFFLE_LENGTH_LONG
                             position:WAFFLE_BOTTOM
                                image:WAFFLE_WARNING];
             ready = false;
-        }
-        
-        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
-        if ([selectedCells count] == 0) {
-            if (ready == true)
-                [self.view makeWaffle:@"Please re-select an experiment and fields to record data for"
+        } else if ([returnFields count] == 0) {
+            if (ready == true) {
+                [self.view makeWaffle:@"Please select fields for this project"
                              duration:WAFFLE_LENGTH_LONG
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_WARNING];
-            ready = false;
+                
+                projNumInteger = [projID intValue];
+                [self launchFieldMatchingViewControllerFromBrowse:FALSE];
+                
+                return;
+            }
         }
+        
     }
     
     if (ready) {
@@ -259,7 +271,7 @@
                                          message:nil
                                         delegate:self
                                cancelButtonTitle:@"Cancel"
-                               otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                               otherButtonTitles:@"Enter Project #", @"Browse", nil];
     message.tag = MENU_PROJECT;
     [message show];
 }
@@ -312,32 +324,6 @@
             browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
             
-        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
-            if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-                
-                if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-                    NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
-                    Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
-                    [dcad setLastController:self];
-                    [dcad setReturnToClass:DELEGATE_KEY_AUTOMATIC];
-                    [[UIApplication sharedApplication] openURL:urlp2s];
-                } else {
-                    NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
-                    [[UIApplication sharedApplication] openURL:urlapp];
-                }
-                
-            } else {
-                
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
-                                                                  message:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Cancel"
-                                                        otherButtonTitles:nil];
-                
-                [message setAlertViewStyle:UIAlertViewStyleDefault];
-                [message show];
-                
-            }
         }
         
     } else if (actionSheet.tag == PROJ_MANUAL) {
@@ -356,47 +342,97 @@
             
             [self rememberPrefs];
             
-            // get the fields to field match
-            DataFieldManager *dfm = [[DataFieldManager alloc] initWithProjID:projNumInteger API:api andFields:nil];
-            [dfm getOrder];
-            
-//            NSMutableArray *garbage = [[NSMutableArray alloc] init];
-//            [garbage addObject:@"one"];
-//            [garbage addObject:@"two"];
-//            [garbage addObject:@"three"];
-//            [garbage addObject:@"four"];
-//            [garbage addObject:@"five"];
-//            [garbage addObject:@"six"];
-//            [garbage addObject:@"seven"];
-//            [garbage addObject:@"eight"];
-//            [garbage addObject:@"nine"];
-//            [garbage addObject:@"ten"];
-//            [garbage addObject:@"eleven"];
-//            [garbage addObject:@"twelve"];
-//            [garbage addObject:@"thirteen"];
-//            [garbage addObject:@"fourteen"];
-//            [garbage addObject:@"fifteen"];
-            
+            [self launchFieldMatchingViewControllerFromBrowse:FALSE];
+        }
+        
+    } 
+}
+
+- (void) launchFieldMatchingViewControllerFromBrowse:(bool) fromBrowse {
+    // get the fields to field match
+    DataFieldManager *dfm = [[DataFieldManager alloc] initWithProjID:projNumInteger API:api andFields:nil];
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading fields..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("step_1_setup_loading_project_fields", NULL);
+    dispatch_async(queue, ^{
+        [dfm getOrder];
+        dispatch_async(dispatch_get_main_queue(), ^{
             // set an observer for the field matched array caught from FieldMatching
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
             
             // launch the field matching dialog
-            FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithUserFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
+            FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithMatchedFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
             fmvc.title = @"Field Matching";
-            [self.navigationController pushViewController:fmvc animated:YES];
         
-        }
-        
-    } 
+            if (fromBrowse) {
+                //[self performSelector:@selector(presentFieldMatchingViewControllerAfterDelay:) withObject:fmvc afterDelay:1.0];
+                double delayInSeconds = 0.1;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    [self.navigationController pushViewController:fmvc animated:YES];
+                });
+            } else
+                [self.navigationController pushViewController:fmvc animated:YES];
+            
+            if (fromBrowse) [NSThread sleepForTimeInterval:1.0];
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+            
+        });
+    });
+}
+
+- (void) presentFieldMatchingViewControllerAfterDelay:(id)sender {
+    FieldMatchingViewController *fmvc = (FieldMatchingViewController *) sender;
+    NSMutableArray *controllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    [controllers addObject:fmvc];
+    [self.navigationController setViewControllers:controllers animated:YES];
+    
+}
+
+- (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:dString
+                                                      message:nil
+                                                     delegate:self
+                                            cancelButtonTitle:nil
+                                            otherButtonTitles:nil];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    spinner.center = CGPointMake(139.5, 75.5);
+    [message addSubview:spinner];
+    [spinner startAnimating];
+    return message;
 }
 
 - (void) retrieveFieldMatchedArray:(NSNotification *)obj {
     NSMutableArray *fieldMatch =  (NSMutableArray *)[obj object];
     if (fieldMatch != nil) {
         // user pressed okay button
-        NSLog(@"Obj at index 0 = %@", [fieldMatch objectAtIndex:0]);
+        returnFields = [[NSMutableArray alloc] init];
+        [returnFields addObjectsFromArray:fieldMatch];
+        [self writeFieldsToPrefsForProj:projNumInteger];
     }
     // else user canceled
+}
+
+- (void) writeFieldsToPrefsForProj:(int)projID {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *prefKey = [NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projID];
+    NSLog(@"WRITING %@", prefKey);
+    if (returnFields == nil || [returnFields count] == 0)
+        return;
+    
+    [prefs setObject:returnFields forKey:prefKey];
+}
+
+- (NSMutableArray *) getFieldsFromPrefsForProj:(int)projID {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *prefKey = [NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projID];
+    NSLog(@"READING %@", prefKey);
+    NSMutableArray *fields = [prefs objectForKey:prefKey];
+    if (fields == nil || [fields count] == 0)
+        return nil;
+    
+    return fields;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -433,11 +469,6 @@
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setValue:[sessionName text] forKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
-        
-        // launch the field matching dialog
-        FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithUserFields:nil andProjectFields:nil];
-        fmvc.title = @"Field Matching";
-        [self.navigationController pushViewController:fmvc animated:YES];
     }
 }
 
@@ -515,29 +546,6 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-- (BOOL) handleNewQRCode:(NSURL *)url {
-    
-//    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-//    NSString *exp = arr[2];
-//    
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_proj_automatic"]];
-//
-//    projNumInteger = [exp integerValue];
-//    
-//    NSString *newExpLabel = [NSString stringWithFormat:@" (currently %@)", exp];
-//    [projNumLabel setText:[StringGrabber concatenateHardcodedString:@"current_proj_label" with:newExpLabel]];
-//    
-//    [self rememberPrefs];
-//    
-//    // launch the sensor selection dialog
-//    SensorSelection *ssView = [[SensorSelection alloc] init];
-//    ssView.title = @"Sensor Selection";
-//    [self.navigationController pushViewController:ssView animated:YES];
-    
-    return YES;
-}
-
 - (void) rememberPrefs {
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
@@ -576,6 +584,8 @@
         [prefs setInteger:0 forKey:kPROJECT_ID_DC]; // reset global proj
         
         displaySensorSelectFromBrowse = true;
+        
+        [self launchFieldMatchingViewControllerFromBrowse:TRUE];
     }
 }
 

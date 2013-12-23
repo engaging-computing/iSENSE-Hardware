@@ -68,7 +68,7 @@ public class ProjectCreate extends Activity {
 		mContext = this;
 		w = new Waffle(mContext);
 
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(Welcome.useDev);
 
 		// Action bar customization for API >= 14

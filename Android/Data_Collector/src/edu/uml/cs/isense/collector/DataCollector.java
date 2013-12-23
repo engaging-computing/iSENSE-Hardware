@@ -81,6 +81,7 @@ import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -1192,7 +1193,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
-		api = API.getInstance(getApplicationContext());
+		api = API.getInstance();
 		api.useDev(Welcome.useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
@@ -1223,7 +1224,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
-		api = API.getInstance(getApplicationContext());
+		api = API.getInstance();
 		api.useDev(Welcome.useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
@@ -1311,7 +1312,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				Locale.US);
 		Date dt = new Date();
 		dateString = sdf.format(dt);
-		dataSetName += " - " + dateString;
+		//dataSetName += " - " + dateString;
 
 		// absolutely ensure the timer resets to 0
 		setTime(0);
@@ -1587,7 +1588,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				if ((mPrefs.getString(
 						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
 						"").equals(""))) {
-					if (api.hasConnectivity()) {
+					if (Connection.hasConnectivity(mContext)) {
 						manageUploadQueueAfterLogin = true;
 						Intent iCanLogin = new Intent(mContext, CanLogin.class);
 						startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);

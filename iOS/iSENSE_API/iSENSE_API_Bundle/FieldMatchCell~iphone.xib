@@ -52,7 +52,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<string key="IBUIText">Field</string>
+								<string key="IBUIText">Proj</string>
 								<object class="NSColor" key="IBUITextColor" id="311120777">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -80,6 +80,7 @@
 								<string key="NSFrame">{{149, 10}, {117, 21}}</string>
 								<reference key="NSSuperview" ref="322765688"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -137,19 +138,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">fieldName</string>
-						<reference key="source" ref="135679168"/>
-						<reference key="destination" ref="509124712"/>
-					</object>
-					<int key="connectionID">259</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">fieldMatch</string>
 						<reference key="source" ref="135679168"/>
 						<reference key="destination" ref="188622386"/>
 					</object>
 					<int key="connectionID">261</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">fieldProj</string>
+						<reference key="source" ref="135679168"/>
+						<reference key="destination" ref="509124712"/>
+					</object>
+					<int key="connectionID">262</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -206,7 +207,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">261</int>
+			<int key="maxID">262</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -215,15 +216,15 @@
 					<string key="superclassName">UITableViewCell</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="fieldMatch">UILabel</string>
-						<string key="fieldName">UILabel</string>
+						<string key="fieldProj">UILabel</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="fieldMatch">
 							<string key="name">fieldMatch</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="fieldName">
-							<string key="name">fieldName</string>
+						<object class="IBToOneOutletInfo" key="fieldProj">
+							<string key="name">fieldProj</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
 					</dictionary>

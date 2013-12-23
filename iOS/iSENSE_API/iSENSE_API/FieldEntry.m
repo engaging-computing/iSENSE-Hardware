@@ -9,5 +9,4 @@
 #import "FieldEntry.h"
 
 @implementation FieldEntry
-
 @end

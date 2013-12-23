@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <iSENSE_API/SensorCompatibility.h>
 #import <iSENSE_API/SensorEnums.h>
-#import "SensorSelection.h"
+#import <iSENSE_API/DataFieldManager.h>
 #import <iSENSE_API/FieldMatchingViewController.h>
 #import <iSENSE_API/ProjectBrowseViewController.h>
 
@@ -24,6 +24,7 @@
     int projNumInteger;
     bool sensorsSelected;
     bool displaySensorSelectFromBrowse;
+    NSMutableArray *returnFields;
     
 }
 
@@ -31,8 +32,6 @@
 - (IBAction)selectLaterToggled:(UISwitch *)switcher;
 - (IBAction)projectOnClick:(UIButton *)projButton;
 - (IBAction)okOnClick:(UIButton *)okButton;
-
-- (BOOL) handleNewQRCode:(NSURL *)url;
 
 @property (nonatomic, strong) IBOutlet UITextField *sessionName;
 @property (nonatomic, strong) IBOutlet UITextField *sampleInterval;

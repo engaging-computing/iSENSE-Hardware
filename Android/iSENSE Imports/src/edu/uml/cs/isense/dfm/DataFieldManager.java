@@ -80,7 +80,7 @@ public class DataFieldManager extends Application {
 	// Static class function strictly for getting the field order of any
 	// project.  To only be used internally.
 	private static LinkedList<String> getOrder(int projID, API api, Context c) {
-		api = API.getInstance(c);
+		api = API.getInstance();
 		DataFieldManager d = new DataFieldManager(projID, api, c, null);
 		d.getOrderWithExternalAsyncTask();
 		return d.order;
@@ -984,7 +984,9 @@ public class DataFieldManager extends Application {
 				}
 
 				// Acceleration
-				else if (field.name.toLowerCase(Locale.US).contains("accel")) {
+				else if (field.name.toLowerCase(Locale.US)
+						.matches("(^(((x|y|z){1}[^x|y|z]*acc[^x|y|z]*)|[^x|y|z]*(accel))$)" + 
+								"|(^((acc[^x|y|z]*(x|y|z){1})|(accel[^x|y|z]*))$)")) {
 					if (field.name.toLowerCase(Locale.US).contains("x")) {
 						order.add(mContext.getString(R.string.accel_x));
 					} else if (field.name.toLowerCase(Locale.US).contains("y")) {
@@ -1081,17 +1083,27 @@ public class DataFieldManager extends Application {
 	}
 	
 	/**
+	 * Getter for the list of actual project fields.
+	 * 
+	 * @return
+	 * 		The list of project fields from the associated project ID
+	 */
+	public LinkedList<String> getRealOrderList() {
+		return this.realOrder;
+	}
+	
+	/**
 	 * Converts order into a String[]
 	 * 
 	 * @return
 	 * 		order in the form of a String[]
 	 */
-	public String[] convertOrderToStringArray() {
+	public String[] convertLinkedListToStringArray(LinkedList<String> ll) {
 		
-		String[] sa = new String[order.size()];
+		String[] sa = new String[ll.size()];
 		int i = 0;
 		
-		for (String s : order)
+		for (String s : ll)
 			sa[i++] = s;
 		
 		return sa;

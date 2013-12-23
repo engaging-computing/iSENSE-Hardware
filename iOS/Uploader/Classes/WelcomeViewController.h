@@ -15,6 +15,10 @@
 @interface WelcomeViewController : UIViewController <UITextFieldDelegate, ProjectBrowseViewControllerDelegate> {
     API *api;
     int projNum;
+    
+    // for dev switching
+    int taps;
+    bool useDev;
 }
 
 // button click methods
@@ -23,5 +27,6 @@
 
 @property (nonatomic, strong) IBOutlet UIButton *continueWithProj;
 @property (nonatomic, strong) IBOutlet UIButton *selectProjLater;
+@property (nonatomic, strong) IBOutlet UILabel  *welcomeText;
 
 @end
