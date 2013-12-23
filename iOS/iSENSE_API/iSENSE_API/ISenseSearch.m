@@ -19,7 +19,7 @@
         query = @"";
         buildType = NEW;
         page = 1;
-        perPage = 10;
+        perPage = 20;
     }
     
     return self;
