@@ -1,10 +1,10 @@
 package edu.uml.cs.isense.riverwalk.dialogs;
 
 import java.io.IOException;
-import java.util.List;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -14,10 +14,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
-    public CameraPreview(Context context, Camera camera) {
+    @SuppressWarnings("deprecation")
+	public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
-        mCamera.setDisplayOrientation(90);
+        
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
         mHolder = getHolder();
@@ -31,6 +32,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
     	 
+    	// Set android picture size (continuous pictures only)
+    	Parameters parameters = mCamera.getParameters();
+    	parameters.setPictureSize(2048, 1536);
+    	mCamera.setParameters(parameters);
     	
     	if (holder == null){
     		Log.d("surfaceCreated", "holder is null");

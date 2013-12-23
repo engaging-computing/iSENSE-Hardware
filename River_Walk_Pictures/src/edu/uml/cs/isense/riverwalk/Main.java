@@ -1,6 +1,8 @@
 package edu.uml.cs.isense.riverwalk;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -21,6 +23,9 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
@@ -35,9 +40,11 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -162,6 +169,9 @@ public class Main extends Activity implements LocationListener {
 		preview.getLayoutParams().height = 0;
 		
 		takePicture = (Button) findViewById(R.id.takePicture);
+		if(continuous == true){
+			takePicture.setText(R.string.takePicContinuous);
+		}
 		takePicture.setOnClickListener(new OnClickListener() {
 
 			// Push take picture button
@@ -203,10 +213,13 @@ public class Main extends Activity implements LocationListener {
 
 						OrientationManager.disableRotation(Main.this);
 						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+						
 					} else {
 						w.make("Cannot write to external storage.",
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					}
+					
+					OrientationManager.enableRotation(Main.this);
 
 					// Continuously take pictures
 				} else if (continuous == true) { 
@@ -271,9 +284,7 @@ public class Main extends Activity implements LocationListener {
 			// do your long running http tasks here,you dont want to pass
 			// argument and u can access the parent class' variable url over
 			// here
-			
-			//TODO
-			
+						
 			while (recording) {
 				
 				//sleep for interval as long as recording is equal to true
@@ -363,6 +374,8 @@ public class Main extends Activity implements LocationListener {
 //			mCamera.stopPreview();
 			mCamera.release();
 			mCamera = null;
+			
+			OrientationManager.enableRotation(Main.this);
 		}
 	}
 
@@ -382,6 +395,17 @@ public class Main extends Activity implements LocationListener {
 			Log.d("CameraMain", "Camera info cameras " + c.toString());
 			mCamera = Camera.open(id);
 			
+			Display display = getWindowManager().getDefaultDisplay();
+			int rotation = display.getRotation();
+			
+			if (rotation == Surface.ROTATION_0){
+		        mCamera.setDisplayOrientation(90);
+			} else if (rotation == Surface.ROTATION_90) {
+				mCamera.setDisplayOrientation(0);
+			} else if (rotation == Surface.ROTATION_270) {
+				mCamera.setDisplayOrientation(180);
+			}
+			
 			Log.d("CameraMain", "Camera is: " + mCamera.toString());
 			qOpened = (mCamera != null);
 		} catch (Exception e) {
@@ -397,7 +421,6 @@ public class Main extends Activity implements LocationListener {
 
 		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
-			//TODO
 			
 			picture = getOutputMediaFile(MEDIA_TYPE_IMAGE);
 			
@@ -413,7 +436,8 @@ public class Main extends Activity implements LocationListener {
               fos.write(data);
               fos.close();
             }  catch (IOException e) {
-              //do something about it
+            	Log.e("onPictureTaken in main",
+						"failed to save picture");
             }
 
 		}
@@ -455,6 +479,7 @@ public class Main extends Activity implements LocationListener {
 
 		return mediaFile;
 	}
+	
 
 	// double tap back button to exit
 	@Override
@@ -590,6 +615,21 @@ public class Main extends Activity implements LocationListener {
 	@SuppressLint("NewApi")
 	public static File convertImageUriToFile(Uri imageUri) {
 
+		Bitmap bmp = null;
+		Bitmap scaled = null;
+		try {
+			bmp = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(imageUri));
+			int h = 1536;  // height in pixels
+			int w = 2048; // width in pixels    
+			scaled = Bitmap.createScaledBitmap(bmp, h, w, true);
+			//imageUri = scaled;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
 		int apiLevel = getApiLevel();
 		if (apiLevel >= 11) {
 
@@ -612,7 +652,34 @@ public class Main extends Activity implements LocationListener {
 			if (cursor.moveToFirst()) {
 				@SuppressWarnings("unused")
 				String orientation = cursor.getString(orientation_ColumnIndex);
-				return new File(cursor.getString(file_ColumnIndex));
+				
+				//create a file to write bitmap data
+				File f = new File(cursor.getString(file_ColumnIndex));
+				//Convert bitmap to byte array
+		
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				scaled.compress(CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+				byte[] bitmapdata = bos.toByteArray();
+				try {
+					bos.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+				//write the bytes in file
+				FileOutputStream fos;
+				try {
+					fos = new FileOutputStream(f);
+					fos.write(bitmapdata);
+					fos.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				return f;
+
 			}
 			return null;
 
@@ -750,6 +817,7 @@ public class Main extends Activity implements LocationListener {
 
 			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
+
 				picture = convertImageUriToFile(imageUri);
 
 				uq.buildQueueFromFile();
