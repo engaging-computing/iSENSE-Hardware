@@ -80,7 +80,7 @@
     <string name="menuDirections">Use Menu to Access Configurations</string>
     <string name="timeElapsed">Time Elapsed: 0:00</string>
     <string name="sessionName">Session Name: </string>
-    <string name="experimentNum">Expm #: </string>
+    <string name="projectNum">Project #: </string>
     <string name="browse">  Browse&#8230;  </string>
     <string name="seatNum">Seat/Student #: </string>
     <string name="seatNumber">1</string>
@@ -131,5 +131,8 @@
     <string name="loading">Loading&#x2026;</string>
     <string name="search">Search</string>
     <string name="select_later">I\'ll select one later</string>
+    <string name="setup">Setup</string>
+    <string name="time">Time</string>
+    <string name="media">Media</string>
 
 </resources>
