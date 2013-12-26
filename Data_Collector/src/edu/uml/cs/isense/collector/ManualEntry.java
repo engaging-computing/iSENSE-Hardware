@@ -323,35 +323,35 @@ public class ManualEntry extends Activity implements OnClickListener,
 		projectLabel.setText(getResources().getString(R.string.usingProject)
 				+ projID);
 
-		int tagIndex = 0; // TODO with API update for uploading data, use field.field_id instead of tagIndex
+		//int tagIndex = 0; // TODO with API update for uploading data, use field.field_id instead of tagIndex
 
 		for (RProjectField projField : fieldOrder) {
 
 			switch (projField.type) {
 
 			case RProjectField.TYPE_LAT:
-				addDataField(projField, TYPE_LATITUDE, tagIndex);
+				addDataField(projField, TYPE_LATITUDE, projField.field_id);
 				break;
 
 			case RProjectField.TYPE_LON:
-				addDataField(projField, TYPE_LONGITUDE, tagIndex);
+				addDataField(projField, TYPE_LONGITUDE, projField.field_id);
 				break;
 
 			case RProjectField.TYPE_TIMESTAMP:
-				addDataField(projField, TYPE_TIME, tagIndex);
+				addDataField(projField, TYPE_TIME, projField.field_id);
 				break;
 
 			case RProjectField.TYPE_TEXT:
-				addDataField(projField, TYPE_TEXT_FIELD, tagIndex);
+				addDataField(projField, TYPE_TEXT_FIELD, projField.field_id);
 				break;
 
 			default:
-				addDataField(projField, TYPE_NUMBER_FIELD, tagIndex);
+				addDataField(projField, TYPE_NUMBER_FIELD, projField.field_id);
 				break;
 
 			}
 
-			tagIndex++;
+			//tagIndex++;
 
 		}
 
@@ -359,7 +359,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	}
 
-	private void addDataField(RProjectField projField, int type, int tagIndex) {
+	private void addDataField(RProjectField projField, int type, long field_id) {
 		LinearLayout dataField = (LinearLayout) View.inflate(this,
 				R.layout.manualentryfield, null);
 		TextView fieldName = (TextView) dataField
@@ -370,7 +370,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		fieldContents.setSingleLine(true);
 		fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-		fieldContents.setTag(tagIndex);
+		fieldContents.setTag(field_id);
 
 		if (type != TYPE_NUMBER_FIELD && type != TYPE_TEXT_FIELD) {
 			fieldContents.setText("Auto");
@@ -684,8 +684,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 
-			ds = new QDataSet(QDataSet.Type.DATA, dataSetName.getText()
-					.toString(), uploadTime, projID, data, null);
+			ds = new QDataSet(dataSetName.getText().toString(), uploadTime, 
+					QDataSet.Type.DATA, data, null, projID, null);
 
 			return null;
 		}
@@ -771,10 +771,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			String projID = projPrefs.getString(PREFERENCES_PROJ_ID, null);
 			if (projID != null) {
 				for (File picture : MediaManager.pictureArray) {
-					QDataSet picDS = new QDataSet(QDataSet.Type.PIC, name,
-							uploadTime, projID, null, picture);
+					QDataSet picDS = new QDataSet(name, uploadTime, QDataSet.Type.PIC, null, picture, projID, null);
 					uq.addDataSetToQueue(picDS);
-
 				}
 
 			}

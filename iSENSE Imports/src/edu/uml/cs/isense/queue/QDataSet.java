@@ -103,20 +103,30 @@ public class QDataSet implements Serializable {
 	 * @param picture
 	 *            - If type is QDataSet.PIC, we look here.
 	 */
-	public QDataSet(Type type, String name, String desc, String projID,
-			String data, File picture) {
-		this.type = type;
+	public QDataSet(String name, String desc, Type type, String data, 
+			File picture, String projID, LinkedList<String> fields) {
+		// name and description of data set
 		this.name = name;
 		this.desc = desc;
-		this.projID = projID;
+		
+		// type (data/media) and the associated data and/or media
+		this.type = type;
 		if (data != null)
 			this.data = data;
 		else
 			this.data = null;
 		this.picture = picture;
-		this.key = new Random().nextLong();
+		
+		// project and fields
+		this.projID = projID;
+		if (fields != null)
+			this.fields = fields;
+		else
+			fields = new LinkedList<String>();
 		this.hasInitialProject = projID.equals("-1") ? false : true;
-		this.fields = new LinkedList<String>();
+		
+		// randomized key
+		this.key = new Random().nextLong();
 	}
 
 	/**
@@ -135,16 +145,32 @@ public class QDataSet implements Serializable {
 	 *         failed
 	 */
 	public int upload(API api, Context c) {
+		// if no project is associated with this data set yet, we can't upload it
 		if (this.projID.equals("-1"))
 			return -1;
 
+		// if there was no initial project, we must reOrder the data with the fields from FieldMatching
 		if (!this.hasInitialProject) {
 			System.out.println("Need to re-order some data with fields: " + this.fields.toString());
 			this.data = DataFieldManager.reOrderData(prepDataForUpload(),
-					this.projID, api, c, this.fields);
+					this.projID, c, this.fields, null);
+		}
+		
+		// otherwise, if we have a JSONArray for data, we must reOrder it as well using fields
+		try {
+			// see if the elements of the JSONArray are JSONArrays
+			JSONArray ja = new JSONArray(data);
+			@SuppressWarnings("unused")
+			JSONArray element = ja.getJSONArray(0);
+			
+			// if we got here, the data is a JSONArray of JSONArrays: reOrder it
+			this.data = DataFieldManager.reOrderData(ja, this.projID, c, this.fields, null);
+			
+		} catch (JSONException e) {
+			// we have a JSONArray of JSONObjects for data already - continue without reOrdering
 		}
 
-		return upload();
+		return uploadDataAndMedia();
 	}
 
 	/**
@@ -154,7 +180,7 @@ public class QDataSet implements Serializable {
 	 * @return The ID of the data set created on iSENSE, or -1 if the upload
 	 *         failed
 	 */
-	public int upload() {
+	private int uploadDataAndMedia() {
 
 		int dataSetID = -1;
 		if (this.rdyForUpload) {
@@ -191,18 +217,17 @@ public class QDataSet implements Serializable {
 			try {
 				jobj.put("data", dataJSON);
 			} catch (JSONException e) {
-				// uh oh
 				e.printStackTrace();
+				return -1;
 			}
 			jobj = UploadQueue.getAPI().rowsToCols(jobj);
 
 			System.out.println("JOBJ: " + jobj.toString());
 
-			dataSetID = UploadQueue.getAPI().uploadDataSet(
+			dataSetID = UploadQueue.getAPI().jsonDataUpload(
 					Integer.parseInt(projID), jobj, name);
 			System.out.println("Data set ID from Upload is: "
 					+ dataSetID);
-
 		}
 		
 		return dataSetID;
@@ -210,15 +235,6 @@ public class QDataSet implements Serializable {
 
 	// Creates a JSON array out of the parsed string
 	private JSONArray prepDataForUpload() {
-		// If the string isn't a complete JSONArray, trim off the incomplete
-		// portion
-		// if (!(this.data.charAt(this.data.length() -1) == '}')) {
-		// int endIndex = this.data.lastIndexOf(']');
-		// if (endIndex != -1)
-		// this.data = this.data.substring(0, endIndex);
-		// this.data = this.data + ']';
-		// }
-
 		JSONArray dataJSON = null;
 		try {
 			dataJSON = new JSONArray(data);
