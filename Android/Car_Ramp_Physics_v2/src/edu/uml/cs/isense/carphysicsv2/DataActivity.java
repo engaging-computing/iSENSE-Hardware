@@ -19,11 +19,10 @@ public class DataActivity extends Activity {
 
 		if (android.os.Build.VERSION.SDK_INT > 11)
 			setFinishOnTouchOutside(false);
-		
-		
+
 		iSENSE_Button = (Button) findViewById(R.id.iSENSE_Button);
 		discard_Button = (Button) findViewById(R.id.discard_Button);
-		
+
 		if (Connection.hasConnectivity(getApplicationContext()))
 			setTitle("Publish Your Data?");
 		else {
@@ -51,5 +50,4 @@ public class DataActivity extends Activity {
 		});
 	}
 
-	
 }
