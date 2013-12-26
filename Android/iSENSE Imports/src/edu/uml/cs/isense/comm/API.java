@@ -524,6 +524,8 @@ public class API {
 	}
 
 	/**
+	 * @deprecated - Will go away, to be replaced by jsonDataUpload
+	 * 
 	 * Uploads a new data set to a project on iSENSE
 	 * 
 	 * @param projectId The ID of the project to upload data to
@@ -547,6 +549,40 @@ public class API {
 			requestData.put("id", ""+projectId);
 			if(!datasetName.equals("")) requestData.put("name", datasetName);
 			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/manualUpload", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			System.out.println("Are I blank? = " + reqResult);
+			JSONObject jobj = new JSONObject(reqResult);
+			System.out.println("Returning: " + jobj.toString());
+			return jobj.getInt("id");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	/** TODO - change name from manualUpload to whatever it'll be.  eventually this will go away and become new uploadDataSet
+	 * Uploads a new data set to a project on iSENSE
+	 * 
+	 * @param projectId The ID of the project to upload data to
+	 * @param data The data to be uploaded. Must be in column-major format to upload correctly
+	 * @param datasetName The name of the dataset
+	 * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
+	 */
+	public int jsonDataUpload(int projectId, JSONObject data, String datasetName) {
+		// append timestamp to the data set name to ensure uniqueness
+		datasetName += appendedTimeStamp();
+		
+		ArrayList<RProjectField> fields = getProjectFields(projectId);
+		JSONObject requestData = new JSONObject();
+		ArrayList<String> headers = new ArrayList<String>();
+		for(RProjectField rpf : fields) {
+			headers.add(""+rpf.field_id);
+		}
+		try {
+			requestData.put("headers", new JSONArray(headers));
+			requestData.put("data", data);
+			requestData.put("id", ""+projectId);
+			if(!datasetName.equals("")) requestData.put("name", datasetName);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/jsonDataUpload", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
 			System.out.println("Are I blank? = " + reqResult);
 			JSONObject jobj = new JSONObject(reqResult);
 			System.out.println("Returning: " + jobj.toString());

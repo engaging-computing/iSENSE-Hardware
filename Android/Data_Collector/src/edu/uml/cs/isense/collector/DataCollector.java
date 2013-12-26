@@ -178,7 +178,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static String dataSetName;
 	private static long sampleInterval;
 	private static long recordingLength;
-	private static int currentProjID;
 
 	// Raw data variables
 	private static String temperature = "";
@@ -758,18 +757,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					// First run through, save data with the picture
 					if (firstSave) {
-						QDataSet ds = new QDataSet(QDataSet.Type.BOTH,
-								dataSetName, description, projID,
-								dataSet.toString(),
-								MediaManager.pictureArray.get(pic - 1));
+						QDataSet ds = new QDataSet(dataSetName, description, QDataSet.Type.BOTH, 
+								dataSet.toString(), MediaManager.pictureArray.get(pic - 1), projID, dfm.getOrderList());
 						uq.addDataSetToQueue(ds);
 						firstSave = false;
 
 						// Next set of runs, save the remaining pictures
 					} else {
-						QDataSet dsp = new QDataSet(QDataSet.Type.PIC,
-								dataSetName, description, projID, null,
-								MediaManager.pictureArray.get(pic - 1));
+						QDataSet dsp = new QDataSet(
+								dataSetName, description, QDataSet.Type.PIC, null,
+								MediaManager.pictureArray.get(pic - 1), projID, dfm.getOrderList());
 						uq.addDataSetToQueue(dsp);
 					}
 
@@ -781,8 +778,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				// Else if no pictures, just save data
 			} else {
-				QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
-						description, projID, dataSet.toString(), null);
+				QDataSet ds = new QDataSet(dataSetName, description, QDataSet.Type.DATA, 
+						dataSet.toString(), null, projID, dfm.getOrderList());
 				uq.addDataSetToQueue(ds);
 			}
 
@@ -1018,27 +1015,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			String fields = mPrefs.getString("accepted_fields", "");
 			getFieldsFromPrefsString(fields);
-			getEnabledFields();
-
-		}
-	}
-
-	private void initDfmWithExternalAsyncTask() {
-
-		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-		String projectInput = mPrefs.getString("project_id", "");
-
-		if (projectInput.equals("-1")) {
-			setUpDFMWithAllFields();
-		} else {
-			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
-					mContext, f);
-
-			String fields = mPrefs.getString("accepted_fields", "");
-			getFieldsFromPrefsString(fields);
-
-			dfm.setOrder(fields);
-
 			getEnabledFields();
 
 		}
@@ -1349,7 +1325,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// TODO should there be a new Fields object for each row recorded? else
 		// duplicate data
 		// if so, then ensure you set dfm's field objects each time
-
+		System.out.println("Polling 1");
 		dataPointCount++;
 		elapsedMillis += sampleInterval;
 		totalMillis = elapsedMillis;
@@ -1405,14 +1381,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 			f.altitude = calcAltitude();
 		if (dfm.enabledFields[Fields.LIGHT])
 			f.lux = light;
+		System.out.println("Polling 2");
 
-		if (currentProjID != -1)
-			dataSet.put(dfm.putData());
-		else
-			dataSet.put(dfm.putDataForNoProjectID());
-
+		dataSet.put(dfm.putDataForNoProjectID()); // TODO this is new
+		
+		System.out.println("Polling 3");
 		data = dfm.writeSdCardLine();
-
+		System.out.println("Polling 4");
 		if (writeCSVFile) {
 			if (beginWrite) {
 				String header = dfm.writeHeaderLine();
@@ -1421,7 +1396,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else {
 				writeToSDCard(data, 'u');
 			}
-		}
+		}System.out.println("Polling 5"); System.out.flush();
+		
 	}
 
 	// All the code for the main button!
@@ -1468,7 +1444,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 							writeCSVFile = false;
 						else
 							writeCSVFile = true;
-						currentProjID = Integer.parseInt(projectInput);
 
 						getWindow().addFlags(
 								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -1749,7 +1724,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			initDfmWithExternalAsyncTask();
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String projectInput = mPrefs.getString("project_id", "");
+
+			if (projectInput.equals("-1")) {
+				setUpDFMWithAllFields();
+			} else {
+				dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+						mContext, f);
+
+				dfm.getOrderWithExternalAsyncTask(); // TODO this was added
+				
+				String fields = mPrefs.getString("accepted_fields", "");
+				getFieldsFromPrefsString(fields);
+
+				dfm.setOrder(fields);
+
+				getEnabledFields();
+
+			}
 			return null;
 		}
 
