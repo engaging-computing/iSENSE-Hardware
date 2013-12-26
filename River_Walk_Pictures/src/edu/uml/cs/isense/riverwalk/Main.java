@@ -12,7 +12,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -730,9 +729,9 @@ public class Main extends Activity implements LocationListener {
 		public void run() {
 
 			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-			String experimentNum = mPrefs.getString("project_id", "Error");
+			String projNum = mPrefs.getString("project_id", "Error");
 
-			if (experimentNum.equals("Error")) {
+			if (projNum.equals("Error")) {
 				uploadError = true;
 				postRunnableWaffleError("No project selected to upload pictures to");
 				return;
@@ -741,14 +740,11 @@ public class Main extends Activity implements LocationListener {
 			// if (dfm == null)
 			initDfm();
 
-			JSONArray dataJSON = new JSONArray(); // data is set into JSONArray
-													// to be uploaded
-			JSONObject dataRow = new JSONObject();
+			JSONArray dataJSON = new JSONArray(); // data is set into JSONArray to be uploaded
 
-			if (!Connection.hasConnectivity(mContext)) {
-				experimentNum = "-1";
-			}
-
+			if (!Connection.hasConnectivity(mContext))
+				projNum = "-1";
+			
 			if (loc.getLatitude() != 0) {
 				f.timeMillis = curTime;
 				System.out.println("curTime =" + f.timeMillis);
@@ -757,11 +753,7 @@ public class Main extends Activity implements LocationListener {
 				f.longitude = loc.getLongitude();
 				System.out.println("Longitude =" + f.longitude);
 
-				if (!experimentNum.equals("-1")) {
-					dataJSON.put(dfm.putData());
-				} else {
-					dataJSON.put(dfm.putDataForNoProjectID());
-				}
+				dataJSON.put(dfm.putDataForNoProjectID());
 
 			} else { // no gps
 				loc = mLocationManager
@@ -773,21 +765,13 @@ public class Main extends Activity implements LocationListener {
 				f.longitude = loc.getLongitude();
 				System.out.println("Longitude (no gps) =" + f.longitude);
 
-				if (!experimentNum.equals("-1")) {
-					dataJSON.put(dfm.putData());
-				} else {
-					dataJSON.put(dfm.putDataForNoProjectID());
-				}
+				dataJSON.put(dfm.putDataForNoProjectID());
 			}
 
-			dataJSON.put(dataRow);
+			QDataSet ds = new QDataSet(name.getText().toString() + (descriptionStr.equals("") ? "" : ": " + descriptionStr),
+					makeThisDatePretty(curTime), QDataSet.Type.BOTH, dataJSON.toString(), picture, projNum, null);
 
-			QDataSet ds = new QDataSet(QDataSet.Type.BOTH, name.getText()
-					.toString() + ": " + descriptionStr,
-					makeThisDatePretty(curTime), experimentNum,
-					dataJSON.toString(), picture);
-
-			System.out.println("projectNum = " + experimentNum);
+			System.out.println("projectNum = " + projNum);
 
 			uq.addDataSetToQueue(ds);
 

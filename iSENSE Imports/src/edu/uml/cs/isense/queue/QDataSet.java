@@ -160,8 +160,7 @@ public class QDataSet implements Serializable {
 		try {
 			// see if the elements of the JSONArray are JSONArrays
 			JSONArray ja = new JSONArray(data);
-			@SuppressWarnings("unused")
-			JSONArray element = ja.getJSONArray(0);
+			ja.getJSONArray(0);
 			
 			// if we got here, the data is a JSONArray of JSONArrays: reOrder it
 			this.data = DataFieldManager.reOrderData(ja, this.projID, c, this.fields, null);

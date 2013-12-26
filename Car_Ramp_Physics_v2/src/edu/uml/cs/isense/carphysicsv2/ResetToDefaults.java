@@ -7,20 +7,20 @@ import android.view.View;
 import android.widget.Button;
 
 public class ResetToDefaults extends Activity {
-	
+
 	Button reset, noreset;
-	
+
 	public void onCreate(Bundle b) {
 		super.onCreate(b);
 		this.setContentView(R.layout.reset);
-		
+
 		setTitle("Are You Sure?");
-		
+
 		reset = (Button) findViewById(R.id.reset);
 		noreset = (Button) findViewById(R.id.noreset);
-		
+
 		reset.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				int length = 10;
@@ -30,21 +30,20 @@ public class ResetToDefaults extends Activity {
 				editor.putInt("length", length).commit();
 				setResult(RESULT_OK);
 				finish();
-				
+
 			}
 		});
-		
+
 		noreset.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				finish();
-				
+
 			}
 		});
-				
-		
+
 	}
 
 }
