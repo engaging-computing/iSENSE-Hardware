@@ -23,7 +23,7 @@
     <string name="lastInitialLabel"> Last Initial: </string>
     <string name="startPrompt">Hold to Start</string>
     <string name="logoDescription">iSense Logo</string>
-    <string name="stopPrompt">Recording Data. Hold to Stop</string>
+    <string name="stopPrompt">Hold to Stop</string>
     <string name="timeElapsed">Time Elapsed:   seconds</string>
     <string name="noLocation0">Latitude: waiting for GPS\nLongitude: waiting for GPS</string>
     <string name="noLocation1">Latitude: waiting for GPS .\nLongitude: waiting for GPS .</string>
