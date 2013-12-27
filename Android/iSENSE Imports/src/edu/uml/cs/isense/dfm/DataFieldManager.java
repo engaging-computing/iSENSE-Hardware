@@ -1116,5 +1116,38 @@ public class DataFieldManager extends Application {
 				enabledFields[Fields.LIGHT] = true;
 		}
 	}
+	
+	/**
+	 * Converts a JSONArray of JSONArray data into a JSONArray of JSONObject
+	 * data where each JSONObject is the internal JSONArray element of the old
+	 * data, keyed with the project's field ID.
+	 * 
+	 * @param oldData
+	 * 		- JSONArray of JSONArray data to be converted
+	 * @return
+	 * 		A JSONArray of JSONObjects, ready for upload to the associated project.
+	 */
+	public JSONArray convertInternalDataToJSONObject(JSONArray oldData) {
+		
+		getOrderWithExternalAsyncTask();
+		JSONArray newData = new JSONArray();
+		
+		for (int i = 0; i < oldData.length(); i++) {
+			try {
+				JSONArray oldRow = oldData.getJSONArray(i);
+				JSONObject newRow = new JSONObject();
+				for (int j = 0; j < this.fieldIDs.size(); j++) {
+					String data = oldRow.getString(j);
+					newRow.put(fieldIDs.get(j) + "", data);
+				}
+				newData.put(newRow);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		return newData;
+	}
 
 }
