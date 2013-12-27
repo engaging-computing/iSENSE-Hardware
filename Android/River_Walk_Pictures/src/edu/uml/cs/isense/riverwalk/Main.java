@@ -141,7 +141,7 @@ public class Main extends Activity implements LocationListener {
 		f = new Fields();
 
 		api = API.getInstance();
-		api.useDev(true);
+		api.useDev(false);
 
 		uq = new UploadQueue("generalpictures", mContext, api);
 
@@ -817,18 +817,14 @@ public class Main extends Activity implements LocationListener {
 
 			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
-
 				picture = convertImageUriToFile(imageUri);
-
-				uq.buildQueueFromFile();
-				queueCount.setText(getResources()
-						.getString(R.string.queueCount) + uq.queueSize());
 				
 				Intent iDesc = new Intent(Main.this, Description.class);
 				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
 				
+			
 
-				new UploadTask().execute();
+			
 
 			}
 
@@ -866,14 +862,13 @@ public class Main extends Activity implements LocationListener {
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
+			descriptionStr = Description.photo_description; 
+			
+			uq.buildQueueFromFile();
+			queueCount.setText(getResources()
+					.getString(R.string.queueCount) + uq.queueSize());
 
-			descriptionStr = Description.photo_description; // set
-															// descriptionStr
-															// equal to
-															// photo_description
-															// in
-															// Description.java
-
+			new UploadTask().execute();
 		}
 	}
 

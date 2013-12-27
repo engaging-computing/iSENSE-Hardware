@@ -55,6 +55,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -65,7 +66,6 @@ import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
-import edu.uml.cs.isense.dfm.SensorCompatibility;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -75,6 +75,18 @@ import edu.uml.cs.isense.waffle.Waffle;
 
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
+
+	@Override
+	public boolean onMenuOpened(int featureId, Menu menu) {
+		// TODO Auto-generated method stub
+		return super.onMenuOpened(featureId, menu);
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		// TODO Auto-generated method stub
+		return super.onMenuItemSelected(featureId, item);
+	}
 
 	/* Default Constants */
 	private final String DEFAULT_USERNAME = "mobile";
@@ -97,7 +109,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	/* Managers and Their Variables */
 	public static DataFieldManager dfm;
-	public static SensorCompatibility sc;
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
 	private Location loc;
@@ -149,6 +160,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int EXPERIMENT_CODE = 2;
 	private final int CHOOSE_SENSORS_REQUESTED = 3;
 	private final int SYNC_TIME_REQUESTED = 4;
+	private final int SETUP_REQUESTED = 5;
 
 	private int dataPointCount = 0, elapsedMillis;
 
@@ -166,7 +178,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
 		// Think pointer to this activity
 		mContext = this;
 
@@ -408,28 +420,41 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!useMenu) {
-			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
-			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
-			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
-		} else {
-			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
-			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
-			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
-		}
+	public boolean onCreateOptionsMenu (Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
 		return true;
 	}
+	
 
+	
+//	@Override
+//	public boolean onPrepareOptionsMenu(Menu menu) {
+//		if (!useMenu) {
+//			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
+//			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
+//			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
+//			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
+//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
+//		} else {
+//			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
+//			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
+//			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
+//			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
+//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
+//		}
+//		return true;
+//	}
+
+	
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_ITEM_SETUP:
-			startStop.setEnabled(false);
+			//startStop.setEnabled(false);
+			Intent iSetup = new Intent(AmusementPark.this, Configuration.class);
+			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
 		case MENU_ITEM_LOGIN:
 			login(true);
@@ -571,6 +596,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			/* TODO fieldMatching.acceptedFields */
 			// acceptedFields = fieldMatcher.acceptedFields;
 			dfm.setEnabledFields(acceptedFields);
+		} else if (requestCode == SETUP_REQUESTED) {
+			
 		}
 
 	}
@@ -845,9 +872,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			dfm = new DataFieldManager(Integer.parseInt(eidInput), api,
 					mContext, f);
 			dfm.getOrder();
-
-			sc = dfm.checkCompatibility();
-
+			
 			publishProgress(100);
 			return null;
 
@@ -857,10 +882,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void voids) {
 			dia.setMessage("Done");
 			dia.cancel();
-
-			Intent i = new Intent(mContext, SensorCompatibility.class);
-			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
-
 		}
 	}
 

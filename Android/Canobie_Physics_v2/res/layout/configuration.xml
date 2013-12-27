@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/setupScroll"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content" >
 
     <LinearLayout
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:paddingTop="15dip"
-                android:text="@string/experimentNum"
+                android:text="@string/projectNum"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
