@@ -148,6 +148,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 
 			manualLogo = (ImageView) findViewById(R.id.manual_logo);
 			manualLogo.setVisibility(View.GONE);
@@ -480,6 +483,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 
 			return true;
+			
+		case android.R.id.home:
+	    	onBackPressed();
+	    	
+	        return true;
 
 		}
 		return false;
@@ -591,7 +599,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 		} else {
 			if (throughUploadButton) {
 				throughUploadButton = false;
-				w.make("There is no data to upload", Waffle.LENGTH_LONG,
+				w.make("There are no data to upload", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			}
 		}
