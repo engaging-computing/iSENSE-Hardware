@@ -66,10 +66,9 @@ public class QDataSet implements Serializable {
 	private String projID;
 
 	private boolean rdyForUpload = true;
-
 	protected long key;
-
 	private boolean hasInitialProject = true;
+	private boolean requestDataLabelInOrder = false;
 
 	/**
 	 * String in JSONArray.toString() format containing all the data to upload
@@ -124,6 +123,7 @@ public class QDataSet implements Serializable {
 		else
 			fields = new LinkedList<String>();
 		this.hasInitialProject = projID.equals("-1") ? false : true;
+		this.requestDataLabelInOrder = false;
 		
 		// randomized key
 		this.key = new Random().nextLong();
@@ -149,24 +149,42 @@ public class QDataSet implements Serializable {
 		if (this.projID.equals("-1"))
 			return -1;
 
-		// if there was no initial project, we must reOrder the data with the fields from FieldMatching
-		if (!this.hasInitialProject) {
-			System.out.println("Need to re-order some data with fields: " + this.fields.toString());
-			this.data = DataFieldManager.reOrderData(prepDataForUpload(),
-					this.projID, c, this.fields, null);
-		}
+		// if the data is already in a forced order and just needs to be labeled with the
+		// project's field IDs, we'll do so here
+		if (this.requestDataLabelInOrder) {
+			try {
+				// see if the elements of the JSONArray are JSONArrays
+				JSONArray ja = new JSONArray(data);
+				ja.getJSONArray(0);
+			
+				// if we got here, the data is a JSONArray of JSONArrays: convert it
+				DataFieldManager dfm = new DataFieldManager(Integer.parseInt(this.projID), api, c, null);
+				this.data = dfm.convertInternalDataToJSONObject(ja).toString();
+				System.out.println("New data = \n" + this.data);
+			} catch (JSONException e) {
+				// we have a JSONArray of JSONObjects: this is bad
+				return -1;
+			}
+		} else {
+			// if there was no initial project, we must reOrder the data with the fields from FieldMatching
+			if (!this.hasInitialProject) {
+				System.out.println("Need to re-order some data with fields: " + this.fields.toString());
+				this.data = DataFieldManager.reOrderData(prepDataForUpload(),
+						this.projID, c, this.fields, null);
+			}
 		
-		// otherwise, if we have a JSONArray for data, we must reOrder it as well using fields
-		try {
-			// see if the elements of the JSONArray are JSONArrays
-			JSONArray ja = new JSONArray(data);
-			ja.getJSONArray(0);
+			// otherwise, if we have a JSONArray for data, we must reOrder it as well using fields
+			try {
+				// see if the elements of the JSONArray are JSONArrays
+				JSONArray ja = new JSONArray(data);
+				ja.getJSONArray(0);
 			
-			// if we got here, the data is a JSONArray of JSONArrays: reOrder it
-			this.data = DataFieldManager.reOrderData(ja, this.projID, c, this.fields, null);
+				// if we got here, the data is a JSONArray of JSONArrays: reOrder it
+				this.data = DataFieldManager.reOrderData(ja, this.projID, c, this.fields, null);
 			
-		} catch (JSONException e) {
-			// we have a JSONArray of JSONObjects for data already - continue without reOrdering
+			} catch (JSONException e) {
+				// we have a JSONArray of JSONObjects for data already - continue without reOrdering
+			}
 		}
 
 		return uploadDataAndMedia();
@@ -368,6 +386,18 @@ public class QDataSet implements Serializable {
 	 */
 	public File getPicture() {
 		return this.picture;
+	}
+	
+	/**
+	 * Set this parameter for this data set if you passed in a JSONArray
+	 * of JSONArrays for a data set with data, in order, of a project you
+	 * want to associate with project fields, in order, at upload time.  If
+	 * you understood ANY of that, fantastic.
+	 * 
+	 * @param rdlio
+	 */
+	public void setRequestDataLabelInOrder(boolean rdlio) {
+		this.requestDataLabelInOrder = rdlio;
 	}
 
 }
