@@ -105,7 +105,7 @@ public class SelectMode extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (!Connection.hasConnectivity(mContext))
-					w.make("You need to have internet connectivity to do this",
+					w.make(getResources().getString(R.string.need_connectivity_to_do),
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				else {
 					Intent iFileBrowse = new Intent(mContext, FileBrowser.class);
@@ -150,13 +150,14 @@ public class SelectMode extends Activity {
 			if (resultCode == RESULT_OK) {
 				String filepath = data.getStringExtra("filepath");
 				if (filepath.length() == 0) {
-					w.make("Could not find .csv file", Waffle.LENGTH_SHORT,
+					w.make(getResources().getString(R.string.could_not_find_csv),
+							Waffle.LENGTH_SHORT,
 							Waffle.IMAGE_X);
 					return;
 				}
 
 				if (!Connection.hasConnectivity(mContext)) {
-					w.make("Cannot upload a .csv file with no internet connectivity",
+					w.make(getResources().getString(R.string.no_csv_no_internet),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				}
@@ -166,7 +167,7 @@ public class SelectMode extends Activity {
 				if (comp.length == 0
 						|| !(comp[comp.length - 1].toLowerCase(Locale.US)
 								.equals("csv"))) {
-					w.make("Only .csv files are allowed for upload",
+					w.make(getResources().getString(R.string.only_csv_files),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				}
@@ -176,7 +177,7 @@ public class SelectMode extends Activity {
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				w.make("Login successful", Waffle.LENGTH_LONG,
+				w.make(getResources().getString(R.string.login_success), Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 
 				new UploadCSVTask().execute(tempFilepath);
@@ -239,7 +240,8 @@ public class SelectMode extends Activity {
 
 			if (api.getCurrentUser() == null) {
 				tempFilepath = filepath;
-				w.make("Please log in", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+				w.make(getResources().getString(R.string.please_log_in), 
+						Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 
 				Intent i = new Intent(mContext, Login.class);
 				startActivityForResult(i, LOGIN_REQUESTED);
@@ -295,10 +297,12 @@ public class SelectMode extends Activity {
 			OrientationManager.enableRotation(SelectMode.this);
 
 			if (dsid <= 0) {
-				w.make(".csv File Failed to Upload", Waffle.LENGTH_SHORT,
+				w.make(getResources().getString(R.string.csv_failed_upload), 
+						Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_X);
 			} else {
-				w.make(".csv File Uploaded Successfully", Waffle.LENGTH_SHORT,
+				w.make(getResources().getString(R.string.csv_success_upload), 
+						Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			}
 
