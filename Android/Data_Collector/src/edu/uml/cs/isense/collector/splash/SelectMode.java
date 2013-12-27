@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -71,6 +72,9 @@ public class SelectMode extends Activity {
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		// Set listeners for the buttons
@@ -300,6 +304,17 @@ public class SelectMode extends Activity {
 
 		}
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case android.R.id.home:
+	    	onBackPressed();
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	@Override

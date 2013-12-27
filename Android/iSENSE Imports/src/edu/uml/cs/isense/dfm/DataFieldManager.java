@@ -1120,7 +1120,7 @@ public class DataFieldManager extends Application {
 	/**
 	 * Converts a JSONArray of JSONArray data into a JSONArray of JSONObject
 	 * data where each JSONObject is the internal JSONArray element of the old
-	 * data, keyed with the project's field ID.
+	 * data, keyed with the project's field IDs.
 	 * 
 	 * @param oldData
 	 * 		- JSONArray of JSONArray data to be converted

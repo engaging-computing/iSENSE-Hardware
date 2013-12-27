@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -88,6 +89,9 @@ public class ProjectCreate extends Activity {
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		projectName = (EditText) findViewById(R.id.project_create_name);
@@ -442,6 +446,17 @@ public class ProjectCreate extends Activity {
 		}
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case android.R.id.home:
+	    	onBackPressed();
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
+	}
+	
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();

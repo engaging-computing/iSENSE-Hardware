@@ -489,19 +489,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		
 		case R.id.menu_item_login:
 			Intent iLogin = new Intent(mContext, Login.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
+		
 			return true;
+		
 		case R.id.menu_item_sync:
 			Intent iTime = new Intent(DataCollector.this, SyncTime.class);
 			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
+		
 			return true;
+		
 		case R.id.menu_item_media:
 			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
 			iMedia.putExtra("dataSetName", dataSetName);
 			startActivity(iMedia);
+		
 			return true;
+		
+		case android.R.id.home:
+	    	onBackPressed();
+	       
+	    	return true;
 		}
 		return false;
 	}
@@ -1866,6 +1877,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 	}
 
@@ -1888,6 +1902,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 	}
 

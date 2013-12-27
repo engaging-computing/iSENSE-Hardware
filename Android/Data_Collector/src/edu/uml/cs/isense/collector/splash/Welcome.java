@@ -120,7 +120,6 @@ public class Welcome extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	    case android.R.id.home:
-	    	
 	    	String other = (useDev) ? "production" : "dev";
 	       
 	    	switch (++actionBarTapCount) {
