@@ -432,10 +432,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		if (!w.isDisplaying) {
 			if (running)
-				w.make("Cannot exit via BACK while recording data; use HOME instead.",
+				w.make(getResources().getString(R.string.no_back_use_home_instead),
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else
-				w.make("Double press \"Back\" to exit.");
+				w.make(getResources().getString(R.string.double_press_back));
 
 		} else if (w.canPerformTask && !running) {
 			super.onBackPressed();
@@ -651,7 +651,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				w.make("Login successful", Waffle.LENGTH_LONG,
+				w.make(getResources().getString(R.string.login_success), 
+						Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 
 				if (manageUploadQueueAfterLogin) {
@@ -695,7 +696,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				new SaveDataTask().execute();
 
 			} else if (resultCode == RESULT_CANCELED) {
-				w.make("Data set deleted", Waffle.LENGTH_SHORT,
+				w.make(getResources().getString(R.string.data_set_deleted),
+						Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 				OrientationManager.enableRotation((Activity) mContext);
 			}
@@ -704,7 +706,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			boolean success = uq.buildQueueFromFile();
 			if (!success) {
-				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
+				w.make(getResources().getString(R.string.could_not_build_queue), Waffle.IMAGE_X);
 			}
 
 		} else if (requestCode == STEP_1_SETUP_REQUESTED) {
@@ -837,7 +839,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			showSummary();
 
-			w.make("Your data set has been saved", Waffle.LENGTH_SHORT,
+			w.make(getResources().getString(R.string.data_saved),
+					Waffle.LENGTH_SHORT,
 					Waffle.IMAGE_CHECK);
 		}
 
@@ -1128,7 +1131,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else {
 			if (throughUploadMenuItem) {
 				throughUploadMenuItem = false;
-				w.make("There is no data to upload", Waffle.LENGTH_LONG,
+				w.make(getResources().getString(R.string.no_data_to_upload),
+						Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			}
 		}
@@ -1430,7 +1434,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				if (!running) {
 					if (dataSetName.equals("")
 							|| ((1000 / sampleInterval) * recordingLength) > Step1Setup.MAX_DATA_POINTS) {
-						w.make("Some data not found - please setup again",
+						w.make(getResources().getString(R.string.setup_again),
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 						Intent iSetup = new Intent(mContext, Step1Setup.class);
 						startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
@@ -1547,7 +1551,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					setTime(0);
 
 					if (writeCSVFile && sdCardError)
-						w.make("Could not write file to SD Card",
+						w.make(getResources().getString(R.string.could_not_write_sd_card),
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 
 					displayDescription();
