@@ -129,7 +129,7 @@
 		765099C1178DD92D00425A27 /* underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = underline.png; sourceTree = "<group>"; };
 		765099C9178DF0CE00425A27 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		765099CB178DF0D500425A27 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		7669F026178B275C00E51AD0 /* Car Ramp Physics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Car Ramp Physics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7669F026178B275C00E51AD0 /* iS Car Ramp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iS Car Ramp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7669F029178B275C00E51AD0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7669F02B178B275C00E51AD0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7669F02D178B275C00E51AD0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -251,7 +251,7 @@
 		7669F027178B275C00E51AD0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7669F026178B275C00E51AD0 /* Car Ramp Physics.app */,
+				7669F026178B275C00E51AD0 /* iS Car Ramp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -435,7 +435,7 @@
 			);
 			name = "Car Ramp Physics";
 			productName = "Car Ramp Physics";
-			productReference = 7669F026178B275C00E51AD0 /* Car Ramp Physics.app */;
+			productReference = 7669F026178B275C00E51AD0 /* iS Car Ramp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -694,7 +694,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "Car Ramp Physics";
+				PRODUCT_NAME = "iS Car Ramp";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -702,6 +702,8 @@
 		7669F04E178B275C00E51AD0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -712,7 +714,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "Car Ramp Physics";
+				PRODUCT_NAME = "iS Car Ramp";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

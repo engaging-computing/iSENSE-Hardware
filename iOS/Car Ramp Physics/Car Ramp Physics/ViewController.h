@@ -27,6 +27,7 @@
 #import <UIKit/UIKit.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import <iSENSE_API/API.h>
+#import <FieldMatchingViewController.h>
 
 typedef struct _RotationDataSaver{
     __unsafe_unretained NSString *first;
@@ -51,6 +52,10 @@ typedef struct _RotationDataSaver{
 @property(nonatomic) IBOutlet UIButton *start;
 @property(nonatomic) IBOutlet UIBarButtonItem *menuButton;
 @property(nonatomic) IBOutlet UIImageView *image;
+@property(nonatomic) UIToolbar *keyboardBar;
+@property(nonatomic) UIBarButtonItem *prev;
+@property(nonatomic) UIBarButtonItem *next;
+@property(nonatomic) UIBarButtonItem *done;
 
 @property(nonatomic) int recordLength;
 @property(nonatomic) int countdown;
@@ -60,6 +65,7 @@ typedef struct _RotationDataSaver{
 @property(nonatomic, retain) UIAlertView *loginalert;
 @property(nonatomic, retain) UIAlertView *saveMode;
 @property(nonatomic, retain) API *api;
+@property(nonatomic, retain) NSNumberFormatter *formatter;
 @property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
 @property (nonatomic, strong) NSMutableArray *dataToBeJSONed;

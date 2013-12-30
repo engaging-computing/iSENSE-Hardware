@@ -16,7 +16,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, keyboardBar,prev, next, done ;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -110,6 +110,42 @@
     lengthField.text = [self.lengths objectAtIndex:row];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3];
+    
+    CGRect frame = self.keyboardBar.frame;
+    frame.origin.y = self.view.frame.size.height - 260.0;
+    self.keyboardBar.frame = frame;
+    
+    [UIView commitAnimations];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3];
+    
+    CGRect frame = self.keyboardBar.frame;
+    frame.origin.y = self.view.frame.size.height;
+    self.keyboardBar.frame = frame;
+    
+    [UIView commitAnimations];
+}
+
 
 - (void)viewDidLoad {
     
@@ -118,10 +154,21 @@
 	UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     [start addGestureRecognizer:longPress];
     
+    formatter = [[NSNumberFormatter alloc] init];
     
+    [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    
+    [formatter setMaximumFractionDigits:3];
+    
+    [formatter setRoundingMode: NSNumberFormatterRoundUp];
     
     useDev = TRUE;
     
+    keyboardBar = [[UIToolbar alloc] init];
+    
+    prev = [[UIBarButtonItem alloc] initWithTitle:@"Previous" style:UIBarButtonItemStylePlain target:self action:@selector(Previous:)];
+    next = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStylePlain target:self action:@selector(Next:)];
+    done = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(Done:)];
     
     api = [API getInstance];
     [api useDev: useDev];
@@ -144,7 +191,6 @@
     timeOver = NO;
     setupDone = NO;
     
-    dfm = [[DataFieldManager alloc] init];
     //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
     
@@ -213,10 +259,7 @@
     
     [self setPickerDefault];
     
-    
-    
-    
-    
+    dfm = [[DataFieldManager alloc] initWithProjID:expNum API:api andFields:nil];    
     
 }
 
@@ -349,6 +392,7 @@
 // Record the data and return the NSMutable array to be JSONed
 - (void) recordData {
     
+    [start setTitle:[NSString stringWithFormat:@"%d", countdown] forState:UIControlStateNormal];
     // Get the recording rate
     float rate = .125;
     /*NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -405,14 +449,13 @@
         
         NSLog(@"points: %d", dataPoints);
         
-        if (countdown >= 0) {
+        if (countdown >=  1) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [start setTitle:[NSString stringWithFormat:@"%d", countdown] forState:UIControlStateNormal];
-                countdown--;
+                [start setTitle:[NSString stringWithFormat:@"%d", --countdown] forState:UIControlStateNormal];
             });
         }
         
-        if (countdown < 0) {
+        if (countdown < 1) {
             
             [self stopRecording:motionmanager];
         }
@@ -451,24 +494,24 @@
             // acceleration in meters per second squared
             if ([dfm enabledFieldAtIndex:fACCEL_X]) {
                 fieldsRow.accel_x = [NSNumber numberWithDouble:[motionmanager.accelerometerData acceleration].x * 9.80665];
-                [vector stringByAppendingString:@"X: "];
-                [vector stringByAppendingString:[fieldsRow.accel_x stringValue]];
+                vector = [vector stringByAppendingString:@"X: "];
+                vector = [vector stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_x]];
             } if ([dfm enabledFieldAtIndex:fACCEL_Y]) {
                 fieldsRow.accel_y = [NSNumber numberWithDouble:[motionmanager.accelerometerData acceleration].y * 9.80665];
                 if ([vector length] == 0) {
-                    [vector stringByAppendingString:@"Y: "];
+                    vector = [vector stringByAppendingString:@"Y: "];
                 } else {
-                    [vector stringByAppendingString:@", Y: "];
+                    vector = [vector stringByAppendingString:@", Y: "];
                 }
-                [vector stringByAppendingString:[fieldsRow.accel_y stringValue]];
+                vector = [vector stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_y]];
             } if ([dfm enabledFieldAtIndex:fACCEL_Z]) {
                 fieldsRow.accel_z = [NSNumber numberWithDouble:[motionmanager.accelerometerData acceleration].z * 9.80665];
                 if ([vector length] == 0) {
-                    [vector stringByAppendingString:@"Z: "];
+                    vector = [vector stringByAppendingString:@"Z: "];
                 } else {
-                    [vector stringByAppendingString:@", Z: "];
+                    vector = [vector stringByAppendingString:@", Z: "];
                 }
-                [vector stringByAppendingString:[fieldsRow.accel_z stringValue]];
+                vector = [vector stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_z]];
             } if ([dfm enabledFieldAtIndex:fACCEL_TOTAL]) {
                 fieldsRow.accel_total = [NSNumber numberWithDouble:
                                          sqrt(pow(fieldsRow.accel_x.doubleValue, 2)
@@ -476,11 +519,11 @@
                                               + pow(fieldsRow.accel_z.doubleValue, 2))];
             
                 if ([vector length] == 0) {
-                    [vector stringByAppendingString:@"Magnitude: "];
+                    vector = [vector stringByAppendingString:@"Total: "];
                 } else {
-                    [vector stringByAppendingString:@", Magnitude: "];
+                    vector = [vector stringByAppendingString:@", Total: "];
                 }
-                [vector stringByAppendingString:[fieldsRow.accel_total stringValue]];
+                vector = [vector stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_total]];
             
             }
             
@@ -988,7 +1031,6 @@
         }
     } else if ([alertView.title isEqualToString:@"Enter Project ID"]) {
         expNum = [[alertView textFieldAtIndex:0].text intValue];
-        if (expNum == 0) {
             if (saveModeEnabled) {
                 expNum = -1;
             } else {
@@ -998,7 +1040,7 @@
                     expNum = PROD_DEFAULT_EXP;
                 }
             }
-        }
+            [self launchFieldMatchingViewControllerFromBrowse:FALSE];
     } else if ([alertView.title isEqualToString:@"No Connectivity"]) {
         if ([title isEqualToString:@"Try Again"]){
             [self saveModeDialog];
@@ -1097,7 +1139,50 @@
 
 -(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
     expNum = project.intValue;
+    [self launchFieldMatchingViewControllerFromBrowse:TRUE];
 }
+
+- (void) launchFieldMatchingViewControllerFromBrowse:(bool)fromBrowse {
+    // get the fields to field match
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading fields..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("loading_project_fields", NULL);
+    dispatch_async(queue, ^{
+        [dfm getOrder];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // set an observer for the field matched array caught from FieldMatching
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
+            
+            // launch the field matching dialog
+            FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithMatchedFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
+            fmvc.title = @"Field Matching";
+            
+            if (fromBrowse) {
+                double delayInSeconds = 0.1;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    [self.navigationController pushViewController:fmvc animated:YES];
+                });
+            } else
+                [self.navigationController pushViewController:fmvc animated:YES];
+            
+            if (fromBrowse) [NSThread sleepForTimeInterval:1.0];
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+            
+        });
+    });
+}
+
+- (void) retrieveFieldMatchedArray:(NSNotification *)obj {
+    NSMutableArray *fieldMatch =  (NSMutableArray *)[obj object];
+    if (fieldMatch != nil) {
+        // user pressed okay button - set the cell's project and fields
+        
+    }
+    // else user canceled
+}
+
 
 
 @end
