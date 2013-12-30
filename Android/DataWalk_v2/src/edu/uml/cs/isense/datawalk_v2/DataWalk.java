@@ -1142,7 +1142,8 @@ public class DataWalk extends Activity implements LocationListener,
 	    				}
 	    			};
 	    			new Thread(r).start();
-	    		}
+	    		} else 
+	    			api.useDev(useDev);
 	    		actionBarTapCount = 0;
 	    		onCreateInit();
 	    		break;

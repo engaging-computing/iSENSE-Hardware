@@ -312,8 +312,8 @@
 				B7AE6FA7181FE08E0081BD4B /* Icons */,
 				B74CA1B217A2C0BF00C0E395 /* rsense_logo_recording.png */,
 				B74CA1B317A2C0BF00C0E395 /* rsense_logo.png */,
-				3908824F169B325A00BEE04F /* Default-568h@2x.png */,
 				52572B741691F742009037A7 /* media_icon.png */,
+				3908824F169B325A00BEE04F /* Default-568h@2x.png */,
 			);
 			name = Drawable;
 			sourceTree = "<group>";
