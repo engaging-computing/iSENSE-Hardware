@@ -12,9 +12,9 @@
         android:title="@string/record_length">
     </item>
     <item
-        android:id="@+id/experiment_select"
+        android:id="@+id/project_select"
         android:showAsAction="ifRoom"
-        android:title="@string/chooseExperimentTitle">
+        android:title="@string/choose_project_title">
     </item>
     <item
         android:id="@+id/login"
