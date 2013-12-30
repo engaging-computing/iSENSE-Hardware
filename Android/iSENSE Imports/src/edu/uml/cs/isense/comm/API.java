@@ -571,21 +571,16 @@ public class API {
 		// append timestamp to the data set name to ensure uniqueness
 		datasetName += appendedTimeStamp();
 		
-//		ArrayList<RProjectField> fields = getProjectFields(projectId);
 		JSONObject requestData = new JSONObject();
-//		ArrayList<String> headers = new ArrayList<String>();
-//		for(RProjectField rpf : fields) {
-//			headers.add(""+rpf.field_id);
-//		}
+
 		try {
-//			requestData.put("headers", new JSONArray(headers));
 			requestData.put("data", data);
 			requestData.put("id", ""+projectId);
 			if(!datasetName.equals("")) 
 				requestData.put("title", datasetName);
 			
-			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/jsonDataUpload", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
-			System.out.println("Are I blank? = " + reqResult);
+			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/jsonDataUpload", 
+					"authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
 			
 			JSONObject jobj = new JSONObject(reqResult);
 			System.out.println("Returning: " + jobj.toString());

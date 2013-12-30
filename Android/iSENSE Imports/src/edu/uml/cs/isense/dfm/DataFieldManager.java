@@ -563,15 +563,6 @@ public class DataFieldManager extends Application {
 		JSONObject outRow;
 		int len = data.length();
 		
-		/////// TODO debug
-		
-		if (fieldOrder == null) System.out.println("BEFORE: fieldOrder = nullbunnies");
-		else					System.out.println("BEFORE: fieldOrder = " + fieldOrder);
-		if (fieldIDs == null)	System.out.println("BEFORE: fieldIDs   = nullbunnies");
-		else					System.out.println("BEFORE: fieldIDs   = " + fieldIDs);
-		
-		///////
-		
 		// if the field order is null, set up the fieldOrder/fieldIDs.  otherwise, just get fieldIDs
 		if (fieldOrder == null || fieldOrder.size() == 0) {
 			DataFieldManager d = new DataFieldManager(Integer.parseInt(projID), api, c, null);
@@ -583,17 +574,7 @@ public class DataFieldManager extends Application {
 			d.getOrderWithExternalAsyncTask();
 			fieldIDs = d.getFieldIDs();
 		}
-		
-		/////// TODO debug
-		
-		if (fieldOrder == null) System.out.println("AFTER: fieldOrder = nullbunnies");
-		else					System.out.println("AFTER: fieldOrder = " + fieldOrder);
-		if (fieldIDs == null)	System.out.println("AFTER: fieldIDs   = nullbunnies");
-		else					System.out.println("AFTER: fieldIDs   = " + fieldIDs);
 			
-		///////
-		
-		
 		Activity a = (Activity) c;
 
 		for (int i = 0; i < len; i++) {
@@ -805,7 +786,7 @@ public class DataFieldManager extends Application {
 		this.fieldIDs = new LinkedList<Long>();
 		
 		for (RProjectField field : projFields) {
-			System.out.println("Getting DFM order");
+
 			realOrder.add(field.name);
 			fieldIDs.add(field.field_id);
 			
@@ -914,10 +895,6 @@ public class DataFieldManager extends Application {
 
 		}
 		
-		System.out.println("So, let's look at the field IDs");
-		for (Long i : fieldIDs) {
-			System.out.println("DFM field are is this: " + i);
-		}
 	}
 	
 	/**
