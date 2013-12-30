@@ -79,15 +79,6 @@ public class DataFieldManager extends Application {
 		this.f = f;
 	}
 
-	// Static class function strictly for getting the field order of any
-	// project.  To only be used internally.
-//	private static LinkedList<String> getOrder(int projID, API api, Context c) {
-//		api = API.getInstance();
-//		DataFieldManager d = new DataFieldManager(projID, api, c, null);
-//		d.getOrderWithExternalAsyncTask();
-//		return d.order;
-//	}
-
 	/**
 	 * Creates a list, stored in this DataFieldManager instance's "order" object,
 	 * of matched fields from the iSENSE project with the instance's "projID".
@@ -208,7 +199,7 @@ public class DataFieldManager extends Application {
 	 * @return The row of data in the form of a JSONArray that is to be re-organized
 	 * at upload time.
 	 */
-	public JSONArray putDataForNoProjectID() {
+	public JSONArray putData() {
 
 		JSONArray dataJSON = new JSONArray();
 
@@ -540,7 +531,7 @@ public class DataFieldManager extends Application {
 	 * 
 	 * @param data
 	 * 		- A JSONArray of JSONArray objects returned from the
-	 * 		{@link edu.uml.cs.isense.dfm.DataFieldManager#putDataForNoProjectID() putDataForNoProjectID()}
+	 * 		{@link edu.uml.cs.isense.dfm.DataFieldManager#putData() putData()} method.
 	 * @param projID
 	 * 		- The project ID which the data will be re-ordered to match.
 	 * @param api
