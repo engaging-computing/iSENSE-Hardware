@@ -1340,7 +1340,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// TODO should there be a new Fields object for each row recorded? else
 		// duplicate data
 		// if so, then ensure you set dfm's field objects each time
-		System.out.println("Polling 1");
+
 		dataPointCount++;
 		elapsedMillis += sampleInterval;
 		totalMillis = elapsedMillis;
@@ -1396,13 +1396,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 			f.altitude = calcAltitude();
 		if (dfm.enabledFields[Fields.LIGHT])
 			f.lux = light;
-		System.out.println("Polling 2");
 
-		dataSet.put(dfm.putDataForNoProjectID()); // TODO this is new
+		dataSet.put(dfm.putData());
 		
-		System.out.println("Polling 3");
 		data = dfm.writeSdCardLine();
-		System.out.println("Polling 4");
+
 		if (writeCSVFile) {
 			if (beginWrite) {
 				String header = dfm.writeHeaderLine();
@@ -1411,7 +1409,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			} else {
 				writeToSDCard(data, 'u');
 			}
-		}System.out.println("Polling 5"); System.out.flush();
+		}
 		
 	}
 

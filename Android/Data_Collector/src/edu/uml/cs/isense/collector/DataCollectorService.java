@@ -78,12 +78,6 @@ public class DataCollectorService extends Service {
 				});
 			}
 		}, 0, 1000);
-		
-		///////// TODO remove this debug info
-		
-		System.out.println("DEBUG: srate = " + srate + "\nDEBUG: recLength = " + recLength);
-		
-		/////////
 
 		long endTime = System.currentTimeMillis() + recLength * 1000;
 		while (System.currentTimeMillis() < endTime) {
@@ -102,14 +96,14 @@ public class DataCollectorService extends Service {
 				
 					// Get current execution time
 					long curExecution = System.currentTimeMillis();
-					System.out.println("Where 5");
+
 					// Execute main body at rate of srate
 					DataCollector.pollForData();
-					System.out.println("Where 6");
+
 					// Wait for a period of srate - execution time
-					System.out.println("Should wait: " + (srate - (System.currentTimeMillis() - curExecution)));
+
 					wait(srate - (System.currentTimeMillis() - curExecution));
-					System.out.flush();
+
 				} catch (Exception e) {
 				}
 			}

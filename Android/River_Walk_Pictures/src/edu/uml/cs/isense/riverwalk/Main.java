@@ -753,7 +753,7 @@ public class Main extends Activity implements LocationListener {
 				f.longitude = loc.getLongitude();
 				System.out.println("Longitude =" + f.longitude);
 
-				dataJSON.put(dfm.putDataForNoProjectID());
+				dataJSON.put(dfm.putData());
 
 			} else { // no gps
 				loc = mLocationManager
@@ -765,7 +765,7 @@ public class Main extends Activity implements LocationListener {
 				f.longitude = loc.getLongitude();
 				System.out.println("Longitude (no gps) =" + f.longitude);
 
-				dataJSON.put(dfm.putDataForNoProjectID());
+				dataJSON.put(dfm.putData());
 			}
 
 			QDataSet ds = new QDataSet(name.getText().toString() + (descriptionStr.equals("") ? "" : ": " + descriptionStr),
