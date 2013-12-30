@@ -7,19 +7,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 public class Configuration extends Activity {
-	private EditText session; 
-	private EditText project;
-	private CheckBox projectLater;
-	private EditText sampleRate;
-	private EditText studentNumber;
-	private CheckBox isCanobie;
-	private Spinner rides;
+	public static EditText session; 
+	public static EditText project;
+	public static CheckBox projectLater;
+	public static EditText sampleRate;
+	public static EditText studentNumber;
+	public static CheckBox isCanobie;
+	public static Spinner rides;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.configuration);
-
 		
 		session = (EditText) findViewById(R.id.sessionName);
 		project = (EditText) findViewById(R.id.ExperimentInput);
