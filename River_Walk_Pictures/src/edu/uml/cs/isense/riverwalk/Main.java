@@ -1001,7 +1001,6 @@ public class Main extends Activity implements LocationListener {
 					@Override
 					public void run() {
 
-						Log.d("tag", "latitude =" + loc.getLatitude());
 						if (loc.getLatitude() != 0)
 							latLong.setText("Lat: " + loc.getLatitude()
 									+ "\nLong: " + loc.getLongitude());

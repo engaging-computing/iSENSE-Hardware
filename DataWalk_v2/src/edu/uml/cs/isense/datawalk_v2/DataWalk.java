@@ -1509,7 +1509,7 @@ public class DataWalk extends Activity implements LocationListener,
 					dataJSON.put(""   + loc.getLongitude());
 					
 					// Save this data point if GPS says it has a lock
-					//if (gpsWorking) { TODO put this back
+					if (gpsWorking) {
 						
 						dataSet.put(dataJSON);
 						
@@ -1526,7 +1526,7 @@ public class DataWalk extends Activity implements LocationListener,
 							}
 
 						});
-					//}
+					}
 				}
 			}
 

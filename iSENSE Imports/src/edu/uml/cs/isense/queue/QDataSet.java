@@ -160,7 +160,6 @@ public class QDataSet implements Serializable {
 				// if we got here, the data is a JSONArray of JSONArrays: convert it
 				DataFieldManager dfm = new DataFieldManager(Integer.parseInt(this.projID), api, c, null);
 				this.data = dfm.convertInternalDataToJSONObject(ja).toString();
-				System.out.println("New data = \n" + this.data);
 			} catch (JSONException e) {
 				// we have a JSONArray of JSONObjects: this is bad
 				return -1;
@@ -168,7 +167,6 @@ public class QDataSet implements Serializable {
 		} else {
 			// if there was no initial project, we must reOrder the data with the fields from FieldMatching
 			if (!this.hasInitialProject) {
-				System.out.println("Need to re-order some data with fields: " + this.fields.toString());
 				this.data = DataFieldManager.reOrderData(prepDataForUpload(),
 						this.projID, c, this.fields, null);
 			}
@@ -211,11 +209,8 @@ public class QDataSet implements Serializable {
 				break;
 
 			case BOTH:
-				System.out.println("Calling Upload Dataset");
 				dataSetID = uploadData();
-				System.out.println("Calling Upload Dataset Media");
 				dataSetID = UploadQueue.getAPI().uploadDataSetMedia(dataSetID, picture);
-				System.out.println("New id = " + dataSetID);
 				break;
 				
 			}
