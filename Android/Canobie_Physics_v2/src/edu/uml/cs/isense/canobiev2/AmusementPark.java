@@ -64,6 +64,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.queue.QDataSet;
@@ -76,17 +77,13 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
-	@Override
-	public boolean onMenuOpened(int featureId, Menu menu) {
-		// TODO Auto-generated method stub
-		return super.onMenuOpened(featureId, menu);
-	}
+//	@Override
+//	public boolean onMenuOpened(int featureId, Menu menu) {
+//		// TODO Auto-generated method stub
+//		return super.onMenuOpened(featureId, menu);
+//	}
 
-	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-		// TODO Auto-generated method stub
-		return super.onMenuItemSelected(featureId, item);
-	}
+	
 
 	/* Default Constants */
 	private final String DEFAULT_USERNAME = "mobile";
@@ -161,6 +158,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int CHOOSE_SENSORS_REQUESTED = 3;
 	private final int SYNC_TIME_REQUESTED = 4;
 	private final int SETUP_REQUESTED = 5;
+	private final int LOGIN_REQUESTED = 6;
 
 	private int dataPointCount = 0, elapsedMillis;
 
@@ -192,7 +190,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			public boolean onLongClick(View arg0) {
 
 				if (!setupDone || rideName.getText().toString() == null) {
-
 					startStop.setEnabled(false);
 					w.make("You must setup before recording data.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
@@ -428,45 +425,47 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	
 
 	
-//	@Override
-//	public boolean onPrepareOptionsMenu(Menu menu) {
-//		if (!useMenu) {
-//			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
-//			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
-//			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
-//			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
-//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
-//		} else {
-//			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
-//			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
-//			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
-//			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
-//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
-//		}
-//		return true;
-//	}
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (!useMenu) {
+			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
+			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
+			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
+			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
+		} else {
+			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
+			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
+			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
+			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
+		}
+		return true;
+	}
 
 	
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_ITEM_SETUP:
+		case R.id.MENU_ITEM_SETUP:
 			//startStop.setEnabled(false);
 			Intent iSetup = new Intent(AmusementPark.this, Configuration.class);
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
-		case MENU_ITEM_LOGIN:
+		case R.id.MENU_ITEM_LOGIN:
+			startActivityForResult(new Intent(getApplicationContext(),
+					Login.class), LOGIN_REQUESTED);
 			login(true);
 			return true;
-		case MENU_ITEM_UPLOAD:
+		case R.id.MENU_ITEM_UPLOAD:
 			manageUploadQueue();
 			return true;
-		case MENU_ITEM_TIME:
-			Intent iTime = new Intent(AmusementPark.this, SyncTime.class);
-			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
+		case R.id.MENU_ITEM_TIME:
+//			Intent iTime = new Intent(AmusementPark.this, SyncTime.class);
+//			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
 			return true;
-		case MENU_ITEM_MEDIA:
+		case R.id.MENU_ITEM_MEDIA:
 			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
 			startActivity(iMedia);
 			return true;
@@ -597,6 +596,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			// acceptedFields = fieldMatcher.acceptedFields;
 			dfm.setEnabledFields(acceptedFields);
 		} else if (requestCode == SETUP_REQUESTED) {
+			
+		} else if (requestCode == LOGIN_REQUESTED) {
 			
 		}
 
@@ -785,7 +786,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		rawAccel = new float[3];
 		rawMag = new float[3];
 		mag = new float[3];
-
+		
 		// Fire up the GPS chip (not literally)
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);

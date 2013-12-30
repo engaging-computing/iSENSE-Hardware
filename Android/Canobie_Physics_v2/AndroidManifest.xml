@@ -36,6 +36,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".Configuration"
+            android:label="Configuration"
+            android:theme="@style/DialogTheme" />
+        <activity
             android:name=".LoginActivity"
             android:label="Login"
             android:theme="@style/DialogTheme" />
@@ -102,6 +106,10 @@
         <activity
             android:name="edu.uml.cs.isense.dfm.FieldMatching"
             android:label="Select Fields"
+            android:theme="@style/theme_dialog_white" />
+         <activity
+            android:name="edu.uml.cs.isense.credentials.Login"
+            android:label="@string/login_prompt"
             android:theme="@style/theme_dialog_white" />
     </application>
 
