@@ -37,7 +37,7 @@
             android:name="edu.uml.cs.isense.collector.splash.Welcome"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/display_name"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppThemeHideActionBarBackArrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

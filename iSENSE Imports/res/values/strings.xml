@@ -24,8 +24,8 @@
     <string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
     <string name="contentDescBack">Back</string>
     <string name="prompt">Select which data sets you would like to upload to iSENSE.
-	    \n\t- Tap data sets to enable/disable them for upload.
-	    \n\t- Long press a data set to reconfigure it.</string>
+	    \n\t&#8226; Tap data sets to enable/disable them for upload.
+	    \n\t&#8226; Long press a data set to reconfigure it.</string>
     <string name="type_data">Type: Data</string>
     <string name="type_picture">Type: Picture</string>
     <string name="select_all">Select All</string>

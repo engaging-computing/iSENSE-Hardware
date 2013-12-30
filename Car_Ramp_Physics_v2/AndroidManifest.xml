@@ -46,7 +46,7 @@
         </activity>
         <activity
             android:name="edu.uml.cs.isense.proj.Setup"
-            android:label="@string/chooseExperimentTitle"
+            android:label="@string/choose_project_title"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" >
         </activity>
