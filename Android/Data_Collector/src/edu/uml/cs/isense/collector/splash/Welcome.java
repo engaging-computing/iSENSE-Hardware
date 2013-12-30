@@ -76,7 +76,7 @@ public class Welcome extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (!Connection.hasConnectivity(mContext))
-					w.make("You need to have internet connectivity to do this",
+					w.make(getResources().getString(R.string.need_connectivity_to_do),
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				else {
 					Intent iSetup = new Intent(mContext, Setup.class);
@@ -94,7 +94,7 @@ public class Welcome extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (!Connection.hasConnectivity(mContext))
-					w.make("You need to have internet connectivity to do this",
+					w.make(getResources().getString(R.string.need_connectivity_to_do),
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				else {
 					Intent iProjCreate = new Intent(mContext, ProjectCreate.class);
@@ -120,18 +120,23 @@ public class Welcome extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	    case android.R.id.home:
-	    	
 	    	String other = (useDev) ? "production" : "dev";
 	       
 	    	switch (++actionBarTapCount) {
 	    	case 5:
-	    		w.make("2 more taps to enter " + other + " mode");
+	    		w.make(getResources().getString(R.string.two_more_taps) 
+	    				+ other 
+	    				+ getResources().getString(R.string.mode_type));
 	    		break;
 	    	case 6:
-	    		w.make("1 more tap to enter " + other + " mode");
+	    		w.make(getResources().getString(R.string.one_more_tap)
+	    				+ other 
+	    				+ getResources().getString(R.string.mode_type));
 	    		break;
 	    	case 7:
-	    		w.make("Now in " + other + " mode");
+	    		w.make(getResources().getString(R.string.now_in_mode)
+	    				+ other 
+	    				+ getResources().getString(R.string.mode_type));
 	    		useDev = !useDev;
 	    		if (api.getCurrentUser() != null) {
 	    			Runnable r = new Runnable() {
@@ -141,7 +146,9 @@ public class Welcome extends Activity {
 	    				}
 	    			};
 	    			new Thread(r).start();
-	    		}
+	    		} else
+	    			api.useDev(useDev);
+	    		
 	    		actionBarTapCount = 0;
 	    		break;
 	    	}

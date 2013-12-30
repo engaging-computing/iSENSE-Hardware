@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1552</int>
-		<string key="IBDocument.SystemVersion">11G63b</string>
+		<string key="IBDocument.SystemVersion">13A603</string>
 		<string key="IBDocument.InterfaceBuilderVersion">3084</string>
-		<string key="IBDocument.AppKitVersion">1138.51</string>
-		<string key="IBDocument.HIToolboxVersion">569.00</string>
+		<string key="IBDocument.AppKitVersion">1265</string>
+		<string key="IBDocument.HIToolboxVersion">695.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			<string key="NS.object.0">2083</string>
@@ -43,14 +43,14 @@
 						<string key="NSFrame">{{20, 20}, {728, 301}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="208359192"/>
+						<reference key="NSNextKeyView" ref="217839491"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">Step 1: Setup Your Session</string>
+						<string key="IBUINormalTitle">Step 1: Setup Your Data Set</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="66786999">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
@@ -120,7 +120,7 @@
 						<string key="NSFrame">{{20, 20}, {728, 300}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="217839491"/>
+						<reference key="NSNextKeyView" ref="987364024"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -154,6 +154,7 @@
 						<string key="NSFrame">{{20, 640}, {728, 300}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -178,7 +179,7 @@
 				<string key="NSFrame">{{0, 64}, {768, 960}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView"/>
+				<reference key="NSNextKeyView" ref="208359192"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MC45NDg0MzMyNTQxIDAuOTQ4NDMzMjU0MSAwLjk0ODQzMzI1NDEAA</bytes>
@@ -303,10 +304,10 @@
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="942973816"/>
-							<reference ref="987364024"/>
-							<reference ref="208359192"/>
 							<reference ref="844535953"/>
 							<reference ref="217839491"/>
+							<reference ref="987364024"/>
+							<reference ref="208359192"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -401,8 +402,6 @@
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="longClickRecognizer">UILongPressGestureRecognizer</string>
-						<string key="mainLogo">UIImageView</string>
-						<string key="mainLogoBackground">UILabel</string>
 						<string key="step1">UIButton</string>
 						<string key="step1Label">UILabel</string>
 						<string key="step2">UIButton</string>
@@ -413,14 +412,6 @@
 						<object class="IBToOneOutletInfo" key="longClickRecognizer">
 							<string key="name">longClickRecognizer</string>
 							<string key="candidateClassName">UILongPressGestureRecognizer</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="mainLogo">
-							<string key="name">mainLogo</string>
-							<string key="candidateClassName">UIImageView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="mainLogoBackground">
-							<string key="name">mainLogoBackground</string>
-							<string key="candidateClassName">UILabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="step1">
 							<string key="name">step1</string>

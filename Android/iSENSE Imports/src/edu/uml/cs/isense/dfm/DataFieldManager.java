@@ -31,8 +31,9 @@ public class DataFieldManager extends Application {
 	private Context mContext;
 
 	private ArrayList<RProjectField> projFields;
-	private LinkedList<String> order;
-	private LinkedList<String> realOrder; // the actual fields in the project, used for .csv file header writing
+	private LinkedList<String>  order;
+	private LinkedList<String>  realOrder; // the actual fields in the project, used for .csv file header writing
+	private LinkedList<Long> fieldIDs;  // IDs for the fields in order, in order
 	private Fields f;
 	
 	private String CSV_DELIMITER = "-:;_--:-;-;_::-;";
@@ -73,17 +74,9 @@ public class DataFieldManager extends Application {
 		this.api = api;
 		this.order = new LinkedList<String>();
 		this.realOrder = new LinkedList<String>();
+		this.fieldIDs = new LinkedList<Long>();
 		this.mContext = mContext;
 		this.f = f;
-	}
-
-	// Static class function strictly for getting the field order of any
-	// project.  To only be used internally.
-	private static LinkedList<String> getOrder(int projID, API api, Context c) {
-		api = API.getInstance();
-		DataFieldManager d = new DataFieldManager(projID, api, c, null);
-		d.getOrderWithExternalAsyncTask();
-		return d.order;
 	}
 
 	/**
@@ -114,6 +107,7 @@ public class DataFieldManager extends Application {
 			return;
 
 		if (projID == -1) {
+			order.clear();
 			order.add(mContext.getString(R.string.time));
 			order.add(mContext.getString(R.string.accel_x));
 			order.add(mContext.getString(R.string.accel_y));
@@ -151,6 +145,7 @@ public class DataFieldManager extends Application {
 			return;
 
 		if (projID == -1) {
+			order.clear();
 			order.add(mContext.getString(R.string.time));
 			order.add(mContext.getString(R.string.accel_x));
 			order.add(mContext.getString(R.string.accel_y));
@@ -187,6 +182,8 @@ public class DataFieldManager extends Application {
 	 * 		A field list built from the FieldMatching dialog.
 	 */
 	public void setOrder(String input) {
+		this.order = new LinkedList<String>();
+		
 		String[] fields = input.split(",");
 		
 		for (String s : fields) {
@@ -196,177 +193,13 @@ public class DataFieldManager extends Application {
 
 	/**
 	 * Creates a row of data from the Fields object this class instance contains.
-	 * 
-	 * NOTE: If you are recording data for no associated project (-1), call
-	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#putDataForNoProjectID() putDataForNoProjectID()}
-	 * instead.
-	 * 
-	 * @return The row of data in the form of a JSONObject.
-	 */
-	public JSONObject putData() {
-
-		JSONObject dataJSON = new JSONObject();
-
-		for (int i = 0; i < order.size(); i++) {
-			String s = order.get(i);
-
-			try {
-				if (s.equals(mContext.getString(R.string.accel_x))) {
-					if (enabledFields[Fields.ACCEL_X])
-						dataJSON.put("" + i, f.accel_x);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.accel_y))) {
-					if (enabledFields[Fields.ACCEL_Y])
-						dataJSON.put("" + i, f.accel_y);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.accel_z))) {
-					if (enabledFields[Fields.ACCEL_Z])
-						dataJSON.put("" + i, f.accel_z);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.accel_total))) {
-					if (enabledFields[Fields.ACCEL_TOTAL])
-						dataJSON.put("" + i, f.accel_total);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.temperature_c))) {
-					if (enabledFields[Fields.TEMPERATURE_C])
-						dataJSON.put("" + i, f.temperature_c);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.temperature_f))) {
-					if (enabledFields[Fields.TEMPERATURE_F])
-						dataJSON.put("" + i, f.temperature_f);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.temperature_k))) {
-					if (enabledFields[Fields.TEMPERATURE_K])
-						dataJSON.put("" + i, f.temperature_k);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.time))) {
-					if (enabledFields[Fields.TIME])
-						dataJSON.put("" + i, "u " + f.timeMillis);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.luminous_flux))) {
-					if (enabledFields[Fields.LIGHT])
-						dataJSON.put("" + i, f.lux);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.heading_deg))) {
-					if (enabledFields[Fields.HEADING_DEG])
-						dataJSON.put("" + i, f.angle_deg);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.heading_rad))) {
-					if (enabledFields[Fields.HEADING_RAD])
-						dataJSON.put("" + i, f.angle_rad);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.latitude))) {
-					if (enabledFields[Fields.LATITUDE])
-						dataJSON.put("" + i, f.latitude);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.longitude))) {
-					if (enabledFields[Fields.LONGITUDE])
-						dataJSON.put("" + i, f.longitude);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.magnetic_x))) {
-					if (enabledFields[Fields.MAG_X])
-						dataJSON.put("" + i, f.mag_x);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.magnetic_y))) {
-					if (enabledFields[Fields.MAG_Y])
-						dataJSON.put("" + i, f.mag_y);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.magnetic_z))) {
-					if (enabledFields[Fields.MAG_Z])
-						dataJSON.put("" + i, f.mag_z);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.magnetic_total))) {
-					if (enabledFields[Fields.MAG_TOTAL])
-						dataJSON.put("" + i, f.mag_total);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.altitude))) {
-					if (enabledFields[Fields.ALTITUDE])
-
-						dataJSON.put("" + i, f.altitude);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				if (s.equals(mContext.getString(R.string.pressure))) {
-					if (enabledFields[Fields.PRESSURE])
-						dataJSON.put("" + i, f.pressure);
-					else
-						dataJSON.put("" + i, "");
-					continue;
-				}
-				dataJSON.put("" + i, "");
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-
-		System.out.println("Data line: " + dataJSON.toString());
-
-		return dataJSON;
-
-	}
-
-	/**
-	 * Creates a row of data from the Fields object this class instance contains.
 	 * This function performs no field matching and assumes you are only calling it
-	 * when this data set has no associated project.  If you have an associated project,
-	 * call {@link edu.uml.cs.isense.dfm.DataFieldManager#putData() putData()} instead.
+	 * with the intention of saving it in the data saver.
 	 * 
 	 * @return The row of data in the form of a JSONArray that is to be re-organized
 	 * at upload time.
 	 */
-	public JSONArray putDataForNoProjectID() {
+	public JSONArray putData() {
 
 		JSONArray dataJSON = new JSONArray();
 
@@ -685,8 +518,6 @@ public class DataFieldManager extends Application {
 		return b.toString();
 	}
 
-	// For use if a clump of data was recorded and needs to be cut down and
-	// re-ordered
 	/**
 	 * Use this method only if data was recorded with no associated project
 	 * AND you intend to create a
@@ -700,7 +531,7 @@ public class DataFieldManager extends Application {
 	 * 
 	 * @param data
 	 * 		- A JSONArray of JSONArray objects returned from the
-	 * 		{@link edu.uml.cs.isense.dfm.DataFieldManager#putDataForNoProjectID() putDataForNoProjectID()}
+	 * 		{@link edu.uml.cs.isense.dfm.DataFieldManager#putData() putData()} method.
 	 * @param projID
 	 * 		- The project ID which the data will be re-ordered to match.
 	 * @param api
@@ -709,18 +540,32 @@ public class DataFieldManager extends Application {
 	 * 		- The context of the Activity calling this function 
 	 * @param fieldOrder
 	 * 		- The list of fields matched using the FieldMatching class, or null if FieldMatching wasn't used.
+	 * @param fieldIDs
+	 * 		- The list of field IDs, in order, of the project to reorder the data for (or null if you do not have them).
 	 * @return
 	 * 		A JSONObject.toString() formatted properly for upload to iSENSE.
 	 * 		
 	 */
-	public static String reOrderData(JSONArray data, String projID, API api,
-			Context c, LinkedList<String> fieldOrder) {
+	public static String reOrderData(JSONArray data, String projID, Context c, 
+			LinkedList<String> fieldOrder, LinkedList<Long> fieldIDs) {
+		API api = API.getInstance();
+		
 		JSONArray row, outData = new JSONArray();
 		JSONObject outRow;
 		int len = data.length();
-		if (fieldOrder == null || fieldOrder.size() == 0)
-			fieldOrder = getOrder(Integer.parseInt(projID), api, c);
 		
+		// if the field order is null, set up the fieldOrder/fieldIDs.  otherwise, just get fieldIDs
+		if (fieldOrder == null || fieldOrder.size() == 0) {
+			DataFieldManager d = new DataFieldManager(Integer.parseInt(projID), api, c, null);
+			d.getOrderWithExternalAsyncTask();
+			fieldOrder = d.getOrderList();
+			fieldIDs = d.getFieldIDs();
+		} else if (fieldIDs == null || fieldIDs.size() == 0) {
+			DataFieldManager d = new DataFieldManager(Integer.parseInt(projID), api, c, null);
+			d.getOrderWithExternalAsyncTask();
+			fieldIDs = d.getFieldIDs();
+		}
+			
 		Activity a = (Activity) c;
 
 		for (int i = 0; i < len; i++) {
@@ -730,109 +575,111 @@ public class DataFieldManager extends Application {
 
 				for (int j = 0; j < fieldOrder.size(); j++) {
 					String s = fieldOrder.get(j);
+					Long id = fieldIDs.get(j);
+					
 					try {
 						// Compare against hard-coded strings
 						if (s.equals(a.getResources().getString(
 								R.string.accel_x))) {
-							outRow.put(j + "", row.getString(Fields.ACCEL_X));
+							outRow.put(id + "", row.getString(Fields.ACCEL_X));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.accel_y))) {
-							outRow.put(j + "", row.getString(Fields.ACCEL_Y));
+							outRow.put(id + "", row.getString(Fields.ACCEL_Y));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.accel_z))) {
-							outRow.put(j + "", row.getString(Fields.ACCEL_Z));
+							outRow.put(id + "", row.getString(Fields.ACCEL_Z));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.accel_total))) {
-							outRow.put(j + "",
+							outRow.put(id + "",
 									row.getString(Fields.ACCEL_TOTAL));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.temperature_c))) {
-							outRow.put(j + "",
+							outRow.put(id + "",
 									row.getString(Fields.TEMPERATURE_C));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.temperature_f))) {
-							outRow.put(j + "",
+							outRow.put(id + "",
 									row.getString(Fields.TEMPERATURE_F));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.temperature_k))) {
-							outRow.put(j + "",
+							outRow.put(id + "",
 									row.getString(Fields.TEMPERATURE_K));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(R.string.time))) {
-							outRow.put(j + "", "u " + row.getString(Fields.TIME));
+							outRow.put(id + "", row.getString(Fields.TIME));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.luminous_flux))) {
-							outRow.put(j + "", row.getString(Fields.LIGHT));
+							outRow.put(id + "", row.getString(Fields.LIGHT));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.heading_deg))) {
-							outRow.put(j + "",
+							outRow.put(id + "",
 									row.getString(Fields.HEADING_DEG));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.heading_rad))) {
-							outRow.put(j + "",
+							outRow.put(id + "",
 									row.getString(Fields.HEADING_RAD));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.latitude))) {
-							outRow.put(j + "", row.getDouble(Fields.LATITUDE));
+							outRow.put(id + "", row.getDouble(Fields.LATITUDE));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.longitude))) {
-							outRow.put(j + "", row.getDouble(Fields.LONGITUDE));
+							outRow.put(id + "", row.getDouble(Fields.LONGITUDE));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.magnetic_x))) {
-							outRow.put(j + "", row.getString(Fields.MAG_X));
+							outRow.put(id + "", row.getString(Fields.MAG_X));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.magnetic_y))) {
-							outRow.put(j + "", row.getString(Fields.MAG_Y));
+							outRow.put(id + "", row.getString(Fields.MAG_Y));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.magnetic_z))) {
-							outRow.put(j + "", row.getString(Fields.MAG_Z));
+							outRow.put(id + "", row.getString(Fields.MAG_Z));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.magnetic_total))) {
-							outRow.put(j + "", row.getString(Fields.MAG_TOTAL));
+							outRow.put(id + "", row.getString(Fields.MAG_TOTAL));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.altitude))) {
-							outRow.put(j + "", row.getString(Fields.ALTITUDE));
+							outRow.put(id + "", row.getString(Fields.ALTITUDE));
 							continue;
 						}
 						if (s.equals(a.getResources().getString(
 								R.string.pressure))) {
-							outRow.put(j + "", row.getString(Fields.PRESSURE));
+							outRow.put(id + "", row.getString(Fields.PRESSURE));
 							continue;
 						}
-						outRow.put(j + "", "");
+						outRow.put(id + "", "");
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -923,11 +770,16 @@ public class DataFieldManager extends Application {
 		}
 		
 	}
-
+	
 	private void getProjectFieldOrder() {
+		this.order = new LinkedList<String>();
+		this.realOrder = new LinkedList<String>();
+		this.fieldIDs = new LinkedList<Long>();
+		
 		for (RProjectField field : projFields) {
 
 			realOrder.add(field.name);
+			fieldIDs.add(field.field_id);
 			
 			switch (field.type) {
 
@@ -1033,6 +885,7 @@ public class DataFieldManager extends Application {
 			}
 
 		}
+		
 	}
 	
 	/**
@@ -1148,6 +1001,17 @@ public class DataFieldManager extends Application {
 	}
 	
 	/**
+	 * Getter for the list of field IDs in the order list.
+	 * 
+	 * @return
+	 * 		The IDs for the fields, in order, of the project associated with this
+	 * 		DataFieldManager instance.
+	 */
+	public LinkedList<Long> getFieldIDs() {
+		return this.fieldIDs;
+	}
+	
+	/**
 	 * Enables all fields for recording data
 	 */
 	public void enableAllFields() {
@@ -1219,6 +1083,39 @@ public class DataFieldManager extends Application {
 			if (s.equals(getString(R.string.luminous_flux)))
 				enabledFields[Fields.LIGHT] = true;
 		}
+	}
+	
+	/**
+	 * Converts a JSONArray of JSONArray data into a JSONArray of JSONObject
+	 * data where each JSONObject is the internal JSONArray element of the old
+	 * data, keyed with the project's field IDs.
+	 * 
+	 * @param oldData
+	 * 		- JSONArray of JSONArray data to be converted
+	 * @return
+	 * 		A JSONArray of JSONObjects, ready for upload to the associated project.
+	 */
+	public JSONArray convertInternalDataToJSONObject(JSONArray oldData) {
+		
+		getOrderWithExternalAsyncTask();
+		JSONArray newData = new JSONArray();
+		
+		for (int i = 0; i < oldData.length(); i++) {
+			try {
+				JSONArray oldRow = oldData.getJSONArray(i);
+				JSONObject newRow = new JSONObject();
+				for (int j = 0; j < this.fieldIDs.size(); j++) {
+					String data = oldRow.getString(j);
+					newRow.put(fieldIDs.get(j) + "", data);
+				}
+				newData.put(newRow);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		return newData;
 	}
 
 }

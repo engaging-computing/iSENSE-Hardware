@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -88,6 +89,9 @@ public class ProjectCreate extends Activity {
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		projectName = (EditText) findViewById(R.id.project_create_name);
@@ -107,7 +111,7 @@ public class ProjectCreate extends Activity {
 			public void onClick(View v) {
 				// check to see if the project has a name
 				if (projectName.getText().toString().length() == 0) {
-					w.make("Please enter a new project name",
+					w.make(getResources().getString(R.string.please_enter_proj_name),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					projectName.setError("Enter a new project name");
 					return;
@@ -116,7 +120,7 @@ public class ProjectCreate extends Activity {
 
 				// check to see if the project has fields
 				if (fieldScroll.getChildCount() == 0) {
-					w.make("Enter some fields for your project",
+					w.make(getResources().getString(R.string.please_enter_field),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				} else {
@@ -126,7 +130,8 @@ public class ProjectCreate extends Activity {
 								.findViewById(R.id.project_field_name);
 						if (fieldName.getText().toString().length() == 0) {
 							int fieldNum = i + 1;
-							w.make("Please a name for field #" + fieldNum,
+							w.make(getResources().getString(R.string.please_enter_name_field)
+									+ fieldNum,
 									Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 							fieldName.setError("Enter a field name");
 							return;
@@ -153,7 +158,7 @@ public class ProjectCreate extends Activity {
 					if (locationCount == 0)
 						locationCount++;
 					else {
-						w.make("Cannot add more than one location.",
+						w.make(getResources().getString(R.string.one_location_only),
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 						return;
 					}
@@ -260,7 +265,8 @@ public class ProjectCreate extends Activity {
 	}
 
 	private void needLogin() {
-		w.make("Please login to iSENSE first", Waffle.LENGTH_SHORT,
+		w.make(getResources().getString(R.string.login_isense_first), 
+				Waffle.LENGTH_SHORT,
 				Waffle.IMAGE_WARN);
 
 		Intent iLogin = new Intent(mContext, Login.class);
@@ -415,7 +421,7 @@ public class ProjectCreate extends Activity {
 				finish();
 
 			} else
-				w.make("Project failed to create - please try again",
+				w.make(getResources().getString(R.string.project_failed_create),
 						Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 
 		}
@@ -428,7 +434,8 @@ public class ProjectCreate extends Activity {
 		if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				w.make("Login successful", Waffle.LENGTH_LONG,
+				w.make(getResources().getString(R.string.login_success), 
+						Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 
 				createProject();
@@ -442,6 +449,17 @@ public class ProjectCreate extends Activity {
 		}
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case android.R.id.home:
+	    	onBackPressed();
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
+	}
+	
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();

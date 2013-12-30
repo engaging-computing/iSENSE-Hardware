@@ -42,8 +42,9 @@ import edu.uml.cs.isense.objects.RTutorial;
  * the iSENSE website. Given a singleton instance of this class,
  * functions can be called through an AsyncTask.
  * 
- * @author Nick Ver Voort of the iSENSE Android-Development Team
- * with input from Mike Stowell and Jeremy Poulin
+ * @author Nick Ver Voort, Jeremy Poulin, and Mike Stowell
+ * of the iSENSE Android-Development Team
+ * 
  */
 
 public class API {
@@ -133,14 +134,15 @@ public class API {
 	public ArrayList<RProject> getProjects(int page, int perPage, boolean descending, int sortOn, String search) {
 		ArrayList<RProject> result = new ArrayList<RProject>();
 		try {
-			String sortMode = descending ? "DESC" : "ASC";
+			String order = descending ? "DESC" : "ASC";
+			String sortMode = "";
 			if(sortOn == CREATED_AT) {
-				sortMode = "created_at "+sortMode;
-			} else if(sortOn == UPDATED_AT) {
-				sortMode = "updated_at "+sortMode;
+				sortMode = "created_at";
+			} else {
+				sortMode = "updated_at";
 			}
-			String reqResult = makeRequest(baseURL, "projects", "page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
-					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
+			String reqResult = makeRequest(baseURL, "projects", "page="+page+"&per_page="+perPage+"&sort="+sortMode
+					+"&order="+order+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
 				JSONObject inner = j.getJSONObject(i);
@@ -283,8 +285,9 @@ public class API {
 	public ArrayList<RTutorial> getTutorials(int page, int perPage, boolean descending, String search) {
 		ArrayList<RTutorial> result = new ArrayList<RTutorial>();
 		try {
-			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")+"&page="+page+"&per_page="+perPage+"&sort="+URLEncoder.encode(sortMode, "UTF-8")
+			String order = descending ? "DESC" : "ASC";
+			String reqResult = makeRequest(baseURL, "tutorials", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8")
+					+"&page="+page+"&per_page="+perPage+"&sort=created_at"+"&order="+order
 					+"&search="+URLEncoder.encode(search, "UTF-8"), "GET", null);
 			JSONArray j = new JSONArray(reqResult);
 			for(int i = 0; i < j.length(); i++) {
@@ -521,6 +524,8 @@ public class API {
 	}
 
 	/**
+	 * @deprecated - Will go away, to be replaced by jsonDataUpload
+	 * 
 	 * Uploads a new data set to a project on iSENSE
 	 * 
 	 * @param projectId The ID of the project to upload data to
@@ -547,6 +552,39 @@ public class API {
 			System.out.println("Are I blank? = " + reqResult);
 			JSONObject jobj = new JSONObject(reqResult);
 			System.out.println("Returning: " + jobj.toString());
+			return jobj.getInt("id");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	/** TODO - change name from manualUpload to whatever it'll be.  eventually this will go away and become new uploadDataSet
+	 * Uploads a new data set to a project on iSENSE
+	 * 
+	 * @param projectId The ID of the project to upload data to
+	 * @param data The data to be uploaded. Must be in column-major format to upload correctly
+	 * @param datasetName The name of the dataset
+	 * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
+	 */
+	public int jsonDataUpload(int projectId, JSONObject data, String datasetName) {
+		// append timestamp to the data set name to ensure uniqueness
+		datasetName += appendedTimeStamp();
+		
+		JSONObject requestData = new JSONObject();
+
+		try {
+			requestData.put("data", data);
+			requestData.put("id", ""+projectId);
+			if(!datasetName.equals("")) 
+				requestData.put("title", datasetName);
+			
+			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/jsonDataUpload", 
+					"authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			
+			JSONObject jobj = new JSONObject(reqResult);
+			System.out.println("Returning: " + jobj.toString());
+			
 			return jobj.getInt("id");
 		} catch (Exception e) {
 			e.printStackTrace();

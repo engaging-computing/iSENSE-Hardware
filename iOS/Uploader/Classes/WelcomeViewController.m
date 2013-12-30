@@ -138,7 +138,8 @@
                     [api useDev:useDev];
                     NSLog(@"Using dev? %d", useDev);
                 });
-            }
+            } else
+                [api useDev:useDev];
             taps = 0;
             break;
         default:

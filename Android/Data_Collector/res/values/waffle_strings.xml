@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Welcome.java -->
+	<string name="need_connectivity_to_do">You need to have internet connectivity to do this</string>
+	<string name="two_more_taps">2 more taps to enter\u0020</string>
+	<string name="one_more_tap">1 more tap to enter\u0020</string>
+	<string name="now_in_mode">Now in\u0020</string>
+	<string name="mode_type">\u0020mode</string>
+	
+	<!-- SelectMode.java -->
+	<string name="could_not_find_csv">Could not find .csv file</string>
+	<string name="no_csv_no_internet">Cannot upload a .csv file with no internet connectivity</string>
+	<string name="only_csv_files">Only .csv files are allowed for upload</string>
+	<string name="login_success">Login successful</string>
+	<string name="please_log_in">Please log in</string>
+	<string name="csv_failed_upload">.csv File Failed to Upload</string>
+	<string name="csv_success_upload">.csv File Uploaded Successfully</string>
+	
+	<!-- ProjectCreate.java -->
+	<string name="please_enter_proj_name">Please enter a new project name</string>
+	<string name="please_enter_field">Please enter at least one field for your project</string>
+	<string name="please_enter_name_field">Please enter a name for field #</string>
+	<string name="one_location_only">Cannot add more than one location</string>
+	<string name="login_isense_first">Please login to iSENSE first</string>
+	<string name="project_failed_create">Project failed to create - please try again</string>
+	
+	<!-- Step1Setup.java -->
+	<string name="please_data_set_name">Please enter a data set name first</string>
+	<string name="please_valid_samp">Please enter a valid sample interval</string>
+	<string name="please_valid_test">Please enter a valid test length</string>
+	<string name="please_sel_proj">Please select a project</string>
+	<string name="please_sel_fields">Please select your project fields</string>
+	
+	<!-- MediaManager.java -->
+	<string name="no_permission_pics">Permission isn\'t granted to write to external storage - enable to take pictures</string>
+	<string name="no_permission_vids">Permission isn\'t granted to write to external storage - enable to take videos</string>
+	
+	<!-- ManualEntry.java -->
+	<string name="inval_or_no_proj">Invalid or no selected project</string>
+	<string name="could_not_build_queue">Could not re-build queue from file</string>
+	<string name="proj_not_found_no_fields">Project not found or has no fields</string>
+	<string name="no_fields_no_internet">Cannot retrieve project fields without internet connectivity</string>
+	<string name="double_press_back">Double press \"Back\" to exit</string>
+	<string name="no_data_to_upload">There are no data to upload</string>
+	<string name="data_saved">Data set saved successfully</string>
+	<string name="data_not_saved">Fatal error saving data</string>
+	
+	<!-- DataCollector.java -->
+	<string name="no_back_use_home_instead">Cannot exit via BACK while recording data - use HOME instead</string>
+	<string name="data_set_deleted">Data set deleted</string>
+	<string name="setup_again">Some data not found - please setup again</string>
+	<string name="could_not_write_sd_card">Could not write file to SD Card</string>
+	
+</resources>
