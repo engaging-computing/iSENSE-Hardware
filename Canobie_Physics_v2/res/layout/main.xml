@@ -8,31 +8,47 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="10dp" >
-
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_marginTop = "10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:orientation="vertical" >
+        
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/timeElapsed"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+        
+        <TextView
+            android:id="@+id/ridename"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:background="#111133"
-            android:orientation="vertical" >
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:text="@string/rideAndSeat"
+            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/values"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:color/transparent"
-                android:text="@string/xyz"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/menuPrompt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            android:text="@string/menuDirections"
+            android:textSize="15sp" />
+    </LinearLayout>
+    
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:orientation="vertical" >
 
         <Button
             android:id="@+id/startStop"
@@ -46,50 +62,27 @@
             android:background="@drawable/button_rsense"
             android:textColor="#0066FF"
             android:textSize="20sp" />
+        
     </LinearLayout>
 
+        
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:padding="10dp"
-        android:orientation="vertical" >
-        
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#111133"
-            android:gravity="center_horizontal"
-            android:text="@string/timeElapsed"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-        
-        <TextView
-            android:id="@+id/ridename"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="#111133"
-            android:gravity="center_horizontal"
-            android:text="@string/rideAndSeat"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/menuPrompt"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:paddingTop="15dp"
-            android:text="@string/menuDirections"
-            android:textColor="@android:color/white"
-            android:background="#111133"
-            android:textSize="15sp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/values"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@android:color/transparent"
+                android:text="@string/xyz"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
 </LinearLayout>
