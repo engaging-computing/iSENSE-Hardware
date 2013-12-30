@@ -135,6 +135,11 @@
             android:label="@string/classroom_mode"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
+            android:label="Delete Selected Data Sets"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
     </application>
 
 </manifest>
