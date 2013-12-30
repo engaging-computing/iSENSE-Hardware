@@ -98,7 +98,7 @@
     <string name="exit">Exit</string>
     <string name="media_desc">Select one of the following options:</string>
     <string name="upload">Upload</string>
-    <string name="okay">Okay</string>
+    <string name="okay">Ok</string>
     <string name="sample_rate">Sample Interval: </string>
     <string name="select_fields_for">	    Please select the fields you would like to record for project #</string>
     
@@ -134,5 +134,8 @@
     <string name="setup">Setup</string>
     <string name="time">Time</string>
     <string name="media">Media</string>
+    <string name="ok">OK</string>
+    <string name="selectProject">Select a Project</string>
+    <string name="project_prompt">Select a Project</string>
 
 </resources>
