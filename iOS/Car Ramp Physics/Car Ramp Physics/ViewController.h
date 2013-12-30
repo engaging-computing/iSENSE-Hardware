@@ -12,7 +12,6 @@
 #import "StringGrabber.h"
 #import "FieldGrabber.h"
 #import "ProjectBrowseViewController.h"
-#import "NewDFM.h"
 #import "Constants.h"
 #import "HexColor.h"
 #import "VariablesViewController.h"
@@ -52,10 +51,7 @@ typedef struct _RotationDataSaver{
 @property(nonatomic) IBOutlet UIButton *start;
 @property(nonatomic) IBOutlet UIBarButtonItem *menuButton;
 @property(nonatomic) IBOutlet UIImageView *image;
-@property(nonatomic) UIToolbar *keyboardBar;
-@property(nonatomic) UIBarButtonItem *prev;
-@property(nonatomic) UIBarButtonItem *next;
-@property(nonatomic) UIBarButtonItem *done;
+
 
 @property(nonatomic) int recordLength;
 @property(nonatomic) int countdown;

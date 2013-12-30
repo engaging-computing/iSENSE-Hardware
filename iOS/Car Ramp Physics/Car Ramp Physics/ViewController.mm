@@ -16,7 +16,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, keyboardBar,prev, next, done ;
+@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, expNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, experiment,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,exp_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -110,42 +110,6 @@
     lengthField.text = [self.lengths objectAtIndex:row];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-}
-
-- (void)keyboardWillShow:(NSNotification *)notification {
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3];
-    
-    CGRect frame = self.keyboardBar.frame;
-    frame.origin.y = self.view.frame.size.height - 260.0;
-    self.keyboardBar.frame = frame;
-    
-    [UIView commitAnimations];
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification {
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3];
-    
-    CGRect frame = self.keyboardBar.frame;
-    frame.origin.y = self.view.frame.size.height;
-    self.keyboardBar.frame = frame;
-    
-    [UIView commitAnimations];
-}
-
 
 - (void)viewDidLoad {
     
@@ -163,12 +127,6 @@
     [formatter setRoundingMode: NSNumberFormatterRoundUp];
     
     useDev = TRUE;
-    
-    keyboardBar = [[UIToolbar alloc] init];
-    
-    prev = [[UIBarButtonItem alloc] initWithTitle:@"Previous" style:UIBarButtonItemStylePlain target:self action:@selector(Previous:)];
-    next = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStylePlain target:self action:@selector(Next:)];
-    done = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(Done:)];
     
     api = [API getInstance];
     [api useDev: useDev];
@@ -315,16 +273,15 @@
     if (self.isMovingToParentViewController == YES) {
         
         change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-        
         [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         UITextField *last = [change_name textFieldAtIndex:1];
         [last setSecureTextEntry:NO];
-        [change_name  textFieldAtIndex:0].placeholder = @"First Name";
+        [last setPlaceholder:@"Last Initial"];
         UITextField *first = [change_name textFieldAtIndex:0];
-        first.delegate = self;
         first.tag = FIRST_NAME_FIELD;
-        last.placeholder = @"Last Initial";
+        first.delegate = self;
         last.delegate = self;
+        [first setPlaceholder:@"First Name"];
         change_name.tag = FIRST_TIME_NAME;
         [change_name show];
         
@@ -893,12 +850,12 @@
         [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         UITextField *last = [change_name textFieldAtIndex:1];
         [last setSecureTextEntry:NO];
-        [change_name textFieldAtIndex:0].placeholder = @"First Name";
+        [last setPlaceholder:@"Last Initial"];
         UITextField *first = [change_name textFieldAtIndex:0];
         first.tag = FIRST_NAME_FIELD;
         first.delegate = self;
-        last.placeholder = @"Last Initial";
         last.delegate = self;
+        [first setPlaceholder:@"First Name"];
         change_name.tag = ENTER_NAME;
         [change_name show];
     }
@@ -1006,13 +963,12 @@
                 [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
                 UITextField *last = [change_name textFieldAtIndex:1];
                 [last setSecureTextEntry:NO];
-                [change_name textFieldAtIndex:0].placeholder = @"First Name";
+                [last setPlaceholder:@"Last Initial"];
                 UITextField *first = [change_name textFieldAtIndex:0];
-                first.delegate = self;
                 first.tag = FIRST_NAME_FIELD;
-                last.placeholder = @"Last Initial";
+                first.delegate = self;
                 last.delegate = self;
-                
+                [first setPlaceholder:@"First Name"];
                 [change_name show];
                 [self.view makeWaffle:@"Please Enter Your Name" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
             } else {
