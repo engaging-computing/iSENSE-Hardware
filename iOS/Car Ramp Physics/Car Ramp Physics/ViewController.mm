@@ -149,7 +149,6 @@
     timeOver = NO;
     setupDone = NO;
     
-    //[dfm setEnabledField:YES atIndex:fACCEL_Y];
     motionmanager = [[CMMotionManager alloc] init];
     
     if (saver->hasLogin){
@@ -534,7 +533,7 @@
     
     // Stop Recording
     running = NO;
-    [vector_status setText:@"Y: "];
+    [vector_status setText:@""];
     countdown = recordLength;
     dispatch_async(dispatch_get_main_queue(), ^{
         [start setTitle:@"Hold to Start" forState:UIControlStateNormal];
@@ -545,6 +544,7 @@
     NSString *name = firstName;
     name = [name stringByAppendingString:@" "];
     name = [name stringByAppendingString:lastInitial];
+    name = [name stringByAppendingString:@". "];
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"HH:mm:ss"];
@@ -583,7 +583,7 @@
     
     // Stop Recording
     running = NO;
-    [vector_status setText:@"Y: "];
+    [vector_status setText:@""];
     countdown = recordLength;
     dispatch_async(dispatch_get_main_queue(), ^{
         [start setTitle:@"Hold to Start" forState:UIControlStateNormal];
@@ -594,6 +594,7 @@
     NSString *name = firstName;
     name = [name stringByAppendingString:@" "];
     name = [name stringByAppendingString:lastInitial];
+    name = [name stringByAppendingString:@". "];
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"HH:mm:ss"];
@@ -734,7 +735,6 @@
         
         
     } else {
-        NSLog(@"Derp");
         [self saveDataSetWithDescription:sessionName];
     }
     return true;
@@ -815,6 +815,7 @@
         login_status.text = [login_status.text stringByAppendingString:firstName];
         login_status.text = [login_status.text stringByAppendingString:@" "];
         login_status.text = [login_status.text stringByAppendingString:lastInitial];
+        login_status.text = [login_status.text stringByAppendingString:@". "];
     };
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
@@ -865,7 +866,6 @@
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    NSLog(@"Hello");
     NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
     if ([string rangeOfCharacterFromSet:cs].location == NSNotFound) {
@@ -948,6 +948,7 @@
             login_status.text = [login_status.text stringByAppendingString:firstName];
             login_status.text = [login_status.text stringByAppendingString:@" "];
             login_status.text = [login_status.text stringByAppendingString:lastInitial];
+            login_status.text = [login_status.text stringByAppendingString:@". "];
             saver->hasName = true;
         } else {
             if ([[alertView textFieldAtIndex:0].text isEqualToString:@""] || [[alertView textFieldAtIndex:1].text isEqualToString:@""]) {
@@ -1019,6 +1020,7 @@
     login_status.text = [login_status.text stringByAppendingString:firstName];
     login_status.text = [login_status.text stringByAppendingString:@" "];
     login_status.text = [login_status.text stringByAppendingString:lastInitial];
+    login_status.text = [login_status.text stringByAppendingString:@". "];
     saver->hasName = true;
     
 }
@@ -1057,6 +1059,7 @@
                 loginstat = [loginstat stringByAppendingString:firstName];
                 loginstat = [loginstat stringByAppendingString:@" "];
                 loginstat = [loginstat stringByAppendingString:lastInitial];
+                loginstat = [loginstat stringByAppendingString:@". "];
                 
                 [login_status setText:loginstat];
                 userName = curUser.username;

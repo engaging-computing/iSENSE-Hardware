@@ -43,12 +43,12 @@
 		767B9260178C3F1700F1C6FA /* upload2.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B925F178C3F1700F1C6FA /* upload2.png */; };
 		767B9262178C3FF600F1C6FA /* users.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9261178C3FF600F1C6FA /* users.png */; };
 		767B9264178C40D500F1C6FA /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9263178C40D500F1C6FA /* info.png */; };
-		767B9266178C416A00F1C6FA /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9265178C416A00F1C6FA /* settings.png */; };
 		767B9268178C41FF00F1C6FA /* barcode.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9267178C41FF00F1C6FA /* barcode.png */; };
-		767B926C178C450300F1C6FA /* reset.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B926B178C450300F1C6FA /* reset.png */; };
 		767B926E178C45A800F1C6FA /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B926D178C45A800F1C6FA /* pencil.png */; };
 		767B9272178C526E00F1C6FA /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767B9271178C526E00F1C6FA /* Accelerate.framework */; };
 		767B9274178C527500F1C6FA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767B9273178C527500F1C6FA /* QuartzCore.framework */; };
+		76A3BE6318731E1E005C0473 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A3BE6218731E1E005C0473 /* settings.png */; };
+		76A3BE6518733E4B005C0473 /* reset.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A3BE6418733E4B005C0473 /* reset.png */; };
 		76A4916717A1585A007F5E90 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A4916617A1585A007F5E90 /* SystemConfiguration.framework */; };
 		76A5ED941796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */; };
 		76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */; };
@@ -156,12 +156,12 @@
 		767B925F178C3F1700F1C6FA /* upload2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload2.png; sourceTree = "<group>"; };
 		767B9261178C3FF600F1C6FA /* users.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = users.png; sourceTree = "<group>"; };
 		767B9263178C40D500F1C6FA /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
-		767B9265178C416A00F1C6FA /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		767B9267178C41FF00F1C6FA /* barcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode.png; sourceTree = "<group>"; };
-		767B926B178C450300F1C6FA /* reset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reset.png; sourceTree = "<group>"; };
 		767B926D178C45A800F1C6FA /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		767B9271178C526E00F1C6FA /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		767B9273178C527500F1C6FA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		76A3BE6218731E1E005C0473 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
+		76A3BE6418733E4B005C0473 /* reset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reset.png; sourceTree = "<group>"; };
 		76A4916617A1585A007F5E90 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
@@ -375,8 +375,10 @@
 		76E91F93179478FC001749FC /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				76A3BE6418733E4B005C0473 /* reset.png */,
 				76DF6A8A17E4FF8D00CF5DDD /* AppLogos */,
 				76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */,
+				76A3BE6218731E1E005C0473 /* settings.png */,
 				76DF6A7F17E4FD2100CF5DDD /* projectblock_dark.png */,
 				7669F03B178B275C00E51AD0 /* Default.png */,
 				7669F03D178B275C00E51AD0 /* Default@2x.png */,
@@ -390,9 +392,7 @@
 				76B58D80178C5D2D006E1425 /* waffle_warn.png */,
 				76B58D81178C5D2D006E1425 /* waffle_x.png */,
 				767B926D178C45A800F1C6FA /* pencil.png */,
-				767B926B178C450300F1C6FA /* reset.png */,
 				767B9267178C41FF00F1C6FA /* barcode.png */,
-				767B9265178C416A00F1C6FA /* settings.png */,
 				767B9263178C40D500F1C6FA /* info.png */,
 				767B9261178C3FF600F1C6FA /* users.png */,
 				767B925F178C3F1700F1C6FA /* upload2.png */,
@@ -498,9 +498,7 @@
 				767B9260178C3F1700F1C6FA /* upload2.png in Resources */,
 				767B9262178C3FF600F1C6FA /* users.png in Resources */,
 				767B9264178C40D500F1C6FA /* info.png in Resources */,
-				767B9266178C416A00F1C6FA /* settings.png in Resources */,
 				767B9268178C41FF00F1C6FA /* barcode.png in Resources */,
-				767B926C178C450300F1C6FA /* reset.png in Resources */,
 				767B926E178C45A800F1C6FA /* pencil.png in Resources */,
 				76B58D82178C5D2D006E1425 /* waffle_check.png in Resources */,
 				76B58D83178C5D2D006E1425 /* waffle_warn.png in Resources */,
@@ -533,6 +531,8 @@
 				76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */,
 				76DF6A8717E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png in Resources */,
 				76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */,
+				76A3BE6318731E1E005C0473 /* settings.png in Resources */,
+				76A3BE6518733E4B005C0473 /* reset.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
