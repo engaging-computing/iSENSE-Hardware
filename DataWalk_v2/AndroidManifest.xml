@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.datawalk_v2"
-    android:versionCode="17"
-    android:versionName="2.3.1" >
+    android:versionCode="18"
+    android:versionName="2.3.2" >
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -133,6 +133,11 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.ClassroomMode"
             android:label="@string/classroom_mode"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
+            android:label="Delete Selected Data Sets"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
     </application>
