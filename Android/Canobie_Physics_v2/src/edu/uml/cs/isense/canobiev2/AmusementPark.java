@@ -70,6 +70,7 @@ import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
+import edu.uml.cs.isense.riverwalk.R;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -97,9 +98,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final String TIME_OFFSET_KEY = "timeOffset";
 
 	/* UI Handles */
-	private EditText experimentInput;
-	private Spinner rides;
-	private TextView rideName;
+	public static EditText experimentInput;
+	public static Spinner rides;
+	public static TextView rideName;
 	private TextView time;
 	private TextView values;
 	private Button startStop;
@@ -462,8 +463,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			manageUploadQueue();
 			return true;
 		case R.id.MENU_ITEM_TIME:
-//			Intent iTime = new Intent(AmusementPark.this, SyncTime.class);
-//			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
+			startActivityForResult(new Intent(getApplicationContext(),
+					SyncTime.class), SYNC_TIME_REQUESTED);
 			return true;
 		case R.id.MENU_ITEM_MEDIA:
 			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
@@ -550,6 +551,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	@Override
 	public void onLocationChanged(Location location) {
+		
+		
 		loc = location;
 	}
 
@@ -596,6 +599,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			// acceptedFields = fieldMatcher.acceptedFields;
 			dfm.setEnabledFields(acceptedFields);
 		} else if (requestCode == SETUP_REQUESTED) {
+			
 			
 		} else if (requestCode == LOGIN_REQUESTED) {
 			
@@ -647,8 +651,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			
 			// Saves data for later upload
 			if (!uploadSuccessful) {
-				QDataSet ds = new QDataSet(QDataSet.Type.DATA, name,
-						getResources().getString(R.id.description), projId, dataSet.toString(), null);
+				QDataSet ds = new QDataSet(name, getResources().getString(R.id.description), QDataSet.Type.DATA,
+						dataSet.toString(), null, projId, null);
+				
 				uq.addDataSetToQueue(ds);
 			}
 
