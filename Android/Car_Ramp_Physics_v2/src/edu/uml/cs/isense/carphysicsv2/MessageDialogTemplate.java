@@ -44,15 +44,20 @@ public class MessageDialogTemplate extends Activity {
 		});
 
 	}
+
 	/**
 	 * This function takes the following:
-	 * @param Context mContext
-	 * @param String title
-	 * @param String message
-	 * @param int reqCode
-	 * and it creates a dialog with a single message.
+	 * 
+	 * @param Context
+	 *            mContext
+	 * @param String
+	 *            title
+	 * @param String
+	 *            message
+	 * @param int reqCode and it creates a dialog with a single message.
 	 */
-	public static void createMessageDialog(Context mContext, String title, String message, int reqCode) {
+	public static void createMessageDialog(Context mContext, String title,
+			String message, int reqCode) {
 
 		MessageDialogTemplate temp = new MessageDialogTemplate();
 		Intent i = new Intent(mContext, MessageDialogTemplate.class);

@@ -6,8 +6,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -306,9 +304,10 @@ public class DataWalk extends Activity implements LocationListener,
 
 					// Save the newest DataSet to the Upload Queue if it has at
 					// least 1 point
-					QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
-							"Data Points: " + dataPointCount, projectID,
-							dataSet.toString(), null);
+					QDataSet ds = new QDataSet(dataSetName, "Data Points: " + dataPointCount,
+							QDataSet.Type.DATA, dataSet.toString(), null, projectID, null);
+					ds.setRequestDataLabelInOrder(true);
+					
 					if (dataPointCount > 0) {
 						uq.addDataSetToQueue(ds);
 						// Tell the user recording has stopped
@@ -345,7 +344,7 @@ public class DataWalk extends Activity implements LocationListener,
 					// ID
 					dataPointCount = 0;
 					dataSetID = -1;
-					// TODO KEEP SCREEN ON
+				
 					// Prevent the screen from turning off and prevent rotation
 					getWindow().addFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -513,8 +512,7 @@ public class DataWalk extends Activity implements LocationListener,
 	 * Logs the user in automatically
 	 */
 	private void AutoLogin() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	/**
@@ -1296,7 +1294,6 @@ public class DataWalk extends Activity implements LocationListener,
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 
 				// Update the UI to signal the fact that you aren't logged in
-				// TODO might still be logged in
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as));
 
@@ -1494,44 +1491,39 @@ public class DataWalk extends Activity implements LocationListener,
 				if ((timerTick % (mInterval / 1000)) == 0 && timerTick != 0) {
 
 					// Prepare a new row of data
-					JSONObject dataJSON = new JSONObject();
+					JSONArray dataJSON = new JSONArray();
 
 					// Determine how long you've been recording for
 					elapsedMillis += mInterval;
 					long time = startTime + elapsedMillis;
 
-					try {
 
-						// Store new values into JSON Object
-						dataJSON.put("0", "u " + time);
-						dataJSON.put("1", accel[3]);
-						dataJSON.put("2", velocity);
-						dataJSON.put("3", totalDistance);
-						dataJSON.put("4", loc.getLatitude());
-						dataJSON.put("5", loc.getLongitude());
+					// Store new values into JSON Object
+					dataJSON.put("u " + time);
+					dataJSON.put(""   + accel[3]);
+					dataJSON.put(""   + velocity);
+					dataJSON.put(""   + totalDistance);
+					dataJSON.put(""   + loc.getLatitude());
+					dataJSON.put(""   + loc.getLongitude());
+					
+					// Save this data point if GPS says it has a lock
+					if (gpsWorking) {
+						
+						dataSet.put(dataJSON);
+						
+						// Updated the number of points recorded here and on
+						// the main UI
+						dataPointCount++;
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								pointsUploadedBox
+								.setText("Points Recorded: "
+										+ dataPointCount);
+							}
 
-						// Save this data point if GPS says it has a lock
-						if (gpsWorking) {
-
-							dataSet.put(dataJSON);
-
-							// Updated the number of points recorded here and on
-							// the main UI
-							dataPointCount++;
-							runOnUiThread(new Runnable() {
-
-								@Override
-								public void run() {
-									pointsUploadedBox
-											.setText("Points Recorded: "
-													+ dataPointCount);
-								}
-
-							});
-						}
-
-					} catch (JSONException e) {
-						e.printStackTrace();
+						});
 					}
 				}
 			}

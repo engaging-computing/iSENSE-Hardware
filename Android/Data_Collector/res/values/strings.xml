@@ -12,12 +12,12 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="gpsString">Enabling GPS satellite communication is recommended for this application.  Would you like to enable GPS?</string>
-    <string name="force_stop">        You have pressed the power button on your device while data was recording.  To our dismay, this causes sensors
+    <string name="force_stop">You have pressed the power button on your device while data was recording.  To our dismay, this causes sensors
         such as the accelerometer to stop collecting data.  Therefore, we have stopped the data collection process for
         you and will allow you to upload your data up to the point before the power button was pressed.</string>
     <string name="description_hint">Enter Description Here&#8230;</string>
-    <string name="description_prompt">        Enter a data set description (or leave blank if you\'d like an automatically generated description) and press
-        \"Save\" to save your data set.  Otherwise, you may throw away your recently recorded data set by pressing
+    <string name="description_prompt">Enter a data set description (or leave blank if you\'d like an automatically generated description) and press
+        \"Save\" to save your data set.  Otherwise, you may discard your recently recorded data set by pressing
        	\"Delete\".</string>
     <string name="retry">Try Again</string>
     <string name="sample_interval">Sample Interval (ms)</string>
