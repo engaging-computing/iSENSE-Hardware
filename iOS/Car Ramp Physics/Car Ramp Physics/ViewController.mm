@@ -497,7 +497,7 @@
             if (dataToBeOrdered != nil) {
                 [dfm setFields:fieldsRow];
                 
-            [dataToBeOrdered addObject:[dfm putDataForNoProjectID]];
+            [dataToBeOrdered addObject:[dfm putData]];
                 
             }
             
@@ -718,13 +718,13 @@
             
         }
         
-        dataToBeJSONed = [DataFieldManager reOrderData:dataToBeOrdered forProjectID:expNum API:api andFieldOrder:[dfm getOrderList]];
+        dataToBeJSONed = [DataFieldManager reOrderData:dataToBeOrdered forProjectID:expNum withFieldOrder:[dfm getOrderList] andFieldIDs:[dfm getFieldIDs]];
         NSLog(@"REORDER SUCCESSFUL: %@", dataToBeJSONed);
         NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
         [data setObject:dataToBeJSONed forKey:@"data"];
         data = [[api rowsToCols:data] mutableCopy];
         
-        bool success = [api uploadDataSetWithId:expNum withData:data andName:sessionName];
+        bool success = [api jsonDataUploadWithId:expNum withData:data andName:sessionName];
         if (!success) {
             [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
         } else {
@@ -1054,7 +1054,7 @@
                 
                 RPerson *curUser = [api getCurrentUser];
                 
-                NSString *loginstat = [@"Logged in as: " stringByAppendingString:curUser.username];
+                NSString *loginstat = [@"Logged in as: " stringByAppendingString:curUser.name];
                 loginstat = [loginstat stringByAppendingString:@", Name: "];
                 loginstat = [loginstat stringByAppendingString:firstName];
                 loginstat = [loginstat stringByAppendingString:@" "];
@@ -1062,7 +1062,7 @@
                 loginstat = [loginstat stringByAppendingString:@". "];
                 
                 [login_status setText:loginstat];
-                userName = curUser.username;
+                userName = curUser.name;
                 passWord = passwordInput;
                 saver->hasLogin = TRUE;
             } else {
