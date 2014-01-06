@@ -464,18 +464,9 @@ dataToBeOrdered, backFromQueue, f, fields;
             if (dataToBeOrdered == nil)
                 dataToBeOrdered = [[NSMutableArray alloc] init];
 
-            //[dataToBeOrdered addObject:fieldsRow];
-      
-            if (dataToBeOrdered != nil) {
-                [dfm setFields:fieldsRow];
-
-                if (projNum == -1) {
-                    [dataToBeOrdered addObject:[dfm putDataForNoProjectID]];
-                } else {
-                    [dataToBeOrdered addObject:[dfm putData]];
-                }
-
-            }
+            [dfm setFields:fieldsRow];
+            [dataToBeOrdered addObject:[dfm putData]];
+            
             
         });
     }
@@ -604,13 +595,6 @@ dataToBeOrdered, backFromQueue, f, fields;
 // Save a data set so you don't have to upload it immediately
 - (void) saveDataSetWithDescription:(NSString *)description {
     
-    
-//    UIAlertView *message = [self getDispatchDialogWithMessage:@"Please wait while we organize your data..."];
-//    [message show];
-    
-//    dispatch_queue_t queue = dispatch_queue_create("automatic_ordering_data_in_upload", NULL);
-//    dispatch_async(queue, ^{
-    
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
         
@@ -620,42 +604,24 @@ dataToBeOrdered, backFromQueue, f, fields;
         QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet"
                                                                   inManagedObjectContext:managedObjectContext]
                        insertIntoManagedObjectContext:managedObjectContext];
-        
-//        dataToBeJSONed = [[NSMutableArray alloc] init];
-        
-        // Organize the data from dataToBeOrdered TODO - what is this crap? can we just do the line below?
-//        for (int i = 0; i < [dataToBeOrdered count]; i++) {
-//            Fields *f = [dataToBeOrdered objectAtIndex:i];
-//            [dfm orderDataFromFields:f];
-//            [dataToBeJSONed addObject:dfm.data];
-//        }
-        
-        // @Mike: dfm.data is currently nil so of course it is going to crash here
-//        [dataToBeJSONed addObject:dfm.data];
-
-//        dispatch_async(dispatch_get_main_queue(), ^{
-    
-            [ds setName:dataSetName];
-            [ds setParentName:PARENT_AUTOMATIC];
-            [ds setDataDescription:description];
-            [ds setProjID:[NSNumber numberWithInt:projNum]];
-            [ds setData:dataToBeOrdered];
-            [ds setPicturePaths:nil];
-            [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-            [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
-    
-            // Add the new data set to the queue
-            [dataSaver addDataSet:ds];
             
-            [self.view makeWaffle:@"Data set saved"
-                         duration:WAFFLE_LENGTH_SHORT
-                         position:WAFFLE_BOTTOM
-                            image:WAFFLE_CHECKMARK];
+    [ds setName:dataSetName];
+    [ds setParentName:PARENT_AUTOMATIC];
+    [ds setDataDescription:description];
+    [ds setProjID:[NSNumber numberWithInt:projNum]];
+    [ds setData:dataToBeOrdered];
+    [ds setPicturePaths:nil];
+    [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+    [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
+    [ds setFields:[dfm getOrderList]];
+    
+    // Add the new data set to the queue
+    [dataSaver addDataSet:ds];
             
-//            [message dismissWithClickedButtonIndex:nil animated:YES];
-//        });
-//        
-//    });
+    [self.view makeWaffle:@"Data set saved"
+                    duration:WAFFLE_LENGTH_SHORT
+                    position:WAFFLE_BOTTOM
+                    image:WAFFLE_CHECKMARK];
     
 }
 

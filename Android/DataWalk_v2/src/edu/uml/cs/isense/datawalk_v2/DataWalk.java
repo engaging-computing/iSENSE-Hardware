@@ -344,7 +344,7 @@ public class DataWalk extends Activity implements LocationListener,
 					// ID
 					dataPointCount = 0;
 					dataSetID = -1;
-					// TODO KEEP SCREEN ON
+				
 					// Prevent the screen from turning off and prevent rotation
 					getWindow().addFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -512,8 +512,7 @@ public class DataWalk extends Activity implements LocationListener,
 	 * Logs the user in automatically
 	 */
 	private void AutoLogin() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	/**
@@ -1295,7 +1294,6 @@ public class DataWalk extends Activity implements LocationListener,
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 
 				// Update the UI to signal the fact that you aren't logged in
-				// TODO might still be logged in
 				loggedInAs.setText(getResources().getString(
 						R.string.logged_in_as));
 

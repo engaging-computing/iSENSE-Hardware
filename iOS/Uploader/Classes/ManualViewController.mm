@@ -782,17 +782,39 @@
             
             for (RProjectField *projField in fieldOrder) {
                 
+                long fieldID = projField.field_id.longValue;
+                
                 if (projField.type.intValue == TYPE_LAT) {
-                    scrollHeight = [self addDataField:projField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
+                    scrollHeight = [self addDataField:projField
+                                             withType:TYPE_LATITUDE
+                                         andObjNumber:objNumber
+                                              andData:nil
+                                               andTag:fieldID];
                 } else if (projField.type.intValue == TYPE_LON) {
-                     scrollHeight = [self addDataField:projField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
+                     scrollHeight = [self addDataField:projField
+                                              withType:TYPE_LONGITUDE
+                                          andObjNumber:objNumber
+                                               andData:nil
+                                                andTag:fieldID];
                 } else if (projField.type.intValue == TYPE_TIMESTAMP) {
-                    scrollHeight = [self addDataField:projField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
+                    scrollHeight = [self addDataField:projField
+                                              withType:TYPE_TIME
+                                         andObjNumber:objNumber
+                                              andData:nil
+                                               andTag:fieldID];
                 } else {
                     if (data == nil)
-                        scrollHeight = [self addDataField:projField withType:TYPE_DEFAULT andObjNumber:objNumber andData:nil];
+                        scrollHeight = [self addDataField:projField
+                                                 withType:TYPE_DEFAULT
+                                             andObjNumber:objNumber
+                                                  andData:nil
+                                                   andTag:fieldID];
                     else {
-                        scrollHeight = [self addDataField:projField withType:TYPE_DEFAULT andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
+                        scrollHeight = [self addDataField:projField
+                                                 withType:TYPE_DEFAULT
+                                             andObjNumber:objNumber
+                                                  andData:[data objectAtIndex:objNumber]
+                                                   andTag:fieldID];
                     }
                 }
             
@@ -844,7 +866,7 @@
     });
 }
 
-- (int) addDataField:(RProjectField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data {
+- (int) addDataField:(RProjectField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data andTag:(long)tag {
     
     CGFloat Y_FIELDNAME = SCROLLVIEW_Y_OFFSET + (objNum * SCROLLVIEW_Y_OFFSET);
     CGFloat Y_FIELDCONTENTS = Y_FIELDNAME + SCROLLVIEW_OBJ_INCR;
@@ -880,6 +902,7 @@
     fieldName.backgroundColor = [UIColor clearColor];
     fieldName.textColor = [UIColor blackColor];
     fieldName.text = [StringGrabber concatenate:projField.name withHardcodedString:@"colon"];
+    fieldName.tag = tag; // TODO
     
     UITextField *fieldContents = [[UITextField alloc] initWithFrame:[self setScrollViewItem:UI_FIELDCONTENTS toSizeWithY:Y_FIELDCONTENTS]];
     fieldContents.delegate = self;
@@ -960,35 +983,41 @@
 - (NSMutableArray *) getDataFromFields {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     int count = 0;
+    long key = -1;
     
     for (UIView *element in scrollView.subviews) {
-        if ([element isKindOfClass:[UITextField class]]) {
+        if ([element isKindOfClass:[UILabel class]]) {
+            
+            key = [element tag]; // TODO
+            
+        } else if ([element isKindOfClass:[UITextField class]]) {
+            
             if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_lat"]]) {
                 
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
                 double lat = lc2d.latitude;
                 NSString *latitude = [NSString stringWithFormat:@"%lf", lat];
-                [data setValue:latitude forKey:[NSString stringWithFormat:@"%d", count]];
+                [data setValue:latitude forKey:[NSString stringWithFormat:@"%ld", key]];
                 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]]) {
                 
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
                 double lon = lc2d.longitude;
                 NSString *longitude = [NSString stringWithFormat:@"%lf", lon];
-                [data setValue:longitude forKey:[NSString stringWithFormat:@"%d", count]];
+                [data setValue:longitude forKey:[NSString stringWithFormat:@"%ld", key]];
                 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]]) {
                 
                 long timeStamp = [[NSDate date] timeIntervalSince1970];
                 NSString *currentTime = [[NSString stringWithFormat:@"u %ld", timeStamp] stringByAppendingString:@"000"];
-                [data setValue:currentTime forKey:[NSString stringWithFormat:@"%d", count]];
+                [data setValue:currentTime forKey:[NSString stringWithFormat:@"%ld", key]];
                 
             } else {
                 
                 if ([((UITextField *) element).text length] != 0)
-                    [data setValue:((UITextField *) element).text forKey:[NSString stringWithFormat:@"%d", count]];
+                    [data setValue:((UITextField *) element).text forKey:[NSString stringWithFormat:@"%ld", key]];
                 else
-                    [data setValue:@"" forKey:[NSString stringWithFormat:@"%d", count]];
+                    [data setValue:@"" forKey:[NSString stringWithFormat:@"%ld", key]];
             }
             count++;
         }
