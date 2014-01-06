@@ -60,8 +60,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.credentials.Login;
@@ -70,21 +70,12 @@ import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
-import edu.uml.cs.isense.riverwalk.R;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
-
-//	@Override
-//	public boolean onMenuOpened(int featureId, Menu menu) {
-//		// TODO Auto-generated method stub
-//		return super.onMenuOpened(featureId, menu);
-//	}
-
-	
 
 	/* Default Constants */
 	private final String DEFAULT_USERNAME = "mobile";
@@ -99,11 +90,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	/* UI Handles */
 	public static EditText experimentInput;
-	public static Spinner rides;
 	public static TextView rideName;
 	private TextView time;
 	private TextView values;
 	private Button startStop;
+	public static EditText dataset; 
+	public static EditText project;
+	public static CheckBox projectLater;
+	public static EditText sampleRate;
+	public static EditText studentNumber;
+	public static CheckBox isCanobie;
+	
+	/*Values obtained from Configuration*/
+	public static int projectNum = -1;
+	public static String data = (new String());
+	public static String rate = (new String());
+	public static String ride = (new String());
+	public static String seat = (new String());
 
 	/* Managers and Their Variables */
 	public static DataFieldManager dfm;
@@ -129,7 +132,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private boolean isRunning = false;
 	private boolean uploadSuccessful = false;
 	private static boolean useMenu = true;
-	private static boolean setupDone = false;
+	public static boolean setupDone = false;
 
 	/* Recording Constants */
 	private final int SAMPLE_INTERVAL = 50;
@@ -189,9 +192,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			@Override
 			public boolean onLongClick(View arg0) {
+				srate = Integer.parseInt(rate);
 
-				if (!setupDone || rideName.getText().toString() == null) {
-					startStop.setEnabled(false);
+				if (!setupDone) { // || rideName.getText().toString() == null) {
 					w.make("You must setup before recording data.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 
@@ -207,7 +210,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
 
-					// Stop the recording
+					// Stop the recording and reset UI
 					if (isRunning) {
 						isRunning = false;
 						setupDone = false;
@@ -231,13 +234,16 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 						// Start the recording
 					} else {
+						
+						new SensorCheckTask().execute();
+						srate = Integer.parseInt(rate);
+						
 						isRunning = true;
 
 						// Check to see if a valid project was chosen. If not,
-						// enable all fields for recording.
-						SharedPreferences mPrefs = getSharedPreferences(
-								PROJ_PREFS_ID, MODE_PRIVATE);
-						if (mPrefs.getString(PROJ_ID, "").equals("-1")) {
+						// (projectNum is -1) enable all fields for recording.
+						
+						if (projectNum == -1) {
 							enableAllFields();
 						}
 
@@ -291,7 +297,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							public void run() {
 								recordData();
 							}
-						}, 0, srate);
+						}, 0, srate * 1000);
 					}
 
 					return isRunning;
@@ -348,7 +354,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			folder.mkdir();
 		}
 
-		String sdFileName = rides.getSelectedItem() + "-" + stNumber + "-"
+		String sdFileName = Configuration.rides.getSelectedItem() + "-" + stNumber + "-"
 				+ dateString + ".csv";
 		File sdFile = new File(folder, sdFileName);
 
@@ -551,8 +557,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	@Override
 	public void onLocationChanged(Location location) {
-		
-		
 		loc = location;
 	}
 
@@ -575,9 +579,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		if (requestCode == EXPERIMENT_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
-				int eid = data.getExtras().getInt(
-						"edu.uml.cs.isense.experiments.exp_id");
-				experimentInput.setText("" + eid);
+
+				//TODO
+				SharedPreferences mPrefs = getSharedPreferences(
+						PROJ_PREFS_ID, 0);
+				final SharedPreferences.Editor mEdit = mPrefs.edit();
+				mEdit.putString(PROJ_ID, Integer.toString(projectNum));
+				mEdit.commit();
+				
 			}
 		} else if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -766,7 +775,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// These store our media objects
 		pictures = new ArrayList<File>();
 		videos = new ArrayList<File>();
-
+		
+		
 		// OMG a button!
 		startStop = (Button) findViewById(R.id.startStop);
 
@@ -808,7 +818,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		// Most important feature. Makes the button beep.
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
-
 	}
 
 	/**
@@ -1051,55 +1060,60 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		
 		DecimalFormat toThou = new DecimalFormat("######0.000");
 
-		if (dfm.enabledFields[Fields.ACCEL_X])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x)))
 			f.accel_x = toThou.format(accel[0]);
-		if (dfm.enabledFields[Fields.ACCEL_Y])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y)))
 			f.accel_y = toThou.format(accel[1]);
-		if (dfm.enabledFields[Fields.ACCEL_Z])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z)))
 			f.accel_z = toThou.format(accel[2]);
-		if (dfm.enabledFields[Fields.ACCEL_TOTAL])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_total)))
 			f.accel_total = toThou.format(accel[3]);
-		if (dfm.enabledFields[Fields.LATITUDE])
+		
+		if (dfm.getOrderList().contains(mContext.getString(R.string.latitude)))
 			f.latitude = loc.getLatitude();
-		if (dfm.enabledFields[Fields.LONGITUDE])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.longitude)))
 			f.longitude = loc.getLongitude();
-		if (dfm.enabledFields[Fields.HEADING_DEG])
+		
+		if (dfm.getOrderList().contains(mContext.getString(R.string.heading_deg)))
 			f.angle_deg = toThou.format(orientation[0]);
-		if (dfm.enabledFields[Fields.HEADING_RAD])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.heading_rad)))
 			f.angle_rad = ""
 					+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
-		if (dfm.enabledFields[Fields.MAG_X])
+		
+		if (dfm.getOrderList().contains(mContext.getString(R.string.magnetic_x)))
 			f.mag_x = "" + mag[0];
-		if (dfm.enabledFields[Fields.MAG_Y])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.magnetic_y)))
 			f.mag_y = "" + mag[1];
-		if (dfm.enabledFields[Fields.MAG_Z])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.magnetic_z)))
 			f.mag_z = "" + mag[2];
-		if (dfm.enabledFields[Fields.MAG_TOTAL])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.magnetic_total)))
 			f.mag_total = ""
 					+ Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
 							+ Math.pow(Double.parseDouble(f.mag_y), 2)
 							+ Math.pow(Double.parseDouble(f.mag_z), 2));
-		if (dfm.enabledFields[Fields.TIME])
+		
+		if (dfm.getOrderList().contains(mContext.getString(R.string.time)))
 			f.timeMillis = currentTime + elapsedMillis;
-		if (dfm.enabledFields[Fields.TEMPERATURE_C])
+		
+		if (dfm.getOrderList().contains(mContext.getString(R.string.temperature_c)))
 			f.temperature_c = temperature;
-		if (dfm.enabledFields[Fields.TEMPERATURE_F])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.temperature_f)))
 			if (temperature.equals(""))
 				f.temperature_f = temperature;
 			else
 				f.temperature_f = ""
 						+ ((Double.parseDouble(temperature) * 1.8) + 32);
-		if (dfm.enabledFields[Fields.TEMPERATURE_K])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.temperature_k)))
 			if (temperature.equals(""))
 				f.temperature_k = temperature;
 			else
 				f.temperature_k = ""
 						+ (Double.parseDouble(temperature) + 273.15);
-		if (dfm.enabledFields[Fields.PRESSURE])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.pressure)))
 			f.pressure = pressure;
-		if (dfm.enabledFields[Fields.ALTITUDE])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.altitude)))
 			f.altitude = "" + loc.getAltitude();
-		if (dfm.enabledFields[Fields.LIGHT])
+		if (dfm.getOrderList().contains(mContext.getString(R.string.luminous_flux)))
 			f.lux = light;
 
 		dataSet.put(dfm.putData());

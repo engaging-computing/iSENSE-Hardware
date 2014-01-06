@@ -1,8 +1,10 @@
 package edu.uml.cs.isense.canobiev2;
 
 import edu.uml.cs.isense.proj.Setup;
+import android.R.string;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,19 +14,18 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 public class Configuration extends Activity {
-	public static EditText session; 
-	public static EditText project;
-	public static CheckBox projectLater;
-	public static EditText sampleRate;
-	public static EditText studentNumber;
-	public static CheckBox isCanobie;
+	private EditText dataset; 
+	private EditText sampleRate;
+	private EditText studentNumber;
 	public static Spinner rides;
 	private Button ok;
-	private Button selected;
-	private TextView rideLabel;
+	private Button select;
+	private static CheckBox projectLater;
+	private static CheckBox isCanobie;
+
+	
 	
 	private int BROWSE_PROJECTS_REQUESTED = 101;
 	
@@ -34,17 +35,20 @@ public class Configuration extends Activity {
 		setContentView(R.layout.configuration);
 		
 		
-		session = (EditText) findViewById(R.id.sessionName);
+		dataset = (EditText) findViewById(R.id.dataName);
 		projectLater = (CheckBox) findViewById(R.id.select_exp_later);
 		sampleRate = (EditText) findViewById(R.id.srate);
 		studentNumber = (EditText) findViewById(R.id.studentNumber);
 		isCanobie = (CheckBox) findViewById(R.id.isCanobie);	
 		rides = (Spinner) findViewById(R.id.rides);
 		ok = (Button) findViewById(R.id.ok);
-		selected = (Button) findViewById(R.id.selectButton);
-		rideLabel = (TextView) findViewById(R.id.rideNameLabel);
-		 
-		selected.setEnabled(false);
+		select = (Button) findViewById(R.id.selectButton);		 
+		
+		dataset.setText(AmusementPark.data);
+		sampleRate.setText(AmusementPark.rate);
+		studentNumber.setText(AmusementPark.seat);
+		
+		projectLater.setChecked(false);
 		
 		projectLater.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 
@@ -52,9 +56,9 @@ public class Configuration extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				if (projectLater.isChecked()) {
-					selected.setEnabled(false);
+					select.setEnabled(false);
 				} else {
-					selected.setEnabled(true);
+					select.setEnabled(true);
 				}
 			}
 			
@@ -67,18 +71,15 @@ public class Configuration extends Activity {
 					boolean isChecked) {
 				if (isCanobie.isChecked()) { 
 					rides.setEnabled(true);
-					rideLabel.setEnabled(true);
 				} else {
 					rides.setEnabled(false);
-					rideLabel.setEnabled(false);
-
 				}
 				
 			}
 			
 		});
 		
-		selected.setOnClickListener(new OnClickListener(){
+		select.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -91,16 +92,12 @@ public class Configuration extends Activity {
 		ok.setOnClickListener(new OnClickListener (){
 			@Override
 			public void onClick(View v) {
-//				try{
-//					 = Integer.parseInt(sampleRate.getText().toString());
-//				} catch(NumberFormatException e) {
-//					sampleRate.setError("Please Enter a Value.");
-//				}
-				
-				
-				
+
 				if(everythingSelected() == true) {
+					AmusementPark.setupDone = true;
 					finish();
+				} else {
+					return;
 				}
 			} 
 		});
@@ -112,22 +109,44 @@ public class Configuration extends Activity {
 	boolean everythingSelected(){
 		boolean selected = true;
 		
-		if(session.getText().length() == 0) {
-			session.setError("Please Enter a Data Set Name.");
+		if(dataset.getText().length() == 0) {
+			dataset.setError("Please Enter a Data Set Name.");
 			selected = false;
+		} else {
+			AmusementPark.data = dataset.getText().toString();
 		}
-		if(isCanobie.isChecked() == false) {
+		
+		
+		if(projectLater.isChecked() == false) {
 			//check if project is selected
+			if (AmusementPark.projectNum == -1) {
+				selected = false;
+				select.setError("Please Select a Project.");
+			} 			
+		} else {
+			AmusementPark.projectNum = -1; 
 		}
 		
 		
 		if(sampleRate.getText().length() == 0) {
 			sampleRate.setError("Please Enter a Value.");
 			selected = false;
-		}
+		} else {
+			AmusementPark.rate = sampleRate.getText().toString();		
+			}
+		
 		if(studentNumber.getText().length() == 0) {
 			studentNumber.setError("Please Enter Seat/Student");
 			selected = false;
+		} else {
+			AmusementPark.seat = studentNumber.getText().toString();
+			
+		}
+		
+		if(isCanobie.isChecked() == true) {
+			//check if ride is selected
+		} else {
+			
 		}
 		
 		return selected;
@@ -136,7 +155,11 @@ public class Configuration extends Activity {
 	 protected void onActivityResult(int requestCode, int resultCode,
              Intent data) {
          if (requestCode == BROWSE_PROJECTS_REQUESTED) {
-             
+        	 SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+				String eidString = mPrefs.getString("project_id", "");
+				//projectNum = Integer.getInteger(eidString);
+				
+				AmusementPark.projectNum = Integer.parseInt(eidString);		
          }
      }
  }
