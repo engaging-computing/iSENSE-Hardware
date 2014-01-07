@@ -871,13 +871,20 @@ dataToBeOrdered, backFromQueue, f, fields;
 
 - (void) setNonRecordingLayout {
 
+    [step1 setAlpha:1.0];
+    [step1 setEnabled:YES];
+    
     [step2 setTitle:@"Step 2: Record a Data Set (Hold Down)" forState:UIControlStateNormal];
     [step2 setTitleColor:UIColorFromHex(0x4C6FD9) forState:UIControlStateNormal];
     
-    [step1 setAlpha:1.0];
-    [step3 setAlpha:1.0];
-    [step1 setEnabled:YES];
-    [step3 setEnabled:YES];
+    
+    if ([[dataSaver dataQueue] count] == 0) {
+        [step3 setEnabled:NO];
+        [step3 setAlpha:0.5];
+    } else {
+        [step3 setEnabled:YES];
+        [step3 setAlpha:1.0];
+    }
     
     [step1Label setAlpha:0.0];
     [step3Label setAlpha:0.0];
