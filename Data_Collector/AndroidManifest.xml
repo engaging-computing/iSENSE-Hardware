@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".splash.ProjectCreate"
+            android:name="edu.uml.cs.isense.proj.ProjectCreate"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Create New Project"
             android:theme="@style/AppTheme" />
