@@ -128,14 +128,14 @@ public class ProjectCreate extends Activity {
 						View cell = fieldScroll.getChildAt(i);
 						EditText fieldName = (EditText) cell
 								.findViewById(R.id.project_field_name);
-						if (fieldName.getText().toString().length() == 0) {
+						if (fieldName != null && fieldName.getText().toString().length() == 0) {
 							int fieldNum = i + 1;
 							w.make(getResources().getString(R.string.please_enter_name_field)
 									+ fieldNum,
 									Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 							fieldName.setError("Enter a field name");
 							return;
-						} else
+						} else if (fieldName != null)
 							fieldName.setError(null);
 
 					}
