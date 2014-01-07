@@ -395,6 +395,22 @@ static RPerson *currentUser;
 }
 
 /**
+ * Gets the ID of a user specified with the username from iSENSE.
+ * This is an authenticated function and requires that the createSession function was called earlier. 
+ *
+ * @param username The username of the user whose ID is to be retrieved
+ * @return An int (defaults to Mobile U.)
+ */
+
+-(int) getUserIDFromUsername: (NSString *) username {
+    
+    
+    
+    return 6;
+    
+}
+
+/**
  * Gets the user profile specified with the username from iSENSE.
  *
  * @param username The username of the user to retrieve
@@ -403,7 +419,7 @@ static RPerson *currentUser;
 -(RPerson *)getUserWithUsername:(NSString *)username {
     
     RPerson *person = [[RPerson alloc] init];
-    NSString *path = [NSString stringWithFormat:@"users/%@", username];
+    NSString *path = [NSString stringWithFormat:@"users/%d", [self getUserIDFromUsername:username]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET andPostData:nil];
     person.person_id = [result objectForKey:@"id"];
     person.name = [result objectForKey:@"name"];

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7669F025178B275C00E51AD0"
-               BuildableName = "Car Ramp Physics.app"
+               BuildableName = "iS Car Ramp.app"
                BlueprintName = "Car Ramp Physics"
                ReferencedContainer = "container:Car Ramp Physics.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7669F025178B275C00E51AD0"
-            BuildableName = "Car Ramp Physics.app"
+            BuildableName = "iS Car Ramp.app"
             BlueprintName = "Car Ramp Physics"
             ReferencedContainer = "container:Car Ramp Physics.xcodeproj">
          </BuildableReference>
@@ -52,7 +52,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7669F025178B275C00E51AD0"
-            BuildableName = "Car Ramp Physics.app"
+            BuildableName = "iS Car Ramp.app"
             BlueprintName = "Car Ramp Physics"
             ReferencedContainer = "container:Car Ramp Physics.xcodeproj">
          </BuildableReference>
@@ -70,7 +70,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "7669F025178B275C00E51AD0"
-            BuildableName = "Car Ramp Physics.app"
+            BuildableName = "iS Car Ramp.app"
             BlueprintName = "Car Ramp Physics"
             ReferencedContainer = "container:Car Ramp Physics.xcodeproj">
          </BuildableReference>

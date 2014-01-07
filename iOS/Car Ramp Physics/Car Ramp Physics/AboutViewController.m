@@ -73,7 +73,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [text setText:@"Enter your first name and last initial so that you can later identify your session on iSENSE.\n\nPress and hold the Start button, and the app will record 10 seconds of acceleration data. After recording, you may publish your data to isense.cs.uml.edu. \n\nYou are also given an option to view your data. \n\nYou may modify various settings -- explore the menus.  \n\nIf setting up your own experiment: create fields named \"Time\" (time/milliseconds) and any of \"X\", \"Y\", \"Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared)." ];
+    [text setText:[StringGrabber grabString:@"about_app_text"]];
     
     self.navigationItem.title = @"About";
 }

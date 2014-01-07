@@ -7,6 +7,7 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 
 #import <UIKit/UIKit.h>
+#import "StringGrabber.h"
 
 @interface AboutViewController : UIViewController
 
