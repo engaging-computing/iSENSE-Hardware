@@ -56,8 +56,8 @@ typedef struct _RotationDataSaver{
 @property(nonatomic) int recordLength;
 @property(nonatomic) int countdown;
 @property(nonatomic, retain) UIAlertView *change_name;
-@property(nonatomic, retain) UIAlertView *experiment;
-@property(nonatomic, retain) UIAlertView *exp_num;
+@property(nonatomic, retain) UIAlertView *project;
+@property(nonatomic, retain) UIAlertView *proj_num;
 @property(nonatomic, retain) UIAlertView *loginalert;
 @property(nonatomic, retain) UIAlertView *saveMode;
 @property(nonatomic, retain) API *api;
@@ -66,7 +66,7 @@ typedef struct _RotationDataSaver{
 @property(nonatomic, retain) CMMotionManager *motionmanager;
 @property (nonatomic, strong) NSMutableArray *dataToBeJSONed;
 @property (nonatomic, strong) NSMutableArray *dataToBeOrdered;
-@property (nonatomic, assign) int expNum;
+@property (nonatomic, assign) int projNum;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic) float sampleInterval;
 @property (nonatomic, copy) NSString *sessionName;

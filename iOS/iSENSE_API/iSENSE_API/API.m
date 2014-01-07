@@ -444,10 +444,17 @@ static RPerson *currentUser;
     
     @try {
         NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
-        [postData setObject:name forKey:@"project_name"];
+        [postData setObject:[NSString stringWithFormat:@"%@",name] forKey:@"project_name"];
         
         NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
-        NSData *postReqData = [NSKeyedArchiver archivedDataWithRootObject:fields];
+        
+        NSError *error;
+        NSData *postReqData = [NSJSONSerialization dataWithJSONObject:postData
+                                                              options:0
+                                                                error:&error];
+        if (error) {
+            NSLog(@"Error parsing object to JSON: %@", error);
+        }
         
         NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
         
@@ -464,7 +471,13 @@ static RPerson *currentUser;
             [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
             [fullFieldMeta setObject:projectId forKey:@"project_id"];
             
-            NSData *fieldPostReqData = [NSKeyedArchiver archivedDataWithRootObject:fieldMetaData];
+            NSError *error;
+            NSData *fieldPostReqData = [NSJSONSerialization dataWithJSONObject:fieldMetaData
+                                                                  options:0
+                                                                    error:&error];
+            if (error) {
+                NSLog(@"Error parsing object to JSON: %@", error);
+            }
             [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
         }
         
