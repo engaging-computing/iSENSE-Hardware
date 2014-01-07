@@ -175,7 +175,6 @@ dataToBeOrdered, backFromQueue, f, fields;
             dataSetName = [prefs valueForKey:[StringGrabber grabString:@"key_step1_data_set_name"]];
             
             projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
-            NSLog(@"Automatic reading fields for key: %@", [NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projNum]);
             fields = [prefs objectForKey:[NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projNum]];
                           
             // Set setup_complete key to false again, initialize the keep_step_2_enabled key to on
@@ -214,19 +213,16 @@ dataToBeOrdered, backFromQueue, f, fields;
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
-    NSLog(@"should autorotate to interface orientation");
     return (isRecording) ? NO : YES;
 }
 
 // iOS6 enable rotation
 - (BOOL)shouldAutorotate {
-    NSLog(@"should autorotate");
     return (isRecording) ? NO : YES;
 }
 
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
-    NSLog(@"supported interface orientations");
     if (isRecording) {
         if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
             return UIInterfaceOrientationMaskPortrait;
@@ -284,28 +280,15 @@ dataToBeOrdered, backFromQueue, f, fields;
             // Get the project
             projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
 
-            // Get Field Order
-            //[dfm getOrder];
-            //[dfm getFieldOrderOfExperiment:projNum];
-            //[self getEnabledFields];
+            // Initialize fields object
             f = [[Fields alloc] init];
             
-            
-            /****  TODO - ensure that this is how we properly get fields to record for the proj ***/
-            
+            // Set up DFM
             dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:f];
             [dfm getOrder];
             [dfm setEnabledFields:fields];
             if (fields != nil)
                 [dfm setOrder:fields];
-            
-            /*******/
-            
-//            if (projNum == -1) {
-//                [dfm getOrder];
-//            } else {
-//                [dfm getOrder];
-//            }
             
             // Change the UI
             [self setRecordingLayout];
@@ -457,9 +440,6 @@ dataToBeOrdered, backFromQueue, f, fields;
                     fieldsRow.gyro_z = [NSNumber numberWithDouble:[motionManager.gyroData rotationRate].z];
             }
             
-            // TODO there's more fields, right...?
-
-            
             // update data object
             if (dataToBeOrdered == nil)
                 dataToBeOrdered = [[NSMutableArray alloc] init];
@@ -573,12 +553,9 @@ dataToBeOrdered, backFromQueue, f, fields;
                 description = @"Data set recorded and uploaded from mobile device using iSENSE iOS Uploader application.";
             }
             
-            NSLog(@"save");
             [self saveDataSetWithDescription:description];
-            NSLog(@"safe!!");
             [self setEnabled:true forButton:step3];
             
-                        
         } else {
             
             [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
@@ -588,8 +565,6 @@ dataToBeOrdered, backFromQueue, f, fields;
     } else if (actionSheet.tag == MENU_MEDIA_AUTOMATIC) {
         // TODO - media code
     }
-    
-    NSLog(@"dont mattah what ya shoveling");
 }
 
 // Save a data set so you don't have to upload it immediately
@@ -705,145 +680,6 @@ dataToBeOrdered, backFromQueue, f, fields;
         button.alpha = .5;
     }
 }
-
-//- (void) setupDFMWithAllFields {
-//    
-//    for (int i = 0; i < [[dfm order] count]; i++) {
-//        [dfm setEnabledField:true atIndex:i];
-//    }
-//}
-
-// Enabled fields check
-//- (void) getEnabledFields {
-//    
-//    if (projNum == -1) {
-//        [self setupDFMWithAllFields];
-//    } else {
-//        int i = 0;
-//        
-//        // get the sensorCompatability array first
-//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
-//        
-//        for (NSString *s in [dfm order]) {
-//            if ([s isEqualToString:[StringGrabber grabField:@"accel_x"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fACCEL_X];
-//                    
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"accel_y"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fACCEL_Y];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"accel_z"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fACCEL_Z];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"accel_total"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fACCEL_TOTAL];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"time"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fTIME_MILLIS];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"latitude"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fLATITUDE];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"longitude"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fLONGITUDE];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_x"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fMAG_X];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_y"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fMAG_Y];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_z"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fMAG_Z];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_total"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fMAG_TOTAL];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"heading_deg"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fANGLE_DEG];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"heading_rad"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fANGLE_RAD];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_c"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fTEMPERATURE_C];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_f"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fTEMPERATURE_F];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_k"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fTEMPERATURE_K];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"pressure"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fPRESSURE];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"altitude"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fALTITUDE];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"luminous_flux"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fLUX];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_x"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fGYRO_X];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_y"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fGYRO_Y];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_z"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fGYRO_Z];
-//                }
-//            }
-//            
-//            ++i;
-//        }
-//  
-//    }
-//        
-//}
 
 - (void) setRecordingLayout {
     

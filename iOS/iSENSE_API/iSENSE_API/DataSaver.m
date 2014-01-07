@@ -35,8 +35,6 @@
     ds.projID = dataSet.projID;
     ds.uploadable = dataSet.uploadable;
     
-    // commitMOCChanges used to be here - moved down to bottom of function
-    
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
     
