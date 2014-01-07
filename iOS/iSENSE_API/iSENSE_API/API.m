@@ -426,31 +426,35 @@ static RPerson *currentUser;
  */
 -(int)createProjectWithName:(NSString *)name andFields:(NSArray *)fields {
     
-    NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
-    [postData setObject:name forKey:@"project_name"];
-    
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
-    NSData *postReqData = [NSKeyedArchiver archivedDataWithRootObject:fields];
-    
-    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
-    
-    NSNumber *projectId = [requestResult objectForKey:@"id"];
-    
-    for (RProjectField *projField in fields) {
-        NSMutableDictionary *fieldMetaData = [[NSMutableDictionary alloc] init];
-        [fieldMetaData setObject:projectId forKey:@"project_id"];
-        [fieldMetaData setObject:projField.type forKey:@"field_type"];
-        [fieldMetaData setObject:projField.name forKey:@"name"];
-        [fieldMetaData setObject:projField.unit forKey:@"unit"];
+    @try {
+        NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
+        [postData setObject:name forKey:@"project_name"];
         
-        NSMutableDictionary *fullFieldMeta = [[NSMutableDictionary alloc] init];
-        [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
-        [fullFieldMeta setObject:projectId forKey:@"project_id"];
+        NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
+        NSData *postReqData = [NSKeyedArchiver archivedDataWithRootObject:fields];
         
-        NSData *fieldPostReqData = [NSKeyedArchiver archivedDataWithRootObject:fieldMetaData];
-        [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
+        NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
+        
+        NSNumber *projectId = [requestResult objectForKey:@"id"];
+        
+        for (RProjectField *projField in fields) {
+            NSMutableDictionary *fieldMetaData = [[NSMutableDictionary alloc] init];
+            [fieldMetaData setObject:projectId forKey:@"project_id"];
+            [fieldMetaData setObject:projField.type forKey:@"field_type"];
+            [fieldMetaData setObject:projField.name forKey:@"name"];
+            [fieldMetaData setObject:projField.unit forKey:@"unit"];
+            
+            NSMutableDictionary *fullFieldMeta = [[NSMutableDictionary alloc] init];
+            [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
+            [fullFieldMeta setObject:projectId forKey:@"project_id"];
+            
+            NSData *fieldPostReqData = [NSKeyedArchiver archivedDataWithRootObject:fieldMetaData];
+            [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
+        }
         
         return projectId.intValue;
+    } @catch (NSException *e) {
+        NSLog(@"%@", e);
     }
     
     return -1;
