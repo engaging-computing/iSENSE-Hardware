@@ -49,8 +49,6 @@
 // substitute for viewDidLoad - allocates memory and sets up main UI
 - (void) viewHasLoaded {
     
-    NSLog(@"view has loaded");
-    
     // Check backFromQueue status to inform user of data set upload success or failure
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     backFromQueue = [prefs boolForKey:[StringGrabber grabString:@"key_back_from_queue"]];
@@ -203,10 +201,8 @@
     }
     
     // DataSaver from Data_CollectorAppDelegate
-    if (dataSaver == nil) {
+    if (dataSaver == nil)
         dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
-        NSLog(@"Current count = %d", dataSaver.dataQueue.count);
-    }
     
     [self initLocations];
     [self resetAddressFields];
@@ -373,8 +369,6 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-    
-    NSLog(@"view did appear");
 }
 
 - (void) dealloc {
@@ -988,7 +982,7 @@
     for (UIView *element in scrollView.subviews) {
         if ([element isKindOfClass:[UILabel class]]) {
             
-            key = [element tag]; // TODO
+            key = [element tag];
             
         } else if ([element isKindOfClass:[UITextField class]]) {
             
@@ -1070,11 +1064,9 @@
     [ds setPicturePaths:[imageList copy]];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
     [ds setHasInitialProj:[NSNumber numberWithBool:(projNum > 0)]];
-    // Add the new data set to the queue
-    [dataSaver addDataSet:ds];
-    NSLog(@"There are %d images in imageList.", imageList.count);
-    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.dataQueue.count);
     
+    // Add the new data set to the queue and remove all media
+    [dataSaver addDataSet:ds];
     [imageList removeAllObjects];
     
 }
@@ -1123,7 +1115,6 @@
     if (!hasCamera) return NO;
     
     cameraUI.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, nil];
-    NSLog(@"Media Types: %@", cameraUI.mediaTypes.description);
     
     // Hides the controls for moving & scaling pictures, or for
     // trimming movies. To instead show the controls, use YES.
@@ -1136,7 +1127,7 @@
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error andContextInfo:(void *)contextInfo {
-    NSLog(@"Got zee image!");
+    NSLog(@"Got the image!");
     if  (error) {
         NSLog(@"%@", error);
     } else {
@@ -1154,7 +1145,6 @@
 
 // For responding to the user accepting a newly-captured picture or movie
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *) info {
-    NSLog(@"Image picker controller method");
     
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
     UIImage *originalImage, *editedImage, *imageToSave;
@@ -1171,13 +1161,8 @@
             imageToSave = originalImage;
         }
         
-        NSLog(@"About to save picture!");
-        
         // Save the new image (original or edited) to the Camera Roll (then send the image to the caller's image:didFinishSavingWithError: method);
         UIImageWriteToSavedPhotosAlbum (imageToSave, self, @selector(image:didFinishSavingWithError:andContextInfo:), nil);
-        
-        NSLog(@"Image write finished.");
-
     }
     
     [self dismissModalViewControllerAnimated:YES];

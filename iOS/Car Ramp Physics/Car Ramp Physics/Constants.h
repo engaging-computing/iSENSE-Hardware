@@ -24,12 +24,6 @@
 #define OPTION_BROWSE_EXPERIMENTS      2
 #define OPTION_SCAN_QR_CODE            3
 
-// types of text field data
-#define TYPE_DEFAULT   0
-#define TYPE_LATITUDE  1
-#define TYPE_LONGITUDE 2
-#define TYPE_TIME      3
-
 // ipad and iphone dimensions
 #define IPAD_WIDTH_PORTRAIT     725
 #define IPAD_WIDTH_LANDSCAPE    980
@@ -62,8 +56,8 @@
 #define DEV_VIS_URL @"http://rsense-dev.cs.uml.edu/projects/"
 #define PROD_VIS_URL @"http://isenseproject.org/projects/"
 
-#define DEV_DEFAULT_EXP 3
-#define PROD_DEFAULT_EXP 12
+#define DEV_DEFAULT_PROJ 3
+#define PROD_DEFAULT_PROJ 12
 
 #define FIRST_NAME_FIELD 9001
 #define LAST_NAME_FIELD 9002

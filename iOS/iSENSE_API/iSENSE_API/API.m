@@ -395,6 +395,22 @@ static RPerson *currentUser;
 }
 
 /**
+ * Gets the ID of a user specified with the username from iSENSE.
+ * This is an authenticated function and requires that the createSession function was called earlier. 
+ *
+ * @param username The username of the user whose ID is to be retrieved
+ * @return An int (defaults to Mobile U.)
+ */
+
+-(int) getUserIDFromUsername: (NSString *) username {
+    
+    
+    
+    return 6;
+    
+}
+
+/**
  * Gets the user profile specified with the username from iSENSE.
  *
  * @param username The username of the user to retrieve
@@ -403,7 +419,7 @@ static RPerson *currentUser;
 -(RPerson *)getUserWithUsername:(NSString *)username {
     
     RPerson *person = [[RPerson alloc] init];
-    NSString *path = [NSString stringWithFormat:@"users/%@", username];
+    NSString *path = [NSString stringWithFormat:@"users/%d", [self getUserIDFromUsername:username]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET andPostData:nil];
     person.person_id = [result objectForKey:@"id"];
     person.name = [result objectForKey:@"name"];
@@ -426,31 +442,48 @@ static RPerson *currentUser;
  */
 -(int)createProjectWithName:(NSString *)name andFields:(NSArray *)fields {
     
-    NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
-    [postData setObject:name forKey:@"project_name"];
-    
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
-    NSData *postReqData = [NSKeyedArchiver archivedDataWithRootObject:fields];
-    
-    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
-    
-    NSNumber *projectId = [requestResult objectForKey:@"id"];
-    
-    for (RProjectField *projField in fields) {
-        NSMutableDictionary *fieldMetaData = [[NSMutableDictionary alloc] init];
-        [fieldMetaData setObject:projectId forKey:@"project_id"];
-        [fieldMetaData setObject:projField.type forKey:@"field_type"];
-        [fieldMetaData setObject:projField.name forKey:@"name"];
-        [fieldMetaData setObject:projField.unit forKey:@"unit"];
+    @try {
+        NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
+        [postData setObject:[NSString stringWithFormat:@"%@",name] forKey:@"project_name"];
         
-        NSMutableDictionary *fullFieldMeta = [[NSMutableDictionary alloc] init];
-        [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
-        [fullFieldMeta setObject:projectId forKey:@"project_id"];
+        NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
         
-        NSData *fieldPostReqData = [NSKeyedArchiver archivedDataWithRootObject:fieldMetaData];
-        [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
+        NSError *error;
+        NSData *postReqData = [NSJSONSerialization dataWithJSONObject:postData
+                                                              options:0
+                                                                error:&error];
+        if (error) {
+            NSLog(@"Error parsing object to JSON: %@", error);
+        }
+        
+        NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
+        
+        NSNumber *projectId = [requestResult objectForKey:@"id"];
+        
+        for (RProjectField *projField in fields) {
+            NSMutableDictionary *fieldMetaData = [[NSMutableDictionary alloc] init];
+            [fieldMetaData setObject:projectId forKey:@"project_id"];
+            [fieldMetaData setObject:projField.type forKey:@"field_type"];
+            [fieldMetaData setObject:projField.name forKey:@"name"];
+            [fieldMetaData setObject:projField.unit forKey:@"unit"];
+            
+            NSMutableDictionary *fullFieldMeta = [[NSMutableDictionary alloc] init];
+            [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
+            [fullFieldMeta setObject:projectId forKey:@"project_id"];
+            
+            NSError *error;
+            NSData *fieldPostReqData = [NSJSONSerialization dataWithJSONObject:fieldMetaData
+                                                                  options:0
+                                                                    error:&error];
+            if (error) {
+                NSLog(@"Error parsing object to JSON: %@", error);
+            }
+            [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
+        }
         
         return projectId.intValue;
+    } @catch (NSException *e) {
+        NSLog(@"%@", e);
     }
     
     return -1;
@@ -498,52 +531,6 @@ static RPerson *currentUser;
     
     [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_sets/%d/edit", dataSetId] withParameters:parameters withRequestType:POST andPostData:postReqData];
     
-}
-
-/**
- * Deprecated - will be replaced by jsonDataUpload
- *
- * Uploads a new data set to a project on iSENSE.
- *
- * @param projectId The ID of the project to upload data to
- * @param dataToUpload The data to be uploaded. Must be in column-major format to upload correctly
- * @param name The name of the dataset
- * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
- */
--(int)uploadDataSetWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
-    
-    // append a timestamp to the name of the data set
-    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
-    
-    NSArray *fields = [self getProjectFieldsWithId:projectId];
-    
-    NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
-    NSMutableArray *headers = [[NSMutableArray alloc] init];
-    
-    for (RProjectField *field in fields) {
-        [headers addObject:[NSString stringWithFormat:@"%@", field.field_id]];
-    }
-    
-    [requestData setObject:[NSString stringWithFormat:@"%d", projectId] forKey:@"id"];
-    [requestData setObject:headers forKey:@"headers"];
-    [requestData setObject:dataToUpload forKey:@"data"];
-    if (![name isEqualToString:NONE]) [requestData setObject:name forKey:@"name"];
-    
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
-    
-    NSError *error;
-    NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
-                                                       options:0
-                                                         error:&error];
-    if (error) {
-        NSLog(@"Error parsing object to JSON: %@", error);
-    }
-    
-    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d/manualUpload", projectId] withParameters:parameters withRequestType:POST andPostData:postReqData];
-    NSNumber *dataSetId = [requestResult objectForKey:@"id"];
-    
-    return dataSetId.intValue;
-
 }
 
 /**

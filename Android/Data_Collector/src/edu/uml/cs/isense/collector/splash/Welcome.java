@@ -19,6 +19,7 @@ import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.proj.ProjectCreate;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -98,6 +99,7 @@ public class Welcome extends Activity {
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				else {
 					Intent iProjCreate = new Intent(mContext, ProjectCreate.class);
+					iProjCreate.putExtra(ProjectCreate.THEME_NAV_BAR, true);
 					startActivityForResult(iProjCreate, PROJECT_CREATE_REQUESTED);
 				}
 			}
