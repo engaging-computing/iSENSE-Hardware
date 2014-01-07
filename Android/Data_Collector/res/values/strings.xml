@@ -66,19 +66,4 @@
 	<string name="pre_manual_entry_str">Manually Enter Data\n(requires project)</string>
     <string name="pre_csv_uploader_str">Upload a .csv File From My Device\n(requires project and Internet)</string>
     
-    <string name="field_type">Add Field</string>
-    <string-array name="field_type_array">
-        <item>Timestamp</item>
-        <item>Number</item>
-        <item>Text</item>
-        <item>Location</item>
-    </string-array>
-    <string name="field_name">field name</string>
-    <string name="units">units</string>
-    <string name="deg">deg</string>
-    <string name="latitude">Latitude</string>
-    <string name="longitude">Longitude</string>
-    <string name="new_proj_name">New Project Name</string>
-    <string name="how_to_add_field">Select a field type from the drop down menu below to add a new field to your project.</string>
-    
 </resources>
