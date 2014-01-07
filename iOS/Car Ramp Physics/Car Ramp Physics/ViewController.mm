@@ -776,6 +776,7 @@
         [experiment addButtonWithTitle:@"Enter Project ID"];
         [experiment addButtonWithTitle:@"Browse"];
         [experiment addButtonWithTitle:@"QR Code"];
+        [experiment addButtonWithTitle:@"Create New Project"];
         [experiment addButtonWithTitle:@"Done"];
         [experiment show];
         
@@ -983,6 +984,8 @@
             [self browseExp];
         } else if ([title isEqualToString:@"QR Code"]) {
             [self QRCode];
+        } else if ([title isEqualToString:@"Create New Project"]) {
+            [self createProject];
         } else {
             [experiment dismissWithClickedButtonIndex:3 animated:YES];
         }
@@ -1025,6 +1028,14 @@
     
 }
 
+- (void) createProject {
+    
+    
+    
+    
+    
+}
+
 // Log into iSENSE
 - (void) login:(NSString *)usernameInput withPassword:(NSString *)passwordInput {
     
@@ -1054,7 +1065,7 @@
                 
                 RPerson *curUser = [api getCurrentUser];
                 
-                NSString *loginstat = [@"Logged in as: " stringByAppendingString:curUser.name];
+                NSString *loginstat = [@"Logged in as: " stringByAppendingString:usernameInput];
                 loginstat = [loginstat stringByAppendingString:@", Name: "];
                 loginstat = [loginstat stringByAppendingString:firstName];
                 loginstat = [loginstat stringByAppendingString:@" "];
@@ -1062,7 +1073,7 @@
                 loginstat = [loginstat stringByAppendingString:@". "];
                 
                 [login_status setText:loginstat];
-                userName = curUser.name;
+                userName = usernameInput;
                 passWord = passwordInput;
                 saver->hasLogin = TRUE;
             } else {
