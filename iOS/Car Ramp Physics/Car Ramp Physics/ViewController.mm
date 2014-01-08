@@ -26,6 +26,8 @@
     saver->user = userName;
     saver->pass = passWord;
     
+    
+    
     if (running) {
         return;
     }
@@ -135,6 +137,7 @@
         saver = new RotationDataSaver;
         saver->hasName = false;
         saver->hasLogin = false;
+        saver->isLoggedIn = false;
         saver->first =  [[NSString alloc] init];
         saver->last = [[NSString alloc] init];
         saver->user = [[NSString alloc] init];
@@ -185,7 +188,9 @@
     
     
     
+    
     [self login:userName withPassword:passWord];
+    saver->isLoggedIn = true;
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
@@ -803,6 +808,9 @@
         login_status.text = [login_status.text stringByAppendingString:@" "];
         login_status.text = [login_status.text stringByAppendingString:lastInitial];
         login_status.text = [login_status.text stringByAppendingString:@". "];
+        saver->hasLogin = true;
+        saver->hasName = true;
+        saver->isLoggedIn = true;
     };
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
@@ -1118,6 +1126,7 @@
                 userName = usernameInput;
                 passWord = passwordInput;
                 saver->hasLogin = TRUE;
+                saver->isLoggedIn = true;
             } else {
                 [self.view makeWaffle:@"Login failed"
                              duration:WAFFLE_LENGTH_SHORT

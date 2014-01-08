@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -42,6 +43,9 @@ public class Setup extends Activity implements OnClickListener {
 	private Button cancel;
 	private Button qrCode;
 	private Button browse;
+	private Button createProject;
+	
+	private LinearLayout oklayout;
 
 	private Context mContext;
 	private Waffle w;
@@ -67,6 +71,11 @@ public class Setup extends Activity implements OnClickListener {
 	 */
 	public static String PROJECT_ID = "project_id";
 	
+	public static String APPNAME;
+	
+	private boolean showOKCancel = false;
+	private boolean constrictFields = false;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +98,18 @@ public class Setup extends Activity implements OnClickListener {
 		browse = (Button) findViewById(R.id.project_browse);
 		browse.setOnClickListener(this);
 		
+		createProject = (Button) findViewById(R.id.createProjectBtn);
+		createProject.setOnClickListener(this);
+		
+		oklayout = (LinearLayout) findViewById(R.id.OKCancelLayout);
+		oklayout.setVisibility(View.GONE);
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
+			showOKCancel = extras.getBoolean("showOKCancel", false);
+			constrictFields = extras.getBoolean("constrictFields", false);
+			if (showOKCancel)
+				oklayout.setVisibility(View.VISIBLE);
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {
 				if (fromWhere.equals("manual")) {
@@ -105,7 +123,10 @@ public class Setup extends Activity implements OnClickListener {
 				}
 			} else {
 				PROJ_PREFS_ID = "PROJID";
-			}	
+			}
+			
+			APPNAME = extras.getString("app_name");
+			
 		} else {
 			PROJ_PREFS_ID = "PROJID";
 		}
@@ -157,6 +178,12 @@ public class Setup extends Activity implements OnClickListener {
 			Intent iProject = new Intent(getApplicationContext(),
 					BrowseProjects.class);;
 			startActivityForResult(iProject, PROJECT_CODE);
+		} else if (id == R.id.createProjectBtn) {
+			if (!constrictFields) {
+				
+			} else {
+				
+			}
 		}
 
 	}
