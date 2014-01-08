@@ -62,7 +62,7 @@ typedef enum {
 -(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 
 -(RPerson *)    getCurrentUser;
--(RPerson *)    getUserWithUsername:(NSString *)username;
+-(RPerson *)    getUserWithID:(int) id;
 -(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields;
 -(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data;
 

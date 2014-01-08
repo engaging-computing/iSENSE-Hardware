@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:ignore="UnusedResources" >
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/projectText"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:gravity="center"
-        android:text="@string/chooseProject"
-        android:textSize="16sp" />
+        android:layout_margin="8dp"
+        android:orientation="horizontal" >
 
-    <EditText
-        android:id="@+id/projectInput"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp"
-        android:digits="1234567890"
-        android:gravity="center"
-        android:imeOptions="actionDone"
-        android:inputType="phone"
-        android:maxLength="6" />
+        <TextView
+            android:id="@+id/projectText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:text="@string/chooseProject"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/projectInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:digits="1234567890"
+            android:gravity="center"
+            android:imeOptions="actionDone"
+            android:inputType="phone"
+            android:maxLength="6" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,42 +42,82 @@
             android:id="@+id/project_browse"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="8dp"
             android:layout_weight="1"
             android:text="@string/browse"
             android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/or" />
 
         <Button
             android:id="@+id/project_qr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:text="@string/scan_qr"
             android:textSize="18sp" />
     </LinearLayout>
+    
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="?android:attr/dividerVertical" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/noProjectYetLbl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/transparent" >
+        android:gravity="center"
+        android:textSize="16sp"
+        android:text="@string/noProjectYet" />
 
-        <Button
-            android:id="@+id/project_cancel"
+    <Button
+        android:id="@+id/createProjectBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/createProject" />
+    
+    <LinearLayout
+        android:id="@+id/OKCancelLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/cancel"
-            android:textSize="18sp" />
+            android:orientation="horizontal"
+            android:weightSum="2" >
 
-        <Button
-            android:id="@+id/project_ok"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/ok"
-            android:textSize="18sp" />
+            <Button
+                android:id="@+id/project_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/ok"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/project_cancel"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/cancel"
+                android:textSize="18sp" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

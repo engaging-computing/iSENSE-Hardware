@@ -26,6 +26,8 @@
     saver->user = userName;
     saver->pass = passWord;
     
+    
+    
     if (running) {
         return;
     }
@@ -35,24 +37,48 @@
             [[NSBundle mainBundle] loadNibNamed:@"ViewController~landscape_iPad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
+            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+            login_status.text = [login_status.text stringByAppendingString:firstName];
+            login_status.text = [login_status.text stringByAppendingString:@" "];
+            login_status.text = [login_status.text stringByAppendingString:lastInitial];
+            login_status.text = [login_status.text stringByAppendingString:@". "];
+            //[self viewDidLoad];
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"ViewController_iPad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
+            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+            login_status.text = [login_status.text stringByAppendingString:firstName];
+            login_status.text = [login_status.text stringByAppendingString:@" "];
+            login_status.text = [login_status.text stringByAppendingString:lastInitial];
+            login_status.text = [login_status.text stringByAppendingString:@". "];
+            //[self viewDidLoad];
         }
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [[NSBundle mainBundle] loadNibNamed:@"ViewController~landscape_iPhone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
+            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+            login_status.text = [login_status.text stringByAppendingString:firstName];
+            login_status.text = [login_status.text stringByAppendingString:@" "];
+            login_status.text = [login_status.text stringByAppendingString:lastInitial];
+            login_status.text = [login_status.text stringByAppendingString:@". "];
+            //[self viewDidLoad];
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"ViewController_iPhone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
+            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
+            login_status.text = [login_status.text stringByAppendingString:firstName];
+            login_status.text = [login_status.text stringByAppendingString:@" "];
+            login_status.text = [login_status.text stringByAppendingString:lastInitial];
+            login_status.text = [login_status.text stringByAppendingString:@". "];
+            //[self viewDidLoad];
         }
         
     }
@@ -135,6 +161,7 @@
         saver = new RotationDataSaver;
         saver->hasName = false;
         saver->hasLogin = false;
+        saver->isLoggedIn = false;
         saver->first =  [[NSString alloc] init];
         saver->last = [[NSString alloc] init];
         saver->user = [[NSString alloc] init];
@@ -155,7 +182,7 @@
         userName = saver->user;
         passWord = saver->pass;
     } else {
-        userName = @"mobile";
+        userName = @"mobile.fake@example.com";
         passWord = @"mobile";
         
         
@@ -185,7 +212,9 @@
     
     
     
+    
     [self login:userName withPassword:passWord];
+    saver->isLoggedIn = true;
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
@@ -774,6 +803,7 @@
         [loginalert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         [loginalert textFieldAtIndex:0].delegate = self;
         [loginalert textFieldAtIndex:1].delegate = self;
+        [loginalert textFieldAtIndex:0].placeholder = @"Email";
         [loginalert textFieldAtIndex:0].tag = LOGIN_USER;
         [loginalert textFieldAtIndex:1].tag = LOGIN_PASS;
         [loginalert show];
@@ -795,7 +825,8 @@
     void (^resetBlock)() = ^() {
         NSLog(@"Reset button pressed");
         countdown = recordLength = 10;
-        userName = passWord = @"mobile";
+        userName = @"mobile.fake@example.com";
+        passWord = @"mobile";
         [self login:userName withPassword:passWord];
         login_status.text = [@"Logged in as: " stringByAppendingString: userName];
         login_status.text = [login_status.text stringByAppendingString:@" Name: "];
@@ -803,6 +834,9 @@
         login_status.text = [login_status.text stringByAppendingString:@" "];
         login_status.text = [login_status.text stringByAppendingString:lastInitial];
         login_status.text = [login_status.text stringByAppendingString:@". "];
+        saver->hasLogin = true;
+        saver->hasName = true;
+        saver->isLoggedIn = true;
     };
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
@@ -857,9 +891,11 @@
     NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:ACCEPTABLE_CHARACTERS] invertedSet];
     NSUInteger newLength = [textField.text length] + [string length] - range.length;
     if ([string rangeOfCharacterFromSet:cs].location == NSNotFound) {
-        if (textField.tag == FIRST_NAME_FIELD || textField.tag == LOGIN_USER || textField.tag == LOGIN_PASS) {
+        if (textField.tag == FIRST_NAME_FIELD || textField.tag == LOGIN_PASS) {
             return (newLength > 20) ? NO : YES;
-        } else {
+        } else if (textField.tag == LOGIN_USER) {
+            return (newLength > 100) ? NO : YES;
+        }else {
             return (newLength > 1) ? NO : YES;
         }
     } else {
@@ -889,6 +925,8 @@
     } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
         [self login:[alertView textFieldAtIndex:0].text withPassword:[alertView textFieldAtIndex:1].text];
         [login_status setText:[@"Logged in as: " stringByAppendingString: [alertView textFieldAtIndex:0].text]];
+        userName = [alertView textFieldAtIndex:0].text;
+        passWord = [alertView textFieldAtIndex:1].text;
     } else if ([alertView.title isEqualToString:@"Publish to iSENSE?"]) {
         if ([title isEqualToString:@"Discard"]) {
             [self.view makeWaffle:@"Data discarded!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
@@ -1094,6 +1132,7 @@
             
             BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
             if (success) {
+                NSLog(@"Damn");
                 [self.view makeWaffle:[NSString stringWithFormat:@"Login as %@ successful", usernameInput]
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
@@ -1107,7 +1146,7 @@
                 
                 RPerson *curUser = [api getCurrentUser];
                 
-                NSString *loginstat = [@"Logged in as: " stringByAppendingString:usernameInput];
+                NSString *loginstat = [@"Logged in as: " stringByAppendingString:curUser.username];
                 loginstat = [loginstat stringByAppendingString:@", Name: "];
                 loginstat = [loginstat stringByAppendingString:firstName];
                 loginstat = [loginstat stringByAppendingString:@" "];
@@ -1115,9 +1154,10 @@
                 loginstat = [loginstat stringByAppendingString:@". "];
                 
                 [login_status setText:loginstat];
-                userName = usernameInput;
+                userName = curUser.username;
                 passWord = passwordInput;
                 saver->hasLogin = TRUE;
+                saver->isLoggedIn = true;
             } else {
                 [self.view makeWaffle:@"Login failed"
                              duration:WAFFLE_LENGTH_SHORT

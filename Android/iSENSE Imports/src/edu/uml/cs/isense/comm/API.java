@@ -101,7 +101,7 @@ public class API {
 			JSONObject j =  new JSONObject(result);
 			
 			authToken = j.getString("authenticity_token");
-			currentUser = getUser(j.getObject("user").getInt("id"));
+			currentUser = getUser(j.getJSONObject("user").getInt("id"));
 	    return true;
 		} catch (Exception e) {
 			// Didn't get an authenticity token.

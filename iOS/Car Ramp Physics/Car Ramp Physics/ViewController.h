@@ -36,6 +36,7 @@ typedef struct _RotationDataSaver{
     bool hasName;
     bool hasLogin;
     bool saveMode;
+    bool isLoggedIn;
     
 } RotationDataSaver;
 

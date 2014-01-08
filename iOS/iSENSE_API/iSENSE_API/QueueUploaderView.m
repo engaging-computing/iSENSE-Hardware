@@ -83,24 +83,24 @@
             [isenseBundle loadNibNamed:@"queue_layout-landscape~ipad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
             [isenseBundle loadNibNamed:@"queue_layout~ipad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         }
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [isenseBundle loadNibNamed:@"queue_layout-landscape~iphone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
             [isenseBundle loadNibNamed:@"queue_layout~iphone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         }
     }
 }

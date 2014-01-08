@@ -1,5 +1,7 @@
 package edu.uml.cs.isense.proj;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -11,7 +13,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.waffle.Waffle;
 
 /**
@@ -42,15 +47,21 @@ public class Setup extends Activity implements OnClickListener {
 	private Button cancel;
 	private Button qrCode;
 	private Button browse;
+	private Button createProject;
+	
+	private LinearLayout oklayout;
 
 	private Context mContext;
 	private Waffle w;
+	private API api;
 
 	private SharedPreferences mPrefs;
 
 	private static final int QR_CODE_REQUESTED = 100;
 	private static final int PROJECT_CODE = 101;
 	private static final int NO_QR_REQUESTED = 102;
+	private static final int NAME_FOR_NEW_PROJECT_REQUESTED = 103;
+	private static final int NEW_PROJ_REQUESTED = 104;
 	
 	/**
 	 * The constant for the "name" parameter in a
@@ -66,6 +77,11 @@ public class Setup extends Activity implements OnClickListener {
 	 * the form of a String, returned by this Activity.
 	 */
 	public static String PROJECT_ID = "project_id";
+	
+	public static String APPNAME;
+	
+	private boolean showOKCancel = false;
+	private boolean constrictFields = false;
 	
 	
 	@Override
@@ -89,9 +105,18 @@ public class Setup extends Activity implements OnClickListener {
 		browse = (Button) findViewById(R.id.project_browse);
 		browse.setOnClickListener(this);
 		
+		createProject = (Button) findViewById(R.id.createProjectBtn);
+		createProject.setOnClickListener(this);
+		
+		oklayout = (LinearLayout) findViewById(R.id.OKCancelLayout);
+		oklayout.setVisibility(View.GONE);
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
+			showOKCancel = extras.getBoolean("showOKCancel", false);
+			constrictFields = extras.getBoolean("constrictFields", false);
+			if (showOKCancel)
+				oklayout.setVisibility(View.VISIBLE);
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {
 				if (fromWhere.equals("manual")) {
@@ -105,7 +130,10 @@ public class Setup extends Activity implements OnClickListener {
 				}
 			} else {
 				PROJ_PREFS_ID = "PROJID";
-			}	
+			}
+			
+			APPNAME = extras.getString("app_name");
+			
 		} else {
 			PROJ_PREFS_ID = "PROJID";
 		}
@@ -157,6 +185,14 @@ public class Setup extends Activity implements OnClickListener {
 			Intent iProject = new Intent(getApplicationContext(),
 					BrowseProjects.class);;
 			startActivityForResult(iProject, PROJECT_CODE);
+		} else if (id == R.id.createProjectBtn) {
+			if (!constrictFields) {
+				Intent iProj = new Intent(getApplicationContext(), ProjectCreate.class);
+				startActivityForResult(iProj, NEW_PROJ_REQUESTED);
+			} else {
+				Intent iNewProjName = new Intent(getApplicationContext(), ProjectNameDialog.class);
+				startActivityForResult(iNewProjName, NAME_FOR_NEW_PROJECT_REQUESTED);
+			}
 		}
 
 	}
@@ -198,7 +234,72 @@ public class Setup extends Activity implements OnClickListener {
 				urlIntent.setData(Uri.parse(url));
 				startActivity(urlIntent);
 			}
+		} else if (requestCode == NAME_FOR_NEW_PROJECT_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				if (data.hasExtra("new_proj_name")){
+
+					ArrayList<RProjectField> fields = getArrayOfFields();
+					int projectNum = api.createProject(data.getStringExtra("new_proj_name"), fields);
+					String s = projectNum + "";
+					SharedPreferences.Editor mEditor = mPrefs.edit();
+					mEditor.putString(PROJECT_ID, s).commit();
+					setResult(RESULT_OK);
+					finish();
+
+				}
+			} else {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		} else if (requestCode == NEW_PROJ_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				if (data.hasExtra(ProjectCreate.NEW_PROJECT_ID)) {
+					String pid = data.getStringExtra(ProjectCreate.NEW_PROJECT_ID);
+					SharedPreferences.Editor mEditor = mPrefs.edit();
+					mEditor.putString(PROJECT_ID, pid).commit();
+					setResult(RESULT_OK);
+					finish();
+				}
+			} else {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
 		}
+	}
+
+	private ArrayList<RProjectField> getArrayOfFields() {
+		ArrayList<RProjectField> fields = new ArrayList<RProjectField>();
+		
+		if (APPNAME.equals("CRP")) {
+			RProjectField time = new RProjectField();
+			time.name = "Time";
+			time.type = RProjectField.TYPE_TIMESTAMP;
+			fields.add(time);
+			
+			RProjectField aX,aY,aZ,aT;
+			aX = new RProjectField();
+			aY = new RProjectField();
+			aZ = new RProjectField();
+			aT = new RProjectField();
+			
+			String b = "Accel-";
+			aX.name = b + "X";
+			aY.name = b + "Y";
+			aZ.name = b + "Z";
+			aT.name = b + "Total";
+			
+			aX.type = aY.type = aZ.type = aT.type = RProjectField.TYPE_NUMBER;
+			aX.unit = aY.unit = aZ.unit = aT.unit = "m/s^2";
+			
+			fields.add(aX);
+			fields.add(aY);
+			fields.add(aZ);
+			fields.add(aT);
+			
+		}
+		
+		
+		return fields;
 	}
 
 	@Override
