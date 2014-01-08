@@ -15,6 +15,7 @@
     <string name="chooseProject">Enter Project ID:</string>
     <string name="noProjectYet">Don\'t Have a Project Yet?</string>
     <string name="createProject">Create New Project</string>
+    <string name="createProjectButton">Create Project</string>
     <string name="search">Search</string>
     <string name="project_no_items">No projects were found.</string>
     <string name="visit">Visit</string>
@@ -136,6 +137,7 @@
 	<string name="one_timestamp_only">Cannot add more than one timestamp</string>
 	<string name="login_isense_first">Please login to iSENSE first</string>
 	<string name="project_failed_create">Project failed to create - please try again</string>
+	<string name="new_proj_name_title">Enter Project Name</string>
 	<!-- End Project Create -->
     
 </resources>
