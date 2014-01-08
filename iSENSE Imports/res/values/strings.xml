@@ -12,7 +12,9 @@
     <string name="select_proj">Select Project</string>
     <string name="browse">Browse</string>
     <string name="scan_qr">Scan QR</string>
-    <string name="chooseProject">Uploading to project #:</string>
+    <string name="chooseProject">Enter Project ID:</string>
+    <string name="noProjectYet">Don\'t Have a Project Yet?</string>
+    <string name="createProject">Create New Project</string>
     <string name="search">Search</string>
     <string name="project_no_items">No projects were found.</string>
     <string name="visit">Visit</string>
