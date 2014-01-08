@@ -265,7 +265,6 @@
 
 - (void) setEnabledFields:(NSMutableArray *)acceptedFields {
     for (NSString *s in acceptedFields) {
-        NSLog(@"STRING IN ACCEPTEDFIELDS: %@", s);
         if ([s isEqualToString:sACCEL_X])
             enabledFields[fACCEL_X] = true;
         else if ([s isEqualToString:sACCEL_Y])
@@ -406,7 +405,11 @@
     else
         [dataJSON addObject:@""];
 
-    NSLog(@"Data line: %@", dataJSON);
+    // log the data line
+    NSString *dataLog = [[NSString alloc] initWithFormat:@"%@", dataJSON];
+    dataLog = [dataLog stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    dataLog = [dataLog stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSLog(@"Data line: %@\n", dataLog);
     
     return dataJSON;
     
@@ -434,9 +437,6 @@
     }
     
     // reorder the data
-    for (int i = 0; i < [fieldOrder count]; i++)
-        NSLog(@"Fields are: %@", [fieldOrder objectAtIndex:i]);
-    
     for (int i = 0; i < len; i++) {
         
         row = [data objectAtIndex:i];

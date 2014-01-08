@@ -534,52 +534,6 @@ static RPerson *currentUser;
 }
 
 /**
- * Deprecated - will be replaced by jsonDataUpload
- *
- * Uploads a new data set to a project on iSENSE.
- *
- * @param projectId The ID of the project to upload data to
- * @param dataToUpload The data to be uploaded. Must be in column-major format to upload correctly
- * @param name The name of the dataset
- * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
- */
--(int)uploadDataSetWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
-    
-    // append a timestamp to the name of the data set
-    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
-    
-    NSArray *fields = [self getProjectFieldsWithId:projectId];
-    
-    NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
-    NSMutableArray *headers = [[NSMutableArray alloc] init];
-    
-    for (RProjectField *field in fields) {
-        [headers addObject:[NSString stringWithFormat:@"%@", field.field_id]];
-    }
-    
-    [requestData setObject:[NSString stringWithFormat:@"%d", projectId] forKey:@"id"];
-    [requestData setObject:headers forKey:@"headers"];
-    [requestData setObject:dataToUpload forKey:@"data"];
-    if (![name isEqualToString:NONE]) [requestData setObject:name forKey:@"name"];
-    
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
-    
-    NSError *error;
-    NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
-                                                       options:0
-                                                         error:&error];
-    if (error) {
-        NSLog(@"Error parsing object to JSON: %@", error);
-    }
-    
-    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d/manualUpload", projectId] withParameters:parameters withRequestType:POST andPostData:postReqData];
-    NSNumber *dataSetId = [requestResult objectForKey:@"id"];
-    
-    return dataSetId.intValue;
-
-}
-
-/**
  * Uploads a new data set to a project on iSENSE.
  *
  * @param projectId - The ID of the project to upload data to
