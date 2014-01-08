@@ -47,24 +47,24 @@
             [[NSBundle mainBundle] loadNibNamed:@"AboutViewController~landscape_iPad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"AboutViewController_iPad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+           // [self viewDidLoad];
         }
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [[NSBundle mainBundle] loadNibNamed:@"AboutViewController~landscape_iPhone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"AboutViewController_iPhone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         }
     }
     
