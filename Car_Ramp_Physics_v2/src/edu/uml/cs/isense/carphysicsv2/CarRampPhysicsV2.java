@@ -765,6 +765,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			return true;
 		case R.id.project_select:
 			Intent setup = new Intent(this, Setup.class);
+			setup.putExtra("showOKCancel", true);
+			setup.putExtra("constrictFields", true);
+			setup.putExtra("app_name", "CRP");
 			startActivityForResult(setup, PROJECT_REQUESTED);
 			return true;
 		case R.id.upload:

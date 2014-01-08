@@ -95,28 +95,26 @@
             android:background="?android:attr/dividerVertical" />
 
         <LinearLayout
-            style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2" >
 
             <Button
-                android:id="@+id/project_cancel"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@android:string/cancel"
-                android:textSize="18sp" />
-
-            <Button
                 android:id="@+id/project_ok"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@android:string/ok"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/project_cancel"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/cancel"
                 android:textSize="18sp" />
         </LinearLayout>
 
