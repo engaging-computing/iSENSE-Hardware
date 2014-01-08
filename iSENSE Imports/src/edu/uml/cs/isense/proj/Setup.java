@@ -61,6 +61,7 @@ public class Setup extends Activity implements OnClickListener {
 	private static final int PROJECT_CODE = 101;
 	private static final int NO_QR_REQUESTED = 102;
 	private static final int NAME_FOR_NEW_PROJECT_REQUESTED = 103;
+	private static final int NEW_PROJ_REQUESTED = 104;
 	
 	/**
 	 * The constant for the "name" parameter in a
@@ -186,7 +187,8 @@ public class Setup extends Activity implements OnClickListener {
 			startActivityForResult(iProject, PROJECT_CODE);
 		} else if (id == R.id.createProjectBtn) {
 			if (!constrictFields) {
-				w.make("Not implemented yet", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+				Intent iProj = new Intent(getApplicationContext(), ProjectCreate.class);
+				startActivityForResult(iProj, NEW_PROJ_REQUESTED);
 			} else {
 				Intent iNewProjName = new Intent(getApplicationContext(), ProjectNameDialog.class);
 				startActivityForResult(iNewProjName, NAME_FOR_NEW_PROJECT_REQUESTED);
@@ -244,6 +246,19 @@ public class Setup extends Activity implements OnClickListener {
 					setResult(RESULT_OK);
 					finish();
 
+				}
+			} else {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		} else if (requestCode == NEW_PROJ_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				if (data.hasExtra(ProjectCreate.NEW_PROJECT_ID)) {
+					String pid = data.getStringExtra(ProjectCreate.NEW_PROJECT_ID);
+					SharedPreferences.Editor mEditor = mPrefs.edit();
+					mEditor.putString(PROJECT_ID, pid).commit();
+					setResult(RESULT_OK);
+					finish();
 				}
 			} else {
 				setResult(RESULT_CANCELED);
