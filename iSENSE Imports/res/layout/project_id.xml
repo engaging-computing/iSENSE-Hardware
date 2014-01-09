@@ -61,63 +61,47 @@
             android:text="@string/scan_qr"
             android:textSize="18sp" />
     </LinearLayout>
-    
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="15dp"
-        android:background="?android:attr/dividerVertical" />
 
     <TextView
         android:id="@+id/noProjectYetLbl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="16sp"
-        android:text="@string/noProjectYet" />
+        android:text="@string/noProjectYet"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/createProjectBtn"
-        android:layout_width="match_parent"
+        android:layout_width="match_parent" 
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_height="wrap_content"
         android:text="@string/createProject" />
-    
+
     <LinearLayout
         android:id="@+id/OKCancelLayout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical" >
+        android:orientation="horizontal"
+        android:weightSum="2" >
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/dividerVertical" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/project_cancel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2" >
+            android:layout_weight="1"
+            android:text="@android:string/cancel"
+            android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/project_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@android:string/ok"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/project_cancel"
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@android:string/cancel"
-                android:textSize="18sp" />
+        <Button
+            android:id="@+id/project_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/ok"
+            android:textSize="18sp" />
+        
         </LinearLayout>
-
-    </LinearLayout>
 
 </LinearLayout>
