@@ -48,7 +48,8 @@
             android:name="edu.uml.cs.isense.proj.ProjectCreate"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Create New Project"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name=".splash.SelectMode"
             android:configChanges="orientation|keyboardHidden|screenSize"
