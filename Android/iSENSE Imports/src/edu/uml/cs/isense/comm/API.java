@@ -53,11 +53,15 @@ public class API {
 	private String version;
 	
 	private static API instance = null;
+	
 	private String baseURL = "";
 	private final String publicURL = "http://129.63.16.128";
 	private final String devURL = "http://129.63.16.30";
+	
 	String authToken = "";
 	RPerson currentUser;
+	
+	private boolean usingDev = false;
 	
 	public static final int CREATED_AT = 0;
 	public static final int UPDATED_AT = 1;
@@ -559,7 +563,7 @@ public class API {
 		return -1;
 	}
 	
-	/** TODO - change name from manualUpload to whatever it'll be.  eventually this will go away and become new uploadDataSet
+	/**
 	 * Uploads a new data set to a project on iSENSE
 	 * 
 	 * @param projectId The ID of the project to upload data to
@@ -913,6 +917,16 @@ public class API {
 	 */
 	public void useDev(boolean use) {
 		baseURL = use ? devURL : publicURL;
+		usingDev = use;
+	}
+	
+	/**
+	 * Returns whether or not the API is using dev mode.
+	 * 
+	 * @return True if the API is using the development website, false otherwise.
+	 */
+	public boolean isUsingDevMode() {
+		return usingDev;
 	}
 	
 	/**
