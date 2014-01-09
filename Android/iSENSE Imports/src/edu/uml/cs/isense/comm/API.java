@@ -487,7 +487,7 @@ public class API {
 			result.timecreated = j.getString("createdAt");
 			result.fieldCount = j.getInt("fieldCount");
 			result.datapointCount = j.getInt("datapointCount");
-			result.data = rowsToCols(j.getJSONObject("data"));
+			result.data = rowsToCols(new JSONObject().put("data", j.getJSONArray("data")));
 			result.project_id = j.getJSONObject("project").getInt("id");
 
 		} catch (Exception e) {
@@ -598,6 +598,8 @@ public class API {
 
 	/**
 	 * Append new rows of data to the end of an existing data set
+	 * ** This currently works for horrible reasons regarding how the website handles
+	 * edit data sets ** Will fix hopefully --J TODO
 	 * 
 	 * @param dataSetId The ID of the data set to append to
 	 * @param newData The new data to append
@@ -606,22 +608,25 @@ public class API {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
 		JSONObject existing = existingDs.data;
+		JSONObject newJobj = new JSONObject();
 		Iterator<?> keys = newData.keys();
 		try {
+			int curIndex = 0;
 			while(keys.hasNext()) {
 				String currKey = (String) keys.next();
 				JSONArray newDataPoints = newData.getJSONArray(currKey);
 				for(int i = 0; i < newDataPoints.length(); i++) {
 					existing.getJSONArray(currKey).put(newDataPoints.get(i));
 				}
+				newJobj.put(curIndex + "", existing.getJSONArray(currKey)); curIndex++;			
 			}
 			ArrayList<RProjectField> fields = getProjectFields(existingDs.project_id);
 			ArrayList<String> headers = new ArrayList<String>();
 			for(RProjectField rpf : fields) {
-				headers.add(rpf.name);
+				headers.add(rpf.field_id + "");
 			}
 			requestData.put("headers", new JSONArray(headers));
-			requestData.put("data", existing);
+			requestData.put("data", newJobj);
 			requestData.put("id", ""+dataSetId);
 			makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
 		} catch (Exception e) {
