@@ -8,37 +8,38 @@
         android:id="@+id/new_proj_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10" >
+        android:ems="10"
+        android:hint="@string/new_proj_name" >
 
         <requestFocus />
     </EditText>
-    
+
     <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/dividerVertical" />
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="25dp"
+        android:background="?android:attr/dividerVertical" />
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="?android:attr/buttonBarStyle" >
+        android:layout_height="wrap_content" >
 
         <Button
             android:id="@+id/clB"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@android:string/cancel"
             android:layout_weight="1"
-            style="?android:attr/buttonBarButtonStyle" />
+            android:text="@android:string/cancel" />
 
         <Button
             android:id="@+id/okB"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/createProjectButton"
-            style="?android:attr/buttonBarButtonStyle" />
-
+            android:text="@string/createProjectButton" />
     </LinearLayout>
 
 </LinearLayout>
