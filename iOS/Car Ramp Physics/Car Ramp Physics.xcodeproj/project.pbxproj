@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		760D197F17958AF600C123D6 /* queue_layout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */; };
-		760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197E17958AF600C123D6 /* queue_layout~iphone.xib */; };
-		760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */; };
-		760D198417958AFF00C123D6 /* queue_layout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198217958AFF00C123D6 /* queue_layout~ipad.xib */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
 		76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */; };
@@ -37,9 +33,6 @@
 		7669F046178B275C00E51AD0 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */; };
 		7669F049178B275C00E51AD0 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F047178B275C00E51AD0 /* ViewController_iPad.xib */; };
 		7669F050178B29B800E51AD0 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7669F04F178B29B800E51AD0 /* logo.png */; };
-		76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 76778D1B17919A6B0067ABA1 /* HexColor.m */; };
-		76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B781791E07B001D6E3A /* CRTableViewCell.m */; };
-		76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B90179332A0001D6E3A /* MarqueeLabel.m */; };
 		76785B9317937721001D6E3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76785B9217937721001D6E3A /* CoreData.framework */; };
 		767B926E178C45A800F1C6FA /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B926D178C45A800F1C6FA /* pencil.png */; };
 		767B9272178C526E00F1C6FA /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767B9271178C526E00F1C6FA /* Accelerate.framework */; };
@@ -50,9 +43,7 @@
 		76A3BE7C187B0FF5005C0473 /* users.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A3BE7B187B0FF5005C0473 /* users.png */; };
 		76A3BE7E187B1862005C0473 /* barcode.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A3BE7D187B1862005C0473 /* barcode.png */; };
 		76A4916717A1585A007F5E90 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A4916617A1585A007F5E90 /* SystemConfiguration.framework */; };
-		76A5ED941796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */; };
 		76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */; };
-		76A5ED9B1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */; };
 		76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */; };
 		76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9E1796CB8C00F83E7A /* ViewController~landscape_iPad.xib */; };
 		76B58D82178C5D2D006E1425 /* waffle_check.png in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D7F178C5D2D006E1425 /* waffle_check.png */; };
@@ -71,9 +62,6 @@
 		76DF6A8717E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */; };
 		76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */; };
 		76E02E31178F19220057D37B /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76E02E30178F19220057D37B /* Fields.strings */; };
-		76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E91F8617945E2E001749FC /* VariablesViewController.m */; };
-		76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */; };
-		76E91F8B179461BF001749FC /* VariablesViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */; };
 		76EF01A3178B571F00CBE38C /* RNGridMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 76EF01A2178B571F00CBE38C /* RNGridMenu.m */; };
 /* End PBXBuildFile section */
 
@@ -109,15 +97,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		760D197917958A4C00C123D6 /* QueueUploaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueUploaderView.h; sourceTree = "<group>"; };
-		760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
-		760D197E17958AF600C123D6 /* queue_layout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~iphone.xib"; sourceTree = "<group>"; };
-		760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
-		760D198217958AFF00C123D6 /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
-		761D27601795C1A30056FA8C /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
 		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
-		7636B54D179EC3BC00DE6C7C /* QueueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueCell.h; sourceTree = "<group>"; };
 		76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -147,12 +128,6 @@
 		7669F045178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		7669F048178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		7669F04F178B29B800E51AD0 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = "../../../Android/Car_Ramp_Physics_v2/res/drawable-xhdpi/logo.png"; sourceTree = "<group>"; };
-		76778D1A17919A6B0067ABA1 /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HexColor.h; path = ../HexColor.h; sourceTree = "<group>"; };
-		76778D1B17919A6B0067ABA1 /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HexColor.m; path = ../HexColor.m; sourceTree = "<group>"; };
-		76785B771791E07B001D6E3A /* CRTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRTableViewCell.h; sourceTree = "<group>"; };
-		76785B781791E07B001D6E3A /* CRTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRTableViewCell.m; sourceTree = "<group>"; };
-		76785B8F179332A0001D6E3A /* MarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MarqueeLabel.h; path = ../MarqueeLabel.h; sourceTree = "<group>"; };
-		76785B90179332A0001D6E3A /* MarqueeLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MarqueeLabel.m; path = ../MarqueeLabel.m; sourceTree = "<group>"; };
 		76785B9217937721001D6E3A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		767B926D178C45A800F1C6FA /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		767B9271178C526E00F1C6FA /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -163,9 +138,7 @@
 		76A3BE7B187B0FF5005C0473 /* users.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = users.png; sourceTree = "<group>"; };
 		76A3BE7D187B1862005C0473 /* barcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode.png; sourceTree = "<group>"; };
 		76A4916617A1585A007F5E90 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
-		76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76A5ED9E1796CB8C00F83E7A /* ViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76B58D7B178C5D16006E1425 /* StringGrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringGrabber.h; path = ../StringGrabber.h; sourceTree = "<group>"; };
@@ -186,10 +159,6 @@
 		76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo72x72.png; path = ../CarRampPhysicsLogo72x72.png; sourceTree = "<group>"; };
 		76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo144x144.png; path = ../CarRampPhysicsLogo144x144.png; sourceTree = "<group>"; };
 		76E02E30178F19220057D37B /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
-		76E91F8517945E2E001749FC /* VariablesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariablesViewController.h; sourceTree = "<group>"; };
-		76E91F8617945E2E001749FC /* VariablesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VariablesViewController.m; sourceTree = "<group>"; };
-		76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VariablesViewController_iPhone.xib; sourceTree = "<group>"; };
-		76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VariablesViewController_iPad.xib; sourceTree = "<group>"; };
 		76EF01A1178B571F00CBE38C /* RNGridMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNGridMenu.h; path = ../RNGridMenu.h; sourceTree = "<group>"; };
 		76EF01A2178B571F00CBE38C /* RNGridMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGridMenu.m; path = ../RNGridMenu.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -217,13 +186,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		760D197A17958AD500C123D6 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Cells;
-			sourceTree = "<group>";
-		};
 		765099A0178DCA6200425A27 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -272,7 +234,6 @@
 		7669F02F178B275C00E51AD0 /* Car Ramp Physics */ = {
 			isa = PBXGroup;
 			children = (
-				760D197A17958AD500C123D6 /* Cells */,
 				76E91F92179478DF001749FC /* Source */,
 				76E91F91179478B7001749FC /* Headers */,
 				76E91F8E1794789F001749FC /* iPhone */,
@@ -308,10 +269,6 @@
 		76E91F8E1794789F001749FC /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
-				760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */,
-				760D197E17958AF600C123D6 /* queue_layout~iphone.xib */,
-				76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */,
-				76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */,
 				76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */,
 				76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */,
 				7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */,
@@ -323,10 +280,6 @@
 		76E91F90179478AD001749FC /* iPad */ = {
 			isa = PBXGroup;
 			children = (
-				760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */,
-				760D198217958AFF00C123D6 /* queue_layout~ipad.xib */,
-				76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */,
-				76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */,
 				76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */,
 				76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */,
 				7669F047178B275C00E51AD0 /* ViewController_iPad.xib */,
@@ -338,13 +291,6 @@
 		76E91F91179478B7001749FC /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				7636B54D179EC3BC00DE6C7C /* QueueCell.h */,
-				761D27601795C1A30056FA8C /* Queue.h */,
-				760D197917958A4C00C123D6 /* QueueUploaderView.h */,
-				76785B8F179332A0001D6E3A /* MarqueeLabel.h */,
-				76E91F8517945E2E001749FC /* VariablesViewController.h */,
-				76785B771791E07B001D6E3A /* CRTableViewCell.h */,
-				76778D1A17919A6B0067ABA1 /* HexColor.h */,
 				765099B7178DD39500425A27 /* Constants.h */,
 				76B58D7B178C5D16006E1425 /* StringGrabber.h */,
 				76EF01A1178B571F00CBE38C /* RNGridMenu.h */,
@@ -358,10 +304,6 @@
 		76E91F92179478DF001749FC /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				76785B90179332A0001D6E3A /* MarqueeLabel.m */,
-				76E91F8617945E2E001749FC /* VariablesViewController.m */,
-				76785B781791E07B001D6E3A /* CRTableViewCell.m */,
-				76778D1B17919A6B0067ABA1 /* HexColor.m */,
 				76B58D7C178C5D16006E1425 /* StringGrabber.m */,
 				76EF01A2178B571F00CBE38C /* RNGridMenu.m */,
 				7669F039178B275C00E51AD0 /* AppDelegate.m */,
@@ -508,16 +450,8 @@
 				765099C8178DD92D00425A27 /* underline.png in Resources */,
 				76E02E31178F19220057D37B /* Fields.strings in Resources */,
 				760FABBC1790566C00951F97 /* Strings.strings in Resources */,
-				76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */,
-				76E91F8B179461BF001749FC /* VariablesViewController_iPad.xib in Resources */,
-				760D197F17958AF600C123D6 /* queue_layout-landscape~iphone.xib in Resources */,
-				760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */,
-				760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */,
-				760D198417958AFF00C123D6 /* queue_layout~ipad.xib in Resources */,
-				76A5ED941796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib in Resources */,
 				76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */,
 				7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */,
-				76A5ED9B1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib in Resources */,
 				76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */,
 				76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */,
 				76C54CF41799704100B93A67 /* button-37.wav in Resources */,
@@ -549,10 +483,6 @@
 				7669F043178B275C00E51AD0 /* ViewController.mm in Sources */,
 				76EF01A3178B571F00CBE38C /* RNGridMenu.m in Sources */,
 				76B58D90178C742C006E1425 /* AboutViewController.m in Sources */,
-				76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */,
-				76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */,
-				76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */,
-				76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

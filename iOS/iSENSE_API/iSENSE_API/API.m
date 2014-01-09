@@ -94,14 +94,15 @@ static RPerson *currentUser;
  */
 -(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
     
-    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"username_or_email=", [username UTF8String], @"&password=", [password UTF8String]];
+    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"email=", [username UTF8String], @"&password=", [password UTF8String]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withRequestType:POST andPostData:nil];
 
     authenticityToken = [result objectForKey:@"authenticity_token"];
     NSLog(@"API: Auth token from login: %@", authenticityToken);
+    int id = [[[result objectForKey:@"user"] objectForKey:@"id"] intValue];
     
     if (authenticityToken) {
-        currentUser = [self getUserWithUsername:username];
+        currentUser = [self getUserWithID:id];
         return TRUE;
     }
     
@@ -395,31 +396,16 @@ static RPerson *currentUser;
 }
 
 /**
- * Gets the ID of a user specified with the username from iSENSE.
- * This is an authenticated function and requires that the createSession function was called earlier. 
- *
- * @param username The username of the user whose ID is to be retrieved
- * @return An int (defaults to Mobile U.)
- */
-
--(int) getUserIDFromUsername: (NSString *) username {
-    
-    
-    
-    return 6;
-    
-}
-
-/**
  * Gets the user profile specified with the username from iSENSE.
  *
  * @param username The username of the user to retrieve
  * @return An RPerson object
  */
--(RPerson *)getUserWithUsername:(NSString *)username {
+-(RPerson *)getUserWithID:(int)id {
     
+    NSLog(@"ID: %d", id);
     RPerson *person = [[RPerson alloc] init];
-    NSString *path = [NSString stringWithFormat:@"users/%d", [self getUserIDFromUsername:username]];
+    NSString *path = [NSString stringWithFormat:@"users/%d", id];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET andPostData:nil];
     person.person_id = [result objectForKey:@"id"];
     person.name = [result objectForKey:@"name"];
@@ -444,10 +430,17 @@ static RPerson *currentUser;
     
     @try {
         NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
-        [postData setObject:name forKey:@"project_name"];
+        [postData setObject:[NSString stringWithFormat:@"%@",name] forKey:@"project_name"];
         
         NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
-        NSData *postReqData = [NSKeyedArchiver archivedDataWithRootObject:fields];
+        
+        NSError *error;
+        NSData *postReqData = [NSJSONSerialization dataWithJSONObject:postData
+                                                              options:0
+                                                                error:&error];
+        if (error) {
+            NSLog(@"Error parsing object to JSON: %@", error);
+        }
         
         NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
         
@@ -464,7 +457,13 @@ static RPerson *currentUser;
             [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
             [fullFieldMeta setObject:projectId forKey:@"project_id"];
             
-            NSData *fieldPostReqData = [NSKeyedArchiver archivedDataWithRootObject:fieldMetaData];
+            NSError *error;
+            NSData *fieldPostReqData = [NSJSONSerialization dataWithJSONObject:fieldMetaData
+                                                                  options:0
+                                                                    error:&error];
+            if (error) {
+                NSLog(@"Error parsing object to JSON: %@", error);
+            }
             [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
         }
         

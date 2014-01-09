@@ -95,13 +95,13 @@ public class API {
 	 */
 	public boolean createSession(String username, String password) {
 		try {
-			String result = makeRequest(baseURL, "login", "username_or_email="+URLEncoder.encode(username, "UTF-8")
+			String result = makeRequest(baseURL, "login", "email="+URLEncoder.encode(username, "UTF-8")
 					+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
 			System.out.println(result);
 			JSONObject j =  new JSONObject(result);
 			
 			authToken = j.getString("authenticity_token");
-			currentUser = getUser(username);
+			currentUser = getUser(j.getJSONObject("user").getInt("id"));
 	    return true;
 		} catch (Exception e) {
 			// Didn't get an authenticity token.
@@ -376,13 +376,13 @@ public class API {
 	/**
 	 * Gets a user off of iSENSE
 	 * 
-	 * @param username The username of the user to retrieve
+	 * @param id The id of the user to retrieve
 	 * @return A Person object
 	 */
-	public RPerson getUser(String username) {
+	public RPerson getUser(int id) {
 		RPerson person = new RPerson();
 		try {
-			String reqResult = makeRequest(baseURL, "users/"+username, "", "GET", null);
+			String reqResult = makeRequest(baseURL, "users/"+id, "", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 
 			person.person_id = j.getInt("id");
