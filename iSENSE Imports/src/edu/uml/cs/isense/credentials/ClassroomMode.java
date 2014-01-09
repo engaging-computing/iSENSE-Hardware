@@ -9,9 +9,24 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import edu.uml.cs.isense.R;
 
+/**
+ * This dialog is used specifically for applications that want
+ * to allow or disallow the use of user account names for the
+ * {@link edu.uml.cs.isense.credentials.EnterName EnterName} dialog.
+ * 
+ * @author iSENSE Android Development Team
+ *
+ */
 public class ClassroomMode extends Activity {
 
+	/**
+	 * SharedPreferences key that decides whether or not the classroom checkbox is enabled.
+	 */
 	public static final String PREFS_KEY_CLASSROOM_MODE = "PREFS_KEY_CLASSROOM_MODE";
+	/**
+	 * SharedPrefences key that the EnterName class uses to determine whether or not to allow
+	 * users to use their account name as a default.
+	 */
 	public static final String PREFS_BOOLEAN_CLASSROOM_MODE = "PREFS_BOOLEAN_CLASSROOM_MODE";
 	
 	@Override
