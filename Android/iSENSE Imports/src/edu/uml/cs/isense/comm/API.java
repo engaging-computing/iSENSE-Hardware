@@ -563,7 +563,7 @@ public class API {
 		return -1;
 	}
 	
-	/** TODO - change name from manualUpload to whatever it'll be.  eventually this will go away and become new uploadDataSet
+	/**
 	 * Uploads a new data set to a project on iSENSE
 	 * 
 	 * @param projectId The ID of the project to upload data to
