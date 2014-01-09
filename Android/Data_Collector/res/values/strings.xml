@@ -64,7 +64,7 @@
 	<string name="pre_data_collector_str">Collect Data Using My Device\'s Hardware Sensors</string>
 	<string name="pre_manual_entry_str">Manually Enter Data\n(requires project)</string>
     <string name="pre_csv_uploader_str">Upload a .csv File From My Device\n(requires project and Internet)</string>
-    <string name="reg_or_tutorials">New to iSENSE? Register for an account or check out our tutorials online</string>
+    <string name="reg_or_tutorials">New to iSENSE? Register for an account or check out our tutorials online.</string>
     <string name="reg_account">Register for Account</string>
     <string name="view_tutorials">View Tutorials</string>
     
