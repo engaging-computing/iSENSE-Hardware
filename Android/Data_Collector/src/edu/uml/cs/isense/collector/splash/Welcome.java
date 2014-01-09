@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ public class Welcome extends Activity {
 	private SharedPreferences mPrefs;
 	public API api;
 	
+	private CountDownTimer cdt;
 	private int actionBarTapCount = 0;
 	public static boolean useDev = false;
 	
@@ -119,9 +121,28 @@ public class Welcome extends Activity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		actionBarTapCount = 0;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	    case android.R.id.home:
+	    	
+	    	// Give user 10 seconds to switch dev/prod mode
+	    	if (actionBarTapCount == 0) {
+	    		cdt = new CountDownTimer(5000, 5000) {
+	    		     public void onTick(long millisUntilFinished) {}
+
+	    		     public void onFinish() {
+	    		         actionBarTapCount = 0;
+	    		     }
+	    		  }.start();
+	    	}
+	    	
 	    	String other = (useDev) ? "production" : "dev";
 	       
 	    	switch (++actionBarTapCount) {
@@ -140,6 +161,9 @@ public class Welcome extends Activity {
 	    				+ other 
 	    				+ getResources().getString(R.string.mode_type));
 	    		useDev = !useDev;
+	    		
+	    		if (cdt != null) cdt.cancel();
+	    		
 	    		if (api.getCurrentUser() != null) {
 	    			Runnable r = new Runnable() {
 	    				public void run() {
