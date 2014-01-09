@@ -8,6 +8,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * Dialog that displays allowing the implementor to name a custom project
+ * created with the fields designated by the "Constrict Fields" extra
+ * passed to the {@link edu.uml.cs.isense.proj.Setup Setup} class.
+ * 
+ * @author iSENSE Android Development Team
+ * 
+ */
 public class ProjectNameDialog extends Activity {
 	
 	private EditText nameInput;
@@ -43,7 +51,6 @@ public class ProjectNameDialog extends Activity {
 			public void onClick(View v) {
 				setResult(RESULT_CANCELED);
 				finish();
-				
 			}
 		});
 	}
