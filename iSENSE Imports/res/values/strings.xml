@@ -12,7 +12,10 @@
     <string name="select_proj">Select Project</string>
     <string name="browse">Browse</string>
     <string name="scan_qr">Scan QR</string>
-    <string name="chooseProject">Uploading to project #:</string>
+    <string name="chooseProject">Enter Project ID:</string>
+    <string name="noProjectYet">Don\'t have a project yet?</string>
+    <string name="createProject">Create New Project</string>
+    <string name="createProjectButton">Create Project</string>
     <string name="search">Search</string>
     <string name="project_no_items">No projects were found.</string>
     <string name="visit">Visit</string>
@@ -31,7 +34,9 @@
     <string name="select_all">Select All</string>
     <string name="deselect_all">Deselect All</string>
     <string name="delete_selected">Delete Selected</string>
-    <string name="sure_delete_selected">Are you sure you would like to delete all selected data sets?  Selected data sets are the ones highlighted green.</string>
+    <string name="sure_delete_selected">Are you sure you would like to delete all selected data sets? 
+         Selected data sets are the ones highlighted green.
+    </string>
 
     <!-- SyncTime -->
     <string name="syncTime">Synchronizing time is useful when using multiple devices to record data at the
@@ -93,12 +98,14 @@
         <item>Temp. (Kelvin)</item>
     </string-array>
 
-    <string name="field_matching_text">        Match the project\'s fields (left) with fields that this app can record data for (dropdowns on the right).  If no match is
-        available, leave the drop down blank.</string>
+    <string name="field_matching_text">Match the project\'s fields (left) with fields that this app can record data for 
+        (dropdowns on the right).  If no match is
+        available, leave the drop down blank.
+    </string>
     <string name="project_field">Project Field</string>
     <string name="back">Back</string>
-    <string name="username">Username:</string>
-    <string name="password">Password:</string>
+    <string name="username">Email:</string>
+    <string name="password">Pass:</string>
     <string name="login">Login</string>
     <string name="first_name">First Name:</string>
     <string name="last_initial">Last Initial:</string>
@@ -134,6 +141,7 @@
 	<string name="one_timestamp_only">Cannot add more than one timestamp</string>
 	<string name="login_isense_first">Please login to iSENSE first</string>
 	<string name="project_failed_create">Project failed to create - please try again</string>
+	<string name="new_proj_name_title">Enter Project Name</string>
 	<!-- End Project Create -->
     
 </resources>
