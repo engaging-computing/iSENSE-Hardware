@@ -80,7 +80,7 @@ public class Setup extends Activity implements OnClickListener {
 	
 	public static String APPNAME;
 	
-	private boolean showOKCancel = false;
+	private boolean showOKCancel = true;
 	private boolean constrictFields = false;
 	
 	
@@ -109,14 +109,14 @@ public class Setup extends Activity implements OnClickListener {
 		createProject.setOnClickListener(this);
 		
 		oklayout = (LinearLayout) findViewById(R.id.OKCancelLayout);
-		oklayout.setVisibility(View.GONE);
+		oklayout.setVisibility(View.VISIBLE);
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			showOKCancel = extras.getBoolean("showOKCancel", false);
+			showOKCancel = extras.getBoolean("showOKCancel", true);
 			constrictFields = extras.getBoolean("constrictFields", false);
-			if (showOKCancel)
-				oklayout.setVisibility(View.VISIBLE);
+			if (!showOKCancel)
+				oklayout.setVisibility(View.GONE);
 			String fromWhere = extras.getString("from_where");
 			if (fromWhere != null) {
 				if (fromWhere.equals("manual")) {
@@ -295,6 +295,45 @@ public class Setup extends Activity implements OnClickListener {
 			fields.add(aY);
 			fields.add(aZ);
 			fields.add(aT);
+			
+		} else if (APPNAME.equals("DataWalk")) {
+			RProjectField time = new RProjectField();
+			time.name = "Time";
+			time.type = RProjectField.TYPE_TIMESTAMP;
+			fields.add(time);
+			
+			RProjectField aT,Vel,TD, Lat, Lon;
+			
+			aT = new RProjectField();
+			aT.name = "Accel-Magnitude";
+			aT.type = RProjectField.TYPE_NUMBER;
+			aT.unit = "m/s^2";
+			
+			Vel = new RProjectField();
+			Vel.name = "Velocity";
+			Vel.type = RProjectField.TYPE_NUMBER;
+			Vel.unit = "m/s";
+			
+			TD = new RProjectField();
+			TD.name = "Total Distance";
+			TD.type = RProjectField.TYPE_NUMBER;
+			TD.unit = "m";
+			
+			Lat = new RProjectField();
+			Lat.name = "Latitude";
+			Lat.type = RProjectField.TYPE_LAT;
+			Lat.unit = "deg";
+			
+			Lon = new RProjectField();
+			Lon.name = "Longitude";
+			Lon.type = RProjectField.TYPE_LON;
+			Lon.unit = "deg";
+			
+			fields.add(aT);
+			fields.add(Vel);
+			fields.add(TD);
+			fields.add(Lat);
+			fields.add(Lon);
 			
 		}
 		
