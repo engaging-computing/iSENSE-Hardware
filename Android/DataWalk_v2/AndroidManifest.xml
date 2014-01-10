@@ -35,7 +35,8 @@
             android:name=".DataWalk"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/display_name"
-            android:theme="@style/theme_blue" >
+            android:theme="@style/AppTheme"
+           	>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

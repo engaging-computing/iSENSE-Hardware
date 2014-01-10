@@ -28,8 +28,8 @@ public class DataRateDialog extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 		// Get strings arrays for labels and corresponding values
-		dataRates = getResources().getStringArray(R.array.dataRate);
-		dataRateValues = getResources().getStringArray(R.array.dataRateVals);
+		dataRates = getResources().getStringArray(R.array.data_rate);
+		dataRateValues = getResources().getStringArray(R.array.data_rate_vals);
 
 		// Get the current
 		String currentDataRate = getSharedPreferences(
