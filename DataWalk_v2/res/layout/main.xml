@@ -1,117 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:baselineAligned="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:keepScreenOn="true"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/startStop"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/locationBlock"
-        android:layout_below="@+id/timePointCountBlock"
-        android:layout_marginBottom="20dp"
+    <LinearLayout
+        android:id="@+id/ll_location"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#003"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <TextView
+            android:id="@+id/tv_latitude"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="5dp"
+            android:text="@string/latitude"
+            android:textColor="#EEE" />
+
+        <TextView
+            android:id="@+id/tv_longitude"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="5dp"
+            android:text="@string/longitude"
+            android:textColor="#EEE" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_rcrdinterval"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/ll_location"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_rsense"
-        android:text="@string/startPrompt"
-        android:textColor="#3E94D1"
-        android:textSize="30sp"
-        android:textStyle="bold"
-         />
-
-    <LinearLayout
-        android:id="@+id/locationBlock"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#000033"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/myLocation"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="#000033"
-            android:text="@string/noLocation0"
-            android:textColor="#A8CFFF"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/timePointCountBlock"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_marginTop="10dp"
-        android:background="@android:color/white"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_rcrdinterval"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/recording_interval" />
+
+        <Button
+            android:id="@+id/b_rcrdinterval"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/tv_rcrdinterval"
+            android:background="@drawable/button_rsense"
+            android:text="@string/ten_seconds"
+            android:textColor="#3E94D1"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_project"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/b_upload"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#2C2"
+            android:text="@string/upload"
+            android:textColor="#FFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#CCC" />
+
+        <Button
+            android:id="@+id/b_project"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/button_bar_rsense"
+            android:text="@string/project_num"
+            android:textColor="#3E94D1"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v_bar"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@id/ll_project"
+        android:background="#CCC" />
+
+    <RelativeLayout
+        android:id="@+id/ll_login"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_above="@id/v_bar"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:id="@+id/tv_login"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/logged_in_as" />
+
+        <Button
+            android:id="@+id/b_username"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/tv_login"
+            android:background="@drawable/button_rsense"
+            android:text="@string/mobile_user"
+            android:textColor="#3E94D1"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_name"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_above="@id/ll_login"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/nameWithColon" />
+
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/tv_name"
+            android:digits="@string/digits_restriction"
+            android:gravity="left|center_vertical"
+            android:hint="@string/john_smith"
+            android:inputType="text"
+            android:maxLength="30"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_timeandcount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll_name"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical" >
 
         <TextView
-        android:id="@+id/NameStatus"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:background="#000033"
-        android:text="@string/nameWithColon"
-        android:textColor="#A8CFFF"
-        android:textSize="18sp"
-        android:textStyle="bold" 
-        android:layout_weight="50"/>
-        
-        <TextView
-            android:id="@+id/timeElapsed"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/tv_elapsedtime"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:background="#000033"
-            android:text="@string/timeElapsed"
-            android:textColor="#A8CFFF"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-    	<TextView
-            android:id="@+id/pointCount"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#000033"
-            android:text="@string/pointsUploaded"
-            android:textColor="#A8CFFF"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:text="@string/timeElapsed" />
 
         <TextView
-            android:id="@+id/loginStatus"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#000033"
-            android:text="@string/logged_in_as"
-            android:textColor="#A8CFFF"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/expNumBx"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#000033"
-            android:text="@string/Exp_Num_Is"
-            android:textColor="#A8CFFF"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-           <TextView
-            android:id="@+id/RateBx"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#000033"
-            android:text="@string/Rate_Is"
-            android:textColor="#A8CFFF"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
-    
+            android:id="@+id/tv_pointcount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/pointsUploaded" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/b_startstop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll_timeandcount"
+        android:layout_below="@id/ll_rcrdinterval"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/button_rsense"
+        android:text="@string/start_prompt"
+        android:textColor="#3E94D1"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

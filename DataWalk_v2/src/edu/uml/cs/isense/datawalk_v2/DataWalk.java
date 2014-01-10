@@ -37,9 +37,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
@@ -70,14 +72,16 @@ public class DataWalk extends Activity implements LocationListener,
 		SensorEventListener, Listener {
 
 	/* UI Related Globals */
-	private TextView loggedInAs;
-	private TextView nameTxtBox;
-	private TextView timeElapsedBox;
-	private TextView pointsUploadedBox;
-	private TextView expNumBox;
-	private TextView rateBox;
-	private TextView latLong;
-	private Button startStop;
+	private TextView elapsedTimeTV;
+	private TextView pointsUploadedTV;
+	private TextView latitudeTV;
+	private TextView longitudeTV;
+	private EditText nameET;
+	private TextView rcrdIntervalB;
+	private Button projNumB;
+	private Button startStopB;
+	private Button uploadB;
+	private Button loggedInAsB;
 
 	/* Manager Controlling Globals */
 	private LocationManager mLocationManager;
@@ -221,9 +225,7 @@ public class DataWalk extends Activity implements LocationListener,
 						firstName = user.name;
 						lastInitial = "";
 
-						nameTxtBox.setText(getResources().getString(
-								R.string.name)
-								+ ": " + firstName);
+						nameET.setText(firstName);
 					}
 
 				} else {
@@ -241,8 +243,7 @@ public class DataWalk extends Activity implements LocationListener,
 								classroomMode);
 						startActivityForResult(iEnterName, NAME_REQUESTED);
 					} else {
-						nameTxtBox.setText(getResources().getString(R.string.name)
-							+ ": " + firstName + " " + lastInitial);
+						nameET.setText(firstName + " " + lastInitial);
 					}
 				}
 			} else {
@@ -253,12 +254,11 @@ public class DataWalk extends Activity implements LocationListener,
 			}
 
 		} else {
-			nameTxtBox.setText(getResources().getString(R.string.name)
-					+ ": " + firstName + " " + lastInitial);
+			nameET.setText(firstName + " " + lastInitial);
 		}
 
 		/* Starts the code for the main button. */
-		startStop.setOnLongClickListener(new OnLongClickListener() {
+		startStopB.setOnLongClickListener(new OnLongClickListener() {
 
 			@SuppressLint("NewApi")
 			@Override
@@ -278,7 +278,7 @@ public class DataWalk extends Activity implements LocationListener,
 					if (android.os.Build.VERSION.SDK_INT >= 11)
 						invalidateOptionsMenu();
 					// Reset the text on the main button
-					startStop.setText(getString(R.string.startPrompt));
+					startStopB.setText(getString(R.string.start_prompt));
 
 					// Cancel the recording timer
 					recordTimer.cancel();
@@ -333,13 +333,10 @@ public class DataWalk extends Activity implements LocationListener,
 					running = true;
 
 					// Reset the main UI text boxes
-					nameTxtBox
-							.setText("Name: " + firstName + " " + lastInitial);
-					pointsUploadedBox.setText("Points Recorded: " + "0");
-					timeElapsedBox.setText("Time Elapsed:" + " 0 seconds");
-					loggedInAs.setText(getResources().getString(
-							R.string.logged_in_as)
-							+ " " + loginName);
+					nameET.setText(firstName + " " + lastInitial);
+					pointsUploadedTV.setText("Points Recorded: " + "0");
+					elapsedTimeTV.setText("Time Elapsed:" + " 0 seconds");
+					loggedInAsB.setText(loginName);
 					// Reset the number of data points and the current dataSet
 					// ID
 					dataPointCount = 0;
@@ -354,7 +351,7 @@ public class DataWalk extends Activity implements LocationListener,
 					runRecordingTimer();
 
 					// Change the text on the main button
-					startStop.setText(getString(R.string.stopPrompt));
+					startStopB.setText(getString(R.string.stop_prompt));
 
 				}
 
@@ -377,7 +374,7 @@ public class DataWalk extends Activity implements LocationListener,
 		else
 			projectID = prefs.getString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
 		
-		expNumBox.setText("Project Number: " + projectID);
+		projNumB.setText("to project " + projectID);
 		
 		
 //		SharedPreferences.Editor mEdit = mPrefs.edit();
@@ -390,17 +387,29 @@ public class DataWalk extends Activity implements LocationListener,
 
 	private void initialize() {
 		// Initialize main UI elements
-		startStop = (Button) findViewById(R.id.startStop);
-		timeElapsedBox = (TextView) findViewById(R.id.timeElapsed);
-		pointsUploadedBox = (TextView) findViewById(R.id.pointCount);
-		expNumBox = (TextView) findViewById(R.id.expNumBx);
-		loggedInAs = (TextView) findViewById(R.id.loginStatus);
-		nameTxtBox = (TextView) findViewById(R.id.NameStatus);
-		rateBox = (TextView) findViewById(R.id.RateBx);
-		latLong = (TextView) findViewById(R.id.myLocation);
+		startStopB = (Button) findViewById(R.id.b_startstop);
+		projNumB = (Button) findViewById(R.id.b_project);
+		uploadB = (Button) findViewById(R.id.b_upload);
+		loggedInAsB = (Button) findViewById(R.id.b_username);
+		elapsedTimeTV = (TextView) findViewById(R.id.tv_elapsedtime);
+		pointsUploadedTV = (TextView) findViewById(R.id.tv_pointcount);
+		rcrdIntervalB = (Button) findViewById(R.id.b_rcrdinterval);
+		latitudeTV = (TextView) findViewById(R.id.tv_longitude);
+		longitudeTV = (TextView) findViewById(R.id.tv_latitude);
+		pointsUploadedTV.setText("Points Recorded: " + dataPointCount);
+		elapsedTimeTV.setText("Time Elapsed: " + timerTick + " seconds");
+		nameET = (EditText) findViewById(R.id.et_name);
+		
+		rcrdIntervalB.setOnClickListener(new OnClickListener() {
 
-		pointsUploadedBox.setText("Points Recorded: " + dataPointCount);
-		timeElapsedBox.setText("Time Elapsed: " + timerTick + " seconds");
+			@Override
+			public void onClick(View v) {
+				// Launches the data recording interval picker
+				startActivity(new Intent(mContext, DataRateDialog.class));
+			}
+			
+		});
+
 	}
 
 	/**
@@ -491,18 +500,16 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Update the text in the text boxes on the main UI
 		if (projectID == "-1") {
-			expNumBox
-					.setText("Project number cannot be choose until you are connected to the intenet."
-							+ projectID);
+			projNumB.setText(getResources().getString(R.string.project_num));
 		} else {
-			expNumBox.setText("Project Number: " + projectID);
+			projNumB.setText("to project " + projectID);
 		}
 		if (mInterval == 1000) {
-			rateBox.setText("Data Recorded Every: 1 second");
+			rcrdIntervalB.setText("1 second");
 		} else if (mInterval == 60000) {
-			rateBox.setText("Data Recorded Every: 1 minute");
+			rcrdIntervalB.setText("1 minute");
 		} else {
-			rateBox.setText("Data Recorded Every: " + mInterval / 1000
+			rcrdIntervalB.setText(mInterval / 1000
 					+ " seconds");
 		}
 
@@ -738,24 +745,19 @@ public class DataWalk extends Activity implements LocationListener,
 						// Show the GPS coordinate on the main UI, else continue
 						// with our loop.
 						if (gpsWorking) {
-							latLong.setText("Latitude: " + loc.getLatitude()
-									+ "\nLongitude: " + loc.getLongitude());
+							latitudeTV.setText(getResources().getString(R.string.latitude) + loc.getLatitude());
+							longitudeTV.setText(getResources().getString(R.string.longitude) + loc.getLongitude());
 						} else {
 							switch (waitingCounter % 5) {
 							case (0):
-								latLong.setText(R.string.noLocation0);
+								latitudeTV.setText(R.string.latitude);
+								longitudeTV.setText(R.string.longitude);
 								break;
-							case (1):
-								latLong.setText(R.string.noLocation1);
-								break;
-							case (2):
-								latLong.setText(R.string.noLocation2);
-								break;
-							case (3):
-								latLong.setText(R.string.noLocation3);
-								break;
-							case (4):
-								latLong.setText(R.string.noLocation4);
+							default:
+								String latitude = (String) latitudeTV.getText();
+								String longitude = (String) longitudeTV.getText();
+								latitudeTV.setText(latitude + " .");
+								longitudeTV.setText(longitude + " .");
 								break;
 							}
 							waitingCounter++;
@@ -858,7 +860,7 @@ public class DataWalk extends Activity implements LocationListener,
 			// button to stop recording.
 		} else if (requestCode == DIALOG_FORCE_STOP) {
 			if (resultCode == RESULT_OK) {
-				startStop.performLongClick();
+				startStopB.performLongClick();
 			}
 
 			// If the user uploaded data, offer to show the data on iSENSE
@@ -891,8 +893,7 @@ public class DataWalk extends Activity implements LocationListener,
 					firstName = user.name;
 					lastInitial = "";
 
-					nameTxtBox.setText(getResources().getString(R.string.name)
-							+ ": " + firstName);
+					nameET.setText(firstName);
 
 				} else {
 					firstName = namePrefs.getString(
@@ -903,8 +904,7 @@ public class DataWalk extends Activity implements LocationListener,
 									EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL,
 									"");
 
-					nameTxtBox.setText(getResources().getString(R.string.name)
-							+ ": " + firstName + " " + lastInitial);
+					nameET.setText(firstName + " " + lastInitial);
 				}
 
 			} else {
@@ -995,9 +995,7 @@ public class DataWalk extends Activity implements LocationListener,
 						DEFAULT_USERNAME);
 
 				// Set the UI to the new login name
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as)
-						+ " " + loginName);
+				loggedInAsB.setText(loginName);
 
 				SharedPreferences namePrefs = getSharedPreferences(
 						EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
@@ -1011,8 +1009,7 @@ public class DataWalk extends Activity implements LocationListener,
 					firstName = user.name;
 					lastInitial = "";
 
-					nameTxtBox.setText(getResources().getString(R.string.name)
-							+ ": " + firstName);
+					nameET.setText(firstName);
 
 				}
 
@@ -1090,11 +1087,6 @@ public class DataWalk extends Activity implements LocationListener,
 					classPrefs.getBoolean(
 							ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true));
 			startActivityForResult(iEnterName, NAME_REQUESTED);
-			return true;
-
-		case R.id.DataUploadRate:
-			// Launches the data recording interval picker
-			startActivity(new Intent(this, DataRateDialog.class));
 			return true;
 
 		case R.id.ExpNum:
@@ -1229,9 +1221,7 @@ public class DataWalk extends Activity implements LocationListener,
 					mEditor.commit();
 
 					// Update the UI with the new logged in username
-					loggedInAs.setText(getResources().getString(
-							R.string.logged_in_as)
-							+ " " + loginName);
+					loggedInAsB.setText(loginName);
 
 					// Update label if in classroom mode and using login for
 					// name
@@ -1251,9 +1241,7 @@ public class DataWalk extends Activity implements LocationListener,
 						firstName = user.name;
 						lastInitial = "";
 
-						nameTxtBox.setText(getResources().getString(
-								R.string.name)
-								+ ": " + firstName);
+						nameET.setText(firstName);
 					}
 
 				} else {
@@ -1294,8 +1282,8 @@ public class DataWalk extends Activity implements LocationListener,
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 
 				// Update the UI to signal the fact that you aren't logged in
-				loggedInAs.setText(getResources().getString(
-						R.string.logged_in_as));
+				loggedInAsB.setText(getResources().getString(
+						R.string.mobile_user));
 
 			}
 
@@ -1462,15 +1450,16 @@ public class DataWalk extends Activity implements LocationListener,
 					@Override
 					public void run() {
 						if (timerTick == 1) {
-							timeElapsedBox.setText("Time Elapsed: " + timerTick
+							elapsedTimeTV.setText("Time Elapsed: " + timerTick
 									+ " second");
 						} else {
-							timeElapsedBox.setText("Time Elapsed: " + timerTick
+							elapsedTimeTV.setText("Time Elapsed: " + timerTick
 									+ " seconds");
 						}
 
+						/* TODO PLEASE REMOVE THIS --J */
 						// Rajia Stealing these Text Boxes for now
-						loggedInAs.setText("Distance: "
+						loggedInAsB.setText("Distance: "
 								+ roundTwoDecimals(totalDistance * 0.000621371)
 								+ " Miles " + roundTwoDecimals(totalDistance)
 								+ " Meters");
@@ -1478,7 +1467,7 @@ public class DataWalk extends Activity implements LocationListener,
 						// roundTwoDecimals(relDistance*0.000621371)+" Miles " +
 						// roundTwoDecimals(relDistance)+ " Meters" );
 
-						rateBox.setText("Velocity: "
+						rcrdIntervalB.setText("Velocity: "
 								+ roundTwoDecimals(velocity * 2.23694)
 								+ " MPH " + roundTwoDecimals(velocity)
 								+ " M/Sec    ");
@@ -1518,7 +1507,7 @@ public class DataWalk extends Activity implements LocationListener,
 							
 							@Override
 							public void run() {
-								pointsUploadedBox
+								pointsUploadedTV
 								.setText("Points Recorded: "
 										+ dataPointCount);
 							}
