@@ -9,8 +9,9 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
+import android.os.CountDownTimer;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.proj.ProjectCreate;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -29,6 +31,7 @@ public class Welcome extends Activity {
 	private SharedPreferences mPrefs;
 	public API api;
 	
+	private CountDownTimer cdt;
 	private int actionBarTapCount = 0;
 	public static boolean useDev = false;
 	
@@ -81,30 +84,11 @@ public class Welcome extends Activity {
 				else {
 					Intent iSetup = new Intent(mContext, Setup.class);
 					iSetup.putExtra("from_where", "welcome");
+					iSetup.putExtra(ProjectCreate.THEME_NAV_BAR, true);
 					startActivityForResult(iSetup, PROJECT_SELECTION_REQUESTED);
 				}
 			}
 		});
-		String selectProjectText = "<font COLOR=\"#0066FF\">" + "Continue With an Existing iSENSE Project" + "</font>"
-				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires Internet)" + "</font>";
-		selectProject.setText(Html.fromHtml(selectProjectText));
-
-		final Button createProject = (Button) findViewById(R.id.welcome_create_project);
-		createProject.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (!Connection.hasConnectivity(mContext))
-					w.make(getResources().getString(R.string.need_connectivity_to_do),
-							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-				else {
-					Intent iProjCreate = new Intent(mContext, ProjectCreate.class);
-					startActivityForResult(iProjCreate, PROJECT_CREATE_REQUESTED);
-				}
-			}
-		});
-		String createProjectText = "<font COLOR=\"#0066FF\">" + "Create a new Project" + "</font>"
-				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires Internet)" + "</font>";
-		createProject.setText(Html.fromHtml(createProjectText));
 		
 		final Button noProject = (Button) findViewById(R.id.welcome_no_project);
 		noProject.setOnClickListener(new OnClickListener() {
@@ -113,13 +97,73 @@ public class Welcome extends Activity {
 				setGlobalProjAndEnableManual("", false);
 			}
 		});
+		
+		final Button registerAccount = (Button) findViewById(R.id.welcome_register_for_isense);
+		registerAccount.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (Connection.hasConnectivity(mContext)) {
+					if (api.isUsingDevMode()) {
+						Intent iRegister = new Intent(Intent.ACTION_VIEW);
+						iRegister.setData(Uri.parse("http://rsense-dev.cs.uml.edu/users/new"));
+						startActivity(iRegister);
+					} else {
+						Intent iRegister = new Intent(Intent.ACTION_VIEW);
+						iRegister.setData(Uri.parse("http://isenseproject.org/users/new"));
+						startActivity(iRegister);
+					}	
+				} else {
+					w.make(getResources().getString(R.string.need_connectivity_to_do),
+							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+				}
+			}
+		});
+		
+		final Button viewTutorials = (Button) findViewById(R.id.welcome_view_tutorials);
+		viewTutorials.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (Connection.hasConnectivity(mContext)) {
+					if (api.isUsingDevMode()) {
+						Intent iTutorials = new Intent(Intent.ACTION_VIEW);
+						iTutorials.setData(Uri.parse("http://rsense-dev.cs.uml.edu/tutorials"));
+						startActivity(iTutorials);
+					} else {
+						Intent iTutorials = new Intent(Intent.ACTION_VIEW);
+						iTutorials.setData(Uri.parse("http://isenseproject.org/tutorials"));
+						startActivity(iTutorials);
+					}	
+				} else {
+					w.make(getResources().getString(R.string.need_connectivity_to_do),
+							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+				}
+			}
+		});
 
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		actionBarTapCount = 0;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	    case android.R.id.home:
+	    	
+	    	// Give user 10 seconds to switch dev/prod mode
+	    	if (actionBarTapCount == 0) {
+	    		cdt = new CountDownTimer(5000, 5000) {
+	    		     public void onTick(long millisUntilFinished) {}
+	    		     public void onFinish() {
+	    		         actionBarTapCount = 0;
+	    		     }
+	    		  }.start();
+	    	}
+	    	
 	    	String other = (useDev) ? "production" : "dev";
 	       
 	    	switch (++actionBarTapCount) {
@@ -138,6 +182,9 @@ public class Welcome extends Activity {
 	    				+ other 
 	    				+ getResources().getString(R.string.mode_type));
 	    		useDev = !useDev;
+	    		
+	    		if (cdt != null) cdt.cancel();
+	    		
 	    		if (api.getCurrentUser() != null) {
 	    			Runnable r = new Runnable() {
 	    				public void run() {
