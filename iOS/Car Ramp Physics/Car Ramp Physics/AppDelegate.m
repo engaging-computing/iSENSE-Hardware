@@ -42,11 +42,11 @@
     
     NSString *proj = [[[url absoluteString] substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:_slashes];
     
-    int expNum = [proj intValue];
+    int projNum = [proj intValue];
     
-    NSLog(@"ExpNum: %d", expNum);
+    NSLog(@"ExpNum: %d", projNum);
     
-    self.viewController.expNum = expNum;
+    self.viewController.projNum = projNum;
     
     return YES;
 }
