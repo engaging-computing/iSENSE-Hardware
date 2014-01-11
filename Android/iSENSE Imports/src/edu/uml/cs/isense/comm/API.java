@@ -611,12 +611,6 @@ public class API {
 					existing.getJSONArray(currKey).put(newDataPoints.get(i));
 				}
 			}
-			ArrayList<RProjectField> fields = getProjectFields(existingDs.project_id);
-			ArrayList<String> headers = new ArrayList<String>();
-			for(RProjectField rpf : fields) {
-				headers.add(rpf.name);
-			}
-			requestData.put("headers", new JSONArray(headers));
 			requestData.put("data", existing);
 			requestData.put("id", ""+dataSetId);
 			makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
