@@ -1,27 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/Upload"
-        android:showAsAction="always"
-        android:title="@string/Upload">
-    </item>   
-    <item
-        android:id="@+id/DataUploadRate"
-        android:showAsAction="always"
-        android:title="@string/recordingInterval">
-    </item>
     
     <item
         android:id="@+id/NameChange"
         android:showAsAction="ifRoom"
         android:title="@string/NameChange">
-    </item>
-    <item
-        android:id="@+id/ExpNum"
-        android:showAsAction="ifRoom"
-        android:title="@string/Exp_Num_Title">
     </item>
     
     <item

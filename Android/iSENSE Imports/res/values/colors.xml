@@ -3,5 +3,7 @@
     <color name="navy_light">#608CBF</color>
     <color name="blue_light">#A1D3FF</color>
     <color name="blue_lighter">#C7E5FF</color>
+    <color name="actionbar_background">#113</color>
+    <color name="actionbar_text">#FFF</color>
 
 </resources>
