@@ -9,7 +9,7 @@
         android:id="@+id/ll_location"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:background="#003"
+        android:background="#444"
         android:orientation="horizontal"
         android:weightSum="2" >
 
@@ -20,6 +20,7 @@
             android:layout_weight="1"
             android:gravity="left|center_vertical"
             android:paddingLeft="5dp"
+            android:singleLine="true"
             android:text="@string/latitude"
             android:textColor="#EEE" />
 
@@ -30,6 +31,7 @@
             android:layout_weight="1"
             android:gravity="left|center_vertical"
             android:paddingLeft="5dp"
+            android:singleLine="true"
             android:text="@string/longitude"
             android:textColor="#EEE" />
     </LinearLayout>
@@ -109,9 +111,9 @@
         android:background="#CCC" />
 
     <RelativeLayout
-        android:id="@+id/ll_login"
+        android:id="@+id/ll_nameandlogin"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="85dp"
         android:layout_above="@id/v_bar"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
@@ -119,18 +121,42 @@
         android:layout_marginTop="10dp" >
 
         <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/nameWithColon" />
+
+        <Button
+            android:id="@+id/b_name"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignLeft="@+id/b_login"
+            android:layout_toRightOf="@id/tv_name"
+            android:background="@drawable/button_rsense"
+            android:text="@string/john_smith"
+            android:textColor="#3E94D1"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/tv_login"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/tv_name"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
             android:gravity="left|center_vertical"
             android:text="@string/logged_in_as" />
 
         <Button
-            android:id="@+id/b_username"
+            android:id="@id/b_login"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
+            android:layout_below="@id/b_name"
+            android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/tv_login"
             android:background="@drawable/button_rsense"
             android:text="@string/mobile_user"
@@ -139,58 +165,29 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/ll_name"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_above="@id/ll_login"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/nameWithColon" />
-
-        <EditText
-            android:id="@+id/et_name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@id/tv_name"
-            android:digits="@string/digits_restriction"
-            android:gravity="left|center_vertical"
-            android:hint="@string/john_smith"
-            android:inputType="text"
-            android:maxLength="30"
-            android:textSize="12sp" />
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/ll_timeandcount"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/ll_name"
+        android:layout_height="85dp"
+        android:layout_above="@id/ll_nameandlogin"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/tv_elapsedtime"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/timeElapsed" />
 
         <TextView
             android:id="@+id/tv_pointcount"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/pointsUploaded" />
     </LinearLayout>
 

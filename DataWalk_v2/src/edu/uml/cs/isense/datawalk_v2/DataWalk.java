@@ -42,7 +42,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
@@ -77,9 +76,9 @@ public class DataWalk extends Activity implements LocationListener,
 	private TextView pointsUploadedTV;
 	private TextView latitudeTV;
 	private TextView longitudeTV;
-	private EditText nameET;
-	private TextView rcrdIntervalB;
+	private Button rcrdIntervalB;
 	private Button projNumB;
+	private Button nameB;
 	private Button startStopB;
 	private Button uploadB;
 	private Button loggedInAsB;
@@ -155,7 +154,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private int elapsedMillis = 0;
 	private int dataPointCount = 0;
 	private int timerTick = 0;
-	private int waitingCounter = 0;
+	private int gpsWaitingCounter = 0;
 
 	// Rajia:
 	float distance = 0;
@@ -222,7 +221,7 @@ public class DataWalk extends Activity implements LocationListener,
 						firstName = user.name;
 						lastInitial = "";
 
-						nameET.setText(firstName);
+						nameB.setText(firstName);
 					}
 
 				} else {
@@ -241,7 +240,7 @@ public class DataWalk extends Activity implements LocationListener,
 								classroomMode);
 						startActivityForResult(iEnterName, NAME_REQUESTED);
 					} else {
-						nameET.setText(firstName + " " + lastInitial);
+						nameB.setText(firstName + " " + lastInitial);
 					}
 				}
 			} else {
@@ -252,7 +251,7 @@ public class DataWalk extends Activity implements LocationListener,
 			}
 
 		} else {
-			nameET.setText(firstName + " " + lastInitial);
+			nameB.setText(firstName + " " + lastInitial);
 		}
 
 		/* Starts the code for the main button. */
@@ -275,6 +274,10 @@ public class DataWalk extends Activity implements LocationListener,
 					useMenu = true;
 					if (android.os.Build.VERSION.SDK_INT >= 11)
 						invalidateOptionsMenu();
+
+					// Enabled the Recording Interval Button
+					rcrdIntervalB.setEnabled(true);
+
 					// Reset the text on the main button
 					startStopB.setText(getString(R.string.start_prompt));
 
@@ -331,10 +334,14 @@ public class DataWalk extends Activity implements LocationListener,
 					useMenu = false;
 					if (android.os.Build.VERSION.SDK_INT >= 11)
 						invalidateOptionsMenu();
+
+					// Disable the Recording Interval Button
+					rcrdIntervalB.setEnabled(false);
+
 					running = true;
 
 					// Reset the main UI text boxes
-					nameET.setText(firstName + " " + lastInitial);
+					nameB.setText(firstName + " " + lastInitial);
 					pointsUploadedTV.setText("Points Recorded: " + "0");
 					elapsedTimeTV.setText("Time Elapsed:" + " 0 seconds");
 					loggedInAsB.setText(loginName);
@@ -342,7 +349,7 @@ public class DataWalk extends Activity implements LocationListener,
 					// ID
 					dataPointCount = 0;
 					dataSetID = -1;
-					// TODO KEEP SCREEN ON
+					// TODO CHECK IF THIS KEEPS SCREEN ON
 					// Prevent the screen from turning off and prevent rotation
 					getWindow().addFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -392,15 +399,15 @@ public class DataWalk extends Activity implements LocationListener,
 		startStopB = (Button) findViewById(R.id.b_startstop);
 		projNumB = (Button) findViewById(R.id.b_project);
 		uploadB = (Button) findViewById(R.id.b_upload);
-		loggedInAsB = (Button) findViewById(R.id.b_username);
+		loggedInAsB = (Button) findViewById(R.id.b_login);
+		nameB = (Button) findViewById(R.id.b_name);
+		rcrdIntervalB = (Button) findViewById(R.id.b_rcrdinterval);
 		elapsedTimeTV = (TextView) findViewById(R.id.tv_elapsedtime);
 		pointsUploadedTV = (TextView) findViewById(R.id.tv_pointcount);
-		rcrdIntervalB = (Button) findViewById(R.id.b_rcrdinterval);
 		latitudeTV = (TextView) findViewById(R.id.tv_longitude);
 		longitudeTV = (TextView) findViewById(R.id.tv_latitude);
 		pointsUploadedTV.setText("Points Recorded: " + dataPointCount);
 		elapsedTimeTV.setText("Time Elapsed: " + timerTick + " seconds");
-		nameET = (EditText) findViewById(R.id.et_name);
 
 		rcrdIntervalB.setOnClickListener(new OnClickListener() {
 
@@ -429,6 +436,36 @@ public class DataWalk extends Activity implements LocationListener,
 			public void onClick(View v) {
 				// Launched the upload queue dialog
 				manageUploadQueue();
+			}
+
+		});
+
+		loggedInAsB.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Launch the dialog that allows users to login to iSENSE
+				startActivityForResult(new Intent(mContext, Login.class),
+						LOGIN_ISENSE_REQUESTED);
+			}
+
+		});
+
+		nameB.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Launch the dialog that allows users to enter his/her
+				// firstname
+				// and last initial
+				Intent iEnterName = new Intent(mContext, EnterName.class);
+				SharedPreferences classPrefs = getSharedPreferences(
+						ClassroomMode.PREFS_KEY_CLASSROOM_MODE, 0);
+				iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+						classPrefs.getBoolean(
+								ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE,
+								true));
+				startActivityForResult(iEnterName, NAME_REQUESTED);
 			}
 
 		});
@@ -542,7 +579,7 @@ public class DataWalk extends Activity implements LocationListener,
 	 */
 	private void AutoLogin() {
 		// TODO Auto-generated method stub
-
+		// I don't know why this is here --J
 	}
 
 	/**
@@ -615,6 +652,7 @@ public class DataWalk extends Activity implements LocationListener,
 			// Rajia will that fix the random velocity problem
 			prevLoc.set(loc);
 			gpsWorking = false;
+			gpsWaitingCounter = 0;
 		}
 	}
 
@@ -624,6 +662,7 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	public void onProviderDisabled(String provider) {
 		gpsWorking = false;
+		gpsWaitingCounter = 0;
 	}
 
 	/**
@@ -675,8 +714,6 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(1).setEnabled(false);
 			menu.getItem(2).setEnabled(false);
 			menu.getItem(3).setEnabled(false);
-			menu.getItem(4).setEnabled(false);
-			menu.getItem(5).setEnabled(false);
 		}
 		/*
 		 * else if (canChangeProjectNum == false){
@@ -689,9 +726,6 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(1).setEnabled(true);
 			menu.getItem(2).setEnabled(true);
 			menu.getItem(3).setEnabled(true);
-			menu.getItem(4).setEnabled(true);
-			menu.getItem(5).setEnabled(true);
-
 		}
 		return true;
 	}
@@ -768,12 +802,12 @@ public class DataWalk extends Activity implements LocationListener,
 						if (gpsWorking) {
 							latitudeTV.setText(getResources().getString(
 									R.string.latitude)
-									+ loc.getLatitude());
+									+ " " + loc.getLatitude());
 							longitudeTV.setText(getResources().getString(
 									R.string.longitude)
-									+ loc.getLongitude());
+									+ " " + loc.getLongitude());
 						} else {
-							switch (waitingCounter % 5) {
+							switch (gpsWaitingCounter % 5) {
 							case (0):
 								latitudeTV.setText(R.string.latitude);
 								longitudeTV.setText(R.string.longitude);
@@ -786,7 +820,7 @@ public class DataWalk extends Activity implements LocationListener,
 								longitudeTV.setText(longitude + " .");
 								break;
 							}
-							waitingCounter++;
+							gpsWaitingCounter++;
 						}
 					}
 				});
@@ -919,7 +953,7 @@ public class DataWalk extends Activity implements LocationListener,
 					firstName = user.name;
 					lastInitial = "";
 
-					nameET.setText(firstName);
+					nameB.setText(firstName);
 
 				} else {
 					firstName = namePrefs.getString(
@@ -930,7 +964,7 @@ public class DataWalk extends Activity implements LocationListener,
 									EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL,
 									"");
 
-					nameET.setText(firstName + " " + lastInitial);
+					nameB.setText(firstName + " " + lastInitial);
 				}
 
 			} else {
@@ -1019,7 +1053,7 @@ public class DataWalk extends Activity implements LocationListener,
 						DEFAULT_USERNAME);
 				loginPass = mPrefs.getString(
 						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						DEFAULT_USERNAME);
+						DEFAULT_PASSWORD);
 
 				// Set the UI to the new login name
 				loggedInAsB.setText(loginName);
@@ -1036,7 +1070,7 @@ public class DataWalk extends Activity implements LocationListener,
 					firstName = user.name;
 					lastInitial = "";
 
-					nameET.setText(firstName);
+					nameB.setText(firstName);
 
 				}
 
@@ -1091,24 +1125,6 @@ public class DataWalk extends Activity implements LocationListener,
 			// reset to default settings
 			Intent i = new Intent(mContext, Reset.class);
 			startActivityForResult(i, RESET_REQUESTED);
-			return true;
-
-		case R.id.login:
-			// Launch the dialog that allows users to login to iSENSE
-			startActivityForResult(new Intent(this, Login.class),
-					LOGIN_ISENSE_REQUESTED);
-			return true;
-
-		case R.id.NameChange:
-			// Launch the dialog that allows users to enter his/her firstname
-			// and last initial
-			Intent iEnterName = new Intent(this, EnterName.class);
-			SharedPreferences classPrefs = getSharedPreferences(
-					ClassroomMode.PREFS_KEY_CLASSROOM_MODE, 0);
-			iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
-					classPrefs.getBoolean(
-							ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true));
-			startActivityForResult(iEnterName, NAME_REQUESTED);
 			return true;
 
 		case R.id.About:
@@ -1257,7 +1273,7 @@ public class DataWalk extends Activity implements LocationListener,
 						firstName = user.name;
 						lastInitial = "";
 
-						nameET.setText(firstName);
+						nameB.setText(firstName);
 					}
 
 				} else {
@@ -1374,6 +1390,7 @@ public class DataWalk extends Activity implements LocationListener,
 			if (gpsWorking == true) {
 				w.make("Weak GPS signal.", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_WARN);
+				gpsWaitingCounter = 0;
 			}
 			gpsWorking = false;
 			// Rajia Will that fix the random velocity problem
