@@ -1,7 +1,7 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /**                                                                                               **/
-/**      IIIIIIIIIIIII            General Purpose Amusement Park Appication      SSSSSSSSS        **/
+/**      IIIIIIIIIIIII            General Purpose Amusement Park Application      SSSSSSSSS       **/
 /**           III                                                               SSS               **/
 /**           III                    Original Creator: John Fertita            SSS                **/
 /**           III                    Optimized By:     Jeremy Poulin,           SSS               **/
@@ -54,6 +54,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -103,10 +104,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	
 	/*Values obtained from Configuration*/
 	public static int projectNum = -1;
-	public static String data = (new String());
-	public static String rate = (new String());
-	public static String ride = (new String());
-	public static String seat = (new String());
+	public static String dataName = "";
+	public static String rate = "";
+	public static String rideNameString = "NOT SET";
+	public static String stNumber = "1";
 
 	/* Managers and Their Variables */
 	public static DataFieldManager dfm;
@@ -138,7 +139,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int SAMPLE_INTERVAL = 50;
 
 	/* Recording Variables */
-	private String rideNameString = "NOT SET";
 	private float rawAccel[];
 	private float rawMag[];
 	private float accel[];
@@ -169,10 +169,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	/* Used with Sync Time */
 	private long currentTime = 0;
 	private long timeOffset = 0;	
+	
+	/* Used to set time elapsed */
+	private String sec = "";
+	private int min = 0;
 
-	String nameOfDataSet = "";
 
-	private static String stNumber = "1";
+
 
 	public static JSONArray dataSet;
 
@@ -213,7 +216,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					// Stop the recording and reset UI
 					if (isRunning) {
 						isRunning = false;
-						setupDone = false;
 						useMenu = true;
 
 						// Unregister sensors to save battery
@@ -229,6 +231,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 						// Cancel the recording timer
 						recordingTimer.cancel();
+						
+						//uploader.run();
+						new UploadTask().execute(); 
+						
 
 						return isRunning;
 
@@ -291,7 +297,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						startStop
 								.setBackgroundResource(R.drawable.button_rsense_stop);
 						startStop.setTextColor(Color.parseColor("#FFFFFF"));
-
+						
+						new TimeElapsedTask().execute();
+						
 						recordingTimer = new Timer();
 						recordingTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
@@ -299,7 +307,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							}
 						}, 0, srate * 1000);
 					}
-
+					
+					
 					return isRunning;
 
 				}
@@ -353,8 +362,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (!folder.exists()) {
 			folder.mkdir();
 		}
-
-		String sdFileName = Configuration.rides.getSelectedItem() + "-" + stNumber + "-"
+		
+		//TODO rides.getSelectedItem()
+		String sdFileName = rideName + "-" + stNumber + "-"
 				+ dateString + ".csv";
 		File sdFile = new File(folder, sdFileName);
 
@@ -608,7 +618,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			// acceptedFields = fieldMatcher.acceptedFields;
 			dfm.setEnabledFields(acceptedFields);
 		} else if (requestCode == SETUP_REQUESTED) {
-			
+			//TODO
+			rideNameString = Configuration.rides.getSelectedItem().toString();
 			
 		} else if (requestCode == LOGIN_REQUESTED) {
 			
@@ -634,7 +645,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			String dateString = sdf.format(dt);
 
 			// Create name from time stamp
-			String name = nameOfDataSet + " - " + dateString;
+			String name = dataName + " - " + dateString;
 
 			// Retrieve project id
 			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
@@ -654,9 +665,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				e.printStackTrace();
 			}
 
-			// Tries to upload the data set
-			int dataSetId = api.uploadDataSet(Integer.parseInt(projId), data, name);
-			uploadSuccessful = (dataSetId <= 0) ? true : false;
+//			// Tries to upload the data set
+//			int dataSetId = api.uploadDataSet(Integer.parseInt(projId), data, name);
+//			uploadSuccessful = (dataSetId <= 0) ? true : false;
 			
 			// Saves data for later upload
 			if (!uploadSuccessful) {
@@ -686,7 +697,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		@Override
 		protected String doInBackground(String... strings) {
 			uploader.run();
-			return strings[0];
+			return null; //strings[0];
 		}
 
 		@Override
@@ -729,17 +740,49 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * @param seconds
 	 */
 	public void setTime(int seconds) {
-		int min = seconds / 60;
+		min = seconds / 60;
 		int secInt = seconds % 60;
 
-		String sec = "";
+		sec = "";
 		if (secInt <= 9)
 			sec = "0" + secInt;
 		else
 			sec = "" + secInt;
+		
+		runOnUiThread(new Runnable() {
+		    public void run() {
+		    	time.setText("Time Elapsed: " + min + ":" + sec);
+		    }
+		});
 
-		time.setText("Time Elapsed: " + min + ":" + sec);
 	}
+	
+	private class TimeElapsedTask extends AsyncTask<Void, Integer, Void> {
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			for(int time = 0; isRunning; time++ ) {
+				setTime(time);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			
+		}
+	}
+	
+	
+	
 
 	/**
 	 * Everything needed to be initialized for onCreate in one helpful function.

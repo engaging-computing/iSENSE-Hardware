@@ -140,7 +140,7 @@ public class Main extends Activity implements LocationListener {
 		f = new Fields();
 
 		api = API.getInstance();
-		api.useDev(false);
+		api.useDev(true);
 
 		uq = new UploadQueue("generalpictures", mContext, api);
 
