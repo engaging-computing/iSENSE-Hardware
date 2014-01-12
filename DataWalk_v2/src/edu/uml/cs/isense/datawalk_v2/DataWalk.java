@@ -156,7 +156,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private int timerTick = 0;
 	private int gpsWaitingCounter = 0;
 
-	// Rajia:
+	/* Distance and Velocity */
 	float distance = 0;
 	float velocity = 0;
 	float deltaTime = 0;
@@ -369,7 +369,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		});
 
-		// additional initializations that are dependent on whether or not we're
+		// Additional initializations that are dependent on whether or not we're
 		// on dev
 		onCreateInit();
 
@@ -883,30 +883,14 @@ public class DataWalk extends Activity implements LocationListener,
 
 			if (Connection.hasConnectivity(mContext)) {
 				if (resultCode == RESULT_OK) {
-
 					setProjectIDFromSetupClass();
 					new GetProjectTask().execute();
-
-				} else if (resultCode == RESULT_CANCELED) {
-					// // This is called when they hit cancel.
-					// // In this situation, we want the UI to display the last
-					// // project number the user entered.
-					// if (useDev)
-					// projectID = DEFAULT_PROJECT_DEV;
-					// else
-					// projectID = DEFAULT_PROJECT;
-					// // Set the project ID in preferences back to its default
-					// // value
-					// SharedPreferences prefs = getSharedPreferences(
-					// Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
-					// SharedPreferences.Editor mEdit = prefs.edit();
-					// mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
-					// mEdit.commit();
 				}
 			} else {
-				// There is no Internet so menu is disabled, thus the user will
-				// never reach this point.
-
+				// TODO There is no Internet so we cannot pull fields from
+				// iSENSE.
+				// IMPORTANT -- Inform the user of this situation and act
+				// appropriately
 			}
 
 			// If the user hit yes, bring them to GPS settings.
@@ -1494,7 +1478,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 						/* TODO PLEASE REMOVE THIS --J */
 						// Rajia Stealing these Text Boxes for now
-						loggedInAsB.setText("Distance: "
+						/*loggedInAsB.setText("Distance: "
 								+ roundTwoDecimals(totalDistance * 0.000621371)
 								+ " Miles " + roundTwoDecimals(totalDistance)
 								+ " Meters");
@@ -1506,7 +1490,7 @@ public class DataWalk extends Activity implements LocationListener,
 								+ roundTwoDecimals(velocity * 2.23694)
 								+ " MPH " + roundTwoDecimals(velocity)
 								+ " M/Sec    ");
-
+						*/
 					}
 				});
 
