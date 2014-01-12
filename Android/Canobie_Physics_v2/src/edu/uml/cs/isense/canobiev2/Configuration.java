@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -44,9 +45,26 @@ public class Configuration extends Activity {
 		ok = (Button) findViewById(R.id.ok);
 		select = (Button) findViewById(R.id.selectButton);		 
 		
-		dataset.setText(AmusementPark.data);
+		dataset.setText(AmusementPark.dataName);
 		sampleRate.setText(AmusementPark.rate);
-		studentNumber.setText(AmusementPark.seat);
+		studentNumber.setText(AmusementPark.stNumber);
+		
+		 final ArrayAdapter<CharSequence> canobieAdapter = ArrayAdapter
+                 .createFromResource(this, R.array.canobie_array,
+                                 android.R.layout.simple_spinner_item);
+		 canobieAdapter
+                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		 
+		 final ArrayAdapter<CharSequence> generalAdapter = ArrayAdapter
+                 .createFromResource(this, R.array.rides_array,
+                                 android.R.layout.simple_spinner_item);
+		  generalAdapter
+		  		 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		 
+		 if (isCanobie.isChecked())
+             rides.setAdapter(canobieAdapter);
+		 else
+             rides.setAdapter(generalAdapter);
 		
 		projectLater.setChecked(false);
 		
@@ -70,9 +88,9 @@ public class Configuration extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				if (isCanobie.isChecked()) { 
-					rides.setEnabled(true);
+					rides.setAdapter(canobieAdapter);
 				} else {
-					rides.setEnabled(false);
+					rides.setAdapter(generalAdapter);
 				}
 				
 			}
@@ -113,7 +131,7 @@ public class Configuration extends Activity {
 			dataset.setError("Please Enter a Data Set Name.");
 			selected = false;
 		} else {
-			AmusementPark.data = dataset.getText().toString();
+			AmusementPark.dataName = dataset.getText().toString();
 		}
 		
 		
@@ -139,9 +157,11 @@ public class Configuration extends Activity {
 			studentNumber.setError("Please Enter Seat/Student");
 			selected = false;
 		} else {
-			AmusementPark.seat = studentNumber.getText().toString();
+			AmusementPark.stNumber = studentNumber.getText().toString();
 			
 		}
+		
+		
 		
 		if(isCanobie.isChecked() == true) {
 			//check if ride is selected
