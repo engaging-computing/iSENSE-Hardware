@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -99,7 +98,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private Waffle w;
 
 	/* iSENSE API Globals and Constants */
-	private final String DEFAULT_USERNAME = "mobile";
+	private final String DEFAULT_USERNAME = "mobile.fake@example.com";
 	private final String DEFAULT_PASSWORD = "mobile";
 	private final String DEFAULT_PROJECT = "156";
 	private final String DEFAULT_PROJECT_DEV = "25";
@@ -178,14 +177,9 @@ public class DataWalk extends Activity implements LocationListener,
 		// Save current context
 		mContext = this;
 		
-		// Initialize action bar customization for API >= 14
-		if (android.os.Build.VERSION.SDK_INT >= 14) {
+		// Initialize action bar customization for API >= 11
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
-			bar.setBackgroundDrawable(new ColorDrawable(Color
-					.parseColor("#111133")));
-			bar.setIcon(getResources()
-					.getDrawable(R.drawable.rsense_logo_right));
-			bar.setDisplayShowTitleEnabled(false);
 			int actionBarTitleId = Resources.getSystem().getIdentifier(
 					"action_bar_title", "id", "android");
 			if (actionBarTitleId > 0) {
@@ -281,7 +275,8 @@ public class DataWalk extends Activity implements LocationListener,
 					startStopB.setText(getString(R.string.start_prompt));
 
 					// Cancel the recording timer
-					recordTimer.cancel();
+					if (recordTimer != null)
+						recordTimer.cancel();
 
 					// Create the name of the session using the entered name
 					dataSetName = firstName + " " + lastInitial;
@@ -406,6 +401,27 @@ public class DataWalk extends Activity implements LocationListener,
 			public void onClick(View v) {
 				// Launches the data recording interval picker
 				startActivity(new Intent(mContext, DataRateDialog.class));
+			}
+			
+		});
+		
+		projNumB.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Allows the user to pick a project to upload to
+				Intent setup = new Intent(mContext, Setup.class);
+				startActivityForResult(setup, PROJECT_REQUESTED);			
+			}
+			
+		});
+		
+		uploadB.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Launched the upload queue dialog
+				manageUploadQueue();				
 			}
 			
 		});
@@ -651,9 +667,6 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(3).setEnabled(false);
 			menu.getItem(4).setEnabled(false);
 			menu.getItem(5).setEnabled(false);
-			menu.getItem(6).setEnabled(false);
-			menu.getItem(7).setEnabled(false);
-			menu.getItem(8).setEnabled(false);
 		} /*
 		 * else if (canChangeProjectNum == false){
 		 * menu.getItem(3).setEnabled(false); menu.getItem(4).setEnabled(false);
@@ -667,9 +680,6 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(3).setEnabled(true);
 			menu.getItem(4).setEnabled(true);
 			menu.getItem(5).setEnabled(true);
-			menu.getItem(6).setEnabled(true);
-			menu.getItem(7).setEnabled(true);
-			menu.getItem(8).setEnabled(true);
 
 		}
 		return true;
@@ -1059,11 +1069,6 @@ public class DataWalk extends Activity implements LocationListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
-		case R.id.Upload:
-			// Launched the upload queue dialog
-			manageUploadQueue();
-			return true;
-
 		case R.id.reset:
 			// Launch the dialog asking if the user is sure he/she wants to
 			// reset to default settings
@@ -1087,12 +1092,6 @@ public class DataWalk extends Activity implements LocationListener,
 					classPrefs.getBoolean(
 							ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true));
 			startActivityForResult(iEnterName, NAME_REQUESTED);
-			return true;
-
-		case R.id.ExpNum:
-			// Allows the user to pick a project to upload to
-			Intent setup = new Intent(this, Setup.class);
-			startActivityForResult(setup, PROJECT_REQUESTED);
 			return true;
 
 		case R.id.About:
