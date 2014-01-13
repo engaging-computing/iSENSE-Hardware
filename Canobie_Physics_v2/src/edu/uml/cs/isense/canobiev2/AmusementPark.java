@@ -622,6 +622,15 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			rideNameString = Configuration.rides.getSelectedItem().toString();
 			
 		} else if (requestCode == LOGIN_REQUESTED) {
+			if (resultCode == Activity.RESULT_OK) {
+				
+				w.make("Login successful", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+				
+			} else if (resultCode == Login.RESULT_ERROR) {
+				
+				startActivityForResult(new Intent(mContext, Login.class), LOGIN_REQUESTED);
+
+			}
 			
 		}
 

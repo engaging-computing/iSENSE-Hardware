@@ -391,7 +391,6 @@ public class API {
 
 			person.person_id = j.getInt("id");
 			person.name = j.getString("name");
-			person.username = j.getString("username");
 			person.url = j.getString("url");
 			person.gravatar = j.getString("gravatar");
 			person.timecreated = j.getString("createdAt");
