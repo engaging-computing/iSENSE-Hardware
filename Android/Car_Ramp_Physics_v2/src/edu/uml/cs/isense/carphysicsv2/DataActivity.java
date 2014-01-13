@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 
 public class DataActivity extends Activity {
 
@@ -19,13 +19,11 @@ public class DataActivity extends Activity {
 
 		if (android.os.Build.VERSION.SDK_INT > 11)
 			setFinishOnTouchOutside(false);
-		
-		
+
 		iSENSE_Button = (Button) findViewById(R.id.iSENSE_Button);
 		discard_Button = (Button) findViewById(R.id.discard_Button);
-		
-		API api = API.getInstance(this);
-		if (api.hasConnectivity())
+
+		if (Connection.hasConnectivity(getApplicationContext()))
 			setTitle("Publish Your Data?");
 		else {
 			setTitle("Save Your Data?");
@@ -52,5 +50,4 @@ public class DataActivity extends Activity {
 		});
 	}
 
-	
 }

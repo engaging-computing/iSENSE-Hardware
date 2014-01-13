@@ -45,6 +45,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
 //import org.opencv.samples.colorblobdetect.ColorBlobDetectionActivity;
 // iSENSE data upload
@@ -171,7 +172,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 		mOpenCvCameraView.setMaxFrameSize(320, 240);
 		
 		// iSENSE network connectivity stuff
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(useDevSite);
 		
 		// TextView for instruction overlay
@@ -726,7 +727,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 	
 			// login to iSENSE if not already			
 		
-			connect = api.hasConnectivity();
+			connect = Connection.hasConnectivity(mContext);
 			
 			Log.i(TAG, "Connectivity status = " + connect);
 			

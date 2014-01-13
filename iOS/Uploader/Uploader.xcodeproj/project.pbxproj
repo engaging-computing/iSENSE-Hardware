@@ -32,14 +32,6 @@
 		B7062016181592B1003C158E /* RotationDataSaver.m in Sources */ = {isa = PBXBuildFile; fileRef = B7062015181592B1003C158E /* RotationDataSaver.m */; };
 		B7115C2216D6ACD80033AAA1 /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = B7115C2116D6ACD80033AAA1 /* Fields.strings */; };
 		B71349FC16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */; };
-		B72302AC17831A7D00DD8B16 /* SensorSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = B72302AB17831A7D00DD8B16 /* SensorSelection.m */; };
-		B72302AE17831AE600DD8B16 /* SensorSelection~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302AD17831AE600DD8B16 /* SensorSelection~iphone.xib */; };
-		B72302B017831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302AF17831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib */; };
-		B72302B217831B3800DD8B16 /* SensorSelection~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302B117831B3800DD8B16 /* SensorSelection~ipad.xib */; };
-		B72302B417831B5800DD8B16 /* SensorSelection-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302B317831B5800DD8B16 /* SensorSelection-landscape~ipad.xib */; };
-		B72302BA1783204000DD8B16 /* SensorCell~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B72302B91783204000DD8B16 /* SensorCell~iphone.xib */; };
-		B72302BD1783260700DD8B16 /* SensorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B72302BC1783260600DD8B16 /* SensorCell.m */; };
-		B7375CDC1784A40600906119 /* SensorCell~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B7375CDB1784A40600906119 /* SensorCell~ipad.xib */; };
 		B74A1F0C16B8641200F0E9EE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B74A1F0E16B8641E00F0E9EE /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */; };
 		B74A1F1016B8642200F0E9EE /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74A1F0F16B8642200F0E9EE /* CoreMedia.framework */; };
@@ -140,16 +132,6 @@
 		B7062015181592B1003C158E /* RotationDataSaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RotationDataSaver.m; sourceTree = "<group>"; };
 		B7115C2116D6ACD80033AAA1 /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
 		B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ManualView-landscape~ipad.xib"; sourceTree = "<group>"; };
-		B72302AA17831A7D00DD8B16 /* SensorSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorSelection.h; sourceTree = "<group>"; };
-		B72302AB17831A7D00DD8B16 /* SensorSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorSelection.m; sourceTree = "<group>"; };
-		B72302AD17831AE600DD8B16 /* SensorSelection~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorSelection~iphone.xib"; sourceTree = "<group>"; };
-		B72302AF17831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorSelection-landscape~iphone.xib"; sourceTree = "<group>"; };
-		B72302B117831B3800DD8B16 /* SensorSelection~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorSelection~ipad.xib"; sourceTree = "<group>"; };
-		B72302B317831B5800DD8B16 /* SensorSelection-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorSelection-landscape~ipad.xib"; sourceTree = "<group>"; };
-		B72302B91783204000DD8B16 /* SensorCell~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorCell~iphone.xib"; sourceTree = "<group>"; };
-		B72302BB1783260600DD8B16 /* SensorCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SensorCell.h; sourceTree = "<group>"; };
-		B72302BC1783260600DD8B16 /* SensorCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SensorCell.m; sourceTree = "<group>"; };
-		B7375CDB1784A40600906119 /* SensorCell~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "SensorCell~ipad.xib"; sourceTree = "<group>"; };
 		B74A1F0B16B8641200F0E9EE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B74A1F0D16B8641E00F0E9EE /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		B74A1F0F16B8642200F0E9EE /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -315,19 +297,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		39BFA4E01796F55900372A87 /* Step One Files */ = {
-			isa = PBXGroup;
-			children = (
-				B72302BB1783260600DD8B16 /* SensorCell.h */,
-				B72302BC1783260600DD8B16 /* SensorCell.m */,
-				B72302AA17831A7D00DD8B16 /* SensorSelection.h */,
-				B72302AB17831A7D00DD8B16 /* SensorSelection.m */,
-				B75046C6177484110034B42C /* StepOneSetup.h */,
-				B75046C7177484110034B42C /* StepOneSetup.mm */,
-			);
-			name = "Step One Files";
-			sourceTree = "<group>";
-		};
 		39F8AF971694C1FB00E5E4C2 /* StringGrabber */ = {
 			isa = PBXGroup;
 			children = (
@@ -343,8 +312,8 @@
 				B7AE6FA7181FE08E0081BD4B /* Icons */,
 				B74CA1B217A2C0BF00C0E395 /* rsense_logo_recording.png */,
 				B74CA1B317A2C0BF00C0E395 /* rsense_logo.png */,
-				3908824F169B325A00BEE04F /* Default-568h@2x.png */,
 				52572B741691F742009037A7 /* media_icon.png */,
+				3908824F169B325A00BEE04F /* Default-568h@2x.png */,
 			);
 			name = Drawable;
 			sourceTree = "<group>";
@@ -366,9 +335,6 @@
 				B7EBFB2F16DF9D8300125169 /* ManualView-landscape~iphone.xib */,
 				B75046C8177484110034B42C /* StepOneSetup~iphone.xib */,
 				B75046CB1774AC680034B42C /* StepOneSetup-landscape~iphone.xib */,
-				B72302AD17831AE600DD8B16 /* SensorSelection~iphone.xib */,
-				B72302AF17831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib */,
-				B72302B91783204000DD8B16 /* SensorCell~iphone.xib */,
 				B77EEE9918298EA1008DFE7C /* SelectMode~iphone.xib */,
 				B77EEE9C18298F7D008DFE7C /* SelectMode-landscape~iphone.xib */,
 				B77EEE8E182932ED008DFE7C /* Welcome~iphone.xib */,
@@ -386,9 +352,6 @@
 				B71349FB16DD3B4600FDC3FF /* ManualView-landscape~ipad.xib */,
 				B75046CD1774ACA40034B42C /* StepOneSetup~ipad.xib */,
 				B75046CF1774ACC40034B42C /* StepOneSetup-landscape~ipad.xib */,
-				B72302B117831B3800DD8B16 /* SensorSelection~ipad.xib */,
-				B72302B317831B5800DD8B16 /* SensorSelection-landscape~ipad.xib */,
-				B7375CDB1784A40600906119 /* SensorCell~ipad.xib */,
 				B77EEE9E1829903D008DFE7C /* SelectMode~ipad.xib */,
 				B77EEEA018299126008DFE7C /* SelectMode-landscape~ipad.xib */,
 				B77EEE93182989C2008DFE7C /* Welcome~ipad.xib */,
@@ -423,7 +386,8 @@
 			children = (
 				399BE2F7169F1D1F000F7B2E /* AutomaticViewController.h */,
 				399BE2F8169F1D1F000F7B2E /* AutomaticViewController.mm */,
-				39BFA4E01796F55900372A87 /* Step One Files */,
+				B75046C6177484110034B42C /* StepOneSetup.h */,
+				B75046C7177484110034B42C /* StepOneSetup.mm */,
 			);
 			name = Automatic;
 			sourceTree = "<group>";
@@ -572,12 +536,6 @@
 				B75046DA1774CD9D0034B42C /* Automatic~ipad.xib in Resources */,
 				B75046DC1774CDD00034B42C /* Automatic-landscape~ipad.xib in Resources */,
 				39A529A8177B5CCB007A4052 /* MainWindow.xib in Resources */,
-				B72302AE17831AE600DD8B16 /* SensorSelection~iphone.xib in Resources */,
-				B72302B017831B1D00DD8B16 /* SensorSelection-landscape~iphone.xib in Resources */,
-				B72302B217831B3800DD8B16 /* SensorSelection~ipad.xib in Resources */,
-				B72302B417831B5800DD8B16 /* SensorSelection-landscape~ipad.xib in Resources */,
-				B72302BA1783204000DD8B16 /* SensorCell~iphone.xib in Resources */,
-				B7375CDC1784A40600906119 /* SensorCell~ipad.xib in Resources */,
 				B74CA1B417A2C0BF00C0E395 /* rsense_logo_recording.png in Resources */,
 				B74CA1B517A2C0BF00C0E395 /* rsense_logo.png in Resources */,
 				B7EEB0751816A459001E7FEB /* uploader_logo_retina.png in Resources */,
@@ -608,8 +566,6 @@
 				39F8AF9A1694C20C00E5E4C2 /* StringGrabber.m in Sources */,
 				399BE2F9169F1D1F000F7B2E /* AutomaticViewController.mm in Sources */,
 				B75046C9177484110034B42C /* StepOneSetup.mm in Sources */,
-				B72302AC17831A7D00DD8B16 /* SensorSelection.m in Sources */,
-				B72302BD1783260700DD8B16 /* SensorCell.m in Sources */,
 				B7062016181592B1003C158E /* RotationDataSaver.m in Sources */,
 				B77EEE8F182932ED008DFE7C /* WelcomeViewController.m in Sources */,
 				B77EEE9A18298EA2008DFE7C /* SelectModeViewController.m in Sources */,

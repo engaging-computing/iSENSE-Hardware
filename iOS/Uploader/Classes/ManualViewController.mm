@@ -49,7 +49,28 @@
 // substitute for viewDidLoad - allocates memory and sets up main UI
 - (void) viewHasLoaded {
     
-    NSLog(@"view has loaded");
+    // Check backFromQueue status to inform user of data set upload success or failure
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    backFromQueue = [prefs boolForKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    if (backFromQueue) {
+        int uploaded = [prefs integerForKey:@"key_data_uploaded"];
+        switch (uploaded) {
+            case DATA_NONE_UPLOADED:
+                [self.view makeWaffle:@"No data sets uploaded" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
+                break;
+                
+            case DATA_UPLOAD_SUCCESS:
+                [self.view makeWaffle:@"All selected data sets uploaded successfully" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
+                break;
+                
+            case DATA_UPLOAD_FAILED:
+                [self.view makeWaffle:@"At least one data set failed to upload" duration:WAFFLE_LENGTH_LONG position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+                break;
+        }
+        
+        // Set back_from_queue key to false again
+        [prefs setBool:false forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+    }
     
     // allocations
     UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"Menu"
@@ -67,7 +88,7 @@
     
     // iSENSE API
     api = [API getInstance];
-    [api useDev:TRUE];
+    [api useDev:[prefs boolForKey:kUSE_DEV]];
     
     if ([api getCurrentUser] != nil)
         loggedInAsLabel.text = [StringGrabber concatenateHardcodedString:@"logged_in_as" with:[[api getCurrentUser] username]];
@@ -115,7 +136,6 @@
     // project number
     if (projNum > 0) {
         projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", projNum]];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setValue:[NSString stringWithFormat:@"%d", projNum] forKey:[StringGrabber grabString:@"key_proj_manual"]];
         
         if (browsing == YES) {
@@ -129,7 +149,6 @@
                 [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:FALSE];
         }
     } else {
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         int proj = [prefs integerForKey:kPROJECT_ID_MANUAL];
         if (proj > 0) {
             // we have a global proj to use
@@ -159,7 +178,7 @@
                                                                       message:nil
                                                                      delegate:self
                                                             cancelButtonTitle:@"Cancel"
-                                                            otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                                                            otherButtonTitles:@"Enter Project #", @"Browse", nil];
                     message.tag = MANUAL_MENU_PROJECT;
                     [message show];
                     
@@ -182,10 +201,8 @@
     }
     
     // DataSaver from Data_CollectorAppDelegate
-    if (dataSaver == nil) {
+    if (dataSaver == nil)
         dataSaver = [(Data_CollectorAppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
-        NSLog(@"Current count = %d", dataSaver.dataQueue.count);
-    }
     
     [self initLocations];
     [self resetAddressFields];
@@ -257,12 +274,12 @@
             if(orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown) {
                 if (keyboardDismissProper)
                     [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + KEY_OFFSET_SCROLL_PORT_IPHONE)];
-                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_PORT_IPHONE,
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_PORT_IPHONE+15,
                                               self.view.frame.size.width, self.view.frame.size.height);
             } else {
                 if (keyboardDismissProper)
-                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + KEY_OFFSET_SCROLL_LAND_IPHONE)];
-                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_LAND_IPHONE,
+                    [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height + KEY_OFFSET_SCROLL_LAND_IPHONE-60)];
+                self.view.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y + KEY_OFFSET_FRAME_LAND_IPHONE+40,
                                              self.view.frame.size.width, self.view.frame.size.height);
             }
         }
@@ -294,7 +311,7 @@
                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_PORT_IPHONE)];
                 } else {
                     if(!keyboardDismissProper)
-                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPHONE)];
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - KEY_OFFSET_SCROLL_LAND_IPHONE+60)];
                 }
             }
         } else {
@@ -352,8 +369,6 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
-    
-    NSLog(@"view did appear");
 }
 
 - (void) dealloc {
@@ -460,10 +475,11 @@
 }
 
 - (IBAction) mediaOnClick:(id)sender {
-    
+    [self.view makeWaffle:@"Feature to be implemented in future release" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_WARNING];
+    /*
     if (![self startCameraControllerFromViewController:self usingDelegate:self])
         [self.view makeWaffle:@"No camera found." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-
+     */
 }
 
 - (IBAction) displayMenu:(id)sender {
@@ -474,7 +490,8 @@
                                  destructiveButtonTitle:nil
                                  otherButtonTitles:@"Upload", @"Project", @"Login", nil];
 	popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-	[popupQuery showInView:self.view];
+	//[popupQuery showInView:self.view];
+    [popupQuery showInView:[UIApplication sharedApplication].keyWindow];
 }
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -485,6 +502,11 @@
         case MANUAL_MENU_UPLOAD:
             
             if ([dataSaver dataSetCountWithParentName:PARENT_MANUAL] > 0) {
+                NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+                backFromQueue = true;
+                [prefs setBool:backFromQueue forKey:[StringGrabber grabString:@"key_back_from_queue"]];
+                [prefs setInteger:DATA_NONE_UPLOADED forKey:@"key_data_uploaded"];
+                
                 QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:PARENT_MANUAL];
                 queueUploader.title = @"Upload";
                 [self.navigationController pushViewController:queueUploader animated:YES];
@@ -499,7 +521,7 @@
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Enter Project #", @"Browse", @"Scan QR Code", nil];
+                                       otherButtonTitles:@"Enter Project #", @"Browse", nil];
             message.tag = MANUAL_MENU_PROJECT;
             [message show];
             
@@ -562,34 +584,6 @@
             browseView.delegate = self;
             browsing = YES;
             [self.navigationController pushViewController:browseView animated:YES];
-            
-        } else if (buttonIndex == OPTION_SCAN_QR_CODE) {
-            
-           if([[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] supportsAVCaptureSessionPreset:AVCaptureSessionPresetMedium]){
-        
-               if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-                   NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=DataCollector%3A//EAN"];
-                   Data_CollectorAppDelegate *dcad = (Data_CollectorAppDelegate*)[[UIApplication sharedApplication] delegate];
-                   [dcad setLastController:self];
-                   [dcad setReturnToClass:DELEGATE_KEY_MANUAL];
-                   [[UIApplication sharedApplication] openURL:urlp2s];
-               } else {
-                   NSURL *urlapp = [NSURL URLWithString:@"http://itunes.com/app/pic2shop"];
-                   [[UIApplication sharedApplication] openURL:urlapp];
-               }
-           
-           } else {
-            
-                UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Your device does not have a camera that supports QR Code scanning."
-                                                                  message:nil
-                                                                 delegate:self
-                                                        cancelButtonTitle:@"Cancel"
-                                                        otherButtonTitles:nil];
-                
-                [message setAlertViewStyle:UIAlertViewStyleDefault];
-                [message show];
-                
-           }
             
         }
         
@@ -762,6 +756,9 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     if (reset) [prefs setInteger:-1 forKey:kPROJECT_ID_MANUAL];
     
+    // always save proj passed in to prefs
+    [prefs setValue:[NSString stringWithFormat:@"%d", projID] forKey:[StringGrabber grabString:@"key_proj_manual"]];
+    
     [[scrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIAlertView *message = [self getDispatchDialogWithMessage:@"Retrieving project fields..."];
@@ -779,17 +776,39 @@
             
             for (RProjectField *projField in fieldOrder) {
                 
+                long fieldID = projField.field_id.longValue;
+                
                 if (projField.type.intValue == TYPE_LAT) {
-                    scrollHeight = [self addDataField:projField withType:TYPE_LATITUDE andObjNumber:objNumber andData:nil];
+                    scrollHeight = [self addDataField:projField
+                                             withType:TYPE_LATITUDE
+                                         andObjNumber:objNumber
+                                              andData:nil
+                                               andTag:fieldID];
                 } else if (projField.type.intValue == TYPE_LON) {
-                     scrollHeight = [self addDataField:projField withType:TYPE_LONGITUDE andObjNumber:objNumber andData:nil];
+                     scrollHeight = [self addDataField:projField
+                                              withType:TYPE_LONGITUDE
+                                          andObjNumber:objNumber
+                                               andData:nil
+                                                andTag:fieldID];
                 } else if (projField.type.intValue == TYPE_TIMESTAMP) {
-                    scrollHeight = [self addDataField:projField withType:TYPE_TIME andObjNumber:objNumber andData:nil];
+                    scrollHeight = [self addDataField:projField
+                                              withType:TYPE_TIME
+                                         andObjNumber:objNumber
+                                              andData:nil
+                                               andTag:fieldID];
                 } else {
                     if (data == nil)
-                        scrollHeight = [self addDataField:projField withType:TYPE_DEFAULT andObjNumber:objNumber andData:nil];
+                        scrollHeight = [self addDataField:projField
+                                                 withType:TYPE_DEFAULT
+                                             andObjNumber:objNumber
+                                                  andData:nil
+                                                   andTag:fieldID];
                     else {
-                        scrollHeight = [self addDataField:projField withType:TYPE_DEFAULT andObjNumber:objNumber andData:[data objectAtIndex:objNumber]];
+                        scrollHeight = [self addDataField:projField
+                                                 withType:TYPE_DEFAULT
+                                             andObjNumber:objNumber
+                                                  andData:[data objectAtIndex:objNumber]
+                                                   andTag:fieldID];
                     }
                 }
             
@@ -818,7 +837,7 @@
                     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT_IPAD)];
                     else
-                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT_IPHONE)];
+                        [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - PORTRAIT_BOTTOM_CUT_IPHONE)];
                 } else {
                     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad)
                         [scrollView setContentSize:CGSizeMake(scrollView.contentSize.width, scrollView.contentSize.height - LANDSCAPE_BOTTOM_CUT_IPAD)];
@@ -841,7 +860,7 @@
     });
 }
 
-- (int) addDataField:(RProjectField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data {
+- (int) addDataField:(RProjectField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data andTag:(long)tag {
     
     CGFloat Y_FIELDNAME = SCROLLVIEW_Y_OFFSET + (objNum * SCROLLVIEW_Y_OFFSET);
     CGFloat Y_FIELDCONTENTS = Y_FIELDNAME + SCROLLVIEW_OBJ_INCR;
@@ -877,6 +896,7 @@
     fieldName.backgroundColor = [UIColor clearColor];
     fieldName.textColor = [UIColor blackColor];
     fieldName.text = [StringGrabber concatenate:projField.name withHardcodedString:@"colon"];
+    fieldName.tag = tag; // TODO
     
     UITextField *fieldContents = [[UITextField alloc] initWithFrame:[self setScrollViewItem:UI_FIELDCONTENTS toSizeWithY:Y_FIELDCONTENTS]];
     fieldContents.delegate = self;
@@ -946,9 +966,9 @@
             }
         } else {
             if (type == UI_FIELDNAME) {
-                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_LABEL_HEIGHT);
+                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE-100, SCROLLVIEW_LABEL_HEIGHT);
             } else {
-                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE, SCROLLVIEW_TEXT_HEIGHT);
+                return CGRectMake(0, y-50, IPHONE_WIDTH_LANDSCAPE-100, SCROLLVIEW_TEXT_HEIGHT);
             }
         }
     }
@@ -957,38 +977,44 @@
 - (NSMutableArray *) getDataFromFields {
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     int count = 0;
+    long key = -1;
     
     for (UIView *element in scrollView.subviews) {
-        if ([element isKindOfClass:[UITextField class]]) {
+        if ([element isKindOfClass:[UILabel class]]) {
+            
+            key = [element tag];
+            
+        } else if ([element isKindOfClass:[UITextField class]]) {
+            
             if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_lat"]]) {
                 
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
                 double lat = lc2d.latitude;
                 NSString *latitude = [NSString stringWithFormat:@"%lf", lat];
-                [data setValue:latitude forKey:[NSString stringWithFormat:@"%d", count]];
+                [data setValue:latitude forKey:[NSString stringWithFormat:@"%ld", key]];
                 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_long"]]) {
                 
                 CLLocationCoordinate2D lc2d = [[locationManager location] coordinate];
                 double lon = lc2d.longitude;
                 NSString *longitude = [NSString stringWithFormat:@"%lf", lon];
-                [data setValue:longitude forKey:[NSString stringWithFormat:@"%d", count]];
+                [data setValue:longitude forKey:[NSString stringWithFormat:@"%ld", key]];
                 
             } else if ([((UITextField *) element).text isEqualToString:[StringGrabber grabString:@"auto_time"]]) {
                 
                 long timeStamp = [[NSDate date] timeIntervalSince1970];
-                NSString *currentTime = [[NSString stringWithFormat:@"%ld", timeStamp] stringByAppendingString:@"000"];
-                [data setValue:currentTime forKey:[NSString stringWithFormat:@"%d", count]];
+                NSString *currentTime = [[NSString stringWithFormat:@"u %ld", timeStamp] stringByAppendingString:@"000"];
+                [data setValue:currentTime forKey:[NSString stringWithFormat:@"%ld", key]];
                 
             } else {
                 
                 if ([((UITextField *) element).text length] != 0)
-                    [data setValue:((UITextField *) element).text forKey:[NSString stringWithFormat:@"%d", count]];
+                    [data setValue:((UITextField *) element).text forKey:[NSString stringWithFormat:@"%ld", key]];
                 else
-                    [data setValue:@"" forKey:[NSString stringWithFormat:@"%d", count]];
+                    [data setValue:@"" forKey:[NSString stringWithFormat:@"%ld", key]];
             }
+            count++;
         }
-        count++;
     }
 
     NSMutableArray *dataEncapsulator = [[NSMutableArray alloc] init];
@@ -1020,31 +1046,6 @@
     return message;
 }
 
-- (BOOL) handleNewQRCode:(NSURL *)url {
-    
-    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-    NSString *proj = arr[2];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setValue:proj forKeyPath:[StringGrabber grabString:@"key_proj_manual"]];
-    
-    projNum = [proj intValue];
-    projNumLabel.text = [StringGrabber concatenateHardcodedString:@"proj_num" with:[NSString stringWithFormat:@"%d", projNum]];
-    
-    if (browsing == YES) {
-        browsing = NO;
-        [self cleanRDSData];
-        [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
-    } else {
-        if (rds != nil && rds.doesHaveData)
-            [self fillDataFieldEntryList:projNum withData:[rds data] andResetGlobal:TRUE];
-        else
-            [self fillDataFieldEntryList:projNum withData:nil andResetGlobal:TRUE];
-    }
-    
-    return YES;
-}
-
 // Save a data set so you don't have to upload it immediately
 - (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description {
     
@@ -1052,7 +1053,7 @@
     projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_manual"]] intValue];
     
     bool uploadable = false;
-    if (projNum > 1) uploadable = true;
+    if (projNum > 0) uploadable = true;
     
     QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
     [ds setName:dataSetNameInput.text];
@@ -1062,12 +1063,10 @@
     [ds setData:dataJSON];
     [ds setPicturePaths:[imageList copy]];
     [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-    [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
-    // Add the new data set to the queue
-    [dataSaver addDataSet:ds];
-    NSLog(@"There are %d images in imageList.", imageList.count);
-    NSLog(@"There are %d dataSets in the dataSaver.", dataSaver.dataQueue.count);
+    [ds setHasInitialProj:[NSNumber numberWithBool:(projNum > 0)]];
     
+    // Add the new data set to the queue and remove all media
+    [dataSaver addDataSet:ds];
     [imageList removeAllObjects];
     
 }
@@ -1116,7 +1115,6 @@
     if (!hasCamera) return NO;
     
     cameraUI.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, nil];
-    NSLog(@"Media Types: %@", cameraUI.mediaTypes.description);
     
     // Hides the controls for moving & scaling pictures, or for
     // trimming movies. To instead show the controls, use YES.
@@ -1129,7 +1127,7 @@
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error andContextInfo:(void *)contextInfo {
-    NSLog(@"Got zee image!");
+    NSLog(@"Got the image!");
     if  (error) {
         NSLog(@"%@", error);
     } else {
@@ -1147,7 +1145,6 @@
 
 // For responding to the user accepting a newly-captured picture or movie
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *) info {
-    NSLog(@"Image picker controller method");
     
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
     UIImage *originalImage, *editedImage, *imageToSave;
@@ -1164,13 +1161,8 @@
             imageToSave = originalImage;
         }
         
-        NSLog(@"About to save picture!");
-        
         // Save the new image (original or edited) to the Camera Roll (then send the image to the caller's image:didFinishSavingWithError: method);
         UIImageWriteToSavedPhotosAlbum (imageToSave, self, @selector(image:didFinishSavingWithError:andContextInfo:), nil);
-        
-        NSLog(@"Image write finished.");
-
     }
     
     [self dismissModalViewControllerAnimated:YES];

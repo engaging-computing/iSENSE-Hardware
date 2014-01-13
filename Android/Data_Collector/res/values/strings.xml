@@ -12,12 +12,12 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="gpsString">Enabling GPS satellite communication is recommended for this application.  Would you like to enable GPS?</string>
-    <string name="force_stop">        You have pressed the power button on your device while data was recording.  To our dismay, this causes sensors
+    <string name="force_stop">You have pressed the power button on your device while data was recording.  To our dismay, this causes sensors
         such as the accelerometer to stop collecting data.  Therefore, we have stopped the data collection process for
         you and will allow you to upload your data up to the point before the power button was pressed.</string>
     <string name="description_hint">Enter Description Here&#8230;</string>
-    <string name="description_prompt">        Enter a data set description (or leave blank if you\'d like an automatically generated description) and press
-        \"Save\" to save your data set.  Otherwise, you may throw away your recently recorded data set by pressing
+    <string name="description_prompt">Enter a data set description (or leave blank if you\'d like an automatically generated description) and press
+        \"Save\" to save your data set.  Otherwise, you may discard your recently recorded data set by pressing
        	\"Delete\".</string>
     <string name="retry">Try Again</string>
     <string name="sample_interval">Sample Interval (ms)</string>
@@ -58,27 +58,14 @@
     <string name="remember_setup">Remember my Sample Interval and Test Length</string>
     
     <string name="welcome_str">Welcome to the iSENSE Uploader.  Select an option below.</string>
-    <string name="continue_with_exist">Continue With an Existing iSENSE Project\n(requires Internet)</string>
-	<string name="create_new_proj">Create a New Project\n(requires Internet)</string>
+    <string name="continue_with_exist">Continue With New or Existing iSENSE Project</string>
 	<string name="select_proj_later">Select a Project Later</string>
 	<string name="what_to_do">What would you like to do?</string>
 	<string name="pre_data_collector_str">Collect Data Using My Device\'s Hardware Sensors</string>
 	<string name="pre_manual_entry_str">Manually Enter Data\n(requires project)</string>
     <string name="pre_csv_uploader_str">Upload a .csv File From My Device\n(requires project and Internet)</string>
-    
-    <string name="field_type">Add Field</string>
-    <string-array name="field_type_array">
-        <item>Timestamp</item>
-        <item>Number</item>
-        <item>Text</item>
-        <item>Location</item>
-    </string-array>
-    <string name="field_name">field name</string>
-    <string name="units">units</string>
-    <string name="deg">deg</string>
-    <string name="latitude">Latitude</string>
-    <string name="longitude">Longitude</string>
-    <string name="new_proj_name">New Project Name</string>
-    <string name="how_to_add_field">Select a field type from the drop down menu below to add a new field to your project.</string>
+    <string name="reg_or_tutorials">New to iSENSE? Register for an account or check out our tutorials online.</string>
+    <string name="reg_account">Register for Account</string>
+    <string name="view_tutorials">View Tutorials</string>
     
 </resources>

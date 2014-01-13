@@ -91,7 +91,7 @@ public class MediaManager extends Activity {
 					startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 
 				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to take pictures.",
+					w.make(getResources().getString(R.string.no_permission_pics),
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}
 
@@ -118,7 +118,7 @@ public class MediaManager extends Activity {
 					startActivityForResult(intentVid, CAMERA_VID_REQUESTED);
 
 				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to record videos.",
+					w.make(getResources().getString(R.string.no_permission_vids),
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				}
 			}

@@ -155,3 +155,5 @@ All other features and error messages will be self-explanatory as they appear in
 Thank you for choosing to use our application - we hope you enjoy using it in conjunction with iSENSE!
 
 --------";
+
+"about_app_text" = "Enter your first name and last initial so that you can later identify your session on iSENSE.\n\nPress and hold the Start button, and the app will record acceleration data. After recording, you may publish your data to isenseproject.org. \n\nYou are also given an option to view your data. \n\nYou may modify various settings -- explore the menus.  \n\nIf setting up your own experiment: create fields named \"Time\" (time/milliseconds) and any of \"X\", \"Y\", \"Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).";

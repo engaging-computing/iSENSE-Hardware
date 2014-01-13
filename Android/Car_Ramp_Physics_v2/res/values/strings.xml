@@ -27,7 +27,7 @@
 	<string name="mag">Magnitude</string>
 	<string name="done">Done</string>
 	<string name="upload_or_trash">Upload Data or Throw It Away</string>
-	<string name="chooseExperimentTitle">Select Project</string>
+	<string name="choose_project_title">Select Project</string>
 	<string name="no_qr">No QR Scanner</string>
 	<string name="record_length">Recording Length</string>
 	<string name="upload">Upload</string>
@@ -64,5 +64,6 @@
 	<string name="view">View</string>
 	<string name="not_logged_in">Not Logged In</string>
 	<string name="linear_accel">Linear Acceleration:   </string>
+	<string name="createProject">Create New Project</string>
     
 </resources>

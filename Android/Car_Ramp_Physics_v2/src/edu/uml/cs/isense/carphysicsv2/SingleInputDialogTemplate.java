@@ -19,8 +19,8 @@ public class SingleInputDialogTemplate extends Activity {
 	Waffle w;
 	Spinner spinner;
 	String length;
-	
-	private int indexOfLength(){
+
+	private int indexOfLength() {
 		if (length.equalsIgnoreCase("1"))
 			return 0;
 		else if (length.equalsIgnoreCase("2"))
@@ -36,12 +36,16 @@ public class SingleInputDialogTemplate extends Activity {
 	}
 
 	public void onRadioButtonClicked(View view) {
-	    // Is the button now checked?
-	    
-	    // Check which radio button was clicked
-	    length = ((RadioButton) view).getText().toString().substring(0, ((RadioButton) view).getText().toString().indexOf(" "));
+		// Is the button now checked?
+
+		// Check which radio button was clicked
+		length = ((RadioButton) view)
+				.getText()
+				.toString()
+				.substring(0,
+						((RadioButton) view).getText().toString().indexOf(" "));
 	}
-	
+
 	public void onCreate(Bundle b) {
 		super.onCreate(b);
 		setContentView(R.layout.single_input_template);
@@ -53,47 +57,45 @@ public class SingleInputDialogTemplate extends Activity {
 		pos = (Button) findViewById(R.id.positive2);
 		neg = (Button) findViewById(R.id.negative2);
 		RadioButton defaultR;
-		
-		SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH",
-				0);
+
+		SharedPreferences prefs = getSharedPreferences("RECORD_LENGTH", 0);
 		length = String.valueOf(prefs.getInt("length", 10));
-		
-		switch(indexOfLength()){
-		
-			case 0:
-				defaultR = (RadioButton) findViewById(R.id.radio0);
-				break;
-			case 1:
-				defaultR = (RadioButton) findViewById(R.id.radio1);
-				break;
-			case 2:
-				defaultR = (RadioButton) findViewById(R.id.radio2);
-				break;
-			case 3:
-				defaultR = (RadioButton) findViewById(R.id.radio3);
-				break;
-			case 4:
-				defaultR = (RadioButton) findViewById(R.id.radio4);
-				break;
-			default:
-				defaultR = (RadioButton) findViewById(R.id.radio5);
-				break;
+
+		switch (indexOfLength()) {
+
+		case 0:
+			defaultR = (RadioButton) findViewById(R.id.radio0);
+			break;
+		case 1:
+			defaultR = (RadioButton) findViewById(R.id.radio1);
+			break;
+		case 2:
+			defaultR = (RadioButton) findViewById(R.id.radio2);
+			break;
+		case 3:
+			defaultR = (RadioButton) findViewById(R.id.radio3);
+			break;
+		case 4:
+			defaultR = (RadioButton) findViewById(R.id.radio4);
+			break;
+		default:
+			defaultR = (RadioButton) findViewById(R.id.radio5);
+			break;
 		}
-		
+
 		defaultR.setChecked(true);
 
 		w = new Waffle(CarRampPhysicsV2.mContext);
-
 
 		pos.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-					Intent i = new Intent();
-					i.putExtra("input", length);
-					setResult(RESULT_OK, i);
-					finish();
+				Intent i = new Intent();
+				i.putExtra("input", length);
+				setResult(RESULT_OK, i);
+				finish();
 
 			}
 		});

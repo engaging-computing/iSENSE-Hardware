@@ -15,9 +15,14 @@
 #import <RProjectField.h>
 #import "Reachability.h"
 #import <MobileCoreServices/UTType.h>
+#import <sys/time.h>
+
+// Version number of the API tested and passed on this version
+// number of the production iSENSE website.
+#define VERSION_MAJOR @"3"
+#define VERSION_MINOR @"1c"
 
 typedef enum {
-    SORT_RATING,
     CREATED_AT_DESC,
     CREATED_AT_ASC,
     UPDATED_AT_DESC,
@@ -57,17 +62,17 @@ typedef enum {
 -(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 
 -(RPerson *)    getCurrentUser;
--(RPerson *)    getUserWithUsername:(NSString *)username;
+-(RPerson *)    getUserWithID:(int) id;
 -(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields;
 -(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data;
 
--(int)      uploadDataSetWithId:     (int)projectId withData:(NSDictionary *)dataToUpload    andName: (NSString *)name;
+-(int)      jsonDataUploadWithId:    (int)projectId withData:(NSDictionary *)dataToUpload    andName: (NSString *)name;
 -(int)      uploadCSVWithId:         (int)projectId withFile:(NSData *)csvToUpload     andName:(NSString *)name;
 -(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
 -(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
 
-/* Convenience Method for Uploading */
+/* Other methods */
 -(NSDictionary *)rowsToCols:(NSDictionary *)original;
-
+-(NSString *) getVersion;
 
 @end

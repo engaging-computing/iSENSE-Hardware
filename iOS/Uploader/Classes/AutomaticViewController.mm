@@ -104,7 +104,7 @@ dataToBeOrdered, backFromQueue, f, fields;
     
     // API setup
     api = [API getInstance];
-    [api useDev:TRUE];
+    [api useDev:[prefs boolForKey:kUSE_DEV]];
     
     // Initializes an Assortment of Variables
     motionManager = [[CMMotionManager alloc] init];
@@ -176,7 +176,7 @@ dataToBeOrdered, backFromQueue, f, fields;
             
             projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
             fields = [prefs objectForKey:[NSString stringWithFormat:@"%@%d", kFIELD_PREF_STRING, projNum]];
-            
+                          
             // Set setup_complete key to false again, initialize the keep_step_2_enabled key to on
             [prefs setBool:false forKey:[StringGrabber grabString:@"key_setup_complete"]];
             [prefs setBool:true forKey:[StringGrabber grabString:@"key_step_2_enabled"]];
@@ -213,19 +213,16 @@ dataToBeOrdered, backFromQueue, f, fields;
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Overriden to allow any orientation.
-    NSLog(@"should autorotate to interface orientation");
     return (isRecording) ? NO : YES;
 }
 
 // iOS6 enable rotation
 - (BOOL)shouldAutorotate {
-    NSLog(@"should autorotate");
     return (isRecording) ? NO : YES;
 }
 
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
-    NSLog(@"supported interface orientations");
     if (isRecording) {
         if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
             return UIInterfaceOrientationMaskPortrait;
@@ -283,26 +280,15 @@ dataToBeOrdered, backFromQueue, f, fields;
             // Get the project
             projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
 
-            // Get Field Order
-            //[dfm getOrder];
-            //[dfm getFieldOrderOfExperiment:projNum];
-            //[self getEnabledFields];
+            // Initialize fields object
             f = [[Fields alloc] init];
             
-            
-            /****  TODO - ensure that this is how we properly get fields to record for the proj ***/
-            
+            // Set up DFM
             dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:f];
             [dfm getOrder];
             [dfm setEnabledFields:fields];
-            
-            /*******/
-            
-//            if (projNum == -1) {
-//                [dfm getOrder];
-//            } else {
-//                [dfm getOrder];
-//            }
+            if (fields != nil)
+                [dfm setOrder:fields];
             
             // Change the UI
             [self setRecordingLayout];
@@ -454,25 +440,13 @@ dataToBeOrdered, backFromQueue, f, fields;
                     fieldsRow.gyro_z = [NSNumber numberWithDouble:[motionManager.gyroData rotationRate].z];
             }
             
-            // TODO there's more fields, right...?
-
-            
             // update data object
             if (dataToBeOrdered == nil)
                 dataToBeOrdered = [[NSMutableArray alloc] init];
 
-            //[dataToBeOrdered addObject:fieldsRow];
-      
-            if (dataToBeOrdered != nil) {
-                [dfm setFields:fieldsRow];
-
-                if (projNum == -1) {
-                    [dataToBeOrdered addObject:[dfm putDataForNoProjectID]];
-                } else {
-                    [dataToBeOrdered addObject:[dfm putData]];
-                }
-
-            }
+            [dfm setFields:fieldsRow];
+            [dataToBeOrdered addObject:[dfm putData]];
+            
             
         });
     }
@@ -548,10 +522,10 @@ dataToBeOrdered, backFromQueue, f, fields;
             
         // Media
         case 1:
-            [self.view makeWaffle:@"This feature is currently disabled."
+            [self.view makeWaffle:@"Feature to be implemented in future release"
                          duration:WAFFLE_LENGTH_SHORT
                          position:WAFFLE_BOTTOM
-                            image:WAFFLE_RED_X];
+                            image:WAFFLE_WARNING];
             
 		default:
 			break;
@@ -579,12 +553,9 @@ dataToBeOrdered, backFromQueue, f, fields;
                 description = @"Data set recorded and uploaded from mobile device using iSENSE iOS Uploader application.";
             }
             
-            NSLog(@"save");
             [self saveDataSetWithDescription:description];
-            NSLog(@"safe!!");
             [self setEnabled:true forButton:step3];
             
-                        
         } else {
             
             [self.view makeWaffle:@"Data set deleted." duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
@@ -594,19 +565,10 @@ dataToBeOrdered, backFromQueue, f, fields;
     } else if (actionSheet.tag == MENU_MEDIA_AUTOMATIC) {
         // TODO - media code
     }
-    
-    NSLog(@"dont mattah what ya shoveling");
 }
 
 // Save a data set so you don't have to upload it immediately
 - (void) saveDataSetWithDescription:(NSString *)description {
-    
-    
-//    UIAlertView *message = [self getDispatchDialogWithMessage:@"Please wait while we organize your data..."];
-//    [message show];
-    
-//    dispatch_queue_t queue = dispatch_queue_create("automatic_ordering_data_in_upload", NULL);
-//    dispatch_async(queue, ^{
     
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         projNum = [[prefs stringForKey:[StringGrabber grabString:@"key_proj_automatic"]] intValue];
@@ -617,42 +579,24 @@ dataToBeOrdered, backFromQueue, f, fields;
         QDataSet *ds = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet"
                                                                   inManagedObjectContext:managedObjectContext]
                        insertIntoManagedObjectContext:managedObjectContext];
-        
-//        dataToBeJSONed = [[NSMutableArray alloc] init];
-        
-        // Organize the data from dataToBeOrdered TODO - what is this crap? can we just do the line below?
-//        for (int i = 0; i < [dataToBeOrdered count]; i++) {
-//            Fields *f = [dataToBeOrdered objectAtIndex:i];
-//            [dfm orderDataFromFields:f];
-//            [dataToBeJSONed addObject:dfm.data];
-//        }
-        
-        // @Mike: dfm.data is currently nil so of course it is going to crash here
-//        [dataToBeJSONed addObject:dfm.data];
-
-//        dispatch_async(dispatch_get_main_queue(), ^{
+            
+    [ds setName:dataSetName];
+    [ds setParentName:PARENT_AUTOMATIC];
+    [ds setDataDescription:description];
+    [ds setProjID:[NSNumber numberWithInt:projNum]];
+    [ds setData:dataToBeOrdered];
+    [ds setPicturePaths:nil];
+    [ds setUploadable:[NSNumber numberWithBool:uploadable]];
+    [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
+    [ds setFields:[dfm getOrderList]];
     
-            [ds setName:dataSetName];
-            [ds setParentName:PARENT_AUTOMATIC];
-            [ds setDataDescription:description];
-            [ds setProjID:[NSNumber numberWithInt:projNum]];
-            [ds setData:dataToBeOrdered];
-            [ds setPicturePaths:nil];
-            [ds setUploadable:[NSNumber numberWithBool:uploadable]];
-            [ds setHasInitialProj:[NSNumber numberWithBool:(projNum != -1)]];
+    // Add the new data set to the queue
+    [dataSaver addDataSet:ds];
             
-            // Add the new data set to the queue
-            [dataSaver addDataSet:ds];
-            
-            [self.view makeWaffle:@"Data set saved"
-                         duration:WAFFLE_LENGTH_SHORT
-                         position:WAFFLE_BOTTOM
-                            image:WAFFLE_CHECKMARK];
-            
-//            [message dismissWithClickedButtonIndex:nil animated:YES];
-//        });
-//        
-//    });
+    [self.view makeWaffle:@"Data set saved"
+                    duration:WAFFLE_LENGTH_SHORT
+                    position:WAFFLE_BOTTOM
+                    image:WAFFLE_CHECKMARK];
     
 }
 
@@ -737,145 +681,6 @@ dataToBeOrdered, backFromQueue, f, fields;
     }
 }
 
-//- (void) setupDFMWithAllFields {
-//    
-//    for (int i = 0; i < [[dfm order] count]; i++) {
-//        [dfm setEnabledField:true atIndex:i];
-//    }
-//}
-
-// Enabled fields check
-//- (void) getEnabledFields {
-//    
-//    if (projNum == -1) {
-//        [self setupDFMWithAllFields];
-//    } else {
-//        int i = 0;
-//        
-//        // get the sensorCompatability array first
-//        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//        NSMutableArray *selectedCells = [prefs objectForKey:@"selected_cells"];
-//        
-//        for (NSString *s in [dfm order]) {
-//            if ([s isEqualToString:[StringGrabber grabField:@"accel_x"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fACCEL_X];
-//                    
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"accel_y"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fACCEL_Y];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"accel_z"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fACCEL_Z];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"accel_total"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fACCEL_TOTAL];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"time"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fTIME_MILLIS];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"latitude"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fLATITUDE];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"longitude"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fLONGITUDE];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_x"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fMAG_X];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_y"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fMAG_Y];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_z"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fMAG_Z];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"magnetic_total"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fMAG_TOTAL];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"heading_deg"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fANGLE_DEG];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"heading_rad"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fANGLE_RAD];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_c"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fTEMPERATURE_C];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_f"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fTEMPERATURE_F];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"temperature_k"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fTEMPERATURE_K];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"pressure"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fPRESSURE];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"altitude"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fALTITUDE];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"luminous_flux"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fLUX];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_x"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fGYRO_X];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_y"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fGYRO_Y];
-//                }
-//            }
-//            else if ([s isEqualToString:[StringGrabber grabField:@"gyroscope_z"]]) {
-//                if ([selectedCells[i] integerValue] == 1) {
-//                    [dfm setEnabledField:true atIndex:fGYRO_Z];
-//                }
-//            }
-//            
-//            ++i;
-//        }
-//  
-//    }
-//        
-//}
-
 - (void) setRecordingLayout {
     
     [step2 setTitle:@"STOP\n(Press and Hold)" forState:UIControlStateNormal];
@@ -902,13 +707,20 @@ dataToBeOrdered, backFromQueue, f, fields;
 
 - (void) setNonRecordingLayout {
 
+    [step1 setAlpha:1.0];
+    [step1 setEnabled:YES];
+    
     [step2 setTitle:@"Step 2: Record a Data Set (Hold Down)" forState:UIControlStateNormal];
     [step2 setTitleColor:UIColorFromHex(0x4C6FD9) forState:UIControlStateNormal];
     
-    [step1 setAlpha:1.0];
-    [step3 setAlpha:1.0];
-    [step1 setEnabled:YES];
-    [step3 setEnabled:YES];
+    
+    if ([[dataSaver dataQueue] count] == 0) {
+        [step3 setEnabled:NO];
+        [step3 setAlpha:0.5];
+    } else {
+        [step3 setEnabled:YES];
+        [step3 setAlpha:1.0];
+    }
     
     [step1Label setAlpha:0.0];
     [step3Label setAlpha:0.0];

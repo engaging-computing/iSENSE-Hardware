@@ -6,7 +6,7 @@ package edu.uml.cs.isense.objects;
  * @author iSENSE Android Development Team
  */
 public class RProjectField {
-    public int field_id;
+    public long field_id;
     public String name="";
     public int type;
     public String unit="";  

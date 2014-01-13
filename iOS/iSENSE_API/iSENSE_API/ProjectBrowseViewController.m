@@ -15,7 +15,7 @@
 
 #define SPINNER_HEIGHT 25
 #define NAVIGATION_CONTROLLER_HEIGHT 75
-#define ITEMS_PER_PAGE 15
+#define ITEMS_PER_PAGE 20
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
@@ -42,7 +42,7 @@
         chooseProject.frame = CGRectMake(20, self.view.bounds.size.height - 170, projectInfo.frame.size.width - 40, 100);
         [chooseProject setTitleColor:UIColorFromHex(0x5C93DB)forState:UIControlStateNormal];
         [chooseProject setTitle:kCHOOSE_PROJECT forState:UIControlStateNormal];
-        //[chooseProject addTarget:self action:@selector(projectChosen) forControlEvents:UIControlEventTouchUpInside];
+        [chooseProject addTarget:self action:@selector(projectChosen) forControlEvents:UIControlEventTouchUpInside];
 
     } else {
         // Bound, allocate, and customize the main view
@@ -78,9 +78,8 @@
     [self setCenter:bottomSpinnerBlock forSpinner:projectSpinner];
     [scrollView addSubview:bottomSpinnerBlock];
     
-    // Prepare rapi
+    // Prepare api
     isenseAPI = [API getInstance];
-    [isenseAPI useDev:YES];
     
     // Load the first 10 Projects. (And more if screen size is large.)
     ISenseSearch *newSearch = [[ISenseSearch alloc] init];

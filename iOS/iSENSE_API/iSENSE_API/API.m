@@ -94,14 +94,15 @@ static RPerson *currentUser;
  */
 -(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
     
-    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"username_or_email=", [username UTF8String], @"&password=", [password UTF8String]];
+    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"email=", [username UTF8String], @"&password=", [password UTF8String]];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withRequestType:POST andPostData:nil];
 
     authenticityToken = [result objectForKey:@"authenticity_token"];
     NSLog(@"API: Auth token from login: %@", authenticityToken);
+    int id = [[[result objectForKey:@"user"] objectForKey:@"id"] intValue];
     
     if (authenticityToken) {
-        currentUser = [self getUserWithUsername:username];
+        currentUser = [self getUserWithID:id];
         return TRUE;
     }
     
@@ -255,22 +256,6 @@ static RPerson *currentUser;
 }
 
 /**
- * Returns the correct string according to the given SortType.
- *
- * @param sort
- * @return NSString of SortType
- */
--(NSString *)getSortType:(SortType)sort {
-    switch (sort) {
-        case SORT_RATING: return @"RATING";
-        case CREATED_AT_DESC: return @"created_at%20DESC";
-        case CREATED_AT_ASC: return @"created_at%20ASC";
-        case UPDATED_AT_DESC: return @"updated_at%20DESC";
-        case UPDATED_AT_ASC: return @"updated_at%20ASC";
-    }
-}
-
-/**
  * 	Retrieves multiple projects off of iSENSE.
  *
  * @param page Which page of results to start from. 1-indexed
@@ -282,9 +267,29 @@ static RPerson *currentUser;
 -(NSArray *)getProjectsAtPage:(int)page withPageLimit:(int)perPage withFilter:(SortType)sort andQuery:(NSString *)search {
     NSMutableArray *results = [[NSMutableArray alloc] init];
     
-    NSString *sortMode = [self getSortType:sort];
+    NSString *sortMode = [[NSString alloc] init];
+    NSString *order = [[NSString alloc] init];
+    switch (sort) {
+        case CREATED_AT_DESC:
+            sortMode = @"created_at";
+            order = @"DESC";
+            break;
+        case CREATED_AT_ASC:
+            sortMode = @"created_at";
+            order = @"ASC";
+            break;
+        case UPDATED_AT_DESC:
+            sortMode = @"updated_at";
+            order = @"DESC";
+            break;
+        case UPDATED_AT_ASC:
+            sortMode = @"updated_at";
+            order = @"ASC";
+            break;
+    }
     
-    NSString *parameters = [NSString stringWithFormat:@"page=%d&per_page=%d&sort=%s&search=%s", page, perPage, sortMode.UTF8String, search.UTF8String];
+    NSString *parameters = [NSString stringWithFormat:@"page=%d&per_page=%d&sort=%s&order=%s&search=%s",
+                            page, perPage, sortMode.UTF8String, order.UTF8String, search.UTF8String];
     NSArray *reqResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET andPostData:nil];
     
     for (NSDictionary *innerProjJSON in reqResult) {
@@ -321,8 +326,10 @@ static RPerson *currentUser;
     
     NSMutableArray *tutorials = [[NSMutableArray alloc] init];
     
-    NSString *sortMode = descending ? @"DESC" : @"ASC";
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
+    NSString *sortMode = @"created_at";
+    NSString *order = descending ? @"DESC" : @"ASC";
+    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&order=%s&search=%s",
+                            [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, order.UTF8String, search.UTF8String];
 
     NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"tutorials" withParameters:parameters withRequestType:GET andPostData:nil];
     for (int i = 0; i < results.count; i++) {
@@ -394,10 +401,11 @@ static RPerson *currentUser;
  * @param username The username of the user to retrieve
  * @return An RPerson object
  */
--(RPerson *)getUserWithUsername:(NSString *)username {
+-(RPerson *)getUserWithID:(int)id {
     
+    NSLog(@"ID: %d", id);
     RPerson *person = [[RPerson alloc] init];
-    NSString *path = [NSString stringWithFormat:@"users/%@", username];
+    NSString *path = [NSString stringWithFormat:@"users/%d", id];
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET andPostData:nil];
     person.person_id = [result objectForKey:@"id"];
     person.name = [result objectForKey:@"name"];
@@ -420,31 +428,48 @@ static RPerson *currentUser;
  */
 -(int)createProjectWithName:(NSString *)name andFields:(NSArray *)fields {
     
-    NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
-    [postData setObject:name forKey:@"project_name"];
-    
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
-    NSData *postReqData = [NSKeyedArchiver archivedDataWithRootObject:fields];
-    
-    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
-    
-    NSNumber *projectId = [requestResult objectForKey:@"id"];
-    
-    for (RProjectField *projField in fields) {
-        NSMutableDictionary *fieldMetaData = [[NSMutableDictionary alloc] init];
-        [fieldMetaData setObject:projectId forKey:@"project_id"];
-        [fieldMetaData setObject:projField.type forKey:@"field_type"];
-        [fieldMetaData setObject:projField.name forKey:@"name"];
-        [fieldMetaData setObject:projField.unit forKey:@"unit"];
+    @try {
+        NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
+        [postData setObject:[NSString stringWithFormat:@"%@",name] forKey:@"project_name"];
         
-        NSMutableDictionary *fullFieldMeta = [[NSMutableDictionary alloc] init];
-        [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
-        [fullFieldMeta setObject:projectId forKey:@"project_id"];
+        NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
         
-        NSData *fieldPostReqData = [NSKeyedArchiver archivedDataWithRootObject:fieldMetaData];
-        [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
+        NSError *error;
+        NSData *postReqData = [NSJSONSerialization dataWithJSONObject:postData
+                                                              options:0
+                                                                error:&error];
+        if (error) {
+            NSLog(@"Error parsing object to JSON: %@", error);
+        }
+        
+        NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
+        
+        NSNumber *projectId = [requestResult objectForKey:@"id"];
+        
+        for (RProjectField *projField in fields) {
+            NSMutableDictionary *fieldMetaData = [[NSMutableDictionary alloc] init];
+            [fieldMetaData setObject:projectId forKey:@"project_id"];
+            [fieldMetaData setObject:projField.type forKey:@"field_type"];
+            [fieldMetaData setObject:projField.name forKey:@"name"];
+            [fieldMetaData setObject:projField.unit forKey:@"unit"];
+            
+            NSMutableDictionary *fullFieldMeta = [[NSMutableDictionary alloc] init];
+            [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
+            [fullFieldMeta setObject:projectId forKey:@"project_id"];
+            
+            NSError *error;
+            NSData *fieldPostReqData = [NSJSONSerialization dataWithJSONObject:fieldMetaData
+                                                                  options:0
+                                                                    error:&error];
+            if (error) {
+                NSLog(@"Error parsing object to JSON: %@", error);
+            }
+            [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
+        }
         
         return projectId.intValue;
+    } @catch (NSException *e) {
+        NSLog(@"%@", e);
     }
     
     return -1;
@@ -497,45 +522,41 @@ static RPerson *currentUser;
 /**
  * Uploads a new data set to a project on iSENSE.
  *
- * @param projectId The ID of the project to upload data to
- * @param dataToUpload The data to be uploaded. Must be in column-major format to upload correctly
- * @param name The name of the dataset
+ * @param projectId - The ID of the project to upload data to
+ * @param dataToUpload - The data to be uploaded. Must be in column-major format to upload correctly
+ * @param name - The name of the dataset
  * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
  */
--(int)uploadDataSetWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
+-(int) jsonDataUploadWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
     
     // append a timestamp to the name of the data set
     name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
     
-    NSArray *fields = [self getProjectFieldsWithId:projectId];
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
-    NSMutableArray *headers = [[NSMutableArray alloc] init];
-    
-    for (RProjectField *field in fields) {
-        [headers addObject:[NSString stringWithFormat:@"%@", field.field_id]];
-    }
     
     [requestData setObject:[NSString stringWithFormat:@"%d", projectId] forKey:@"id"];
-    [requestData setObject:headers forKey:@"headers"];
     [requestData setObject:dataToUpload forKey:@"data"];
-    if (![name isEqualToString:NONE]) [requestData setObject:name forKey:@"name"];
+    if (![name isEqualToString:NONE]) [requestData setObject:name forKey:@"title"];
     
     NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
     
     NSError *error;
     NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
-                                                       options:0
-                                                         error:&error];
+                                                          options:0
+                                                            error:&error];
     if (error) {
         NSLog(@"Error parsing object to JSON: %@", error);
     }
     
-    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d/manualUpload", projectId] withParameters:parameters withRequestType:POST andPostData:postReqData];
-    NSNumber *dataSetId = [requestResult objectForKey:@"id"];
+    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl
+                                                      withPath:[NSString stringWithFormat:@"projects/%d/jsonDataUpload", projectId]
+                                                withParameters:parameters
+                                               withRequestType:POST
+                                                   andPostData:postReqData];
     
+    NSNumber *dataSetId = [requestResult objectForKey:@"id"];
     return dataSetId.intValue;
-
 }
 
 /*
@@ -909,13 +930,40 @@ static RPerson *currentUser;
  * @return A pretty formatted date and timestamp
  */
 -(NSString *)appendedTimeStamp {
-    NSDate *now = [NSDate date];
     
+    // get time and date
+    NSDate *now = [NSDate date];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterShortStyle];
     [formatter setTimeStyle:NSDateFormatterShortStyle];
     
-    return [formatter stringFromDate:now];
+    // get seconds and microseconds using c structs
+    struct timeval time;
+    gettimeofday(&time, NULL);
+    int seconds = time.tv_sec % 60;
+    int microseconds = time.tv_usec;
+    NSString *secondStr = (seconds < 10) ? [NSString stringWithFormat:@"0%d", seconds] : [NSString stringWithFormat:@"%d", seconds];
+    
+    // format the timestamp
+    NSString *rawTime = [formatter stringFromDate:now];
+    NSArray *cmp = [rawTime componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]];
+    
+    [formatter setDateFormat:@"HH:mm"];
+    rawTime = [formatter stringFromDate:now];
+    
+    NSString *timeStamp = [NSString stringWithFormat:@"%@ %@:%@.%d", cmp[0], rawTime, secondStr, microseconds];
+    
+    return timeStamp;
+}
+
+/**
+ * Gets the current version of the production iSENSE website that this
+ * API has been minimally confirmed to work for
+ *
+ * @return The version of iSENSE in MAJOR.MINOR version format
+ */
+-(NSString *) getVersion {
+    return [NSString stringWithFormat:@"%@.%@", VERSION_MAJOR, VERSION_MINOR];
 }
 
 @end

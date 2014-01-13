@@ -50,7 +50,7 @@ public class EnterName extends Activity {
 
 		baseContext = getBaseContext();
 		w = new Waffle(baseContext);
-		API api = API.getInstance(baseContext);
+		API api = API.getInstance();
 		
 		/* Determine if we are running in classroom mode or not */
 		boolean classroomMode = true;
