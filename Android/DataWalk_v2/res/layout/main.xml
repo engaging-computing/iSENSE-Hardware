@@ -63,7 +63,7 @@
             android:layout_toRightOf="@id/tv_rcrdinterval"
             android:background="@drawable/button_rsense"
             android:text="@string/ten_seconds"
-            android:textColor="#3E94D1"
+            android:textColor="@color/rsense_button_text"
             android:textSize="14sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -98,7 +98,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_bar_rsense"
             android:text="@string/project_num"
-            android:textColor="#3E94D1"
+            android:textColor="@color/rsense_button_text"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -136,7 +136,7 @@
             android:layout_toRightOf="@id/tv_name"
             android:background="@drawable/button_rsense"
             android:text="@string/john_smith"
-            android:textColor="#3E94D1"
+            android:textColor="@color/rsense_button_text"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -160,7 +160,7 @@
             android:layout_toRightOf="@id/tv_login"
             android:background="@drawable/button_rsense"
             android:text="@string/mobile_user"
-            android:textColor="#3E94D1"
+            android:textColor="@color/rsense_button_text"
             android:textSize="14sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -201,7 +201,7 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/button_rsense"
         android:text="@string/start_prompt"
-        android:textColor="#3E94D1"
+        android:textColor="@color/rsense_button_text"
         android:textSize="22sp"
         android:textStyle="bold" />
 
