@@ -16,15 +16,13 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
-import edu.uml.cs.isense.supplements.FileBrowser;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -50,7 +48,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		btnDev.setOnClickListener(this);
 		btnProd.setOnClickListener(this);
 
-		api = API.getInstance(this);
+		api = API.getInstance();
 		//api.setBaseUrl("http://129.63.17.17:3000");
 	}
 
@@ -62,7 +60,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if(api.hasConnectivity()) {
+		if(Connection.hasConnectivity(getApplicationContext())) {
 			if ( v == btnDev ) {
 				api.useDev(true);
 				status.setText("Starting test on rsense-dev...\n");
@@ -120,7 +118,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class UsersTask extends AsyncTask<Void, Void, RPerson> {
 		@Override
 		protected RPerson doInBackground(Void... params) {
-			return api.getUser("NickAVV");
+			return api.getUser(1);
 		}
 
 		@Override
