@@ -186,13 +186,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		760D197A17958AD500C123D6 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Cells;
-			sourceTree = "<group>";
-		};
 		765099A0178DCA6200425A27 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -241,7 +234,6 @@
 		7669F02F178B275C00E51AD0 /* Car Ramp Physics */ = {
 			isa = PBXGroup;
 			children = (
-				760D197A17958AD500C123D6 /* Cells */,
 				76E91F92179478DF001749FC /* Source */,
 				76E91F91179478B7001749FC /* Headers */,
 				76E91F8E1794789F001749FC /* iPhone */,

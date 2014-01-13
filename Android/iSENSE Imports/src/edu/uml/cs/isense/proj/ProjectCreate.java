@@ -33,12 +33,23 @@ import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
+/**
+ * This Activity is designed to allow users to create a project on the
+ * iSENSE website.
+ * 
+ * @author iSENSE Android Development Team
+ */
 public class ProjectCreate extends Activity {
 
+	/**
+	 * Constant for an intent extra that can be passed as a boolean value
+	 * as true if the implementation wants to theme the navigation bar
+	 * to look rSENSE-y.
+	 */
 	public static final String THEME_NAV_BAR = "theme_nav_bar_constant";
 	
-	public static Context mContext;
-	public static Waffle w;
+	private static Context mContext;
+	private static Waffle w;
 
 	private API api;
 
@@ -50,6 +61,10 @@ public class ProjectCreate extends Activity {
 	private ArrayList<RProjectField> fields;
 
 	private int newProjID;
+	
+	/**
+	 * Constant for the new project ID returned by this class.
+	 */
 	public static final String NEW_PROJECT_ID = "new_proj_id";
 
 	private static final int FIELD_TYPE_TIMESTAMP = 0;
@@ -427,7 +442,7 @@ public class ProjectCreate extends Activity {
 			if (newProjID != 0) {
 
 				Intent iRet = new Intent();
-				iRet.putExtra(NEW_PROJECT_ID, newProjID);
+				iRet.putExtra(NEW_PROJECT_ID, "" + newProjID);
 				setResult(RESULT_OK, iRet);
 				finish();
 

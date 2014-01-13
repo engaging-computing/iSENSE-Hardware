@@ -53,11 +53,15 @@ public class API {
 	private String version;
 	
 	private static API instance = null;
+	
 	private String baseURL = "";
 	private final String publicURL = "http://129.63.16.128";
 	private final String devURL = "http://129.63.16.30";
+	
 	String authToken = "";
 	RPerson currentUser;
+	
+	private boolean usingDev = false;
 	
 	public static final int CREATED_AT = 0;
 	public static final int UPDATED_AT = 1;
@@ -95,13 +99,13 @@ public class API {
 	 */
 	public boolean createSession(String username, String password) {
 		try {
-			String result = makeRequest(baseURL, "login", "username_or_email="+URLEncoder.encode(username, "UTF-8")
+			String result = makeRequest(baseURL, "login", "email="+URLEncoder.encode(username, "UTF-8")
 					+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
 			System.out.println(result);
 			JSONObject j =  new JSONObject(result);
 			
 			authToken = j.getString("authenticity_token");
-			currentUser = getUser(username);
+			currentUser = getUser(j.getJSONObject("user").getInt("id"));
 	    return true;
 		} catch (Exception e) {
 			// Didn't get an authenticity token.
@@ -359,7 +363,6 @@ public class API {
 
 				person.person_id = inner.getInt("id");
 				person.name = inner.getString("name");
-				person.username = inner.getString("username");
 				person.url = inner.getString("url");
 				person.gravatar = inner.getString("gravatar");
 				person.timecreated = inner.getString("createdAt");
@@ -376,18 +379,17 @@ public class API {
 	/**
 	 * Gets a user off of iSENSE
 	 * 
-	 * @param username The username of the user to retrieve
+	 * @param id The id of the user to retrieve
 	 * @return A Person object
 	 */
-	public RPerson getUser(String username) {
+	public RPerson getUser(int id) {
 		RPerson person = new RPerson();
 		try {
-			String reqResult = makeRequest(baseURL, "users/"+username, "", "GET", null);
+			String reqResult = makeRequest(baseURL, "users/"+id, "", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 
 			person.person_id = j.getInt("id");
 			person.name = j.getString("name");
-			person.username = j.getString("username");
 			person.url = j.getString("url");
 			person.gravatar = j.getString("gravatar");
 			person.timecreated = j.getString("createdAt");
@@ -483,7 +485,7 @@ public class API {
 			result.timecreated = j.getString("createdAt");
 			result.fieldCount = j.getInt("fieldCount");
 			result.datapointCount = j.getInt("datapointCount");
-			result.data = rowsToCols(j.getJSONObject("data"));
+			result.data = rowsToCols(new JSONObject().put("data", j.getJSONArray("data")));
 			result.project_id = j.getJSONObject("project").getInt("id");
 
 		} catch (Exception e) {
@@ -559,7 +561,7 @@ public class API {
 		return -1;
 	}
 	
-	/** TODO - change name from manualUpload to whatever it'll be.  eventually this will go away and become new uploadDataSet
+	/**
 	 * Uploads a new data set to a project on iSENSE
 	 * 
 	 * @param projectId The ID of the project to upload data to
@@ -594,35 +596,48 @@ public class API {
 
 	/**
 	 * Append new rows of data to the end of an existing data set
+	 * ** This currently works for horrible reasons regarding how the website handles
+	 * edit data sets ** Will fix hopefully --J TODO
 	 * 
 	 * @param dataSetId The ID of the data set to append to
 	 * @param newData The new data to append
+	 * 
+	 * @return success or failure
 	 */
-	public void appendDataSetData(int dataSetId, JSONObject newData) {
+	public boolean appendDataSetData(int dataSetId, JSONObject newData) {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
 		JSONObject existing = existingDs.data;
+		JSONObject newJobj = new JSONObject();
 		Iterator<?> keys = newData.keys();
 		try {
+			int curIndex = 0;
 			while(keys.hasNext()) {
 				String currKey = (String) keys.next();
 				JSONArray newDataPoints = newData.getJSONArray(currKey);
 				for(int i = 0; i < newDataPoints.length(); i++) {
 					existing.getJSONArray(currKey).put(newDataPoints.get(i));
 				}
+				newJobj.put(curIndex + "", existing.getJSONArray(currKey)); curIndex++;			
 			}
 			ArrayList<RProjectField> fields = getProjectFields(existingDs.project_id);
 			ArrayList<String> headers = new ArrayList<String>();
 			for(RProjectField rpf : fields) {
-				headers.add(rpf.name);
+				headers.add(rpf.field_id + "");
 			}
 			requestData.put("headers", new JSONArray(headers));
-			requestData.put("data", existing);
+			requestData.put("data", newJobj);
 			requestData.put("id", ""+dataSetId);
-			makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			
+			String result = makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			new JSONObject(result); // this line will throw an exception if it fails, thus returning false
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
+		
+		return true;
 	}
 
 	/**
@@ -908,6 +923,16 @@ public class API {
 	 */
 	public void useDev(boolean use) {
 		baseURL = use ? devURL : publicURL;
+		usingDev = use;
+	}
+	
+	/**
+	 * Returns whether or not the API is using dev mode.
+	 * 
+	 * @return True if the API is using the development website, false otherwise.
+	 */
+	public boolean isUsingDevMode() {
+		return usingDev;
 	}
 	
 	/**
