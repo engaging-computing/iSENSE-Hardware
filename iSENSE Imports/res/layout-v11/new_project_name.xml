@@ -5,13 +5,11 @@
     android:orientation="vertical" >
 
     <EditText
-        android:inputType="text"
-        android:hint="@string/new_proj_name"
-        android:id="@+id/new_proj_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/new_proj_name" >
+        android:hint="@string/new_proj_name"
+        android:inputType="text" >
 
         <requestFocus />
     </EditText>
