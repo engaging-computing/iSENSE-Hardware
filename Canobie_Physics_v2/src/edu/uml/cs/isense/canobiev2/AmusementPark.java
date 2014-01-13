@@ -108,7 +108,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static String rate = "";
 	public static String rideNameString = "NOT SET";
 	public static String stNumber = "1";
-
+	public static Boolean projectLaterChecked = false;
+	public static Boolean canobieChecked = true;
+	
 	/* Managers and Their Variables */
 	public static DataFieldManager dfm;
 	private SensorManager mSensorManager;
@@ -164,7 +166,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int SETUP_REQUESTED = 5;
 	private final int LOGIN_REQUESTED = 6;
 
-	private int dataPointCount = 0, elapsedMillis;
+	private int dataPointCount = 0, elapsedSecs;
 
 	/* Used with Sync Time */
 	private long currentTime = 0;
@@ -195,13 +197,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			@Override
 			public boolean onLongClick(View arg0) {
-				srate = Integer.parseInt(rate);
-
-				if (!setupDone) { // || rideName.getText().toString() == null) {
+				if ((!setupDone)) {
 					w.make("You must setup before recording data.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-
-					// TODO Launch setup
 
 					isRunning = false;
 					return isRunning;
@@ -213,10 +211,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
 
-					// Stop the recording and reset UI
+					
+
+					// Stop the recording and reset UI if running
 					if (isRunning) {
 						isRunning = false;
 						useMenu = true;
+						setupDone = false;
+						
 
 						// Unregister sensors to save battery
 						mSensorManager.unregisterListener(AmusementPark.this);
@@ -240,9 +242,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 						// Start the recording
 					} else {
+						srate = Integer.parseInt(rate);
 						
 						new SensorCheckTask().execute();
-						srate = Integer.parseInt(rate);
 						
 						isRunning = true;
 
@@ -260,7 +262,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						registerSensors();
 
 						dataSet = new JSONArray();
-						elapsedMillis = 0;
+						elapsedSecs = 0;
 						dataPointCount = 0;
 
 						currentTime = getUploadTime();
@@ -299,13 +301,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						startStop.setTextColor(Color.parseColor("#FFFFFF"));
 						
 						new TimeElapsedTask().execute();
-						
+						//TODO
 						recordingTimer = new Timer();
 						recordingTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
 								recordData();
 							}
-						}, 0, srate * 1000);
+						}, 0, srate);
 					}
 					
 					
@@ -587,18 +589,18 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == EXPERIMENT_CODE) {
-			if (resultCode == Activity.RESULT_OK) {
-
-				//TODO
-				SharedPreferences mPrefs = getSharedPreferences(
-						PROJ_PREFS_ID, 0);
-				final SharedPreferences.Editor mEdit = mPrefs.edit();
-				mEdit.putString(PROJ_ID, Integer.toString(projectNum));
-				mEdit.commit();
-				
-			}
-		} else if (requestCode == SYNC_TIME_REQUESTED) {
+//		if (requestCode == EXPERIMENT_CODE) {
+//			if (resultCode == Activity.RESULT_OK) {
+//
+//				//TODO
+//				SharedPreferences mPrefs = getSharedPreferences(
+//						PROJ_PREFS_ID, 0);
+//				final SharedPreferences.Editor mEdit = mPrefs.edit();
+//				mEdit.putString(PROJ_ID, Integer.toString(projectNum));
+//				mEdit.commit();
+//				
+//			}
+		if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
 				SharedPreferences mPrefs = getSharedPreferences(
@@ -617,10 +619,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			/* TODO fieldMatching.acceptedFields */
 			// acceptedFields = fieldMatcher.acceptedFields;
 			dfm.setEnabledFields(acceptedFields);
-		} else if (requestCode == SETUP_REQUESTED) {
-			//TODO
-			rideNameString = Configuration.rides.getSelectedItem().toString();
 			
+		} else if (requestCode == SETUP_REQUESTED) {
+				rideName.setText("Ride/St#: " + rideNameString +"/" + stNumber);
+				
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
 				
@@ -749,6 +751,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * @param seconds
 	 */
 	public void setTime(int seconds) {
+		elapsedSecs = seconds;
+		
 		min = seconds / 60;
 		int secInt = seconds % 60;
 
@@ -758,6 +762,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		else
 			sec = "" + secInt;
 		
+
 		runOnUiThread(new Runnable() {
 		    public void run() {
 		    	time.setText("Time Elapsed: " + min + ":" + sec);
@@ -978,25 +983,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 	
 	/**
-	 * Turns elapsedMillis into readable strings.
+	 * Turns elapsedSecs into readable strings.
 	 * 
 	 * @author jpoulin
 	 */
 	private class ElapsedTime {
-		private String elapsedMillis;
 		private String elapsedSeconds;
 		private String elapsedMinutes;
 		
 		/**
 		 * Everybody likes strings.
 		 * 
-		 * @param milliseconds
+		 * @param seconds
 		 */
-		ElapsedTime(int milliseconds) {
-			int seconds, minutes;
+		ElapsedTime(int seconds) {
+			int minutes;
 			
-			seconds = milliseconds / 1000;
-			milliseconds %= 1000;
+		
 			minutes = seconds / 60;
 			seconds %= 60;
 			
@@ -1006,13 +1009,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				elapsedSeconds = "" + seconds;
 			}
 
-			if (milliseconds < 10) {
-				elapsedMillis = "00" + milliseconds;
-			} else if (milliseconds < 100) {
-				elapsedMillis = "0" + milliseconds;
-			} else {
-				elapsedMillis = "" + milliseconds;
-			}
 
 			if (minutes < 10) {
 				elapsedMinutes = "0" + minutes;
@@ -1030,11 +1026,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 */
 	private void showSummary(Date date, String sdFileName) {
 
-		ElapsedTime time = new ElapsedTime(elapsedMillis);
+		ElapsedTime time = new ElapsedTime(elapsedSecs);
 		
 		Intent iSummary = new Intent(mContext, Summary.class);
-		iSummary.putExtra("millis", time.elapsedMillis)
-				.putExtra("seconds", time.elapsedSeconds)
+		iSummary.putExtra("seconds", time.elapsedSeconds)
 				.putExtra("minutes", time.elapsedMinutes)
 				.putExtra("append", "Filename: \n" + sdFileName)
 				.putExtra("date", getNiceDateString(date))
@@ -1107,69 +1102,65 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * Records a data point, puts it into the dataSet object, and writes it to a csv string.
 	 */
 	private void recordData() {
-		dataPointCount++;
-		elapsedMillis += srate;
-		
-		DecimalFormat toThou = new DecimalFormat("######0.000");
+		 dataPointCount++;
+         elapsedSecs += srate;
+         
+         DecimalFormat toThou = new DecimalFormat("######0.000");
 
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x)))
-			f.accel_x = toThou.format(accel[0]);
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y)))
-			f.accel_y = toThou.format(accel[1]);
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z)))
-			f.accel_z = toThou.format(accel[2]);
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_total)))
-			f.accel_total = toThou.format(accel[3]);
-		
-		if (dfm.getOrderList().contains(mContext.getString(R.string.latitude)))
-			f.latitude = loc.getLatitude();
-		if (dfm.getOrderList().contains(mContext.getString(R.string.longitude)))
-			f.longitude = loc.getLongitude();
-		
-		if (dfm.getOrderList().contains(mContext.getString(R.string.heading_deg)))
-			f.angle_deg = toThou.format(orientation[0]);
-		if (dfm.getOrderList().contains(mContext.getString(R.string.heading_rad)))
-			f.angle_rad = ""
-					+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
-		
-		if (dfm.getOrderList().contains(mContext.getString(R.string.magnetic_x)))
-			f.mag_x = "" + mag[0];
-		if (dfm.getOrderList().contains(mContext.getString(R.string.magnetic_y)))
-			f.mag_y = "" + mag[1];
-		if (dfm.getOrderList().contains(mContext.getString(R.string.magnetic_z)))
-			f.mag_z = "" + mag[2];
-		if (dfm.getOrderList().contains(mContext.getString(R.string.magnetic_total)))
-			f.mag_total = ""
-					+ Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
-							+ Math.pow(Double.parseDouble(f.mag_y), 2)
-							+ Math.pow(Double.parseDouble(f.mag_z), 2));
-		
-		if (dfm.getOrderList().contains(mContext.getString(R.string.time)))
-			f.timeMillis = currentTime + elapsedMillis;
-		
-		if (dfm.getOrderList().contains(mContext.getString(R.string.temperature_c)))
-			f.temperature_c = temperature;
-		if (dfm.getOrderList().contains(mContext.getString(R.string.temperature_f)))
-			if (temperature.equals(""))
-				f.temperature_f = temperature;
-			else
-				f.temperature_f = ""
-						+ ((Double.parseDouble(temperature) * 1.8) + 32);
-		if (dfm.getOrderList().contains(mContext.getString(R.string.temperature_k)))
-			if (temperature.equals(""))
-				f.temperature_k = temperature;
-			else
-				f.temperature_k = ""
-						+ (Double.parseDouble(temperature) + 273.15);
-		if (dfm.getOrderList().contains(mContext.getString(R.string.pressure)))
-			f.pressure = pressure;
-		if (dfm.getOrderList().contains(mContext.getString(R.string.altitude)))
-			f.altitude = "" + loc.getAltitude();
-		if (dfm.getOrderList().contains(mContext.getString(R.string.luminous_flux)))
-			f.lux = light;
+         if (dfm.enabledFields[Fields.ACCEL_X])
+                 f.accel_x = toThou.format(accel[0]);
+         if (dfm.enabledFields[Fields.ACCEL_Y])
+                 f.accel_y = toThou.format(accel[1]);
+         if (dfm.enabledFields[Fields.ACCEL_Z])
+                 f.accel_z = toThou.format(accel[2]);
+         if (dfm.enabledFields[Fields.ACCEL_TOTAL])
+                 f.accel_total = toThou.format(accel[3]);
+         if (dfm.enabledFields[Fields.LATITUDE])
+                 f.latitude = loc.getLatitude();
+         if (dfm.enabledFields[Fields.LONGITUDE])
+                 f.longitude = loc.getLongitude();
+         if (dfm.enabledFields[Fields.HEADING_DEG])
+                 f.angle_deg = toThou.format(orientation[0]);
+         if (dfm.enabledFields[Fields.HEADING_RAD])
+                 f.angle_rad = ""
+                                 + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+         if (dfm.enabledFields[Fields.MAG_X])
+                 f.mag_x = "" + mag[0];
+         if (dfm.enabledFields[Fields.MAG_Y])
+                 f.mag_y = "" + mag[1];
+         if (dfm.enabledFields[Fields.MAG_Z])
+                 f.mag_z = "" + mag[2];
+         if (dfm.enabledFields[Fields.MAG_TOTAL])
+                 f.mag_total = ""
+                                 + Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
+                                                 + Math.pow(Double.parseDouble(f.mag_y), 2)
+                                                 + Math.pow(Double.parseDouble(f.mag_z), 2));
+         if (dfm.enabledFields[Fields.TIME])
+                 f.timeMillis = currentTime + elapsedSecs;
+         if (dfm.enabledFields[Fields.TEMPERATURE_C])
+                 f.temperature_c = temperature;
+         if (dfm.enabledFields[Fields.TEMPERATURE_F])
+                 if (temperature.equals(""))
+                         f.temperature_f = temperature;
+                 else
+                         f.temperature_f = ""
+                                         + ((Double.parseDouble(temperature) * 1.8) + 32);
+         if (dfm.enabledFields[Fields.TEMPERATURE_K])
+                 if (temperature.equals(""))
+                         f.temperature_k = temperature;
+                 else
+                         f.temperature_k = ""
+                                         + (Double.parseDouble(temperature) + 273.15);
+         if (dfm.enabledFields[Fields.PRESSURE])
+                 f.pressure = pressure;
+         if (dfm.enabledFields[Fields.ALTITUDE])
+                 f.altitude = "" + loc.getAltitude();
+         if (dfm.enabledFields[Fields.LIGHT])
+                 f.lux = light;
 
-		dataSet.put(dfm.putData());
-		dataToBeWrittenToFile = dfm.writeSdCardLine();
+         dataSet.put(dfm.putData());
+         dataToBeWrittenToFile = dfm.writeSdCardLine();
+
 	}
 
 }

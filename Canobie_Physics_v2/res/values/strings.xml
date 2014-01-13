@@ -99,7 +99,7 @@
     <string name="media_desc">Select one of the following options:</string>
     <string name="upload">Upload</string>
     <string name="okay">Ok</string>
-    <string name="sample_rate">Sample Interval (seconds): </string>
+    <string name="sample_rate">Sample Interval (milli-seconds): </string>
     <string name="select_fields_for">	    Please select the fields you would like to record for project #</string>
     
     <string name="syncTime">	    Synchronizing time is useful when using multiple devices on a ride at the

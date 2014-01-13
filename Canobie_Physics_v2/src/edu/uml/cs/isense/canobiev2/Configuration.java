@@ -49,6 +49,9 @@ public class Configuration extends Activity {
 		sampleRate.setText(AmusementPark.rate);
 		studentNumber.setText(AmusementPark.stNumber);
 		
+		
+		/*Setup Addapter for rides*/
+		
 		 final ArrayAdapter<CharSequence> canobieAdapter = ArrayAdapter
                  .createFromResource(this, R.array.canobie_array,
                                  android.R.layout.simple_spinner_item);
@@ -60,19 +63,30 @@ public class Configuration extends Activity {
                                  android.R.layout.simple_spinner_item);
 		  generalAdapter
 		  		 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		 
+		  
+		  /*Set up checkboxes*/
+		  projectLater.setChecked(AmusementPark.projectLaterChecked);
+		  isCanobie.setChecked(AmusementPark.canobieChecked);
+
+			if (projectLater.isChecked()) {
+				select.setEnabled(false);
+			} else {
+				select.setEnabled(true);
+			}
+
 		 if (isCanobie.isChecked())
              rides.setAdapter(canobieAdapter);
 		 else
              rides.setAdapter(generalAdapter);
 		
-		projectLater.setChecked(false);
 		
+		/*Checkbox on checked change listeners*/
 		projectLater.setOnCheckedChangeListener(new OnCheckedChangeListener(){
 
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
+				AmusementPark.projectLaterChecked = projectLater.isChecked();
 				if (projectLater.isChecked()) {
 					select.setEnabled(false);
 				} else {
@@ -87,6 +101,7 @@ public class Configuration extends Activity {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
+				AmusementPark.canobieChecked = isCanobie.isChecked();
 				if (isCanobie.isChecked()) { 
 					rides.setAdapter(canobieAdapter);
 				} else {
@@ -97,6 +112,7 @@ public class Configuration extends Activity {
 			
 		});
 		
+		/*select a project*/		
 		select.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -110,6 +126,7 @@ public class Configuration extends Activity {
 			
 		});
 		
+		
 		ok.setOnClickListener(new OnClickListener (){
 			@Override
 			public void onClick(View v) {
@@ -122,11 +139,9 @@ public class Configuration extends Activity {
 				}
 			} 
 		});
-		
-		
-	
 	}
 	
+	/*Check that all values have been filled in and set values in AmusementPark*/
 	boolean everythingSelected(){
 		boolean selected = true;
 		
@@ -161,16 +176,10 @@ public class Configuration extends Activity {
 			selected = false;
 		} else {
 			AmusementPark.stNumber = studentNumber.getText().toString();
-			
 		}
 		
-		
-		
-		if(isCanobie.isChecked() == true) {
-			//check if ride is selected
-		} else {
-			
-		}
+		AmusementPark.rideNameString = rides.getSelectedItem().toString();
+
 		
 		return selected;
 	}
@@ -180,7 +189,6 @@ public class Configuration extends Activity {
          if (requestCode == BROWSE_PROJECTS_REQUESTED) {
         	 SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 				String eidString = mPrefs.getString("project_id", "");
-				//projectNum = Integer.getInteger(eidString);
 				
 				AmusementPark.projectNum = Integer.parseInt(eidString);		
          }
