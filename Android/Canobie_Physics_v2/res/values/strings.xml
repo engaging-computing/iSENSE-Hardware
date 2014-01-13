@@ -137,5 +137,7 @@
     <string name="ok">OK</string>
     <string name="selectProject">Select a Project</string>
     <string name="project_prompt">Select a Project</string>
+    <string name="project_name_dialog">Create a Project</string>
+    <string name="login_prompt_error">Login Error</string>
 
 </resources>

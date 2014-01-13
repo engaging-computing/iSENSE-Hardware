@@ -101,8 +101,11 @@ public class Configuration extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				startActivityForResult(new Intent(getApplicationContext(),
-						Setup.class), BROWSE_PROJECTS_REQUESTED);
+				Intent intent = new Intent(getApplicationContext(), Setup.class);
+				intent.putExtra("constrictFields", true);
+				intent.putExtra("app_name", "Canobie");
+				intent.putExtra("showOKCancel", true);
+				startActivityForResult(intent, BROWSE_PROJECTS_REQUESTED);
 			}
 			
 		});
