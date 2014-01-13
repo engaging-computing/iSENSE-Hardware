@@ -363,7 +363,6 @@ public class API {
 
 				person.person_id = inner.getInt("id");
 				person.name = inner.getString("name");
-				person.username = inner.getString("username");
 				person.url = inner.getString("url");
 				person.gravatar = inner.getString("gravatar");
 				person.timecreated = inner.getString("createdAt");
@@ -602,8 +601,10 @@ public class API {
 	 * 
 	 * @param dataSetId The ID of the data set to append to
 	 * @param newData The new data to append
+	 * 
+	 * @return success or failure
 	 */
-	public void appendDataSetData(int dataSetId, JSONObject newData) {
+	public boolean appendDataSetData(int dataSetId, JSONObject newData) {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
 		JSONObject existing = existingDs.data;
@@ -627,10 +628,16 @@ public class API {
 			requestData.put("headers", new JSONArray(headers));
 			requestData.put("data", newJobj);
 			requestData.put("id", ""+dataSetId);
-			makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			
+			String result = makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			new JSONObject(result); // this line will throw an exception if it fails, thus returning false
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
+		
+		return true;
 	}
 
 	/**
