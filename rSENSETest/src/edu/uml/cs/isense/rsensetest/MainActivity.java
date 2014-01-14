@@ -116,7 +116,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class UsersTask extends AsyncTask<Void, Void, RPerson> {
 		@Override
 		protected RPerson doInBackground(Void... params) {
-			return api.getUser("NickAVV");
+			return api.getUser(1);
 		}
 
 		@Override
