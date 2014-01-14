@@ -96,13 +96,13 @@ public class DataWalk extends Activity implements LocationListener,
 	private Waffle w;
 
 	/* iSENSE API Globals and Constants */
-	private final String DEFAULT_USERNAME = "mobile";
+	private final String DEFAULT_USERNAME = "mobile.fake@example.com";
 	private final String DEFAULT_PASSWORD = "mobile";
-	private final String DEFAULT_PROJECT = "156";
-	private final String DEFAULT_PROJECT_DEV = "25";
+	private final String DEFAULT_PROJECT = "5";
+	private final String DEFAULT_PROJECT_DEV = "5";
 	private int actionBarTapCount = 0;
-	public static boolean useDev = false;
-	private String projectID = "156";
+	public static boolean useDev = true;
+	private String projectID = "5";
 
 	private String loginName = "";
 	private String loginPass = "";
@@ -297,9 +297,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 				// Save the newest DataSet to the Upload Queue if it has at
 				// least 1 point
-				QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
-						"Data Points: " + dataPointCount, projectID,
-						dataSet.toString(), null);
+				QDataSet ds = new QDataSet( dataSetName, "Data Points: " + dataPointCount,
+                        QDataSet.Type.DATA, dataSet.toString(), null, projectID, null);
+        ds.setRequestDataLabelInOrder(true);
 				if (dataPointCount > 0) {
 					uq.addDataSetToQueue(ds);
 					// Tell the user recording has stopped
