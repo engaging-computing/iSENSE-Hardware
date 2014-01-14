@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -71,6 +72,9 @@ public class SelectMode extends Activity {
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		// Set listeners for the buttons
@@ -101,7 +105,7 @@ public class SelectMode extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (!Connection.hasConnectivity(mContext))
-					w.make("You need to have internet connectivity to do this",
+					w.make(getResources().getString(R.string.need_connectivity_to_do),
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 				else {
 					Intent iFileBrowse = new Intent(mContext, FileBrowser.class);
@@ -113,7 +117,7 @@ public class SelectMode extends Activity {
 		String csvUploaderText = "<font COLOR=\"#0066FF\">"
 				+ "Upload a .csv File From My Device" + "</font>" + "<br/>"
 				+ "<font COLOR=\"#D9A414\">"
-				+ "(requires project and Internet)" + "</font>";
+				+ "(requires project)" + "</font>";
 		csvUploader.setText(Html.fromHtml(csvUploaderText));
 
 		// Determine if we should disable manual entry and .csv uploader
@@ -131,7 +135,7 @@ public class SelectMode extends Activity {
 				String c = "<font COLOR=\"#0066FF\">"
 						+ "Upload a .csv File From My Device" + "</font>"
 						+ "<br/>" + "<font COLOR=\"#B88804\">"
-						+ "(requires project and Internet)" + "</font>";
+						+ "(requires project)" + "</font>";
 				csvUploader.setText(Html.fromHtml(c));
 			}
 		}
@@ -146,13 +150,14 @@ public class SelectMode extends Activity {
 			if (resultCode == RESULT_OK) {
 				String filepath = data.getStringExtra("filepath");
 				if (filepath.length() == 0) {
-					w.make("Could not find .csv file", Waffle.LENGTH_SHORT,
+					w.make(getResources().getString(R.string.could_not_find_csv),
+							Waffle.LENGTH_SHORT,
 							Waffle.IMAGE_X);
 					return;
 				}
 
 				if (!Connection.hasConnectivity(mContext)) {
-					w.make("Cannot upload a .csv file with no internet connectivity",
+					w.make(getResources().getString(R.string.no_csv_no_internet),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				}
@@ -162,7 +167,7 @@ public class SelectMode extends Activity {
 				if (comp.length == 0
 						|| !(comp[comp.length - 1].toLowerCase(Locale.US)
 								.equals("csv"))) {
-					w.make("Only .csv files are allowed for upload",
+					w.make(getResources().getString(R.string.only_csv_files),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				}
@@ -172,7 +177,7 @@ public class SelectMode extends Activity {
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				w.make("Login successful", Waffle.LENGTH_LONG,
+				w.make(getResources().getString(R.string.login_success), Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 
 				new UploadCSVTask().execute(tempFilepath);
@@ -217,10 +222,10 @@ public class SelectMode extends Activity {
 			api.createSession(
 					mPrefs.getString(
 							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-							""),
+							Login.DEFAULT_USERNAME),
 					mPrefs.getString(
 							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							""));
+							Login.DEFAULT_PASSWORD));
 
 			publishProgress(100);
 			return null;
@@ -235,7 +240,8 @@ public class SelectMode extends Activity {
 
 			if (api.getCurrentUser() == null) {
 				tempFilepath = filepath;
-				w.make("Please log in", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+				w.make(getResources().getString(R.string.please_log_in), 
+						Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 
 				Intent i = new Intent(mContext, Login.class);
 				startActivityForResult(i, LOGIN_REQUESTED);
@@ -291,15 +297,28 @@ public class SelectMode extends Activity {
 			OrientationManager.enableRotation(SelectMode.this);
 
 			if (dsid <= 0) {
-				w.make(".csv File Failed to Upload", Waffle.LENGTH_SHORT,
+				w.make(getResources().getString(R.string.csv_failed_upload), 
+						Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_X);
 			} else {
-				w.make(".csv File Uploaded Successfully", Waffle.LENGTH_SHORT,
+				w.make(getResources().getString(R.string.csv_success_upload), 
+						Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			}
 
 		}
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case android.R.id.home:
+	    	onBackPressed();
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	@Override
