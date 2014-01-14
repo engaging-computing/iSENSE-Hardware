@@ -101,7 +101,7 @@ public class API {
 		try {
 			String result = makeRequest(baseURL, "login", "email="+URLEncoder.encode(username, "UTF-8")
 					+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
-			System.out.println(result);
+			System.out.println("createSession result: " + result);
 			JSONObject j =  new JSONObject(result);
 			
 			authToken = j.getString("authenticity_token");

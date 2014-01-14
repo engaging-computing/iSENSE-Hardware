@@ -88,6 +88,7 @@ public class Configuration extends Activity {
 					boolean isChecked) {
 				AmusementPark.projectLaterChecked = projectLater.isChecked();
 				if (projectLater.isChecked()) {
+					AmusementPark.projectNum = -1; 
 					select.setEnabled(false);
 				} else {
 					select.setEnabled(true);
@@ -131,7 +132,7 @@ public class Configuration extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				if(everythingSelected() == true) {
+				if(everythingSelected() == true) {	
 					AmusementPark.setupDone = true;
 					finish();
 				} else {
@@ -152,15 +153,13 @@ public class Configuration extends Activity {
 			AmusementPark.dataName = dataset.getText().toString();
 		}
 		
+		/* check if project later is checked */
 		
-		if(projectLater.isChecked() == false) {
-			//check if project is selected
+		if(!projectLater.isChecked()) {
 			if (AmusementPark.projectNum == -1) {
 				selected = false;
 				select.setError("Please Select a Project.");
 			} 			
-		} else {
-			AmusementPark.projectNum = -1; 
 		}
 		
 		
@@ -168,8 +167,16 @@ public class Configuration extends Activity {
 			sampleRate.setError("Please Enter a Value.");
 			selected = false;
 		} else {
-			AmusementPark.rate = sampleRate.getText().toString();		
+			if (Integer.decode(sampleRate.getText().toString()) < 50) {
+				sampleRate.setError("Value must at least 50.");
+				selected = false;
+			} else {
+				AmusementPark.rate = sampleRate.getText().toString();		
 			}
+			
+		}
+		
+		
 		
 		if(studentNumber.getText().length() == 0) {
 			studentNumber.setError("Please Enter Seat/Student");
@@ -187,10 +194,10 @@ public class Configuration extends Activity {
 	 protected void onActivityResult(int requestCode, int resultCode,
              Intent data) {
          if (requestCode == BROWSE_PROJECTS_REQUESTED) {
-        	 SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-				String eidString = mPrefs.getString("project_id", "");
+        	SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+        	String eidString = mPrefs.getString("project_id", "");
 				
-				AmusementPark.projectNum = Integer.parseInt(eidString);		
+			AmusementPark.projectNum = Integer.parseInt(eidString);		
          }
      }
  }
