@@ -68,16 +68,16 @@ public class Configuration extends Activity {
 		  projectLater.setChecked(AmusementPark.projectLaterChecked);
 		  isCanobie.setChecked(AmusementPark.canobieChecked);
 
-			if (projectLater.isChecked()) {
-				select.setEnabled(false);
-			} else {
-				select.setEnabled(true);
-			}
+		if (projectLater.isChecked()) {
+			select.setEnabled(false);
+		} else {
+			select.setEnabled(true);
+		}
 
-		 if (isCanobie.isChecked())
-             rides.setAdapter(canobieAdapter);
-		 else
-             rides.setAdapter(generalAdapter);
+		if (isCanobie.isChecked())
+            rides.setAdapter(canobieAdapter);
+		else
+            rides.setAdapter(generalAdapter);
 		
 		
 		/*Checkbox on checked change listeners*/
@@ -89,6 +89,11 @@ public class Configuration extends Activity {
 				AmusementPark.projectLaterChecked = projectLater.isChecked();
 				if (projectLater.isChecked()) {
 					AmusementPark.projectNum = -1; 
+					
+					SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+					SharedPreferences.Editor mEdit = mPrefs.edit();
+					mEdit.putString(Setup.PROJECT_ID, "-1").commit();
+					
 					select.setEnabled(false);
 				} else {
 					select.setEnabled(true);
@@ -194,10 +199,11 @@ public class Configuration extends Activity {
 	 protected void onActivityResult(int requestCode, int resultCode,
              Intent data) {
          if (requestCode == BROWSE_PROJECTS_REQUESTED) {
-        	SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-        	String eidString = mPrefs.getString("project_id", "");
-				
-			AmusementPark.projectNum = Integer.parseInt(eidString);		
+        	 
+        	SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+        	String eidString = mPrefs.getString(Setup.PROJECT_ID, "");
+			AmusementPark.projectNum = Integer.parseInt(eidString);
+			
          }
      }
  }
