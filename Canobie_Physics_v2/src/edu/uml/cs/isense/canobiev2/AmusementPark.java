@@ -160,7 +160,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	/* Start Activity Codes*/
 	private final int QUEUE_UPLOAD_REQUESTED = 1;
-	private final int EXPERIMENT_CODE = 2;
 	private final int CHOOSE_SENSORS_REQUESTED = 3;
 	private final int SYNC_TIME_REQUESTED = 4;
 	private final int SETUP_REQUESTED = 5;
@@ -307,7 +306,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							public void run() {
 								recordData();
 							}
-						}, 0, srate);
+						}, srate, srate);
 					}
 					
 					
@@ -589,17 +588,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-//		if (requestCode == EXPERIMENT_CODE) {
-//			if (resultCode == Activity.RESULT_OK) {
-//
-//				//TODO
-//				SharedPreferences mPrefs = getSharedPreferences(
-//						PROJ_PREFS_ID, 0);
-//				final SharedPreferences.Editor mEdit = mPrefs.edit();
-//				mEdit.putString(PROJ_ID, Integer.toString(projectNum));
-//				mEdit.commit();
-//				
-//			}
 		if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
@@ -622,6 +610,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			
 		} else if (requestCode == SETUP_REQUESTED) {
 				rideName.setText("Ride/St#: " + rideNameString +"/" + stNumber);
+				
+				SharedPreferences mPrefs = getSharedPreferences(
+						PROJ_PREFS_ID, 0);
+				final SharedPreferences.Editor mEdit = mPrefs.edit();
+				mEdit.putString(PROJ_ID, Integer.toString(projectNum));
+				mEdit.commit();
+				
 				
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -716,7 +711,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			dia = new ProgressDialog(AmusementPark.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data and media are uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data and media saved to Queue");
 			dia.setCancelable(false);
 			dia.show();
 
@@ -929,7 +924,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			dia = new ProgressDialog(AmusementPark.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Gathering experiment fields...");
+			dia.setMessage("Gathering project fields...");
 			dia.setCancelable(false);
 			dia.show();
 
