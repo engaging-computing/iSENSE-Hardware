@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <DataSaver.h>
 
 @class PWViewController;
 
@@ -15,5 +16,12 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) PWViewController *viewController;
+
+@property (nonatomic, strong) IBOutlet DataSaver *dataSaver;
+
+// Core Data Stuffs
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end

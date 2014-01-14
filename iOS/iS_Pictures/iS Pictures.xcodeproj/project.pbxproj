@@ -7,9 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		76318B2518833128008D3A1F /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 76318B2418833128008D3A1F /* StringGrabber.m */; };
+		76318B29188332C4008D3A1F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76318B28188332C4008D3A1F /* MobileCoreServices.framework */; };
+		76318B2C18833314008D3A1F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76318B2B18833314008D3A1F /* SystemConfiguration.framework */; };
+		76318B3018833395008D3A1F /* reset.png in Resources */ = {isa = PBXBuildFile; fileRef = 76318B2D18833395008D3A1F /* reset.png */; };
+		76318B3118833395008D3A1F /* upload2.png in Resources */ = {isa = PBXBuildFile; fileRef = 76318B2E18833395008D3A1F /* upload2.png */; };
+		76318B3218833395008D3A1F /* users.png in Resources */ = {isa = PBXBuildFile; fileRef = 76318B2F18833395008D3A1F /* users.png */; };
+		76318B35188333B1008D3A1F /* barcode.png in Resources */ = {isa = PBXBuildFile; fileRef = 76318B33188333B1008D3A1F /* barcode.png */; };
+		76318B36188333B1008D3A1F /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 76318B34188333B1008D3A1F /* info.png */; };
+		76318B3D18837B93008D3A1F /* AboutViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76318B3718837B93008D3A1F /* AboutViewController_iPad.xib */; };
+		76318B3E18837B93008D3A1F /* AboutViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76318B3818837B93008D3A1F /* AboutViewController_iPhone.xib */; };
+		76318B3F18837B93008D3A1F /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76318B3A18837B93008D3A1F /* AboutViewController.m */; };
+		76318B4018837B93008D3A1F /* AboutViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76318B3B18837B93008D3A1F /* AboutViewController~landscape_iPad.xib */; };
+		76318B4118837B93008D3A1F /* AboutViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76318B3C18837B93008D3A1F /* AboutViewController~landscape_iPhone.xib */; };
+		76318B4B18842337008D3A1F /* navBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 76318B4A18842337008D3A1F /* navBar.png */; };
+		76318B54188434EB008D3A1F /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76318B52188434EB008D3A1F /* Fields.strings */; };
+		76318B55188434EB008D3A1F /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76318B53188434EB008D3A1F /* Strings.strings */; };
+		76318B5818858541008D3A1F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76318B5718858541008D3A1F /* CoreData.framework */; };
 		766173451880BF1D0094680C /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 766173421880BF0D0094680C /* libiSENSE_API.a */; };
 		766173461880BF230094680C /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 766173441880BF0D0094680C /* iSENSE_API_Bundle.bundle */; };
-		766173501880CE810094680C /* navBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 7661734F1880CE810094680C /* navBar.png */; };
 		766173531880D0AB0094680C /* RNGridMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 766173521880D0AB0094680C /* RNGridMenu.m */; };
 		766173571880D1620094680C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 766173561880D1620094680C /* QuartzCore.framework */; };
 		7661735B1880D1CC0094680C /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7661735A1880D1CC0094680C /* Accelerate.framework */; };
@@ -26,6 +42,11 @@
 		767621B2187F0DC600A473B7 /* PWViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 767621B1187F0DC600A473B7 /* PWViewController.m */; };
 		767621B5187F0DC600A473B7 /* PWViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 767621B3187F0DC600A473B7 /* PWViewController_iPhone.xib */; };
 		767621B8187F0DC600A473B7 /* PWViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 767621B6187F0DC600A473B7 /* PWViewController_iPad.xib */; };
+		76E57E9F1885C82600C9107C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76E57E9E1885C82600C9107C /* AssetsLibrary.framework */; };
+		76E57EA11885E51400C9107C /* river_walk_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA01885E51400C9107C /* river_walk_57x57.png */; };
+		76E57EA31885E51B00C9107C /* river_walk_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA21885E51B00C9107C /* river_walk_114x114.png */; };
+		76E57EA51885E52600C9107C /* river_walk_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA41885E52600C9107C /* river_walk_72x72.png */; };
+		76E57EA71885E52C00C9107C /* river_walk_144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA61885E52C00C9107C /* river_walk_144x144.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,8 +81,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		76318B2318833128008D3A1F /* StringGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
+		76318B2418833128008D3A1F /* StringGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
+		76318B28188332C4008D3A1F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		76318B2B18833314008D3A1F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		76318B2D18833395008D3A1F /* reset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reset.png; sourceTree = "<group>"; };
+		76318B2E18833395008D3A1F /* upload2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload2.png; sourceTree = "<group>"; };
+		76318B2F18833395008D3A1F /* users.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = users.png; sourceTree = "<group>"; };
+		76318B33188333B1008D3A1F /* barcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode.png; sourceTree = "<group>"; };
+		76318B34188333B1008D3A1F /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
+		76318B3718837B93008D3A1F /* AboutViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPad.xib; sourceTree = "<group>"; };
+		76318B3818837B93008D3A1F /* AboutViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPhone.xib; sourceTree = "<group>"; };
+		76318B3918837B93008D3A1F /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		76318B3A18837B93008D3A1F /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		76318B3B18837B93008D3A1F /* AboutViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
+		76318B3C18837B93008D3A1F /* AboutViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
+		76318B4A18842337008D3A1F /* navBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBar.png; sourceTree = "<group>"; };
+		76318B52188434EB008D3A1F /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
+		76318B53188434EB008D3A1F /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
+		76318B5718858541008D3A1F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		7661733C1880BF0C0094680C /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
-		7661734F1880CE810094680C /* navBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBar.png; sourceTree = "<group>"; };
 		766173511880D0AB0094680C /* RNGridMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNGridMenu.h; sourceTree = "<group>"; };
 		766173521880D0AB0094680C /* RNGridMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNGridMenu.m; sourceTree = "<group>"; };
 		766173561880D1620094680C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -84,6 +123,12 @@
 		767621B1187F0DC600A473B7 /* PWViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PWViewController.m; sourceTree = "<group>"; };
 		767621B4187F0DC600A473B7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PWViewController_iPhone.xib; sourceTree = "<group>"; };
 		767621B7187F0DC600A473B7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PWViewController_iPad.xib; sourceTree = "<group>"; };
+		76E57E9C1885AC9D00C9107C /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		76E57E9E1885C82600C9107C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		76E57EA01885E51400C9107C /* river_walk_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = river_walk_57x57.png; path = ../river_walk_57x57.png; sourceTree = "<group>"; };
+		76E57EA21885E51B00C9107C /* river_walk_114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = river_walk_114x114.png; path = ../river_walk_114x114.png; sourceTree = "<group>"; };
+		76E57EA41885E52600C9107C /* river_walk_72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = river_walk_72x72.png; path = ../river_walk_72x72.png; sourceTree = "<group>"; };
+		76E57EA61885E52C00C9107C /* river_walk_144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = river_walk_144x144.png; path = ../river_walk_144x144.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +136,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76E57E9F1885C82600C9107C /* AssetsLibrary.framework in Frameworks */,
+				76318B5818858541008D3A1F /* CoreData.framework in Frameworks */,
+				76318B2C18833314008D3A1F /* SystemConfiguration.framework in Frameworks */,
+				76318B29188332C4008D3A1F /* MobileCoreServices.framework in Frameworks */,
 				7661735B1880D1CC0094680C /* Accelerate.framework in Frameworks */,
 				766173571880D1620094680C /* QuartzCore.framework in Frameworks */,
 				766173451880BF1D0094680C /* libiSENSE_API.a in Frameworks */,
@@ -115,8 +164,6 @@
 		7676218C187F0DC600A473B7 = {
 			isa = PBXGroup;
 			children = (
-				7661735A1880D1CC0094680C /* Accelerate.framework */,
-				766173561880D1620094680C /* QuartzCore.framework */,
 				7661733C1880BF0C0094680C /* iSENSE_API.xcodeproj */,
 				7676219E187F0DC600A473B7 /* iS Pictures */,
 				76762197187F0DC600A473B7 /* Frameworks */,
@@ -135,6 +182,12 @@
 		76762197187F0DC600A473B7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				76E57E9E1885C82600C9107C /* AssetsLibrary.framework */,
+				76318B5718858541008D3A1F /* CoreData.framework */,
+				76318B2B18833314008D3A1F /* SystemConfiguration.framework */,
+				76318B28188332C4008D3A1F /* MobileCoreServices.framework */,
+				7661735A1880D1CC0094680C /* Accelerate.framework */,
+				766173561880D1620094680C /* QuartzCore.framework */,
 				76762198187F0DC600A473B7 /* UIKit.framework */,
 				7676219A187F0DC600A473B7 /* Foundation.framework */,
 				7676219C187F0DC600A473B7 /* CoreGraphics.framework */,
@@ -156,8 +209,19 @@
 		7676219F187F0DC600A473B7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				76E57EA61885E52C00C9107C /* river_walk_144x144.png */,
+				76E57EA41885E52600C9107C /* river_walk_72x72.png */,
+				76E57EA21885E51B00C9107C /* river_walk_114x114.png */,
+				76E57EA01885E51400C9107C /* river_walk_57x57.png */,
+				76318B52188434EB008D3A1F /* Fields.strings */,
+				76318B53188434EB008D3A1F /* Strings.strings */,
+				76318B4A18842337008D3A1F /* navBar.png */,
+				76318B33188333B1008D3A1F /* barcode.png */,
+				76318B34188333B1008D3A1F /* info.png */,
+				76318B2D18833395008D3A1F /* reset.png */,
+				76318B2E18833395008D3A1F /* upload2.png */,
+				76318B2F18833395008D3A1F /* users.png */,
 				7661735C1880D5770094680C /* menuIcon.png */,
-				7661734F1880CE810094680C /* navBar.png */,
 				767621A0187F0DC600A473B7 /* iS Pictures-Info.plist */,
 				767621A1187F0DC600A473B7 /* InfoPlist.strings */,
 				767621A4187F0DC600A473B7 /* main.m */,
@@ -172,6 +236,8 @@
 		767621BE187F0E2400A473B7 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				76318B2418833128008D3A1F /* StringGrabber.m */,
+				76318B3A18837B93008D3A1F /* AboutViewController.m */,
 				766173521880D0AB0094680C /* RNGridMenu.m */,
 				767621A8187F0DC600A473B7 /* PWAppDelegate.m */,
 				767621B1187F0DC600A473B7 /* PWViewController.m */,
@@ -182,9 +248,12 @@
 		767621BF187F0E2C00A473B7 /* header */ = {
 			isa = PBXGroup;
 			children = (
+				76318B2318833128008D3A1F /* StringGrabber.h */,
+				76318B3918837B93008D3A1F /* AboutViewController.h */,
 				766173511880D0AB0094680C /* RNGridMenu.h */,
 				767621A7187F0DC600A473B7 /* PWAppDelegate.h */,
 				767621B0187F0DC600A473B7 /* PWViewController.h */,
+				76E57E9C1885AC9D00C9107C /* Constants.h */,
 			);
 			name = header;
 			sourceTree = "<group>";
@@ -201,6 +270,8 @@
 		767621C1187F0E4A00A473B7 /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				76318B3C18837B93008D3A1F /* AboutViewController~landscape_iPhone.xib */,
+				76318B3818837B93008D3A1F /* AboutViewController_iPhone.xib */,
 				767621B3187F0DC600A473B7 /* PWViewController_iPhone.xib */,
 			);
 			name = iPhone;
@@ -209,6 +280,8 @@
 		767621C2187F0E4E00A473B7 /* iPad */ = {
 			isa = PBXGroup;
 			children = (
+				76318B3B18837B93008D3A1F /* AboutViewController~landscape_iPad.xib */,
+				76318B3718837B93008D3A1F /* AboutViewController_iPad.xib */,
 				767621B6187F0DC600A473B7 /* PWViewController_iPad.xib */,
 			);
 			name = iPad;
@@ -298,8 +371,23 @@
 				767621AF187F0DC600A473B7 /* Default-568h@2x.png in Resources */,
 				767621B5187F0DC600A473B7 /* PWViewController_iPhone.xib in Resources */,
 				767621B8187F0DC600A473B7 /* PWViewController_iPad.xib in Resources */,
-				766173501880CE810094680C /* navBar.png in Resources */,
 				7661735D1880D5770094680C /* menuIcon.png in Resources */,
+				76318B3018833395008D3A1F /* reset.png in Resources */,
+				76318B3118833395008D3A1F /* upload2.png in Resources */,
+				76318B3218833395008D3A1F /* users.png in Resources */,
+				76318B35188333B1008D3A1F /* barcode.png in Resources */,
+				76318B36188333B1008D3A1F /* info.png in Resources */,
+				76318B3D18837B93008D3A1F /* AboutViewController_iPad.xib in Resources */,
+				76318B3E18837B93008D3A1F /* AboutViewController_iPhone.xib in Resources */,
+				76318B4018837B93008D3A1F /* AboutViewController~landscape_iPad.xib in Resources */,
+				76318B4118837B93008D3A1F /* AboutViewController~landscape_iPhone.xib in Resources */,
+				76318B4B18842337008D3A1F /* navBar.png in Resources */,
+				76318B54188434EB008D3A1F /* Fields.strings in Resources */,
+				76318B55188434EB008D3A1F /* Strings.strings in Resources */,
+				76E57EA11885E51400C9107C /* river_walk_57x57.png in Resources */,
+				76E57EA31885E51B00C9107C /* river_walk_114x114.png in Resources */,
+				76E57EA51885E52600C9107C /* river_walk_72x72.png in Resources */,
+				76E57EA71885E52C00C9107C /* river_walk_144x144.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,6 +402,8 @@
 				767621A9187F0DC600A473B7 /* PWAppDelegate.m in Sources */,
 				767621B2187F0DC600A473B7 /* PWViewController.m in Sources */,
 				766173531880D0AB0094680C /* RNGridMenu.m in Sources */,
+				76318B2518833128008D3A1F /* StringGrabber.m in Sources */,
+				76318B3F18837B93008D3A1F /* AboutViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +521,7 @@
 				INFOPLIST_FILE = "iS Pictures/iS Pictures-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -449,6 +540,7 @@
 				INFOPLIST_FILE = "iS Pictures/iS Pictures-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
+		76318B1F18818E4F008D3A1F /* menuIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 76318B1E18818E4F008D3A1F /* menuIcon.png */; };
 		76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */; };
 		765099C2178DD92D00425A27 /* button_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BB178DD92D00425A27 /* button_dark.png */; };
 		765099C5178DD92D00425A27 /* button_light_long.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BE178DD92D00425A27 /* button_light_long.png */; };
@@ -99,6 +100,7 @@
 /* Begin PBXFileReference section */
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
+		76318B1E18818E4F008D3A1F /* menuIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuIcon.png; sourceTree = "<group>"; };
 		76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		765099BB178DD92D00425A27 /* button_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_dark.png; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 		76E91F93179478FC001749FC /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				76318B1E18818E4F008D3A1F /* menuIcon.png */,
 				76DF6A8A17E4FF8D00CF5DDD /* AppLogos */,
 				76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */,
 				76A3BE7D187B1862005C0473 /* barcode.png */,
@@ -469,6 +472,7 @@
 				76A3BE7C187B0FF5005C0473 /* users.png in Resources */,
 				76A3BE7E187B1862005C0473 /* barcode.png in Resources */,
 				7662C420187C38430071B4CF /* upload2.png in Resources */,
+				76318B1F18818E4F008D3A1F /* menuIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

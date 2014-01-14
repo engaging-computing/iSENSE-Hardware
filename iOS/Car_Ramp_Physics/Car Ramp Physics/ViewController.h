@@ -112,7 +112,7 @@ typedef struct _RotationDataSaver{
 @property (nonatomic) BOOL saveModeEnabled;
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture;
-- (IBAction)showMenu:(id)sender;
+- (void)showMenu;
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)changeName;

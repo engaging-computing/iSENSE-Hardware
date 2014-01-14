@@ -440,7 +440,11 @@
                 return;
             }
             
+            
+            NSLog(@"User: %@", [api getCurrentUser]);
+            
             if ([api getCurrentUser] != nil) {
+                NSLog(@"Uploading...");
                 [dataSaver upload:parent];
             }
             

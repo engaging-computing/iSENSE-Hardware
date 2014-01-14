@@ -228,6 +228,11 @@
         NSLog(@"Current count = %d", dataSaver.dataQueue.count);
     }
     
+    UIButton* btton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btton setFrame:CGRectMake(0, 0, 30, 30)];
+    [btton addTarget:self action:@selector(showMenu) forControlEvents:UIControlEventTouchUpInside];
+    [btton setImage:[UIImage imageNamed:@"menuIcon"] forState:UIControlStateNormal];
+    menuButton = [[UIBarButtonItem alloc] initWithCustomView:btton];
     self.navigationItem.rightBarButtonItem = menuButton;
     
     [image setAutoresizesSubviews:YES];
@@ -756,7 +761,7 @@
     
 }
 
-- (IBAction)showMenu:(id)sender {
+- (void)showMenu {
     
     
     RNGridMenu *menu;
@@ -1146,7 +1151,7 @@
                 
                 RPerson *curUser = [api getCurrentUser];
                 
-                NSString *loginstat = [@"Logged in as: " stringByAppendingString:curUser.username];
+                NSString *loginstat = [@"Logged in as: " stringByAppendingString:usernameInput];
                 loginstat = [loginstat stringByAppendingString:@", Name: "];
                 loginstat = [loginstat stringByAppendingString:firstName];
                 loginstat = [loginstat stringByAppendingString:@" "];
@@ -1154,7 +1159,7 @@
                 loginstat = [loginstat stringByAppendingString:@". "];
                 
                 [login_status setText:loginstat];
-                userName = curUser.username;
+                userName = usernameInput;
                 passWord = passwordInput;
                 saver->hasLogin = TRUE;
                 saver->isLoggedIn = true;
