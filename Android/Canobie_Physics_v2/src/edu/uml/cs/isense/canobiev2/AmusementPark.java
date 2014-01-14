@@ -68,6 +68,7 @@ import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -79,13 +80,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
 	/* Default Constants */
-	private final String DEFAULT_USERNAME = "mobile";
+	private final String DEFAULT_USERNAME = "mobile.fake@example.com";
 	private final String DEFAULT_PASSWORD = "mobile";
-	private final String USERNAME_KEY = "username";
-	private final String PASSWORD_KEY = "password";
 	private final String ACTIVITY_NAME = "canobielake";
-	private final String PROJ_PREFS_ID = "PROJID";
-	private final String PROJ_ID = "project_id";
 	private final String TIME_OFFSET_PREFS_ID = "time_offset";
 	private final String TIME_OFFSET_KEY = "timeOffset";
 
@@ -229,12 +226,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						time.setText(getResources().getString(
 								R.string.timeElapsed));
 						rideName.setText("Ride/St#: NOT SET");
+						values.setText("X: " + "\nY: " + "\nZ: ");
+								
 
 						// Cancel the recording timer
 						recordingTimer.cancel();
 						
-						//uploader.run();
-						new UploadTask().execute(); 
+						//Add data to Queue to be uploaded
+						new AddToQueueTask().execute(); 
 						
 
 						return isRunning;
@@ -309,9 +308,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						}, srate, srate);
 					}
 					
-					
 					return isRunning;
-
 				}
 			}
 
@@ -517,7 +514,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				String yPrepend = accel[1] > 0 ? "+" : "";
 				String zPrepend = accel[2] > 0 ? "+" : "";
 
-				if (!isRunning) {
+				if (isRunning) {
 					values.setText("X: " + xPrepend
 							+ threeDigit.format(accel[0]) + "\nY: " + yPrepend
 							+ threeDigit.format(accel[1]) + "\nZ: " + zPrepend
@@ -612,9 +609,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				rideName.setText("Ride/St#: " + rideNameString +"/" + stNumber);
 				
 				SharedPreferences mPrefs = getSharedPreferences(
-						PROJ_PREFS_ID, 0);
+						Setup.PROJ_PREFS_ID, 0);
 				final SharedPreferences.Editor mEdit = mPrefs.edit();
-				mEdit.putString(PROJ_ID, Integer.toString(projectNum));
+				mEdit.putString(Setup.PROJECT_ID, Integer.toString(projectNum));
 				mEdit.commit();
 				
 				
@@ -654,8 +651,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			String name = dataName + " - " + dateString;
 
 			// Retrieve project id
-			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
-			String projId = mPrefs.getString(PROJ_ID, "");
+			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+			String projId = mPrefs.getString(Setup.PROJECT_ID, "");
 
 			// Make sure the user is logged in
 			if (api.getCurrentUser() == null) {
@@ -675,7 +672,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 //			int dataSetId = api.uploadDataSet(Integer.parseInt(projId), data, name);
 //			uploadSuccessful = (dataSetId <= 0) ? true : false;
 			
-			// Saves data for later upload
+			// Saves data to queue for later upload
 			if (!uploadSuccessful) {
 				QDataSet ds = new QDataSet(name, getResources().getString(R.id.description), QDataSet.Type.DATA,
 						dataSet.toString(), null, projId, null);
@@ -696,7 +693,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * 
 	 * @author jpoulin
 	 */
-	private class UploadTask extends AsyncTask<String, Void, String> {
+	private class AddToQueueTask extends AsyncTask<String, Void, String> {
 
 		ProgressDialog dia;
 
@@ -805,16 +802,16 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Preferences
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences("USER_INFO",
+				AmusementPark.mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
 
 		// If the is no previously store username/password, write in the default
 		// credentials
-		if (mPrefs.getString(USERNAME_KEY, "").equals("")
-				|| mPrefs.getString(PASSWORD_KEY, "").equals("")) {
+		if (mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME).equals(DEFAULT_USERNAME)
+				|| mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD).equals("")) {
 			final SharedPreferences.Editor mEdit = mPrefs.edit();
-			mEdit.putString(USERNAME_KEY, DEFAULT_USERNAME);
-			mEdit.putString(PASSWORD_KEY, DEFAULT_PASSWORD);
+			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME);
+			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD);
 			mEdit.commit();
 		}
 
@@ -884,17 +881,38 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			// TODO call the login activity
 		} else {
 
+			new LoginTask().execute();
+
+			// login to iSENSE
+			//TODO
+			
+		}
+	}
+	
+	private class LoginTask extends AsyncTask<Void, Integer, Void> {
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
 			// Get user info from encrypted preferences
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					AmusementPark.mContext,
 					AmusementPark.mContext.getSharedPreferences("USER_INFO",
 							Context.MODE_PRIVATE));
+			
+			api.createSession(mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME),
+					mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD));
+			
+			return null;
+		}
 
-			// login to iSENSE
-			api.createSession(mPrefs.getString(USERNAME_KEY, DEFAULT_USERNAME),
-					mPrefs.getString(PASSWORD_KEY, PASSWORD_KEY));
+		@Override
+		protected void onPostExecute(Void voids) {
 		}
 	}
+	
 
 	/**
 	 * Returns the milliseconds elapsed since the Epoch. This includes the time
@@ -932,9 +950,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-
-			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
-			String eidInput = mPrefs.getString(PROJ_ID, "");
+			//TODO
+			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+			String eidInput = mPrefs.getString(Setup.PROJECT_ID, "");
 
 			dfm = new DataFieldManager(Integer.parseInt(eidInput), api,
 					mContext, f);
@@ -956,12 +974,148 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * Set all dfm's fields to enabled. 
 	 */
 	private void enableAllFields() {
-
-		dfm = new DataFieldManager(-1, api, mContext, f);
-		dfm.getOrder();
-		dfm.enableAllFields();
-
+		setUpDFMWithAllFields();
 	}
+	
+	private void setUpDFMWithAllFields() {
+		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		mEdit.putString(Setup.PROJECT_ID, "-1").commit();
+
+		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
+				Setup.PROJECT_ID, "-1")), api, mContext, f);
+		dfm.getOrder();
+
+		for (int i = 0; i < Fields.NUM_FIELDS; i++)
+			dfm.enabledFields[i] = true;
+
+		String acceptedFields = getResources().getString(R.string.time) + ","
+				+ getResources().getString(R.string.accel_x) + ","
+				+ getResources().getString(R.string.accel_y) + ","
+				+ getResources().getString(R.string.accel_z) + ","
+				+ getResources().getString(R.string.accel_total) + ","
+				+ getResources().getString(R.string.latitude) + ","
+				+ getResources().getString(R.string.longitude) + ","
+				+ getResources().getString(R.string.magnetic_x) + ","
+				+ getResources().getString(R.string.magnetic_y) + ","
+				+ getResources().getString(R.string.magnetic_z) + ","
+				+ getResources().getString(R.string.magnetic_total) + ","
+				+ getResources().getString(R.string.heading_deg) + ","
+				+ getResources().getString(R.string.heading_rad) + ","
+				+ getResources().getString(R.string.temperature_c) + ","
+				+ getResources().getString(R.string.pressure) + ","
+				+ getResources().getString(R.string.altitude) + ","
+				+ getResources().getString(R.string.luminous_flux) + ","
+				+ getResources().getString(R.string.temperature_f) + ","
+				+ getResources().getString(R.string.temperature_k);
+
+		mEdit.putString("accepted_fields", acceptedFields).commit();
+	}
+
+	private void initDfm() {
+
+		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+		String projectInput = mPrefs.getString(Setup.PROJECT_ID, "");
+
+		if (projectInput.equals("-1")) {
+			setUpDFMWithAllFields();
+		} else {
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f);
+			dfm.getOrder();
+
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+			getEnabledFields();
+
+		}
+	}
+
+	// (currently 2 of these methods exist - one also in step1setup)
+		private void getEnabledFields() {
+
+			try {
+				for (String s : acceptedFields) {
+					if (s.length() != 0)
+						break;
+				}
+			} catch (NullPointerException e) {
+				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+				String fields = mPrefs.getString("accepted_fields", "");
+				getFieldsFromPrefsString(fields);
+			}
+
+			for (String s : acceptedFields) {
+				if (s.equals(getString(R.string.time)))
+					dfm.enabledFields[Fields.TIME] = true;
+
+				else if (s.equals(getString(R.string.accel_x)))
+					dfm.enabledFields[Fields.ACCEL_X] = true;
+
+				else if (s.equals(getString(R.string.accel_y)))
+					dfm.enabledFields[Fields.ACCEL_Y] = true;
+
+				else if (s.equals(getString(R.string.accel_z)))
+					dfm.enabledFields[Fields.ACCEL_Z] = true;
+
+				else if (s.equals(getString(R.string.accel_total)))
+					dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
+
+				else if (s.equals(getString(R.string.latitude)))
+					dfm.enabledFields[Fields.LATITUDE] = true;
+
+				else if (s.equals(getString(R.string.longitude)))
+					dfm.enabledFields[Fields.LONGITUDE] = true;
+
+				else if (s.equals(getString(R.string.magnetic_x)))
+					dfm.enabledFields[Fields.MAG_X] = true;
+
+				else if (s.equals(getString(R.string.magnetic_y)))
+					dfm.enabledFields[Fields.MAG_Y] = true;
+
+				else if (s.equals(getString(R.string.magnetic_z)))
+					dfm.enabledFields[Fields.MAG_Z] = true;
+
+				else if (s.equals(getString(R.string.magnetic_total)))
+					dfm.enabledFields[Fields.MAG_TOTAL] = true;
+
+				else if (s.equals(getString(R.string.heading_deg)))
+					dfm.enabledFields[Fields.HEADING_DEG] = true;
+
+				else if (s.equals(getString(R.string.heading_rad)))
+					dfm.enabledFields[Fields.HEADING_RAD] = true;
+
+				else if (s.equals(getString(R.string.temperature_c)))
+					dfm.enabledFields[Fields.TEMPERATURE_C] = true;
+
+				else if (s.equals(getString(R.string.temperature_f)))
+					dfm.enabledFields[Fields.TEMPERATURE_F] = true;
+
+				else if (s.equals(getString(R.string.temperature_k)))
+					dfm.enabledFields[Fields.TEMPERATURE_K] = true;
+
+				else if (s.equals(getString(R.string.pressure)))
+					dfm.enabledFields[Fields.PRESSURE] = true;
+
+				else if (s.equals(getString(R.string.altitude)))
+					dfm.enabledFields[Fields.ALTITUDE] = true;
+
+				else if (s.equals(getString(R.string.luminous_flux)))
+					dfm.enabledFields[Fields.LIGHT] = true;
+
+			}
+		}
+
+		private void getFieldsFromPrefsString(String fieldList) {
+
+			String[] fields = fieldList.split(",");
+			acceptedFields = new LinkedList<String>();
+
+			for (String f : fields) {
+				acceptedFields.add(f);
+			}
+		}
+	
 
 	/**
 	 * Prompts the user to upload the rest of their content
