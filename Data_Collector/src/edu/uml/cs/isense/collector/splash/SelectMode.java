@@ -222,10 +222,10 @@ public class SelectMode extends Activity {
 			api.createSession(
 					mPrefs.getString(
 							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-							""),
+							Login.DEFAULT_USERNAME),
 					mPrefs.getString(
 							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							""));
+							Login.DEFAULT_PASSWORD));
 
 			publishProgress(100);
 			return null;

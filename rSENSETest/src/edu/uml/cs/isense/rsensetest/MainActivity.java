@@ -33,6 +33,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	int FILEPICK = 0;
 	int MEDIAPROJPICK = 1;
 	int MEDIADATASET = 2;
+	
+	int projectId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -200,16 +202,28 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class UploadTask extends AsyncTask<JSONObject, Void, Void> {
+	private class UploadTask extends AsyncTask<Void, Void, Integer> {
 		@Override
-		protected Void doInBackground(JSONObject... params) {
-			api.uploadDataSet(2, params[0], "mobile upload testfuyf");
-			return null;
+		protected Integer doInBackground(Void... params) {
+			JSONObject j = new JSONObject();
+			try {
+				j.put("1", new JSONArray().put("45"));
+				j.put("0", new JSONArray().put("2013/08/02 09:50:01"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return -1;
+			}
+			return api.uploadDataSet(projectId, j, "mobile upload test");
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			
+		protected void onPostExecute(Integer result) {
+			if(result == -1) {
+				status.append(Html.fromHtml("<font color=\"#dd0000\">Upload data set fail.</font><br>"));
+			} else {
+				status.append(Html.fromHtml("<font color=\"#00aa00\">Upload data set success.</font><br>"));
+				new DeleteProjectTask().execute();
+			}
 		}
 	}
 	
@@ -277,15 +291,16 @@ public class MainActivity extends Activity implements OnClickListener {
 				status.append(Html.fromHtml("<font color=\"#dd0000\">Create project fail.</font><br>"));
 			} else {
 				status.append(Html.fromHtml("<font color=\"#00aa00\">Create project success.</font><br>"));
-				new DeleteProjectTask().execute(result);
+				projectId = result;
+				new UploadTask().execute();
 			}
 		}
 	}
-	private class DeleteProjectTask extends AsyncTask<Integer, Void, Integer> {
+	private class DeleteProjectTask extends AsyncTask<Void, Void, Integer> {
 		@Override
-		protected Integer doInBackground(Integer... params) {
+		protected Integer doInBackground(Void... params) {
 			
-			return api.deleteProject(params[0]);
+			return api.deleteProject(projectId);
 		}
 
 		@Override

@@ -5,7 +5,7 @@
     android:layout_marginBottom="20dp"
     android:layout_marginTop="20dp"
     android:orientation="vertical"
-    android:weightSum="6" >
+    android:weightSum="6.15" >
 
     <TextView
         android:id="@+id/welcome_text"
@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_weight="1.15"
+        android:layout_weight="1.1"
         android:text="@string/welcome_str"
         android:textSize="16sp" />
 
@@ -27,7 +27,7 @@
         android:layout_marginTop="5dp"
         android:background="@drawable/button_rsense"
         android:text="@string/continue_with_exist"
-        android:layout_weight=".9"
+        android:layout_weight="1"
         android:textColor="#0066FF"
         android:textSize="16sp" />
 
@@ -39,7 +39,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/button_rsense"
-        android:layout_weight=".9"
+        android:layout_weight="1"
         android:text="@string/select_proj_later"
         android:textColor="#0066FF"
         android:textSize="16sp" />
