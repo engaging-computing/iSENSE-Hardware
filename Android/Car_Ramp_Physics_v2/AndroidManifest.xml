@@ -3,8 +3,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.carphysicsv2"
-    android:versionCode="17"
-    android:versionName="2.3.1" >
+    android:versionCode="18"
+    android:versionName="2.3.2" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -46,7 +46,7 @@
         </activity>
         <activity
             android:name="edu.uml.cs.isense.proj.Setup"
-            android:label="@string/chooseExperimentTitle"
+            android:label="@string/choose_project_title"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" >
         </activity>
@@ -56,7 +56,7 @@
             tools:ignore="MissingRegistered" >
         </activity>
         <activity
-            android:name="edu.uml.cs.isense.exp.NoQR"
+            android:name="edu.uml.cs.isense.proj.NoQR"
             android:label="@string/no_qr"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" >
@@ -139,6 +139,11 @@
             android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
             android:label="Delete Selected Data Sets"
             android:theme="@style/theme_dialog_white" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
+            android:label="@string/new_proj_name_title"
+            tools:ignore="MissingRegistered" />
+
     </application>
 
 </manifest>

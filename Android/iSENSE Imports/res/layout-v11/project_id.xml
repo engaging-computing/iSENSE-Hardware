@@ -36,7 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:background="@android:color/transparent" >
+        android:background="@android:color/transparent"
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/project_browse"
@@ -68,30 +69,60 @@
         android:layout_marginTop="15dp"
         android:background="?android:attr/dividerVertical" />
 
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
+    <TextView
+        android:id="@+id/noProjectYetLbl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:gravity="center"
+        android:text="@string/noProjectYet"
+        android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/project_cancel"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/cancel"
-            android:textSize="18sp" />
+    <Button
+        android:id="@+id/createProjectBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/createProject" />
 
-        <Button
-            android:id="@+id/project_ok"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/OKCancelLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerVertical" />
+
+        <LinearLayout
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/ok"
-            android:textSize="18sp" />
+            android:orientation="horizontal"
+            android:weightSum="2" >
+
+            <Button
+                android:id="@+id/project_cancel"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/cancel"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/project_ok"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@android:string/ok"
+                android:textSize="18sp" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

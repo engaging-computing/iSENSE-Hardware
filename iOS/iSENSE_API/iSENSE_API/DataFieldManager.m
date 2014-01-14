@@ -14,12 +14,7 @@
 
 @implementation DataFieldManager
 
-@synthesize order, realOrder;
-
-//- (id) init {
-//    [self disableAllFields];
-//    return self;
-//}
+@synthesize order, realOrder, fieldIDs;
 
 - (id) initWithProjID:(int)projectID API:(API *)isenseAPI andFields:(Fields *)fields {
  
@@ -34,22 +29,17 @@
     
     order     = [[NSMutableArray alloc] init];
     realOrder = [[NSMutableArray alloc] init];
+    fieldIDs  = [[NSMutableArray alloc] init];
     
     return self;
 }
-
-+ (NSMutableArray *) getOrderForProjID:(int)projectID API:(API *)isenseAPI {
-    DataFieldManager *d = [[DataFieldManager alloc] initWithProjID:projectID API:isenseAPI andFields:nil];
-    [d getOrder];
-    return d.order;
-}
-
 
 - (void) getOrder {
     if (order.count != 0)
         return;
     
     if (projID == -1) {
+        [order removeAllObjects];
         
         [order addObject:sACCEL_X];
         [order addObject:sACCEL_Y];
@@ -85,9 +75,14 @@
 
 - (void) getProjectFieldOrder {
     
+    order = [[NSMutableArray alloc] init];
+    realOrder = [[NSMutableArray alloc] init];
+    fieldIDs = [[NSMutableArray alloc] init];
+    
     for (RProjectField *field in projFields) {
         
         [realOrder addObject:field.name];
+        [fieldIDs  addObject:field.field_id];
         
         switch (field.type.intValue) {
             case TYPE_NUMBER: // TODO - should we enable fields here too?
@@ -270,7 +265,6 @@
 
 - (void) setEnabledFields:(NSMutableArray *)acceptedFields {
     for (NSString *s in acceptedFields) {
-        NSLog(@"STRING IN ACCEPTEDFIELDS: %@", s);
         if ([s isEqualToString:sACCEL_X])
             enabledFields[fACCEL_X] = true;
         else if ([s isEqualToString:sACCEL_Y])
@@ -318,290 +312,131 @@
     }
 }
 
-- (NSMutableDictionary *) putData {
-    
-    NSMutableDictionary *dataJSON = [[NSMutableDictionary alloc] init];
-    
-    for (int i = 0; i < order.count; i++) {
-        
-        NSString *s = [order objectAtIndex:i];
-        
-        if ([s isEqualToString:sACCEL_X]) {
-            if (enabledFields[fACCEL_X])
-                [dataJSON setObject:f.accel_x forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sACCEL_Y]) {
-            if (enabledFields[fACCEL_Y])
-                [dataJSON setObject:f.accel_y forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sACCEL_Z]) {
-            if (enabledFields[fACCEL_Z])
-                [dataJSON setObject:f.accel_z forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sACCEL_TOTAL]) {
-            if (enabledFields[fACCEL_TOTAL])
-                [dataJSON setObject:f.accel_total forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sTEMPERATURE_C]) {
-            if (enabledFields[fTEMPERATURE_C])
-                [dataJSON setObject:f.temperature_c forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sTEMPERATURE_F]) {
-            if (enabledFields[fTEMPERATURE_F])
-                [dataJSON setObject:f.temperature_f forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sTEMPERATURE_K]) {
-            if (enabledFields[fTEMPERATURE_K])
-                [dataJSON setObject:f.temperature_k forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sTIME_MILLIS]) {
-            if (enabledFields[fTIME_MILLIS])
-                [dataJSON setObject:[NSString stringWithFormat:@"u %@", f.time_millis] forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sLUX]) {
-            if (enabledFields[fLUX])
-                [dataJSON setObject:f.lux forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sANGLE_DEG]) {
-            if (enabledFields[fANGLE_DEG])
-                [dataJSON setObject:f.angle_deg forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sANGLE_RAD]) {
-            if (enabledFields[fANGLE_RAD])
-                [dataJSON setObject:f.angle_rad forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sLATITUDE]) {
-            if (enabledFields[fLATITUDE])
-                [dataJSON setObject:f.latitude forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sLONGITUDE]) {
-            if (enabledFields[fLONGITUDE])
-                [dataJSON setObject:f.longitude forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sMAG_X]) {
-            if (enabledFields[fMAG_X])
-                [dataJSON setObject:f.mag_x forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sMAG_Y]) {
-            if (enabledFields[fMAG_Y])
-                [dataJSON setObject:f.mag_y forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sMAG_Z]) {
-            if (enabledFields[fMAG_Z])
-                [dataJSON setObject:f.mag_z forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sMAG_TOTAL]) {
-            if (enabledFields[fMAG_TOTAL])
-                [dataJSON setObject:f.mag_total forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sALTITUDE]) {
-            if (enabledFields[fALTITUDE])
-                [dataJSON setObject:f.altitude forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sPRESSURE]) {
-            if (enabledFields[fPRESSURE])
-                [dataJSON setObject:f.pressure forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sGYRO_X]) {
-            if (enabledFields[fGYRO_X])
-                [dataJSON setObject:f.gyro_x forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sGYRO_Y]) {
-            if (enabledFields[fGYRO_Y])
-                [dataJSON setObject:f.gyro_y forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        if ([s isEqualToString:sGYRO_Z]) {
-            if (enabledFields[fGYRO_Z])
-                [dataJSON setObject:f.gyro_z forKey:[NSString stringWithFormat:@"%d", i]];
-            else
-                [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-            continue;
-        }
-        
-        [dataJSON setObject:@"" forKey:[NSString stringWithFormat:@"%d", i]];
-        
-    }
-    
-    NSLog(@"Data line: %@", dataJSON);
-    
-    return dataJSON;
-}
-
-- (NSMutableArray *) putDataForNoProjectID {
+- (NSMutableArray *) putData {
     
     NSMutableArray *dataJSON = [[NSMutableArray alloc] init];
     
     if (enabledFields[fACCEL_X])
-        [dataJSON addObject:(f.accel_x == nil) ? @"" : f.accel_x];
+        [dataJSON addObject:(f.accel_x == nil) ? @"" : [NSString stringWithFormat:@"%@", f.accel_x]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fACCEL_Y])
-        [dataJSON addObject:(f.accel_y == nil) ? @"" : f.accel_y];
+        [dataJSON addObject:(f.accel_y == nil) ? @"" : [NSString stringWithFormat:@"%@", f.accel_y]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fACCEL_Z])
-        [dataJSON addObject:(f.accel_z == nil) ? @"" : f.accel_z];
+        [dataJSON addObject:(f.accel_z == nil) ? @"" : [NSString stringWithFormat:@"%@", f.accel_z]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fACCEL_TOTAL])
-        [dataJSON addObject:(f.accel_total == nil) ? @"" : f.accel_total];
+        [dataJSON addObject:(f.accel_total == nil) ? @"" : [NSString stringWithFormat:@"%@", f.accel_total]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fTEMPERATURE_C])
-        [dataJSON addObject:(f.temperature_c == nil) ? @"" : f.temperature_c];
+        [dataJSON addObject:(f.temperature_c == nil) ? @"" : [NSString stringWithFormat:@"%@", f.temperature_c]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fTEMPERATURE_F])
-        [dataJSON addObject:(f.temperature_f == nil) ? @"" : f.temperature_f];
+        [dataJSON addObject:(f.temperature_f == nil) ? @"" : [NSString stringWithFormat:@"%@", f.temperature_f]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fTEMPERATURE_K])
-        [dataJSON addObject:(f.temperature_k == nil) ? @"" : f.temperature_k];
+        [dataJSON addObject:(f.temperature_k == nil) ? @"" : [NSString stringWithFormat:@"%@", f.temperature_k]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fTIME_MILLIS])
-        [dataJSON addObject:(f.time_millis == nil) ? @"" : f.time_millis];
+        [dataJSON addObject:(f.time_millis == nil) ? @"" : [NSString stringWithFormat:@"%@", f.time_millis]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fLUX])
-        [dataJSON addObject:(f.lux == nil) ? @"" : f.lux];
+        [dataJSON addObject:(f.lux == nil) ? @"" : [NSString stringWithFormat:@"%@", f.lux]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fANGLE_DEG])
-        [dataJSON addObject:(f.angle_deg == nil) ? @"" : f.angle_deg];
+        [dataJSON addObject:(f.angle_deg == nil) ? @"" : [NSString stringWithFormat:@"%@", f.angle_deg]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fANGLE_RAD])
-        [dataJSON addObject:(f.angle_rad == nil) ? @"" : f.angle_rad];
+        [dataJSON addObject:(f.angle_rad == nil) ? @"" : [NSString stringWithFormat:@"%@", f.angle_rad]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fLATITUDE])
-        [dataJSON addObject:(f.latitude == nil) ? @"" : f.latitude];
+        [dataJSON addObject:(f.latitude == nil) ? @"" : [NSString stringWithFormat:@"%@", f.latitude]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fLONGITUDE])
-        [dataJSON addObject:(f.longitude == nil) ? @"" : f.longitude];
+        [dataJSON addObject:(f.longitude == nil) ? @"" : [NSString stringWithFormat:@"%@", f.longitude]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fMAG_X])
-        [dataJSON addObject:(f.mag_x == nil) ? @"" : f.mag_x];
+        [dataJSON addObject:(f.mag_x == nil) ? @"" : [NSString stringWithFormat:@"%@", f.mag_x]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fMAG_Y])
-        [dataJSON addObject:(f.mag_y == nil) ? @"" : f.mag_y];
+        [dataJSON addObject:(f.mag_y == nil) ? @"" : [NSString stringWithFormat:@"%@", f.mag_y]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fMAG_Z])
-        [dataJSON addObject:(f.mag_z == nil) ? @"" : f.mag_z];
+        [dataJSON addObject:(f.mag_z == nil) ? @"" : [NSString stringWithFormat:@"%@", f.mag_z]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fMAG_TOTAL])
-        [dataJSON addObject:(f.mag_total == nil) ? @"" : f.mag_total];
+        [dataJSON addObject:(f.mag_total == nil) ? @"" : [NSString stringWithFormat:@"%@", f.mag_total]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fALTITUDE])
-        [dataJSON addObject:(f.altitude == nil) ? @"" : f.altitude];
+        [dataJSON addObject:(f.altitude == nil) ? @"" : [NSString stringWithFormat:@"%@", f.altitude]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fPRESSURE])
-        [dataJSON addObject:(f.pressure == nil) ? @"" : f.pressure];
+        [dataJSON addObject:(f.pressure == nil) ? @"" : [NSString stringWithFormat:@"%@", f.pressure]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fGYRO_X])
-        [dataJSON addObject:(f.gyro_x == nil) ? @"" : f.gyro_x];
+        [dataJSON addObject:(f.gyro_x == nil) ? @"" : [NSString stringWithFormat:@"%@", f.gyro_x]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fGYRO_Y])
-        [dataJSON addObject:(f.gyro_y == nil) ? @"" : f.gyro_y];
+        [dataJSON addObject:(f.gyro_y == nil) ? @"" : [NSString stringWithFormat:@"%@", f.gyro_y]];
     else
         [dataJSON addObject:@""];
     if (enabledFields[fGYRO_Z])
-        [dataJSON addObject:(f.gyro_z == nil) ? @"" : f.gyro_z];
+        [dataJSON addObject:(f.gyro_z == nil) ? @"" : [NSString stringWithFormat:@"%@", f.gyro_z]];
     else
         [dataJSON addObject:@""];
 
-    NSLog(@"Data line: %@", dataJSON);
+    // log the data line
+    NSString *dataLog = [[NSString alloc] initWithFormat:@"%@", dataJSON];
+    dataLog = [dataLog stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    dataLog = [dataLog stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSLog(@"Data line: %@\n", dataLog);
     
     return dataJSON;
     
 }
 
-+ (NSMutableArray *) reOrderData:(NSMutableArray *)data forProjectID:(int)projectID API:(API *)isenseAPI andFieldOrder:(NSMutableArray *)fieldOrder {
++ (NSMutableArray *) reOrderData:(NSMutableArray *)data forProjectID:(int)projectID withFieldOrder:(NSMutableArray *)fieldOrder andFieldIDs:(NSMutableArray *)ids {
+    
+    API *api = [API getInstance];
     
     NSMutableArray *row     = [[NSMutableArray alloc] init];
     NSMutableArray *outData = [[NSMutableArray alloc] init];
     NSMutableDictionary *outRow;
-    
     int len = data.count;
-    if (fieldOrder == nil || fieldOrder.count == 0)
-        fieldOrder = [DataFieldManager getOrderForProjID:projectID API:isenseAPI];
     
-    for (int i = 0; i < [fieldOrder count]; i++)
-        NSLog(@"Fields are: %@", [fieldOrder objectAtIndex:i]);
+    // if the field order is null, set up the fieldOrder/fieldIDs.  otherwise, just get fieldIDs
+    if (fieldOrder == nil || fieldOrder.count == 0) {
+        DataFieldManager *d = [[DataFieldManager alloc] initWithProjID:projectID API:api andFields:nil];
+        [d getOrder];
+        fieldOrder = [d getOrderList];
+        ids = [d getFieldIDs];
+    } else if (ids == nil || ids.count == 0) {
+        DataFieldManager *d = [[DataFieldManager alloc] initWithProjID:projectID API:api andFields:nil];
+        [d getOrder];
+        ids = [d getFieldIDs];
+    }
     
+    // reorder the data
     for (int i = 0; i < len; i++) {
         
         row = [data objectAtIndex:i];
@@ -610,97 +445,98 @@
         for (int j = 0; j < fieldOrder.count; j++) {
             
             NSString *s = [fieldOrder objectAtIndex:j];
+            NSNumber *idField = [ids objectAtIndex:j];
             
             if ([s isEqualToString:sACCEL_X]) {
-                [outRow setObject:[row objectAtIndex:fACCEL_X] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fACCEL_X] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sACCEL_Y]) {
-                [outRow setObject:[row objectAtIndex:fACCEL_Y] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fACCEL_Y] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sACCEL_Z]) {
-                [outRow setObject:[row objectAtIndex:fACCEL_Z] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fACCEL_Z] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sACCEL_TOTAL]) {
-                [outRow setObject:[row objectAtIndex:fACCEL_TOTAL] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fACCEL_TOTAL] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sTEMPERATURE_C]) {
-                [outRow setObject:[row objectAtIndex:fTEMPERATURE_C] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fTEMPERATURE_C] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sTEMPERATURE_F]) {
-                [outRow setObject:[row objectAtIndex:fTEMPERATURE_F] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fTEMPERATURE_F] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sTEMPERATURE_K]) {
-                [outRow setObject:[row objectAtIndex:fTEMPERATURE_K] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fTEMPERATURE_K] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sTIME_MILLIS]) {
-                [outRow setObject:[NSString stringWithFormat:@"u %@",[row objectAtIndex:fTIME_MILLIS]] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[NSString stringWithFormat:@"u %@",[row objectAtIndex:fTIME_MILLIS]] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sLUX]) {
-                [outRow setObject:[row objectAtIndex:fLUX] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fLUX] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sANGLE_DEG]) {
-                [outRow setObject:[row objectAtIndex:fANGLE_DEG] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fANGLE_DEG] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sANGLE_RAD]) {
-                [outRow setObject:[row objectAtIndex:fANGLE_RAD] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fANGLE_RAD] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sLATITUDE]) {
-                [outRow setObject:[row objectAtIndex:fLATITUDE] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fLATITUDE] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sLONGITUDE]) {
-                [outRow setObject:[row objectAtIndex:fLONGITUDE] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fLONGITUDE] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sMAG_X]) {
-                [outRow setObject:[row objectAtIndex:fMAG_X] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fMAG_X] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sMAG_Y]) {
-                [outRow setObject:[row objectAtIndex:fMAG_Y] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fMAG_Y] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sMAG_Z]) {
-                [outRow setObject:[row objectAtIndex:fMAG_Z] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fMAG_Z] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sMAG_TOTAL]) {
-                [outRow setObject:[row objectAtIndex:fMAG_TOTAL] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fMAG_TOTAL] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sALTITUDE]) {
-                [outRow setObject:[row objectAtIndex:fALTITUDE] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fALTITUDE] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sPRESSURE]) {
-                [outRow setObject:[row objectAtIndex:fPRESSURE] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fPRESSURE] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sGYRO_X]) {
-                [outRow setObject:[row objectAtIndex:fGYRO_X] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fGYRO_X] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sGYRO_Y]) {
-                [outRow setObject:[row objectAtIndex:fGYRO_Y] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fGYRO_Y] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             if ([s isEqualToString:sGYRO_Z]) {
-                [outRow setObject:[row objectAtIndex:fGYRO_Z] forKey:[NSString stringWithFormat:@"%d", j]];
+                [outRow setObject:[row objectAtIndex:fGYRO_Z] forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
                 continue;
             }
             
-            [outRow setObject:@"" forKey:[NSString stringWithFormat:@"%d", j]];
+            [outRow setObject:@"" forKey:[NSString stringWithFormat:@"%ld", idField.longValue]];
             
         }
         
@@ -712,11 +548,11 @@
 }
 
 - (void) setOrder:(NSMutableArray *)newOrderFields {
+    if (order != nil)
+        [order removeAllObjects];
+    
     order = [[NSMutableArray alloc] initWithArray:newOrderFields];
 }
-
-
-/******************************************************************/
 
 - (void) setEnabledField:(bool)value atIndex:(int)index {
     enabledFields[index] = value;
@@ -724,6 +560,10 @@
 
 - (bool) enabledFieldAtIndex:(int)index {
     return enabledFields[index];
+}
+
+- (NSMutableArray *) getFieldIDs {
+    return fieldIDs;
 }
 
 

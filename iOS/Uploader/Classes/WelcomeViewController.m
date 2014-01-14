@@ -84,6 +84,11 @@
     [welcomeText setUserInteractionEnabled:YES];
     [welcomeText addGestureRecognizer:devGesture];
     
+    // color nav bar
+    [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundColor:UIColorFromHex(0x111155)];
+    self.navigationController.navigationBar.tintColor = UIColorFromHex(0x111155);
+    [[UIBarButtonItem appearance] setTintColor:UIColorFromHex(0x79ADE8)];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

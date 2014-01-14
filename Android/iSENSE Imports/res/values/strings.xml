@@ -12,7 +12,10 @@
     <string name="select_proj">Select Project</string>
     <string name="browse">Browse</string>
     <string name="scan_qr">Scan QR</string>
-    <string name="chooseProject">Uploading to project #:</string>
+    <string name="chooseProject">Enter Project ID:</string>
+    <string name="noProjectYet">Don\'t have a project yet?</string>
+    <string name="createProject">Create New Project</string>
+    <string name="createProjectButton">Create Project</string>
     <string name="search">Search</string>
     <string name="project_no_items">No projects were found.</string>
     <string name="visit">Visit</string>
@@ -24,14 +27,16 @@
     <string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
     <string name="contentDescBack">Back</string>
     <string name="prompt">Select which data sets you would like to upload to iSENSE.
-	    \n\t- Tap data sets to enable/disable them for upload.
-	    \n\t- Long press a data set to reconfigure it.</string>
+	    \n\t&#8226; Tap data sets to enable/disable them for upload.
+	    \n\t&#8226; Long press a data set to reconfigure it.</string>
     <string name="type_data">Type: Data</string>
     <string name="type_picture">Type: Picture</string>
     <string name="select_all">Select All</string>
     <string name="deselect_all">Deselect All</string>
     <string name="delete_selected">Delete Selected</string>
-    <string name="sure_delete_selected">Are you sure you would like to delete all selected data sets?  Selected data sets are the ones highlighted green.</string>
+    <string name="sure_delete_selected">Are you sure you would like to delete all selected data sets? 
+         Selected data sets are the ones highlighted green.
+    </string>
 
     <!-- SyncTime -->
     <string name="syncTime">Synchronizing time is useful when using multiple devices to record data at the
@@ -93,12 +98,14 @@
         <item>Temp. (Kelvin)</item>
     </string-array>
 
-    <string name="field_matching_text">        Match the project\'s fields (left) with fields that this app can record data for (dropdowns on the right).  If no match is
-        available, leave the drop down blank.</string>
+    <string name="field_matching_text">Match the project\'s fields (left) with fields that this app can record data for 
+        (dropdowns on the right).  If no match is
+        available, leave the drop down blank.
+    </string>
     <string name="project_field">Project Field</string>
     <string name="back">Back</string>
-    <string name="username">Username:</string>
-    <string name="password">Password:</string>
+    <string name="username">Email:</string>
+    <string name="password">Pass:</string>
     <string name="login">Login</string>
     <string name="first_name">First Name:</string>
     <string name="last_initial">Last Initial:</string>
@@ -111,5 +118,30 @@
     
     <string name="always_prompt_first_name">Always prompt for first name and last initial</string>
 	<string name="classroom_mode">Classroom Mode</string>
+	
+	<!-- Project Create -->
+    <string name="field_type">Add Field</string>
+    <string-array name="field_type_array">
+        <item>Timestamp</item>
+        <item>Number</item>
+        <item>Text</item>
+        <item>Location</item>
+    </string-array>
+    <string name="field_name">field name</string>
+    <string name="units">units</string>
+    <string name="deg">deg</string>
+    <string name="new_proj_name">New Project Name</string>
+    <string name="how_to_add_field">Select a field type from the drop down menu below to add a new field to your project.</string>
+    <string name="blank_desc"></string>
+    <string name="login_success">Login Successful</string>
+	<string name="please_enter_proj_name">Please enter a new project name</string>
+	<string name="please_enter_field">Please enter at least one field for your project</string>
+	<string name="please_enter_name_field">Please enter a name for field #</string>
+	<string name="one_location_only">Cannot add more than one location</string>
+	<string name="one_timestamp_only">Cannot add more than one timestamp</string>
+	<string name="login_isense_first">Please login to iSENSE first</string>
+	<string name="project_failed_create">Project failed to create - please try again</string>
+	<string name="new_proj_name_title">Enter Project Name</string>
+	<!-- End Project Create -->
     
 </resources>
