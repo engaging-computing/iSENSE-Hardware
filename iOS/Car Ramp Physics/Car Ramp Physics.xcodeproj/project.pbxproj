@@ -7,15 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		760D197717958A4300C123D6 /* QueueUploaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 760D197517958A4300C123D6 /* QueueUploaderView.m */; };
-		760D197F17958AF600C123D6 /* queue_layout-landscape~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */; };
-		760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D197E17958AF600C123D6 /* queue_layout~iphone.xib */; };
-		760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */; };
-		760D198417958AFF00C123D6 /* queue_layout~ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 760D198217958AFF00C123D6 /* queue_layout~ipad.xib */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
-		761D275E1795C1960056FA8C /* Queue.m in Sources */ = {isa = PBXBuildFile; fileRef = 761D275D1795C1960056FA8C /* Queue.m */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
-		7636B54F179EC3BC00DE6C7C /* QueueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7636B54E179EC3BC00DE6C7C /* QueueCell.m */; };
 		76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */; };
 		765099C2178DD92D00425A27 /* button_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BB178DD92D00425A27 /* button_dark.png */; };
 		765099C5178DD92D00425A27 /* button_light_long.png in Resources */ = {isa = PBXBuildFile; fileRef = 765099BE178DD92D00425A27 /* button_light_long.png */; };
@@ -26,6 +19,7 @@
 		765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099CB178DF0D500425A27 /* CoreMotion.framework */; };
 		7655BCDA17AC2064005FA0AD /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099A5178DCA6200425A27 /* libiSENSE_API.a */; };
 		7655BCE117AC2B70005FA0AD /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 765099A7178DCA6200425A27 /* iSENSE_API_Bundle.bundle */; };
+		7662C420187C38430071B4CF /* upload2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7662C41F187C38430071B4CF /* upload2.png */; };
 		7669F02A178B275C00E51AD0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F029178B275C00E51AD0 /* UIKit.framework */; };
 		7669F02C178B275C00E51AD0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F02B178B275C00E51AD0 /* Foundation.framework */; };
 		7669F02E178B275C00E51AD0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F02D178B275C00E51AD0 /* CoreGraphics.framework */; };
@@ -39,24 +33,17 @@
 		7669F046178B275C00E51AD0 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */; };
 		7669F049178B275C00E51AD0 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7669F047178B275C00E51AD0 /* ViewController_iPad.xib */; };
 		7669F050178B29B800E51AD0 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 7669F04F178B29B800E51AD0 /* logo.png */; };
-		76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 76778D1B17919A6B0067ABA1 /* HexColor.m */; };
-		76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B781791E07B001D6E3A /* CRTableViewCell.m */; };
-		76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 76785B90179332A0001D6E3A /* MarqueeLabel.m */; };
 		76785B9317937721001D6E3A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76785B9217937721001D6E3A /* CoreData.framework */; };
-		767B9260178C3F1700F1C6FA /* upload2.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B925F178C3F1700F1C6FA /* upload2.png */; };
-		767B9262178C3FF600F1C6FA /* users.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9261178C3FF600F1C6FA /* users.png */; };
-		767B9264178C40D500F1C6FA /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9263178C40D500F1C6FA /* info.png */; };
-		767B9266178C416A00F1C6FA /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9265178C416A00F1C6FA /* settings.png */; };
-		767B9268178C41FF00F1C6FA /* barcode.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B9267178C41FF00F1C6FA /* barcode.png */; };
-		767B926C178C450300F1C6FA /* reset.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B926B178C450300F1C6FA /* reset.png */; };
 		767B926E178C45A800F1C6FA /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 767B926D178C45A800F1C6FA /* pencil.png */; };
 		767B9272178C526E00F1C6FA /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767B9271178C526E00F1C6FA /* Accelerate.framework */; };
 		767B9274178C527500F1C6FA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767B9273178C527500F1C6FA /* QuartzCore.framework */; };
+		76A3BE6318731E1E005C0473 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A3BE6218731E1E005C0473 /* settings.png */; };
+		76A3BE6518733E4B005C0473 /* reset.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A3BE6418733E4B005C0473 /* reset.png */; };
+		76A3BE68187AFD44005C0473 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A3BE67187AFD44005C0473 /* info.png */; };
+		76A3BE7C187B0FF5005C0473 /* users.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A3BE7B187B0FF5005C0473 /* users.png */; };
+		76A3BE7E187B1862005C0473 /* barcode.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A3BE7D187B1862005C0473 /* barcode.png */; };
 		76A4916717A1585A007F5E90 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A4916617A1585A007F5E90 /* SystemConfiguration.framework */; };
-		76A5159617E239AE0044F668 /* NewDFM.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A5159517E239AE0044F668 /* NewDFM.m */; };
-		76A5ED941796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */; };
 		76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */; };
-		76A5ED9B1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */; };
 		76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */; };
 		76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76A5ED9E1796CB8C00F83E7A /* ViewController~landscape_iPad.xib */; };
 		76B58D82178C5D2D006E1425 /* waffle_check.png in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D7F178C5D2D006E1425 /* waffle_check.png */; };
@@ -68,19 +55,13 @@
 		76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */; };
 		76C54CF41799704100B93A67 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 76C54CF31799704100B93A67 /* button-37.wav */; };
 		76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C54CF81799754300B93A67 /* AudioToolbox.framework */; };
-		76DF6A7C17E3A81B00CF5DDD /* ProjectBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DF6A7817E3A81B00CF5DDD /* ProjectBlock.m */; };
-		76DF6A7D17E3A81B00CF5DDD /* ProjectBrowseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DF6A7A17E3A81B00CF5DDD /* ProjectBrowseViewController.m */; };
 		76DF6A8017E4FD2100CF5DDD /* projectblock_clean.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */; };
 		76DF6A8117E4FD2100CF5DDD /* projectblock_dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A7F17E4FD2100CF5DDD /* projectblock_dark.png */; };
 		76DF6A8317E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8217E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png */; };
 		76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8417E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png */; };
 		76DF6A8717E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */; };
 		76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */; };
-		76DF6A8C17E778F500CF5DDD /* ISenseSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 76DF6A8B17E778F500CF5DDD /* ISenseSearch.m */; };
 		76E02E31178F19220057D37B /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76E02E30178F19220057D37B /* Fields.strings */; };
-		76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E91F8617945E2E001749FC /* VariablesViewController.m */; };
-		76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */; };
-		76E91F8B179461BF001749FC /* VariablesViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */; };
 		76EF01A3178B571F00CBE38C /* RNGridMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 76EF01A2178B571F00CBE38C /* RNGridMenu.m */; };
 /* End PBXBuildFile section */
 
@@ -116,18 +97,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		760D197517958A4300C123D6 /* QueueUploaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueUploaderView.m; sourceTree = "<group>"; };
-		760D197917958A4C00C123D6 /* QueueUploaderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QueueUploaderView.h; sourceTree = "<group>"; };
-		760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~iphone.xib"; sourceTree = "<group>"; };
-		760D197E17958AF600C123D6 /* queue_layout~iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~iphone.xib"; sourceTree = "<group>"; };
-		760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout-landscape~ipad.xib"; sourceTree = "<group>"; };
-		760D198217958AFF00C123D6 /* queue_layout~ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "queue_layout~ipad.xib"; sourceTree = "<group>"; };
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
-		761D275D1795C1960056FA8C /* Queue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Queue.m; sourceTree = "<group>"; };
-		761D27601795C1A30056FA8C /* Queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Queue.h; sourceTree = "<group>"; };
 		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
-		7636B54D179EC3BC00DE6C7C /* QueueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueueCell.h; sourceTree = "<group>"; };
-		7636B54E179EC3BC00DE6C7C /* QueueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueueCell.m; sourceTree = "<group>"; };
 		76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		7650999F178DCA6200425A27 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -138,7 +109,8 @@
 		765099C1178DD92D00425A27 /* underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = underline.png; sourceTree = "<group>"; };
 		765099C9178DF0CE00425A27 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		765099CB178DF0D500425A27 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		7669F026178B275C00E51AD0 /* Car Ramp Physics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Car Ramp Physics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7662C41F187C38430071B4CF /* upload2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload2.png; sourceTree = "<group>"; };
+		7669F026178B275C00E51AD0 /* iS Car Ramp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iS Car Ramp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7669F029178B275C00E51AD0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7669F02B178B275C00E51AD0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7669F02D178B275C00E51AD0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -156,28 +128,17 @@
 		7669F045178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		7669F048178B275C00E51AD0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		7669F04F178B29B800E51AD0 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = "../../../Android/Car_Ramp_Physics_v2/res/drawable-xhdpi/logo.png"; sourceTree = "<group>"; };
-		76778D1A17919A6B0067ABA1 /* HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HexColor.h; path = ../HexColor.h; sourceTree = "<group>"; };
-		76778D1B17919A6B0067ABA1 /* HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HexColor.m; path = ../HexColor.m; sourceTree = "<group>"; };
-		76785B771791E07B001D6E3A /* CRTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRTableViewCell.h; sourceTree = "<group>"; };
-		76785B781791E07B001D6E3A /* CRTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CRTableViewCell.m; sourceTree = "<group>"; };
-		76785B8F179332A0001D6E3A /* MarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MarqueeLabel.h; path = ../MarqueeLabel.h; sourceTree = "<group>"; };
-		76785B90179332A0001D6E3A /* MarqueeLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MarqueeLabel.m; path = ../MarqueeLabel.m; sourceTree = "<group>"; };
 		76785B9217937721001D6E3A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		767B925F178C3F1700F1C6FA /* upload2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload2.png; sourceTree = "<group>"; };
-		767B9261178C3FF600F1C6FA /* users.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = users.png; sourceTree = "<group>"; };
-		767B9263178C40D500F1C6FA /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
-		767B9265178C416A00F1C6FA /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
-		767B9267178C41FF00F1C6FA /* barcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode.png; sourceTree = "<group>"; };
-		767B926B178C450300F1C6FA /* reset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reset.png; sourceTree = "<group>"; };
 		767B926D178C45A800F1C6FA /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		767B9271178C526E00F1C6FA /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		767B9273178C527500F1C6FA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		76A3BE6218731E1E005C0473 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
+		76A3BE6418733E4B005C0473 /* reset.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reset.png; sourceTree = "<group>"; };
+		76A3BE67187AFD44005C0473 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
+		76A3BE7B187B0FF5005C0473 /* users.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = users.png; sourceTree = "<group>"; };
+		76A3BE7D187B1862005C0473 /* barcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = barcode.png; sourceTree = "<group>"; };
 		76A4916617A1585A007F5E90 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		76A5159417E239AE0044F668 /* NewDFM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewDFM.h; sourceTree = "<group>"; };
-		76A5159517E239AE0044F668 /* NewDFM.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewDFM.m; sourceTree = "<group>"; };
-		76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
-		76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "VariablesViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76A5ED9E1796CB8C00F83E7A /* ViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76B58D7B178C5D16006E1425 /* StringGrabber.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StringGrabber.h; path = ../StringGrabber.h; sourceTree = "<group>"; };
@@ -191,23 +152,13 @@
 		76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPad.xib; sourceTree = "<group>"; };
 		76C54CF31799704100B93A67 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-37.wav"; sourceTree = "<group>"; };
 		76C54CF81799754300B93A67 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		76DF6A7517E3A81B00CF5DDD /* ISenseSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISenseSearch.h; sourceTree = "<group>"; };
-		76DF6A7717E3A81B00CF5DDD /* ProjectBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBlock.h; sourceTree = "<group>"; };
-		76DF6A7817E3A81B00CF5DDD /* ProjectBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBlock.m; sourceTree = "<group>"; };
-		76DF6A7917E3A81B00CF5DDD /* ProjectBrowseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBrowseViewController.h; sourceTree = "<group>"; };
-		76DF6A7A17E3A81B00CF5DDD /* ProjectBrowseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBrowseViewController.m; sourceTree = "<group>"; };
 		76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_clean.png; sourceTree = "<group>"; };
 		76DF6A7F17E4FD2100CF5DDD /* projectblock_dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = projectblock_dark.png; sourceTree = "<group>"; };
 		76DF6A8217E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo57x57.png; path = ../CarRampPhysicsLogo57x57.png; sourceTree = "<group>"; };
 		76DF6A8417E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo114x114.png; path = ../CarRampPhysicsLogo114x114.png; sourceTree = "<group>"; };
 		76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo72x72.png; path = ../CarRampPhysicsLogo72x72.png; sourceTree = "<group>"; };
 		76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo144x144.png; path = ../CarRampPhysicsLogo144x144.png; sourceTree = "<group>"; };
-		76DF6A8B17E778F500CF5DDD /* ISenseSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISenseSearch.m; sourceTree = "<group>"; };
 		76E02E30178F19220057D37B /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
-		76E91F8517945E2E001749FC /* VariablesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariablesViewController.h; sourceTree = "<group>"; };
-		76E91F8617945E2E001749FC /* VariablesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VariablesViewController.m; sourceTree = "<group>"; };
-		76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VariablesViewController_iPhone.xib; sourceTree = "<group>"; };
-		76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VariablesViewController_iPad.xib; sourceTree = "<group>"; };
 		76EF01A1178B571F00CBE38C /* RNGridMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNGridMenu.h; path = ../RNGridMenu.h; sourceTree = "<group>"; };
 		76EF01A2178B571F00CBE38C /* RNGridMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNGridMenu.m; path = ../RNGridMenu.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -235,13 +186,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		760D197A17958AD500C123D6 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Cells;
-			sourceTree = "<group>";
-		};
 		765099A0178DCA6200425A27 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -266,7 +210,7 @@
 		7669F027178B275C00E51AD0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7669F026178B275C00E51AD0 /* Car Ramp Physics.app */,
+				7669F026178B275C00E51AD0 /* iS Car Ramp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -290,7 +234,6 @@
 		7669F02F178B275C00E51AD0 /* Car Ramp Physics */ = {
 			isa = PBXGroup;
 			children = (
-				760D197A17958AD500C123D6 /* Cells */,
 				76E91F92179478DF001749FC /* Source */,
 				76E91F91179478B7001749FC /* Headers */,
 				76E91F8E1794789F001749FC /* iPhone */,
@@ -326,10 +269,6 @@
 		76E91F8E1794789F001749FC /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
-				760D197D17958AF600C123D6 /* queue_layout-landscape~iphone.xib */,
-				760D197E17958AF600C123D6 /* queue_layout~iphone.xib */,
-				76E91F8717945E2E001749FC /* VariablesViewController_iPhone.xib */,
-				76A5ED931796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib */,
 				76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */,
 				76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */,
 				7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */,
@@ -341,10 +280,6 @@
 		76E91F90179478AD001749FC /* iPad */ = {
 			isa = PBXGroup;
 			children = (
-				760D198117958AFF00C123D6 /* queue_layout-landscape~ipad.xib */,
-				760D198217958AFF00C123D6 /* queue_layout~ipad.xib */,
-				76E91F8A179461BF001749FC /* VariablesViewController_iPad.xib */,
-				76A5ED9A1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib */,
 				76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */,
 				76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */,
 				7669F047178B275C00E51AD0 /* ViewController_iPad.xib */,
@@ -356,17 +291,6 @@
 		76E91F91179478B7001749FC /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				76DF6A7517E3A81B00CF5DDD /* ISenseSearch.h */,
-				76DF6A7717E3A81B00CF5DDD /* ProjectBlock.h */,
-				76DF6A7917E3A81B00CF5DDD /* ProjectBrowseViewController.h */,
-				76A5159417E239AE0044F668 /* NewDFM.h */,
-				7636B54D179EC3BC00DE6C7C /* QueueCell.h */,
-				761D27601795C1A30056FA8C /* Queue.h */,
-				760D197917958A4C00C123D6 /* QueueUploaderView.h */,
-				76785B8F179332A0001D6E3A /* MarqueeLabel.h */,
-				76E91F8517945E2E001749FC /* VariablesViewController.h */,
-				76785B771791E07B001D6E3A /* CRTableViewCell.h */,
-				76778D1A17919A6B0067ABA1 /* HexColor.h */,
 				765099B7178DD39500425A27 /* Constants.h */,
 				76B58D7B178C5D16006E1425 /* StringGrabber.h */,
 				76EF01A1178B571F00CBE38C /* RNGridMenu.h */,
@@ -380,23 +304,12 @@
 		76E91F92179478DF001749FC /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				76DF6A8B17E778F500CF5DDD /* ISenseSearch.m */,
-				76DF6A7817E3A81B00CF5DDD /* ProjectBlock.m */,
-				76DF6A7A17E3A81B00CF5DDD /* ProjectBrowseViewController.m */,
-				761D275D1795C1960056FA8C /* Queue.m */,
-				760D197517958A4300C123D6 /* QueueUploaderView.m */,
-				7636B54E179EC3BC00DE6C7C /* QueueCell.m */,
-				76785B90179332A0001D6E3A /* MarqueeLabel.m */,
-				76E91F8617945E2E001749FC /* VariablesViewController.m */,
-				76785B781791E07B001D6E3A /* CRTableViewCell.m */,
-				76778D1B17919A6B0067ABA1 /* HexColor.m */,
 				76B58D7C178C5D16006E1425 /* StringGrabber.m */,
 				76EF01A2178B571F00CBE38C /* RNGridMenu.m */,
 				7669F039178B275C00E51AD0 /* AppDelegate.m */,
 				7669F042178B275C00E51AD0 /* ViewController.mm */,
 				76B58D8E178C742B006E1425 /* AboutViewController.m */,
 				7669F035178B275C00E51AD0 /* main.m */,
-				76A5159517E239AE0044F668 /* NewDFM.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -406,6 +319,8 @@
 			children = (
 				76DF6A8A17E4FF8D00CF5DDD /* AppLogos */,
 				76DF6A7E17E4FD2100CF5DDD /* projectblock_clean.png */,
+				76A3BE7D187B1862005C0473 /* barcode.png */,
+				76A3BE6218731E1E005C0473 /* settings.png */,
 				76DF6A7F17E4FD2100CF5DDD /* projectblock_dark.png */,
 				7669F03B178B275C00E51AD0 /* Default.png */,
 				7669F03D178B275C00E51AD0 /* Default@2x.png */,
@@ -419,12 +334,10 @@
 				76B58D80178C5D2D006E1425 /* waffle_warn.png */,
 				76B58D81178C5D2D006E1425 /* waffle_x.png */,
 				767B926D178C45A800F1C6FA /* pencil.png */,
-				767B926B178C450300F1C6FA /* reset.png */,
-				767B9267178C41FF00F1C6FA /* barcode.png */,
-				767B9265178C416A00F1C6FA /* settings.png */,
-				767B9263178C40D500F1C6FA /* info.png */,
-				767B9261178C3FF600F1C6FA /* users.png */,
-				767B925F178C3F1700F1C6FA /* upload2.png */,
+				76A3BE7B187B0FF5005C0473 /* users.png */,
+				76A3BE67187AFD44005C0473 /* info.png */,
+				76A3BE6418733E4B005C0473 /* reset.png */,
+				7662C41F187C38430071B4CF /* upload2.png */,
 				7669F04F178B29B800E51AD0 /* logo.png */,
 			);
 			name = Images;
@@ -459,7 +372,7 @@
 			);
 			name = "Car Ramp Physics";
 			productName = "Car Ramp Physics";
-			productReference = 7669F026178B275C00E51AD0 /* Car Ramp Physics.app */;
+			productReference = 7669F026178B275C00E51AD0 /* iS Car Ramp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -524,12 +437,6 @@
 				7669F046178B275C00E51AD0 /* ViewController_iPhone.xib in Resources */,
 				7669F049178B275C00E51AD0 /* ViewController_iPad.xib in Resources */,
 				7669F050178B29B800E51AD0 /* logo.png in Resources */,
-				767B9260178C3F1700F1C6FA /* upload2.png in Resources */,
-				767B9262178C3FF600F1C6FA /* users.png in Resources */,
-				767B9264178C40D500F1C6FA /* info.png in Resources */,
-				767B9266178C416A00F1C6FA /* settings.png in Resources */,
-				767B9268178C41FF00F1C6FA /* barcode.png in Resources */,
-				767B926C178C450300F1C6FA /* reset.png in Resources */,
 				767B926E178C45A800F1C6FA /* pencil.png in Resources */,
 				76B58D82178C5D2D006E1425 /* waffle_check.png in Resources */,
 				76B58D83178C5D2D006E1425 /* waffle_warn.png in Resources */,
@@ -543,16 +450,8 @@
 				765099C8178DD92D00425A27 /* underline.png in Resources */,
 				76E02E31178F19220057D37B /* Fields.strings in Resources */,
 				760FABBC1790566C00951F97 /* Strings.strings in Resources */,
-				76E91F8917945E2E001749FC /* VariablesViewController_iPhone.xib in Resources */,
-				76E91F8B179461BF001749FC /* VariablesViewController_iPad.xib in Resources */,
-				760D197F17958AF600C123D6 /* queue_layout-landscape~iphone.xib in Resources */,
-				760D198017958AF600C123D6 /* queue_layout~iphone.xib in Resources */,
-				760D198317958AFF00C123D6 /* queue_layout-landscape~ipad.xib in Resources */,
-				760D198417958AFF00C123D6 /* queue_layout~ipad.xib in Resources */,
-				76A5ED941796C7C600F83E7A /* VariablesViewController~landscape_iPhone.xib in Resources */,
 				76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */,
 				7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */,
-				76A5ED9B1796CAAF00F83E7A /* VariablesViewController~landscape_iPad.xib in Resources */,
 				76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */,
 				76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */,
 				76C54CF41799704100B93A67 /* button-37.wav in Resources */,
@@ -562,6 +461,12 @@
 				76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */,
 				76DF6A8717E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png in Resources */,
 				76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */,
+				76A3BE6318731E1E005C0473 /* settings.png in Resources */,
+				76A3BE6518733E4B005C0473 /* reset.png in Resources */,
+				76A3BE68187AFD44005C0473 /* info.png in Resources */,
+				76A3BE7C187B0FF5005C0473 /* users.png in Resources */,
+				76A3BE7E187B1862005C0473 /* barcode.png in Resources */,
+				7662C420187C38430071B4CF /* upload2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,17 +483,6 @@
 				7669F043178B275C00E51AD0 /* ViewController.mm in Sources */,
 				76EF01A3178B571F00CBE38C /* RNGridMenu.m in Sources */,
 				76B58D90178C742C006E1425 /* AboutViewController.m in Sources */,
-				76778D1C17919A6B0067ABA1 /* HexColor.m in Sources */,
-				76785B791791E07B001D6E3A /* CRTableViewCell.m in Sources */,
-				76785B91179332A0001D6E3A /* MarqueeLabel.m in Sources */,
-				76E91F8817945E2E001749FC /* VariablesViewController.m in Sources */,
-				760D197717958A4300C123D6 /* QueueUploaderView.m in Sources */,
-				761D275E1795C1960056FA8C /* Queue.m in Sources */,
-				7636B54F179EC3BC00DE6C7C /* QueueCell.m in Sources */,
-				76A5159617E239AE0044F668 /* NewDFM.m in Sources */,
-				76DF6A7C17E3A81B00CF5DDD /* ProjectBlock.m in Sources */,
-				76DF6A7D17E3A81B00CF5DDD /* ProjectBrowseViewController.m in Sources */,
-				76DF6A8C17E778F500CF5DDD /* ISenseSearch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -724,7 +618,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "Car Ramp Physics";
+				PRODUCT_NAME = "iS Car Ramp";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -732,6 +626,8 @@
 		7669F04E178B275C00E51AD0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -742,7 +638,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "Car Ramp Physics";
+				PRODUCT_NAME = "iS Car Ramp";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

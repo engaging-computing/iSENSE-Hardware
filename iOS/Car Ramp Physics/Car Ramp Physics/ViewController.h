@@ -12,7 +12,6 @@
 #import "StringGrabber.h"
 #import "FieldGrabber.h"
 #import "ProjectBrowseViewController.h"
-#import "NewDFM.h"
 #import "Constants.h"
 #import "HexColor.h"
 #import "VariablesViewController.h"
@@ -27,6 +26,7 @@
 #import <UIKit/UIKit.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import <iSENSE_API/API.h>
+#import <FieldMatchingViewController.h>
 
 typedef struct _RotationDataSaver{
     __unsafe_unretained NSString *first;
@@ -36,10 +36,11 @@ typedef struct _RotationDataSaver{
     bool hasName;
     bool hasLogin;
     bool saveMode;
+    bool isLoggedIn;
     
 } RotationDataSaver;
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, ProjectBrowseViewControllerDelegate>
 {
     
     RotationDataSaver *saver;
@@ -52,19 +53,21 @@ typedef struct _RotationDataSaver{
 @property(nonatomic) IBOutlet UIBarButtonItem *menuButton;
 @property(nonatomic) IBOutlet UIImageView *image;
 
+
 @property(nonatomic) int recordLength;
 @property(nonatomic) int countdown;
 @property(nonatomic, retain) UIAlertView *change_name;
-@property(nonatomic, retain) UIAlertView *experiment;
-@property(nonatomic, retain) UIAlertView *exp_num;
+@property(nonatomic, retain) UIAlertView *project;
+@property(nonatomic, retain) UIAlertView *proj_num;
 @property(nonatomic, retain) UIAlertView *loginalert;
 @property(nonatomic, retain) UIAlertView *saveMode;
 @property(nonatomic, retain) API *api;
-@property NewDFM *dfm;
+@property(nonatomic, retain) NSNumberFormatter *formatter;
+@property DataFieldManager *dfm;
 @property(nonatomic, retain) CMMotionManager *motionmanager;
 @property (nonatomic, strong) NSMutableArray *dataToBeJSONed;
 @property (nonatomic, strong) NSMutableArray *dataToBeOrdered;
-@property (nonatomic, assign) int expNum;
+@property (nonatomic, assign) int projNum;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic) float sampleInterval;
 @property (nonatomic, copy) NSString *sessionName;

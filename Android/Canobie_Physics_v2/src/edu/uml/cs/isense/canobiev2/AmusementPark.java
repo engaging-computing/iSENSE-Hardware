@@ -704,7 +704,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 */
 	private void initVars() {
 
-		api = API.getInstance(this);
+		api = API.getInstance();
 		api.useDev(true);
 
 		// Get the last stored username and password from Encrypted Shared

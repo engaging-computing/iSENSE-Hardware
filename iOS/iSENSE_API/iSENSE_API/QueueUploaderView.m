@@ -83,28 +83,24 @@
             [isenseBundle loadNibNamed:@"queue_layout-landscape~ipad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
             [isenseBundle loadNibNamed:@"queue_layout~ipad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         }
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [isenseBundle loadNibNamed:@"queue_layout-landscape~iphone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
-            
-            NSString *name = [[NSBundle mainBundle] resourcePath];
-            NSLog(@"HONKYFROG: %@", name);
-            
             [isenseBundle loadNibNamed:@"queue_layout~iphone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         }
     }
 }
@@ -264,7 +260,7 @@
                                                      message:nil
                                                     delegate:self
                                            cancelButtonTitle:@"Cancel"
-                                           otherButtonTitles:@"Enter Project #", @"Browse Projects", @"Scan QR Code", nil];
+                                           otherButtonTitles:@"Enter Project #", @"Browse Projects", nil];
                 message.tag = QUEUE_SELECT_PROJ;
                 [message show];
             }
@@ -319,8 +315,6 @@
             browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
             
-        } else if (buttonIndex == OPTION_SCAN_PROJECT_QR) {
-            [self.view makeWaffle:@"Scan QR Code not currently implemented" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM];
         }
         
     } else if (actionSheet.tag == PROJECT_MANUAL_ENTRY) {
@@ -330,12 +324,14 @@
             NSString *projIDString = [[actionSheet textFieldAtIndex:0] text];
             projID = [projIDString intValue];
             
-            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-            [cell setProjID:projIDString];
-            [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
+//            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+//            [cell setProjID:projIDString];
+//            [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setInteger:projID forKey:KEY_PROJECT_ID];
+            
+            [self launchFieldMatchingViewControllerFromBrowse:FALSE];
         }
         
     } else if (actionSheet.tag == QUEUE_CHANGE_DESC) {
@@ -353,30 +349,19 @@
 -(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
 
     projID = project.intValue;
+    
+    if (projID != 0) {
+//        QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+//        
+//        [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
+//        [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
+//        [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:project];
         
-    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-    
-    [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
-    [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
-    [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:project];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setInteger:projID forKey:KEY_PROJECT_ID];
-    
-}
-
-- (BOOL) handleNewQRCode:(NSURL *)url {
-//    
-//    NSArray *arr = [[url absoluteString] componentsSeparatedByString:@"="];
-//    NSString *exp = arr[2];
-//    
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    [prefs setValue:exp forKeyPath:[StringGrabber grabString:@"key_exp_manual"]]; // if you uncomment this, make a new key_exp_manual
-//    
-//    QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-//    [cell setExpNum:exp];
-//    
-    return YES;
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setInteger:projID forKey:KEY_PROJECT_ID];
+        
+        [self launchFieldMatchingViewControllerFromBrowse:TRUE];
+    }
 }
 
 // Dispose of any resources that can be recreated.
@@ -538,6 +523,57 @@
         default:
             return YES;
     }
+}
+
+- (void) launchFieldMatchingViewControllerFromBrowse:(bool)fromBrowse {
+    // get the fields to field match
+    DataFieldManager *dfm = [[DataFieldManager alloc] initWithProjID:projID API:api andFields:nil];
+    UIAlertView *message = [self getDispatchDialogWithMessage:@"Loading fields..."];
+    [message show];
+    
+    dispatch_queue_t queue = dispatch_queue_create("step_1_setup_loading_project_fields", NULL);
+    dispatch_async(queue, ^{
+        [dfm getOrder];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // set an observer for the field matched array caught from FieldMatching
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveFieldMatchedArray:) name:kFIELD_MATCHED_ARRAY object:nil];
+            
+            // launch the field matching dialog
+            FieldMatchingViewController *fmvc = [[FieldMatchingViewController alloc] initWithMatchedFields:[dfm getOrderList] andProjectFields:[dfm getRealOrder]];
+            fmvc.title = @"Field Matching";
+            
+            if (fromBrowse) {
+                double delayInSeconds = 0.1;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    [self.navigationController pushViewController:fmvc animated:YES];
+                });
+            } else
+                [self.navigationController pushViewController:fmvc animated:YES];
+            
+            if (fromBrowse) [NSThread sleepForTimeInterval:1.0];
+            [message dismissWithClickedButtonIndex:nil animated:YES];
+            
+        });
+    });
+}
+
+- (void) retrieveFieldMatchedArray:(NSNotification *)obj {
+    NSMutableArray *fieldMatch =  (NSMutableArray *)[obj object];
+    if (fieldMatch != nil) {
+        // user pressed okay button - set the cell's project and fields
+        QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+        
+        [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
+        [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
+        [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
+        
+        [cell setFields:fieldMatch];
+        [cell.dataSet setFields:fieldMatch];
+        [dataSaver editDataSetWithKey:cell.mKey andChangeFieldsTo:fieldMatch];
+        
+    }
+    // else user canceled
 }
 
 @end

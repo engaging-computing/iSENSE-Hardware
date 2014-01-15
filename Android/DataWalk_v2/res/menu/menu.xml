@@ -46,5 +46,10 @@
         android:showAsAction="ifRoom"
         android:title="@string/help">
     </item>
+    <item
+        android:id="@+id/classroom"
+        android:showAsAction="ifRoom"
+        android:title="@string/classroom">
+    </item>
 
 </menu>

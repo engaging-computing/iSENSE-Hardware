@@ -74,7 +74,6 @@ import android.widget.TextView;
 import edu.uml.cs.isense.collector.dialogs.CanLogin;
 import edu.uml.cs.isense.collector.dialogs.Description;
 import edu.uml.cs.isense.collector.dialogs.ForceStop;
-import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
@@ -82,6 +81,8 @@ import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.queue.QDataSet;
@@ -177,7 +178,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static String dataSetName;
 	private static long sampleInterval;
 	private static long recordingLength;
-	private static int currentProjID;
 
 	// Raw data variables
 	private static String temperature = "";
@@ -189,7 +189,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static float accel[];
 	private static float mag[];
 	private static float orientation[];
-	
+
 	/* Publicized Variables */
 
 	// Lists and Queues
@@ -246,7 +246,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	private static FileWriter gpxwriter;
 	private static BufferedWriter out;
 	private static Context mContext;
-	
+
 	public static JSONArray dataSet;
 
 	// Custom
@@ -399,10 +399,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// and update UI
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences("USER_INFO",
+				DataCollector.mContext.getSharedPreferences(
+						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
 
-		if (!(mPrefs.getString("username", "").equals("")) && !inPausedState)
+		if (!(mPrefs.getString(
+				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+				.equals(""))
+				&& !inPausedState)
 			login();
 
 		inPausedState = false;
@@ -428,10 +432,10 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		if (!w.isDisplaying) {
 			if (running)
-				w.make("Cannot exit via BACK while recording data; use HOME instead.",
+				w.make(getResources().getString(R.string.no_back_use_home_instead),
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else
-				w.make("Double press \"Back\" to exit.");
+				w.make(getResources().getString(R.string.double_press_back));
 
 		} else if (w.canPerformTask && !running) {
 			super.onBackPressed();
@@ -463,8 +467,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Prepare the menu (enable/disable properly)
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-//		if (!preLoad)
-//			setMenuStatus(true);
+		// if (!preLoad)
+		// setMenuStatus(true);
 		if (!useMenu) {
 
 			menu.getItem(0).setEnabled(false);
@@ -476,7 +480,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			menu.getItem(0).setEnabled(true);
 			menu.getItem(1).setEnabled(true);
 			menu.getItem(2).setEnabled(true);
-			
+
 		}
 		return true;
 	}
@@ -485,19 +489,30 @@ public class DataCollector extends Activity implements SensorEventListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		
 		case R.id.menu_item_login:
-			Intent iLogin = new Intent(mContext, LoginActivity.class);
+			Intent iLogin = new Intent(mContext, Login.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
+		
 			return true;
+		
 		case R.id.menu_item_sync:
 			Intent iTime = new Intent(DataCollector.this, SyncTime.class);
 			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
+		
 			return true;
+		
 		case R.id.menu_item_media:
 			Intent iMedia = new Intent(DataCollector.this, MediaManager.class);
 			iMedia.putExtra("dataSetName", dataSetName);
 			startActivity(iMedia);
+		
 			return true;
+		
+		case android.R.id.home:
+	    	onBackPressed();
+	       
+	    	return true;
 		}
 		return false;
 	}
@@ -635,24 +650,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				String returnCode = data.getStringExtra("returnCode");
 
-				if (returnCode.equals("Success")) {
+				w.make(getResources().getString(R.string.login_success), 
+						Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
 
-					w.make("Login successful", Waffle.LENGTH_LONG,
-							Waffle.IMAGE_CHECK);
-
-					if (manageUploadQueueAfterLogin) {
-						manageUploadQueueAfterLogin = false;
-						manageUploadQueue();
-					}
-
-				} else if (returnCode.equals("Failed")) {
-
-					Intent i = new Intent(mContext, LoginActivity.class);
-					startActivityForResult(i, LOGIN_REQUESTED);
-				} else {
-					// should never get here
+				if (manageUploadQueueAfterLogin) {
+					manageUploadQueueAfterLogin = false;
+					manageUploadQueue();
 				}
 
 			} else if (resultCode == RESULT_CANCELED) {
@@ -660,6 +665,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 					manageUploadQueueAfterLogin = false;
 					manageUploadQueue();
 				}
+			} else if (resultCode == Login.RESULT_ERROR) {
+
+				Intent i = new Intent(mContext, Login.class);
+				startActivityForResult(i, LOGIN_REQUESTED);
+
 			}
 
 		} else if (requestCode == GPS_REQUESTED) {
@@ -686,7 +696,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 				new SaveDataTask().execute();
 
 			} else if (resultCode == RESULT_CANCELED) {
-				w.make("Data set deleted", Waffle.LENGTH_SHORT,
+				w.make(getResources().getString(R.string.data_set_deleted),
+						Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 				OrientationManager.enableRotation((Activity) mContext);
 			}
@@ -695,7 +706,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			boolean success = uq.buildQueueFromFile();
 			if (!success) {
-				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
+				w.make(getResources().getString(R.string.could_not_build_queue), Waffle.IMAGE_X);
 			}
 
 		} else if (requestCode == STEP_1_SETUP_REQUESTED) {
@@ -714,7 +725,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == CAN_LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				Intent iLogin = new Intent(mContext, LoginActivity.class);
+				Intent iLogin = new Intent(mContext, Login.class);
 				startActivityForResult(iLogin, LOGIN_REQUESTED);
 			} else if (resultCode == RESULT_CANCELED) {
 				if (manageUploadQueueAfterLogin) {
@@ -759,18 +770,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 					// First run through, save data with the picture
 					if (firstSave) {
-						QDataSet ds = new QDataSet(QDataSet.Type.BOTH,
-								dataSetName, description, projID,
-								dataSet.toString(),
-								MediaManager.pictureArray.get(pic - 1));
+						QDataSet ds = new QDataSet(dataSetName, description, QDataSet.Type.BOTH, 
+								dataSet.toString(), MediaManager.pictureArray.get(pic - 1), projID, dfm.getOrderList());
 						uq.addDataSetToQueue(ds);
 						firstSave = false;
 
 						// Next set of runs, save the remaining pictures
 					} else {
-						QDataSet dsp = new QDataSet(QDataSet.Type.PIC,
-								dataSetName, description, projID, null,
-								MediaManager.pictureArray.get(pic - 1));
+						QDataSet dsp = new QDataSet(
+								dataSetName, description, QDataSet.Type.PIC, null,
+								MediaManager.pictureArray.get(pic - 1), projID, dfm.getOrderList());
 						uq.addDataSetToQueue(dsp);
 					}
 
@@ -782,8 +791,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 				// Else if no pictures, just save data
 			} else {
-				QDataSet ds = new QDataSet(QDataSet.Type.DATA, dataSetName,
-						description, projID, dataSet.toString(), null);
+				QDataSet ds = new QDataSet(dataSetName, description, QDataSet.Type.DATA, 
+						dataSet.toString(), null, projID, dfm.getOrderList());
 				uq.addDataSetToQueue(ds);
 			}
 
@@ -830,7 +839,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 			showSummary();
 
-			w.make("Your data set has been saved", Waffle.LENGTH_SHORT,
+			w.make(getResources().getString(R.string.data_saved),
+					Waffle.LENGTH_SHORT,
 					Waffle.IMAGE_CHECK);
 		}
 
@@ -863,12 +873,18 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected Boolean doInBackground(Void... params) {
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					DataCollector.mContext,
-					DataCollector.mContext.getSharedPreferences("USER_INFO",
+					DataCollector.mContext.getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 
-			boolean success = api.createSession(
-					mPrefs.getString("username", ""),
-					mPrefs.getString("password", ""));
+			boolean success = api
+					.createSession(
+							mPrefs.getString(
+									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+									""),
+							mPrefs.getString(
+									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+									""));
 			return success;
 		}
 
@@ -1018,27 +1034,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		}
 	}
 
-	private void initDfmWithExternalAsyncTask() {
-
-		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-		String projectInput = mPrefs.getString("project_id", "");
-
-		if (projectInput.equals("-1")) {
-			setUpDFMWithAllFields();
-		} else {
-			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
-					mContext, f);
-
-			String fields = mPrefs.getString("accepted_fields", "");
-			getFieldsFromPrefsString(fields);
-			
-			dfm.setOrder(fields);
-			
-			getEnabledFields();
-
-		}
-	}
-
 	// (currently 2 of these methods exist - one also in step1setup)
 	private void getEnabledFields() {
 
@@ -1136,7 +1131,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else {
 			if (throughUploadMenuItem) {
 				throughUploadMenuItem = false;
-				w.make("There is no data to upload", Waffle.LENGTH_LONG,
+				w.make(getResources().getString(R.string.no_data_to_upload),
+						Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			}
 		}
@@ -1188,7 +1184,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables needed to be initialized for onCreate
 	private void initVars() {
-		api = API.getInstance(getApplicationContext());
+		api = API.getInstance();
 		api.useDev(Welcome.useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
@@ -1219,7 +1215,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	// Variables to re-initialize for onConfigurationChange
 	private void reInitVars() {
-		api = API.getInstance(getApplicationContext());
+		api = API.getInstance();
 		api.useDev(Welcome.useDev);
 
 		uq = new UploadQueue("datacollector", mContext, api);
@@ -1256,10 +1252,13 @@ public class DataCollector extends Activity implements SensorEventListener,
 		// Set all the login info
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences("USER_INFO",
+				DataCollector.mContext.getSharedPreferences(
+						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
 
-		if (!(mPrefs.getString("username", "").equals("")))
+		if (!(mPrefs.getString(
+				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+				.equals("")))
 			login();
 
 		// Add listener
@@ -1304,7 +1303,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				Locale.US);
 		Date dt = new Date();
 		dateString = sdf.format(dt);
-		dataSetName += " - " + dateString;
+		//dataSetName += " - " + dateString;
 
 		// absolutely ensure the timer resets to 0
 		setTime(0);
@@ -1337,10 +1336,11 @@ public class DataCollector extends Activity implements SensorEventListener,
 	}
 
 	// Code for polling sensors for data periodically - called by service
-	public static void pollForData() { 
-		// TODO should there be a new Fields object for each row recorded? else duplicate data
+	public static void pollForData() {
+		// TODO should there be a new Fields object for each row recorded? else
+		// duplicate data
 		// if so, then ensure you set dfm's field objects each time
-		
+
 		dataPointCount++;
 		elapsedMillis += sampleInterval;
 		totalMillis = elapsedMillis;
@@ -1397,11 +1397,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		if (dfm.enabledFields[Fields.LIGHT])
 			f.lux = light;
 
-		if (currentProjID != -1)
-			dataSet.put(dfm.putData());
-		else
-			dataSet.put(dfm.putDataForNoProjectID());
-
+		dataSet.put(dfm.putData());
+		
 		data = dfm.writeSdCardLine();
 
 		if (writeCSVFile) {
@@ -1413,6 +1410,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				writeToSDCard(data, 'u');
 			}
 		}
+		
 	}
 
 	// All the code for the main button!
@@ -1420,7 +1418,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		step1.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+
 				Intent iSetup = new Intent(mContext, Step1Setup.class);
 				startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
 			}
@@ -1434,15 +1432,16 @@ public class DataCollector extends Activity implements SensorEventListener,
 				if (!running) {
 					if (dataSetName.equals("")
 							|| ((1000 / sampleInterval) * recordingLength) > Step1Setup.MAX_DATA_POINTS) {
-						w.make("Some data not found - please setup again",
+						w.make(getResources().getString(R.string.setup_again),
 								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 						Intent iSetup = new Intent(mContext, Step1Setup.class);
 						startActivityForResult(iSetup, STEP_1_SETUP_REQUESTED);
 					} else {
 
 						setUpRecordingDescription();
-						
-						// get csv order (not used if project is -1: perhaps add that check here?)
+
+						// get csv order (not used if project is -1: perhaps add
+						// that check here?)
 						dfm.getProjectFieldsAndSetCSVOrder();
 
 						// start running task
@@ -1458,7 +1457,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 							writeCSVFile = false;
 						else
 							writeCSVFile = true;
-						currentProjID = Integer.parseInt(projectInput);
 
 						getWindow().addFlags(
 								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -1546,12 +1544,12 @@ public class DataCollector extends Activity implements SensorEventListener,
 						writeToSDCard(null, 'f');
 
 					setMenuStatus(true);
-					
+
 					step2.setText(R.string.step2);
 					setTime(0);
 
 					if (writeCSVFile && sdCardError)
-						w.make("Could not write file to SD Card",
+						w.make(getResources().getString(R.string.could_not_write_sd_card),
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 
 					displayDescription();
@@ -1570,12 +1568,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 			public void onClick(View v) {
 
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						DataCollector.mContext, DataCollector.mContext
-								.getSharedPreferences("USER_INFO",
-										Context.MODE_PRIVATE));
+						DataCollector.mContext,
+						DataCollector.mContext.getSharedPreferences(
+								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+								Context.MODE_PRIVATE));
 
-				if ((mPrefs.getString("username", "").equals(""))) {
-					if (api.hasConnectivity()) {
+				if ((mPrefs.getString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+						"").equals(""))) {
+					if (Connection.hasConnectivity(mContext)) {
 						manageUploadQueueAfterLogin = true;
 						Intent iCanLogin = new Intent(mContext, CanLogin.class);
 						startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);
@@ -1658,8 +1659,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 		iSummary.putExtra("millis", s_elapsedMillis)
 				.putExtra("seconds", s_elapsedSeconds)
 				.putExtra("minutes", s_elapsedMinutes)
-				.putExtra("append", appendMe)
-				.putExtra("date", dateString)
+				.putExtra("append", appendMe).putExtra("date", dateString)
 				.putExtra("points", "" + dataPointCount);
 
 		startActivity(iSummary);
@@ -1702,15 +1702,15 @@ public class DataCollector extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void result) {
 			inPausedState = false;
 			OrientationManager.enableRotation(DataCollector.this);
-			
+
 			preLoad = false;
 			useMenu = true;
 
 			if (mMenu != null) {
-			//	onPrepareOptionsMenu(mMenu);
+				// onPrepareOptionsMenu(mMenu);
 				setMenuStatus(true);
 			}
-			
+
 			setContentView(R.layout.automatic_concept);
 			initMainUI();
 			assignVars();
@@ -1737,7 +1737,25 @@ public class DataCollector extends Activity implements SensorEventListener,
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			initDfmWithExternalAsyncTask();
+			SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+			String projectInput = mPrefs.getString("project_id", "");
+
+			if (projectInput.equals("-1")) {
+				setUpDFMWithAllFields();
+			} else {
+				dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+						mContext, f);
+
+				dfm.getOrderWithExternalAsyncTask(); // TODO this was added
+				
+				String fields = mPrefs.getString("accepted_fields", "");
+				getFieldsFromPrefsString(fields);
+
+				dfm.setOrder(fields);
+
+				getEnabledFields();
+
+			}
 			return null;
 		}
 
@@ -1748,7 +1766,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				dia.cancel();
 
 			OrientationManager.enableRotation(DataCollector.this);
-			
+
 			// what is dfm order is 0?
 
 			super.onPostExecute(result);
@@ -1785,7 +1803,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 			// }
 
 		}
-		
+
 		if (useMenu && android.os.Build.VERSION.SDK_INT >= 11)
 			invalidateOptionsMenu();
 	}
@@ -1861,6 +1879,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 	}
 
@@ -1883,6 +1904,9 @@ public class DataCollector extends Activity implements SensorEventListener,
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 	}
 

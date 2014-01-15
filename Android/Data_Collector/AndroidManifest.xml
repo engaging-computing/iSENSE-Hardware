@@ -2,12 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.collector"
-    android:versionCode="26"
-    android:versionName="3.5" >
+    android:versionCode="32"
+    android:versionName="3.6.1" >
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <supports-screens
         android:anyDensity="true"
@@ -37,7 +37,7 @@
             android:name="edu.uml.cs.isense.collector.splash.Welcome"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/display_name"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppThemeHideActionBarBackArrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,10 +45,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".splash.ProjectCreate"
+            android:name="edu.uml.cs.isense.proj.ProjectCreate"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Create New Project"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            tools:ignore="MissingRegistered" />
         <activity
             android:name=".splash.SelectMode"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -65,10 +66,6 @@
             android:label="Manual"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".dialogs.LoginActivity"
-            android:label="Login"
-            android:theme="@style/theme_dialog_white" />
-        <activity
             android:name="edu.uml.cs.isense.sync.SyncTime"
             android:label="Synchronize Time"
             android:theme="@style/AppTheme"
@@ -76,10 +73,6 @@
         <activity
             android:name=".dialogs.MediaManager"
             android:label="Media Manager"
-            android:theme="@style/theme_dialog_white" />
-        <activity
-            android:name=".dialogs.LoginError"
-            android:label="Login Failed"
             android:theme="@style/theme_dialog_white" />
         <activity
             android:name=".dialogs.Summary"
@@ -186,6 +179,21 @@
         <activity
             android:name="edu.uml.cs.isense.queue.QueueSummary"
             android:label="Summary"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.EnterName"
+            android:label="@string/enter_name_prompt"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.Login"
+            android:label="@string/login_prompt"
+            android:theme="@style/theme_dialog_white"
+            tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.LoginError"
+            android:label="@string/login_error_prompt"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
 

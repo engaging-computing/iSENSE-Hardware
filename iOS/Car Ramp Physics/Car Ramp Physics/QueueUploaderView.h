@@ -12,6 +12,7 @@
 #import "QueueCell.h"
 #import "ProjectBrowseViewController.h"
 #import "Waffle.h"
+#import "StringGrabber.h"
 #import <iSENSE_API/DataFieldManager.h>
 #import <DataSaver.h>
 

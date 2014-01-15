@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -23,8 +24,9 @@ import android.widget.TextView;
 import edu.uml.cs.isense.collector.DataCollector;
 import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
-import edu.uml.cs.isense.collector.dialogs.LoginActivity;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.supplements.FileBrowser;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
@@ -35,7 +37,7 @@ public class SelectMode extends Activity {
 	private static Context mContext;
 	private Waffle w;
 	private API api;
-	
+
 	private String tempFilepath = "";
 
 	public static final String ENABLE_MANUAL_AND_CSV = "enable_manual_and_csv";
@@ -51,7 +53,7 @@ public class SelectMode extends Activity {
 
 		mContext = this;
 		w = new Waffle(mContext);
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 
 		// Action bar customization for API >= 14
 		if (android.os.Build.VERSION.SDK_INT >= 14) {
@@ -70,6 +72,9 @@ public class SelectMode extends Activity {
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		// Set listeners for the buttons
@@ -90,20 +95,29 @@ public class SelectMode extends Activity {
 				startActivity(iME);
 			}
 		});
-		String manualEntryText = "<font COLOR=\"#0066FF\">" + "Manually Enter Data" + "</font>"
-				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires project)" + "</font>";
+		String manualEntryText = "<font COLOR=\"#0066FF\">"
+				+ "Manually Enter Data" + "</font>" + "<br/>"
+				+ "<font COLOR=\"#D9A414\">" + "(requires project)" + "</font>";
 		manualEntry.setText(Html.fromHtml(manualEntryText));
 
 		final Button csvUploader = (Button) findViewById(R.id.select_mode_csv_uploader);
 		csvUploader.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent iFileBrowse = new Intent(mContext, FileBrowser.class);
-				startActivityForResult(iFileBrowse, UPLOAD_CSV_REQUESTED);
+				if (!Connection.hasConnectivity(mContext))
+					w.make(getResources().getString(R.string.need_connectivity_to_do),
+							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+				else {
+					Intent iFileBrowse = new Intent(mContext, FileBrowser.class);
+					startActivityForResult(iFileBrowse, UPLOAD_CSV_REQUESTED);
+				}
+				
 			}
 		});
-		String csvUploaderText = "<font COLOR=\"#0066FF\">" + "Upload a .csv File From My Device" + "</font>"
-				+ "<br/>" + "<font COLOR=\"#D9A414\">" + "(requires project and Internet)" + "</font>";
+		String csvUploaderText = "<font COLOR=\"#0066FF\">"
+				+ "Upload a .csv File From My Device" + "</font>" + "<br/>"
+				+ "<font COLOR=\"#D9A414\">"
+				+ "(requires project)" + "</font>";
 		csvUploader.setText(Html.fromHtml(csvUploaderText));
 
 		// Determine if we should disable manual entry and .csv uploader
@@ -112,13 +126,16 @@ public class SelectMode extends Activity {
 			boolean en = extras.getBoolean(ENABLE_MANUAL_AND_CSV);
 			if (!en) {
 				manualEntry.setEnabled(false);
-				String m = "<font COLOR=\"#0066FF\">" + "Manually Enter Data" + "</font>"
-						+ "<br/>" + "<font COLOR=\"#B88804\">" + "(requires project)" + "</font>";
+				String m = "<font COLOR=\"#0066FF\">" + "Manually Enter Data"
+						+ "</font>" + "<br/>" + "<font COLOR=\"#B88804\">"
+						+ "(requires project)" + "</font>";
 				manualEntry.setText(Html.fromHtml(m));
-				
+
 				csvUploader.setEnabled(false);
-				String c = "<font COLOR=\"#0066FF\">" + "Upload a .csv File From My Device" + "</font>"
-						+ "<br/>" + "<font COLOR=\"#B88804\">" + "(requires project and Internet)" + "</font>";
+				String c = "<font COLOR=\"#0066FF\">"
+						+ "Upload a .csv File From My Device" + "</font>"
+						+ "<br/>" + "<font COLOR=\"#B88804\">"
+						+ "(requires project)" + "</font>";
 				csvUploader.setText(Html.fromHtml(c));
 			}
 		}
@@ -133,13 +150,14 @@ public class SelectMode extends Activity {
 			if (resultCode == RESULT_OK) {
 				String filepath = data.getStringExtra("filepath");
 				if (filepath.length() == 0) {
-					w.make("Could not find .csv file", Waffle.LENGTH_SHORT,
+					w.make(getResources().getString(R.string.could_not_find_csv),
+							Waffle.LENGTH_SHORT,
 							Waffle.IMAGE_X);
 					return;
 				}
 
-				if (!api.hasConnectivity()) {
-					w.make("Cannot upload a .csv file with no internet connectivity",
+				if (!Connection.hasConnectivity(mContext)) {
+					w.make(getResources().getString(R.string.no_csv_no_internet),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				}
@@ -149,7 +167,7 @@ public class SelectMode extends Activity {
 				if (comp.length == 0
 						|| !(comp[comp.length - 1].toLowerCase(Locale.US)
 								.equals("csv"))) {
-					w.make("Only .csv files are allowed for upload",
+					w.make(getResources().getString(R.string.only_csv_files),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				}
@@ -158,23 +176,17 @@ public class SelectMode extends Activity {
 			}
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				if (resultCode == RESULT_OK) {
-					String returnCode = data.getStringExtra("returnCode");
 
-					if (returnCode.equals("Success")) {
+				w.make(getResources().getString(R.string.login_success), Waffle.LENGTH_LONG,
+						Waffle.IMAGE_CHECK);
 
-						w.make("Login successful", Waffle.LENGTH_LONG,
-								Waffle.IMAGE_CHECK);
-
-						new UploadCSVTask().execute(tempFilepath);
-
-					} else if (returnCode.equals("Failed")) {
-						
-						Intent i = new Intent(mContext, LoginActivity.class);
-						startActivityForResult(i, LOGIN_REQUESTED);
-						
-					}
-				}
+				new UploadCSVTask().execute(tempFilepath);
+				
+			} else if (resultCode == Login.RESULT_ERROR) {
+				
+				Intent i = new Intent(mContext, Login.class);
+				startActivityForResult(i, LOGIN_REQUESTED);
+				
 			}
 		}
 	}
@@ -203,11 +215,17 @@ public class SelectMode extends Activity {
 
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					SelectMode.mContext,
-					SelectMode.mContext.getSharedPreferences("USER_INFO",
+					SelectMode.mContext.getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 
-			api.createSession(mPrefs.getString("username", ""),
-					mPrefs.getString("password", ""));
+			api.createSession(
+					mPrefs.getString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+							Login.DEFAULT_USERNAME),
+					mPrefs.getString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+							Login.DEFAULT_PASSWORD));
 
 			publishProgress(100);
 			return null;
@@ -222,9 +240,10 @@ public class SelectMode extends Activity {
 
 			if (api.getCurrentUser() == null) {
 				tempFilepath = filepath;
-				w.make("Please log in", Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
-				
-				Intent i = new Intent(mContext, LoginActivity.class);
+				w.make(getResources().getString(R.string.please_log_in), 
+						Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+
+				Intent i = new Intent(mContext, Login.class);
 				startActivityForResult(i, LOGIN_REQUESTED);
 			} else {
 				new UploadCSVTask().execute(filepath);
@@ -278,15 +297,28 @@ public class SelectMode extends Activity {
 			OrientationManager.enableRotation(SelectMode.this);
 
 			if (dsid <= 0) {
-				w.make(".csv File Failed to Upload", Waffle.LENGTH_SHORT,
+				w.make(getResources().getString(R.string.csv_failed_upload), 
+						Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_X);
 			} else {
-				w.make(".csv File Uploaded Successfully", Waffle.LENGTH_SHORT,
+				w.make(getResources().getString(R.string.csv_success_upload), 
+						Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 			}
 
 		}
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case android.R.id.home:
+	    	onBackPressed();
+	        return true;
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	@Override
