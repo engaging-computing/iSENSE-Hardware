@@ -167,7 +167,8 @@ public class PendulumTrackerActivity extends Activity implements
 		mOpenCvCameraView.setMaxFrameSize(320, 240);
 		
 		// iSENSE network connectivity stuff
-		api = API.getInstance(mContext);
+		//api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(useDevSite);
 		
 		// TextView for instruction overlay
@@ -605,8 +606,11 @@ public class PendulumTrackerActivity extends Activity implements
 
 			Log.i(TAG, "Uploading new dataset"); 
 			
-			sessionId = api.uploadDataSet(projectID, jobj, nameOfSession
+			sessionId = api.jsonDataUpload(projectID, jobj, nameOfSession
 					+ " (location not found)");
+			
+			//sessionId = api.uploadDataSet(projectID, jobj, nameOfSession
+			//		+ " (location not found)");
 			
 			if(sessionId == -1)
 				Log.i(TAG, "Dataset failed to upload!");
@@ -722,11 +726,13 @@ public class PendulumTrackerActivity extends Activity implements
 	
 			// login to iSENSE if not already			
 		
-			connect = api.hasConnectivity();
+			// TODO: update with equivalent call!
+			//connect = api.hasConnectivity();
+			connect = true;
 			
 			Log.i(TAG, "Connectivity status = " + connect);
 			
-			// if connected log into rSENSE
+			// if connected log into iSENSE
 			if (connect) 
 			{
 				Log.i(TAG, "Connected to the 'net. Now attempting to log into rSENSE and create a session.");
