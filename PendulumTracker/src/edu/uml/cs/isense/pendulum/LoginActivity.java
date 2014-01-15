@@ -51,10 +51,10 @@ public class LoginActivity extends Activity {
 				if(firstNameInput.length() == 0 || lastInitialInput.length() == 0) {
 					showFailure();
 				} else {
-					ColorBlobDetectionActivity.firstName   = firstNameInput.getText().toString();
-					ColorBlobDetectionActivity.lastInitial = lastInitialInput.getText().toString();
-					ColorBlobDetectionActivity.mSessionCreated = true; /////
-					//ColorBlobDetectionActivity.mDataCollectionEnabled = true; /////
+					PendulumTrackerActivity.firstName   = firstNameInput.getText().toString();
+					PendulumTrackerActivity.lastInitial = lastInitialInput.getText().toString();
+					PendulumTrackerActivity.mSessionCreated = true; /////
+					//PendulumTrackerActivity.mDataCollectionEnabled = true; /////
 					setResult(NAME_SUCCESSFUL, null);
 					// make keyboard disappear
 					InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
