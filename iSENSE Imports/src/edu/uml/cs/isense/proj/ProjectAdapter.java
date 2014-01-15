@@ -48,7 +48,7 @@ class ProjectAdapter extends ArrayAdapter<RProject> {
 		allItemsLoaded = false;
 		loading = false;
 		updateTask = new UIUpdateTask();
-		api = API.getInstance(context);
+		api = API.getInstance();
 	}
 
 	/**

@@ -12,7 +12,7 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="theme_blue" parent="@android:style/Theme.Holo.Light">
+    <style name="theme_blue" parent="@android:style/Theme.Holo">
         <item name="android:windowBackground">@color/LightBlue</item>
     </style>
 
