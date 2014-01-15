@@ -20,15 +20,108 @@
 
 @synthesize menuButton, project, loginalert, login_status, userName, passWord, api, groupNameField, dataSaver, selectButton, popOver, managedObjectContext, projID, projectIDLbl, picCntLbl, proj_num, saveMode, useDev;
 
+// pre-iOS6 rotating options
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+// iOS6 rotating options
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+// iOS6 interface orientations
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
+
+// displays the correct xib based on orientation and device type - called automatically upon view controller entry
+-(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    UIImageView *titleView;
+    if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"PWViewController~landscape_iPad"
+                                          owner:self
+                                        options:nil];
+            if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) {
+                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar~landscape_iPad.png"]];
+            } else {
+                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar~landscape_iPad.png"]];
+            }
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"PWViewController_iPad"
+                                          owner:self
+                                        options:nil];
+            if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) {
+               titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPad.png"]];
+            } else {
+                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPad.png"]];
+            }
+        }
+    } else {
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+            [[NSBundle mainBundle] loadNibNamed:@"PWViewController~landscape_iPhone"
+                                          owner:self
+                                        options:nil];
+            if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) {
+                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar~landscape_iPhone.png"]];
+            } else {
+                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar~landscape_iPhone.png"]];
+            }
+        } else {
+            [[NSBundle mainBundle] loadNibNamed:@"PWViewController_iPhone"
+                                          owner:self
+                                        options:nil];
+            
+            if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) {
+                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPhone.png"]];
+            } else {
+              titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPhone.png"]];  
+            }           
+
+        }
+    }
+    
+    NSString *loginstat = [@"Logged in as: " stringByAppendingString:userName];
+    
+    [login_status setText:loginstat];
+    
+    
+    [[UINavigationBar appearance] setTitleView:titleView];
+    self.navigationItem.titleView = titleView;
+    
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self willRotateToInterfaceOrientation:self.interfaceOrientation duration:0];
+}
+
+
+
+- (UIImage *)imageWithColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
     [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setBackgroundColor:UIColorFromHex(0x111155)];
-    UIImageView *titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar.png"]];
-    [[UINavigationBar appearance] setTitleView:titleView];
-    self.navigationItem.titleView = titleView;
     UIButton* btton = [UIButton buttonWithType:UIButtonTypeCustom];
     [btton setFrame:CGRectMake(0, 0, 30, 30)];
     [btton addTarget:self action:@selector(callMenu) forControlEvents:UIControlEventTouchUpInside];
@@ -37,6 +130,8 @@
     [menuButton setTintColor:UIColorFromHex(0x111155)];
     self.navigationItem.rightBarButtonItem = menuButton;
     [[UIBarButtonItem appearance] setTintColor:UIColorFromHex(0x111155)];
+    [[UIButton appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)] forState:UIControlStateHighlighted];
+    
     
     groupNameField.delegate = self;
     
@@ -65,15 +160,31 @@
         NSLog(@"Datasaver Details: %@", dataSaver.description);
         NSLog(@"Current count = %d", dataSaver.dataQueue.count);
     }
+    
+    userName = [prefs stringForKey:[StringGrabber grabString:@"key_username"]];
+    passWord = [prefs stringForKey:[StringGrabber grabString:@"key_password"]];
+    
+    if (userName == nil) {
+        userName = @"mobile.fake@example.com";
+    }
+    
+    if (passWord == nil) {
+        passWord = @"mobile";
+    }
+    [self login:userName withPassword:passWord];
 
 }
 
 -(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)proj {
     
     projID = proj.intValue;
+    [self finishedChoosingProject];
     
-    if (projID != 0) {
+}
 
+- (void) finishedChoosingProject {
+    if (projID != 0) {
+        
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setInteger:projID forKey:KEY_PROJECT_ID];
@@ -99,10 +210,6 @@
     return YES;
 }
 
-- (void) viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-}
 
 - (void) callMenu {
     RNGridMenu *menu;
@@ -117,7 +224,7 @@
         NSLog(@"Upload button pressed");
         
         if (dataSaver.dataQueue.count > 0) {
-            QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:@"PWViewController"];
+            QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:@"Pictures"];
             queueUploader.title = @"Upload saved data";
             [self.navigationController pushViewController:queueUploader animated:YES];
         } else {
@@ -208,6 +315,7 @@
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
     picker.allowsEditing = YES;
+    picker.view.tag = PICKER_TAG_CAMERA;
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
     
     [self presentViewController:picker animated:YES completion:nil];
@@ -219,6 +327,7 @@
     picker.delegate = self;
     picker.allowsEditing = YES;
     picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.view.tag = PICKER_TAG_GALLERY;
     
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:picker];
@@ -235,15 +344,23 @@
 
 - (void) QRCode {
     [project dismissWithClickedButtonIndex:2 animated:YES];
-    if ([[UIApplication sharedApplication]
-         canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-        NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=pictures%3A//EAN"];
-        [[UIApplication sharedApplication] openURL:urlp2s];
-    } else {
-        NSURL *urlapp = [NSURL URLWithString:
-                         @"http://itunes.com/app/pic2shop"];
-        [[UIApplication sharedApplication] openURL:urlapp];
-    }
+    ZBarReaderViewController *reader = [ZBarReaderViewController new];
+    reader.readerDelegate = self;
+    reader.supportedOrientationsMask = ZBarOrientationMaskAll;
+    
+    ZBarImageScanner *scanner = reader.scanner;
+    // TODO: (optional) additional reader configuration here
+    
+    // EXAMPLE: disable rarely used I2/5 to improve performance
+    [scanner setSymbology: ZBAR_I25
+                   config: ZBAR_CFG_ENABLE
+                       to: 0];
+    
+    reader.view.tag = PICKER_TAG_QR;
+    
+    // present and release the controller
+    [self presentModalViewController: reader
+                            animated: YES];
 }
 
 - (void) projCode {
@@ -350,55 +467,84 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     
-    UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
-    //self.imageView.image = chosenImage;
+    if ( picker.view.tag == PICKER_TAG_CAMERA || picker.view.tag == PICKER_TAG_GALLERY ) {
     
-    QDataSet *dataSet = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
-    
-    UIImage *viewImage = chosenImage;  // --- mine was made from drawing context
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    // Request to save the image to camera roll
-    
-    [library writeImageToSavedPhotosAlbum:[viewImage CGImage] orientation:(ALAssetOrientation)[viewImage imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
-        if (error) {
-            NSLog(@"error");
-        } else {
-            NSLog(@"url %@", assetURL);
-            NSString *imageName = [assetURL lastPathComponent];
-            
-            NSLog(@"Image Name: %@", imageName);
-            
-            NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(chosenImage, 1)];
-            
-            dataSet.picturePaths = [[NSArray alloc] initWithObjects:imageData, nil];
-            
-            [dataSet setName:imageName];
-            [dataSet setParentName:@"PWViewController"];
-            [dataSet setDataDescription:nil];
-            [dataSet setUploadable:[NSNumber numberWithBool:YES]];
-            [dataSet setProjID:[NSNumber numberWithInt:projID]];
-            [dataSet setHasInitialProj:[NSNumber numberWithBool:TRUE]];
-            
-            bool success = [dataSaver addDataSet:dataSet];
-            
-            NSString *s = @"NO";
-            
-            if (success){
-                s = @"YES";
+        UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
+        //self.imageView.image = chosenImage;
+        
+        QDataSet *dataSet = [[QDataSet alloc] initWithEntity:[NSEntityDescription entityForName:@"QDataSet" inManagedObjectContext:managedObjectContext] insertIntoManagedObjectContext:managedObjectContext];
+        
+        UIImage *viewImage = chosenImage;  // --- mine was made from drawing context
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        // Request to save the image to camera roll
+        
+        [library writeImageToSavedPhotosAlbum:[viewImage CGImage] orientation:(ALAssetOrientation)[viewImage imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
+            if (error) {
+                NSLog(@"error");
+            } else {
+                NSLog(@"url %@", assetURL);
+                NSString *imageName = [assetURL lastPathComponent];
+                
+                NSLog(@"Image Name: %@", imageName);
+                
+                NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(chosenImage, 1)];
+                
+                dataSet.picturePaths = [[NSArray alloc] initWithObjects:imageData, nil];
+                
+                [dataSet setName:imageName];
+                [dataSet setParentName:@"Pictures"];
+                [dataSet setDataDescription:nil];
+                [dataSet setUploadable:[NSNumber numberWithBool:YES]];
+                [dataSet setProjID:[NSNumber numberWithInt:projID]];
+                [dataSet setHasInitialProj:[NSNumber numberWithBool:(projID != -1)]];
+                
+                bool success = [dataSaver addDataSet:dataSet];
+                
+                NSString *s = @"NO";
+                
+                if (success){
+                    s = @"YES";
+                }
+                
+                NSLog(@"DataSet added?: %@", s);
+                
+                NSLog(@"Count: %d", dataSaver.dataQueue.count);
             }
-            
-            NSLog(@"DataSet added?: %@", s);
-            
-            NSLog(@"Count: %d", dataSaver.dataQueue.count);
+        }];
+        
+        
+        
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            [self.popOver dismissPopoverAnimated:YES];
+        } else {
+            [picker dismissViewControllerAnimated:YES completion:nil];
         }
-    }];     
-    
-    
-    
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-        [self.popOver dismissPopoverAnimated:YES];
+        
     } else {
-        [picker dismissViewControllerAnimated:YES completion:nil];
+        // ADD: get the decode results
+        id<NSFastEnumeration> results =
+        [info objectForKey: ZBarReaderControllerResults];
+        ZBarSymbol *symbol = nil;
+        for(symbol in results)
+            // EXAMPLE: just grab the first barcode
+            break;
+        
+        // EXAMPLE: do something useful with the barcode data
+        NSLog(@"QR Data: %@", symbol.data);
+        
+        NSRange range = [symbol.data rangeOfString:@"projects"];
+        
+        NSMutableCharacterSet *_slashes = [NSMutableCharacterSet characterSetWithCharactersInString:@"/"];
+        
+        NSString *proj = [[symbol.data substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:_slashes];
+        
+        projID = [proj intValue];
+        
+        NSLog(@"ExpNum: %d", projID);
+        
+        // ADD: dismiss the controller (NB dismiss from the *reader*!)
+        [picker dismissModalViewControllerAnimated: YES];
+        [self finishedChoosingProject];
     }
     
     

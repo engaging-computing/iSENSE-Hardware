@@ -47,25 +47,6 @@
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-{
-    NSLog(@"got barcode: %@", url);
-    
-    NSRange range = [[url absoluteString] rangeOfString:@"projects"];
-    
-    NSMutableCharacterSet *_slashes = [NSMutableCharacterSet characterSetWithCharactersInString:@"/"];
-    
-    NSString *proj = [[[url absoluteString] substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:_slashes];
-    
-    int projNum = [proj intValue];
-    
-    NSLog(@"ExpNum: %d", projNum);
-    
-    //self.viewController.projNum = projNum;
-    
-    return YES;
-}
-
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     

@@ -19,7 +19,7 @@
 #import "Constants.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
-@interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProjectBrowseViewControllerDelegate>
+@interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProjectBrowseViewControllerDelegate, ZBarReaderDelegate>
 
 @property(nonatomic) IBOutlet UITextField *groupNameField;
 @property(nonatomic) IBOutlet UILabel *projectIDLbl, *picCntLbl, *login_status;

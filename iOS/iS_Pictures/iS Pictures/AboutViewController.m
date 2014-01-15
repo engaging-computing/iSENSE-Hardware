@@ -78,7 +78,6 @@
     
     self.navigationItem.title = @"About";
     
-    [self.text setEditable:NO];
 }
 
 - (void) viewDidAppear:(BOOL)animated {

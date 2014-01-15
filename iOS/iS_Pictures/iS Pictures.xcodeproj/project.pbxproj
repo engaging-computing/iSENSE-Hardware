@@ -20,7 +20,7 @@
 		76318B3F18837B93008D3A1F /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76318B3A18837B93008D3A1F /* AboutViewController.m */; };
 		76318B4018837B93008D3A1F /* AboutViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76318B3B18837B93008D3A1F /* AboutViewController~landscape_iPad.xib */; };
 		76318B4118837B93008D3A1F /* AboutViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76318B3C18837B93008D3A1F /* AboutViewController~landscape_iPhone.xib */; };
-		76318B4B18842337008D3A1F /* navBar.png in Resources */ = {isa = PBXBuildFile; fileRef = 76318B4A18842337008D3A1F /* navBar.png */; };
+		76318B4B18842337008D3A1F /* navBar_iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 76318B4A18842337008D3A1F /* navBar_iPhone.png */; };
 		76318B54188434EB008D3A1F /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76318B52188434EB008D3A1F /* Fields.strings */; };
 		76318B55188434EB008D3A1F /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76318B53188434EB008D3A1F /* Strings.strings */; };
 		76318B5818858541008D3A1F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76318B5718858541008D3A1F /* CoreData.framework */; };
@@ -42,6 +42,14 @@
 		767621B2187F0DC600A473B7 /* PWViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 767621B1187F0DC600A473B7 /* PWViewController.m */; };
 		767621B5187F0DC600A473B7 /* PWViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 767621B3187F0DC600A473B7 /* PWViewController_iPhone.xib */; };
 		767621B8187F0DC600A473B7 /* PWViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 767621B6187F0DC600A473B7 /* PWViewController_iPad.xib */; };
+		7680C9021886E4B100BC1E98 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7680C8FE1886E4B100BC1E98 /* AVFoundation.framework */; };
+		7680C9031886E4B100BC1E98 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7680C8FF1886E4B100BC1E98 /* CoreMedia.framework */; };
+		7680C9041886E4B100BC1E98 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7680C9001886E4B100BC1E98 /* CoreVideo.framework */; };
+		7680C9051886E4B100BC1E98 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7680C9011886E4B100BC1E98 /* libiconv.dylib */; };
+		7680C9071886E4F300BC1E98 /* ZBarSDK in Resources */ = {isa = PBXBuildFile; fileRef = 7680C9061886E4F300BC1E98 /* ZBarSDK */; };
+		7680C90E1886E9EA00BC1E98 /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7680C90D1886E9EA00BC1E98 /* libzbar.a */; };
+		7680C911188718D000BC1E98 /* PWViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7680C910188718D000BC1E98 /* PWViewController~landscape_iPhone.xib */; };
+		7680C91318872F2B00BC1E98 /* PWViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7680C91218872F2B00BC1E98 /* PWViewController~landscape_iPad.xib */; };
 		76E57E9F1885C82600C9107C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76E57E9E1885C82600C9107C /* AssetsLibrary.framework */; };
 		76E57EA11885E51400C9107C /* river_walk_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA01885E51400C9107C /* river_walk_57x57.png */; };
 		76E57EA31885E51B00C9107C /* river_walk_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA21885E51B00C9107C /* river_walk_114x114.png */; };
@@ -96,7 +104,7 @@
 		76318B3A18837B93008D3A1F /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		76318B3B18837B93008D3A1F /* AboutViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76318B3C18837B93008D3A1F /* AboutViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "AboutViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
-		76318B4A18842337008D3A1F /* navBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBar.png; sourceTree = "<group>"; };
+		76318B4A18842337008D3A1F /* navBar_iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBar_iPhone.png; sourceTree = "<group>"; };
 		76318B52188434EB008D3A1F /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
 		76318B53188434EB008D3A1F /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		76318B5718858541008D3A1F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -123,6 +131,14 @@
 		767621B1187F0DC600A473B7 /* PWViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PWViewController.m; sourceTree = "<group>"; };
 		767621B4187F0DC600A473B7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PWViewController_iPhone.xib; sourceTree = "<group>"; };
 		767621B7187F0DC600A473B7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PWViewController_iPad.xib; sourceTree = "<group>"; };
+		7680C8FE1886E4B100BC1E98 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		7680C8FF1886E4B100BC1E98 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		7680C9001886E4B100BC1E98 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		7680C9011886E4B100BC1E98 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		7680C9061886E4F300BC1E98 /* ZBarSDK */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ZBarSDK; path = "iS Pictures/ZBarSDK"; sourceTree = "<group>"; };
+		7680C90D1886E9EA00BC1E98 /* libzbar.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libzbar.a; path = "iS Pictures/ZBarSDK/libzbar.a"; sourceTree = "<group>"; };
+		7680C910188718D000BC1E98 /* PWViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "PWViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
+		7680C91218872F2B00BC1E98 /* PWViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "PWViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		76E57E9C1885AC9D00C9107C /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		76E57E9E1885C82600C9107C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		76E57EA01885E51400C9107C /* river_walk_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = river_walk_57x57.png; path = ../river_walk_57x57.png; sourceTree = "<group>"; };
@@ -136,6 +152,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7680C9021886E4B100BC1E98 /* AVFoundation.framework in Frameworks */,
+				7680C9031886E4B100BC1E98 /* CoreMedia.framework in Frameworks */,
+				7680C9041886E4B100BC1E98 /* CoreVideo.framework in Frameworks */,
+				7680C9051886E4B100BC1E98 /* libiconv.dylib in Frameworks */,
+				7680C90E1886E9EA00BC1E98 /* libzbar.a in Frameworks */,
 				76E57E9F1885C82600C9107C /* AssetsLibrary.framework in Frameworks */,
 				76318B5818858541008D3A1F /* CoreData.framework in Frameworks */,
 				76318B2C18833314008D3A1F /* SystemConfiguration.framework in Frameworks */,
@@ -182,6 +203,12 @@
 		76762197187F0DC600A473B7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7680C90D1886E9EA00BC1E98 /* libzbar.a */,
+				7680C8FE1886E4B100BC1E98 /* AVFoundation.framework */,
+				7680C8FF1886E4B100BC1E98 /* CoreMedia.framework */,
+				7680C9001886E4B100BC1E98 /* CoreVideo.framework */,
+				7680C9011886E4B100BC1E98 /* libiconv.dylib */,
+				7680C9061886E4F300BC1E98 /* ZBarSDK */,
 				76E57E9E1885C82600C9107C /* AssetsLibrary.framework */,
 				76318B5718858541008D3A1F /* CoreData.framework */,
 				76318B2B18833314008D3A1F /* SystemConfiguration.framework */,
@@ -215,7 +242,7 @@
 				76E57EA01885E51400C9107C /* river_walk_57x57.png */,
 				76318B52188434EB008D3A1F /* Fields.strings */,
 				76318B53188434EB008D3A1F /* Strings.strings */,
-				76318B4A18842337008D3A1F /* navBar.png */,
+				76318B4A18842337008D3A1F /* navBar_iPhone.png */,
 				76318B33188333B1008D3A1F /* barcode.png */,
 				76318B34188333B1008D3A1F /* info.png */,
 				76318B2D18833395008D3A1F /* reset.png */,
@@ -273,6 +300,7 @@
 				76318B3C18837B93008D3A1F /* AboutViewController~landscape_iPhone.xib */,
 				76318B3818837B93008D3A1F /* AboutViewController_iPhone.xib */,
 				767621B3187F0DC600A473B7 /* PWViewController_iPhone.xib */,
+				7680C910188718D000BC1E98 /* PWViewController~landscape_iPhone.xib */,
 			);
 			name = iPhone;
 			sourceTree = "<group>";
@@ -283,6 +311,7 @@
 				76318B3B18837B93008D3A1F /* AboutViewController~landscape_iPad.xib */,
 				76318B3718837B93008D3A1F /* AboutViewController_iPad.xib */,
 				767621B6187F0DC600A473B7 /* PWViewController_iPad.xib */,
+				7680C91218872F2B00BC1E98 /* PWViewController~landscape_iPad.xib */,
 			);
 			name = iPad;
 			sourceTree = "<group>";
@@ -381,13 +410,16 @@
 				76318B3E18837B93008D3A1F /* AboutViewController_iPhone.xib in Resources */,
 				76318B4018837B93008D3A1F /* AboutViewController~landscape_iPad.xib in Resources */,
 				76318B4118837B93008D3A1F /* AboutViewController~landscape_iPhone.xib in Resources */,
-				76318B4B18842337008D3A1F /* navBar.png in Resources */,
+				76318B4B18842337008D3A1F /* navBar_iPhone.png in Resources */,
 				76318B54188434EB008D3A1F /* Fields.strings in Resources */,
 				76318B55188434EB008D3A1F /* Strings.strings in Resources */,
 				76E57EA11885E51400C9107C /* river_walk_57x57.png in Resources */,
 				76E57EA31885E51B00C9107C /* river_walk_114x114.png in Resources */,
 				76E57EA51885E52600C9107C /* river_walk_72x72.png in Resources */,
 				76E57EA71885E52C00C9107C /* river_walk_144x144.png in Resources */,
+				7680C9071886E4F300BC1E98 /* ZBarSDK in Resources */,
+				7680C911188718D000BC1E98 /* PWViewController~landscape_iPhone.xib in Resources */,
+				7680C91318872F2B00BC1E98 /* PWViewController~landscape_iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,7 +552,10 @@
 				);
 				INFOPLIST_FILE = "iS Pictures/iS Pictures-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**",
+					"\"$(SRCROOT)/iS Pictures/ZBarSDK\"",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -539,7 +574,10 @@
 				);
 				INFOPLIST_FILE = "iS Pictures/iS Pictures-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
+				LIBRARY_SEARCH_PATHS = (
+					"/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**",
+					"\"$(SRCROOT)/iS Pictures/ZBarSDK\"",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

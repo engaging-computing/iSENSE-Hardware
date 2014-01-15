@@ -12,6 +12,10 @@
 #define DEV_DEFAULT_PROJ 3
 #define PROD_DEFAULT_PROJ 12
 
+#define PICKER_TAG_CAMERA 1
+#define PICKER_TAG_GALLERY 2
+#define PICKER_TAG_QR 3
+
 
 
 #endif
