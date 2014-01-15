@@ -46,6 +46,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.pendulum.R;
 // iSENSE data upload
 
@@ -727,8 +728,8 @@ public class PendulumTrackerActivity extends Activity implements
 			// login to iSENSE if not already			
 		
 			// TODO: update with equivalent call!
-			//connect = api.hasConnectivity();
-			connect = true;
+			connect = Connection.hasConnectivity(mContext);
+			
 			
 			Log.i(TAG, "Connectivity status = " + connect);
 			
