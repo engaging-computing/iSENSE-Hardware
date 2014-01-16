@@ -6,6 +6,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -15,7 +17,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -41,7 +42,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
@@ -76,9 +76,9 @@ public class DataWalk extends Activity implements LocationListener,
 	private TextView pointsUploadedTV;
 	private TextView latitudeTV;
 	private TextView longitudeTV;
-	private EditText nameET;
-	private TextView rcrdIntervalB;
+	private Button rcrdIntervalB;
 	private Button projNumB;
+	private Button nameB;
 	private Button startStopB;
 	private Button uploadB;
 	private Button loggedInAsB;
@@ -99,7 +99,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private Waffle w;
 
 	/* iSENSE API Globals and Constants */
-	private final String DEFAULT_USERNAME = "mobile";
+	private final String DEFAULT_USERNAME = "mobile.fake@example.com";
 	private final String DEFAULT_PASSWORD = "mobile";
 	private final String DEFAULT_PROJECT = "156";
 	private final String DEFAULT_PROJECT_DEV = "25";
@@ -114,7 +114,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private String baseprojectURL = "http://isenseproject.org/projects/";
 	private String baseprojectURLDev = "http://rsense-dev.cs.uml.edu/projects/";
 	private int dataSetID = -1;
-	
+
 	/* Project Preferences */
 	private static final String PROJ_PREFS_KEY = "proj_prefs_key";
 	private static final String PROJ_ID_PRODUCTION = "proj_id_production";
@@ -154,9 +154,9 @@ public class DataWalk extends Activity implements LocationListener,
 	private int elapsedMillis = 0;
 	private int dataPointCount = 0;
 	private int timerTick = 0;
-	private int waitingCounter = 0;
+	private int gpsWaitingCounter = 0;
 
-	// Rajia:
+	/* Distance and Velocity */
 	float distance = 0;
 	float velocity = 0;
 	float deltaTime = 0;
@@ -177,15 +177,10 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Save current context
 		mContext = this;
-		
-		// Initialize action bar customization for API >= 14
-		if (android.os.Build.VERSION.SDK_INT >= 14) {
+
+		// Initialize action bar customization for API >= 11
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
-			bar.setBackgroundDrawable(new ColorDrawable(Color
-					.parseColor("#111133")));
-			bar.setIcon(getResources()
-					.getDrawable(R.drawable.rsense_logo_right));
-			bar.setDisplayShowTitleEnabled(false);
 			int actionBarTitleId = Resources.getSystem().getIdentifier(
 					"action_bar_title", "id", "android");
 			if (actionBarTitleId > 0) {
@@ -195,7 +190,7 @@ public class DataWalk extends Activity implements LocationListener,
 					title.setTextSize(24.0f);
 				}
 			}
-					
+
 			// make the actionbar clickable
 			bar.setDisplayHomeAsUpEnabled(true);
 		}
@@ -219,13 +214,14 @@ public class DataWalk extends Activity implements LocationListener,
 				if (namePrefs
 						.getBoolean(
 								EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
-								true) && Connection.hasConnectivity(mContext)) {
+								true)
+						&& Connection.hasConnectivity(mContext)) {
 					RPerson user = api.getCurrentUser();
 					if (user != null) {
 						firstName = user.name;
 						lastInitial = "";
 
-						nameET.setText(firstName);
+						nameB.setText(firstName);
 					}
 
 				} else {
@@ -239,11 +235,12 @@ public class DataWalk extends Activity implements LocationListener,
 
 					if (firstName.length() == 0) {
 						Intent iEnterName = new Intent(this, EnterName.class);
-						iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+						iEnterName.putExtra(
+								EnterName.PREFERENCES_CLASSROOM_MODE,
 								classroomMode);
 						startActivityForResult(iEnterName, NAME_REQUESTED);
 					} else {
-						nameET.setText(firstName + " " + lastInitial);
+						nameB.setText(firstName + " " + lastInitial);
 					}
 				}
 			} else {
@@ -254,7 +251,7 @@ public class DataWalk extends Activity implements LocationListener,
 			}
 
 		} else {
-			nameET.setText(firstName + " " + lastInitial);
+			nameB.setText(firstName + " " + lastInitial);
 		}
 
 		/* Starts the code for the main button. */
@@ -277,11 +274,16 @@ public class DataWalk extends Activity implements LocationListener,
 					useMenu = true;
 					if (android.os.Build.VERSION.SDK_INT >= 11)
 						invalidateOptionsMenu();
+
+					// Enabled the Recording Interval Button
+					rcrdIntervalB.setEnabled(true);
+
 					// Reset the text on the main button
 					startStopB.setText(getString(R.string.start_prompt));
 
 					// Cancel the recording timer
-					recordTimer.cancel();
+					if (recordTimer != null)
+						recordTimer.cancel();
 
 					// Create the name of the session using the entered name
 					dataSetName = firstName + " " + lastInitial;
@@ -294,20 +296,22 @@ public class DataWalk extends Activity implements LocationListener,
 						projectID = prefs.getString(PROJ_ID_DEV,
 								DEFAULT_PROJECT_DEV);
 					else
-						projectID = prefs.getString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
+						projectID = prefs.getString(PROJ_ID_PRODUCTION,
+								DEFAULT_PROJECT);
 
 					// Set the project URL for view data
 					if (useDev)
-						projectURL = baseprojectURLDev + projectID + "/data_sets/";
+						projectURL = baseprojectURLDev + projectID
+								+ "/data_sets/";
 					else
 						projectURL = baseprojectURL + projectID + "/data_sets/";
 
 					// Save the newest DataSet to the Upload Queue if it has at
 					// least 1 point
-					QDataSet ds = new QDataSet(dataSetName, "Data Points: " + dataPointCount,
-							QDataSet.Type.DATA, dataSet.toString(), null, projectID, null);
+					QDataSet ds = new QDataSet(dataSetName, "Data Points: "
+							+ dataPointCount, QDataSet.Type.DATA, dataSet
+							.toString(), null, projectID, null);
 					ds.setRequestDataLabelInOrder(true);
-					
 					if (dataPointCount > 0) {
 						uq.addDataSetToQueue(ds);
 						// Tell the user recording has stopped
@@ -330,10 +334,14 @@ public class DataWalk extends Activity implements LocationListener,
 					useMenu = false;
 					if (android.os.Build.VERSION.SDK_INT >= 11)
 						invalidateOptionsMenu();
+
+					// Disable the Recording Interval Button
+					rcrdIntervalB.setEnabled(false);
+
 					running = true;
 
 					// Reset the main UI text boxes
-					nameET.setText(firstName + " " + lastInitial);
+					nameB.setText(firstName + " " + lastInitial);
 					pointsUploadedTV.setText("Points Recorded: " + "0");
 					elapsedTimeTV.setText("Time Elapsed:" + " 0 seconds");
 					loggedInAsB.setText(loginName);
@@ -341,7 +349,7 @@ public class DataWalk extends Activity implements LocationListener,
 					// ID
 					dataPointCount = 0;
 					dataSetID = -1;
-				
+					// TODO CHECK IF THIS KEEPS SCREEN ON
 					// Prevent the screen from turning off and prevent rotation
 					getWindow().addFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -360,25 +368,26 @@ public class DataWalk extends Activity implements LocationListener,
 			}
 
 		});
-		
-		// additional initializations that are dependent on whether or not we're on dev
+
+		// Additional initializations that are dependent on whether or not we're
+		// on dev
 		onCreateInit();
 
 	}// ends onCreate
-	
+
 	protected void onCreateInit() {
 		// Set the initial default projectID in preferences
-		SharedPreferences prefs = getSharedPreferences(PROJ_PREFS_KEY, Context.MODE_PRIVATE);
+		SharedPreferences prefs = getSharedPreferences(PROJ_PREFS_KEY,
+				Context.MODE_PRIVATE);
 		if (useDev)
 			projectID = prefs.getString(PROJ_ID_DEV, DEFAULT_PROJECT_DEV);
 		else
 			projectID = prefs.getString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
-		
+
 		projNumB.setText("to project " + projectID);
-		
-		
-//		SharedPreferences.Editor mEdit = mPrefs.edit();
-//		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT).commit();
+
+		// SharedPreferences.Editor mEdit = mPrefs.edit();
+		// mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT).commit();
 
 		// Attempt to login with saved credentials, otherwise try default
 		// credentials
@@ -390,16 +399,16 @@ public class DataWalk extends Activity implements LocationListener,
 		startStopB = (Button) findViewById(R.id.b_startstop);
 		projNumB = (Button) findViewById(R.id.b_project);
 		uploadB = (Button) findViewById(R.id.b_upload);
-		loggedInAsB = (Button) findViewById(R.id.b_username);
+		loggedInAsB = (Button) findViewById(R.id.b_login);
+		nameB = (Button) findViewById(R.id.b_name);
+		rcrdIntervalB = (Button) findViewById(R.id.b_rcrdinterval);
 		elapsedTimeTV = (TextView) findViewById(R.id.tv_elapsedtime);
 		pointsUploadedTV = (TextView) findViewById(R.id.tv_pointcount);
-		rcrdIntervalB = (Button) findViewById(R.id.b_rcrdinterval);
 		latitudeTV = (TextView) findViewById(R.id.tv_longitude);
 		longitudeTV = (TextView) findViewById(R.id.tv_latitude);
 		pointsUploadedTV.setText("Points Recorded: " + dataPointCount);
 		elapsedTimeTV.setText("Time Elapsed: " + timerTick + " seconds");
-		nameET = (EditText) findViewById(R.id.et_name);
-		
+
 		rcrdIntervalB.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -407,7 +416,58 @@ public class DataWalk extends Activity implements LocationListener,
 				// Launches the data recording interval picker
 				startActivity(new Intent(mContext, DataRateDialog.class));
 			}
-			
+
+		});
+
+		projNumB.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Allows the user to pick a project to upload to
+				Intent setup = new Intent(mContext, Setup.class);
+				startActivityForResult(setup, PROJECT_REQUESTED);
+			}
+
+		});
+
+		uploadB.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Launched the upload queue dialog
+				manageUploadQueue();
+			}
+
+		});
+
+		loggedInAsB.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Launch the dialog that allows users to login to iSENSE
+				startActivityForResult(new Intent(mContext, Login.class),
+						LOGIN_ISENSE_REQUESTED);
+			}
+
+		});
+
+		nameB.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// Launch the dialog that allows users to enter his/her
+				// firstname
+				// and last initial
+				Intent iEnterName = new Intent(mContext, EnterName.class);
+				SharedPreferences classPrefs = getSharedPreferences(
+						ClassroomMode.PREFS_KEY_CLASSROOM_MODE, 0);
+				iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+						classPrefs.getBoolean(
+								ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE,
+								true));
+				startActivityForResult(iEnterName, NAME_REQUESTED);
+			}
+
 		});
 
 	}
@@ -466,16 +526,16 @@ public class DataWalk extends Activity implements LocationListener,
 		if (Connection.hasConnectivity(this)) {
 			if (android.os.Build.VERSION.SDK_INT >= 11)
 				invalidateOptionsMenu();
-			//setProjectIdtoUsersChoice();
+			// setProjectIdtoUsersChoice();
 			AutoLogin();
 			// projectID = projectId;
 			// loginNow = false;
-		} //else {
-//			if (android.os.Build.VERSION.SDK_INT >= 11)
-//				invalidateOptionsMenu();
-//			// loginNow = true;
-//			//setProjectIdEmpty();
-//		}
+		} // else {
+			// if (android.os.Build.VERSION.SDK_INT >= 11)
+			// invalidateOptionsMenu();
+			// // loginNow = true;
+			// //setProjectIdEmpty();
+			// }
 
 		// Get the last know recording interval
 		mInterval = Integer.parseInt(getSharedPreferences(INTERVAL_PREFS_KEY,
@@ -509,8 +569,7 @@ public class DataWalk extends Activity implements LocationListener,
 		} else if (mInterval == 60000) {
 			rcrdIntervalB.setText("1 minute");
 		} else {
-			rcrdIntervalB.setText(mInterval / 1000
-					+ " seconds");
+			rcrdIntervalB.setText(mInterval / 1000 + " seconds");
 		}
 
 	}// ends onResume
@@ -519,7 +578,8 @@ public class DataWalk extends Activity implements LocationListener,
 	 * Logs the user in automatically
 	 */
 	private void AutoLogin() {
-		
+		// TODO Auto-generated method stub
+		// I don't know why this is here --J
 	}
 
 	/**
@@ -527,19 +587,22 @@ public class DataWalk extends Activity implements LocationListener,
 	 */
 	private void setProjectIDFromSetupClass() {
 		// get the projectID from Setup
-		SharedPreferences setupPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
+		SharedPreferences setupPrefs = getSharedPreferences(
+				Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
 		if (useDev)
-			projectID = setupPrefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT_DEV);
+			projectID = setupPrefs.getString(Setup.PROJECT_ID,
+					DEFAULT_PROJECT_DEV);
 		else
 			projectID = setupPrefs.getString(Setup.PROJECT_ID, DEFAULT_PROJECT);
 	}
-	
+
 	/**
 	 * sets the project ID to local prefs
 	 */
 	private void setProjectIDForLocalPrefs() {
 		// set the ID to our local prefs
-		SharedPreferences localPrefs = getSharedPreferences(PROJ_PREFS_KEY, Context.MODE_PRIVATE);
+		SharedPreferences localPrefs = getSharedPreferences(PROJ_PREFS_KEY,
+				Context.MODE_PRIVATE);
 		SharedPreferences.Editor mEdit = localPrefs.edit();
 		if (useDev)
 			mEdit.putString(PROJ_ID_DEV, projectID);
@@ -548,20 +611,20 @@ public class DataWalk extends Activity implements LocationListener,
 		mEdit.commit();
 	}
 
-//	/**
-//	 * Sets project ID to default
-//	 */
-//	private void setProjectIDToDefault() {
-//		// Auto-generated method stub
-//		projectID = DEFAULT_PROJECT;
-//		// Set the project ID in preferences back to -1
-//		SharedPreferences prefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
-//				Context.MODE_PRIVATE);
-//		SharedPreferences.Editor mEdit = prefs.edit();
-//		mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
-//		mEdit.commit();
-//
-//	}
+	// /**
+	// * Sets project ID to default
+	// */
+	// private void setProjectIDToDefault() {
+	// // Auto-generated method stub
+	// projectID = DEFAULT_PROJECT;
+	// // Set the project ID in preferences back to -1
+	// SharedPreferences prefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
+	// Context.MODE_PRIVATE);
+	// SharedPreferences.Editor mEdit = prefs.edit();
+	// mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
+	// mEdit.commit();
+	//
+	// }
 
 	/**
 	 * Handles application behavior on back press.
@@ -589,6 +652,7 @@ public class DataWalk extends Activity implements LocationListener,
 			// Rajia will that fix the random velocity problem
 			prevLoc.set(loc);
 			gpsWorking = false;
+			gpsWaitingCounter = 0;
 		}
 	}
 
@@ -598,6 +662,7 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	public void onProviderDisabled(String provider) {
 		gpsWorking = false;
+		gpsWaitingCounter = 0;
 	}
 
 	/**
@@ -649,12 +714,8 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(1).setEnabled(false);
 			menu.getItem(2).setEnabled(false);
 			menu.getItem(3).setEnabled(false);
-			menu.getItem(4).setEnabled(false);
-			menu.getItem(5).setEnabled(false);
-			menu.getItem(6).setEnabled(false);
-			menu.getItem(7).setEnabled(false);
-			menu.getItem(8).setEnabled(false);
-		} /*
+		}
+		/*
 		 * else if (canChangeProjectNum == false){
 		 * menu.getItem(3).setEnabled(false); menu.getItem(4).setEnabled(false);
 		 * }
@@ -665,12 +726,6 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(1).setEnabled(true);
 			menu.getItem(2).setEnabled(true);
 			menu.getItem(3).setEnabled(true);
-			menu.getItem(4).setEnabled(true);
-			menu.getItem(5).setEnabled(true);
-			menu.getItem(6).setEnabled(true);
-			menu.getItem(7).setEnabled(true);
-			menu.getItem(8).setEnabled(true);
-
 		}
 		return true;
 	}
@@ -745,22 +800,27 @@ public class DataWalk extends Activity implements LocationListener,
 						// Show the GPS coordinate on the main UI, else continue
 						// with our loop.
 						if (gpsWorking) {
-							latitudeTV.setText(getResources().getString(R.string.latitude) + loc.getLatitude());
-							longitudeTV.setText(getResources().getString(R.string.longitude) + loc.getLongitude());
+							latitudeTV.setText(getResources().getString(
+									R.string.latitude)
+									+ " " + loc.getLatitude());
+							longitudeTV.setText(getResources().getString(
+									R.string.longitude)
+									+ " " + loc.getLongitude());
 						} else {
-							switch (waitingCounter % 5) {
+							switch (gpsWaitingCounter % 5) {
 							case (0):
 								latitudeTV.setText(R.string.latitude);
 								longitudeTV.setText(R.string.longitude);
 								break;
 							default:
 								String latitude = (String) latitudeTV.getText();
-								String longitude = (String) longitudeTV.getText();
+								String longitude = (String) longitudeTV
+										.getText();
 								latitudeTV.setText(latitude + " .");
 								longitudeTV.setText(longitude + " .");
 								break;
 							}
-							waitingCounter++;
+							gpsWaitingCounter++;
 						}
 					}
 				});
@@ -823,30 +883,14 @@ public class DataWalk extends Activity implements LocationListener,
 
 			if (Connection.hasConnectivity(mContext)) {
 				if (resultCode == RESULT_OK) {
-					
 					setProjectIDFromSetupClass();
 					new GetProjectTask().execute();
-					
-				} else if (resultCode == RESULT_CANCELED) {
-//					// This is called when they hit cancel.
-//					// In this situation, we want the UI to display the last
-//					// project number the user entered.
-//					if (useDev)
-//						projectID = DEFAULT_PROJECT_DEV;
-//					else
-//						projectID = DEFAULT_PROJECT;
-//					// Set the project ID in preferences back to its default
-//					// value
-//					SharedPreferences prefs = getSharedPreferences(
-//							Setup.PROJ_PREFS_ID, Context.MODE_PRIVATE);
-//					SharedPreferences.Editor mEdit = prefs.edit();
-//					mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
-//					mEdit.commit();
 				}
 			} else {
-				// There is no Internet so menu is disabled, thus the user will
-				// never reach this point.
-
+				// TODO There is no Internet so we cannot pull fields from
+				// iSENSE.
+				// IMPORTANT -- Inform the user of this situation and act
+				// appropriately
 			}
 
 			// If the user hit yes, bring them to GPS settings.
@@ -893,7 +937,7 @@ public class DataWalk extends Activity implements LocationListener,
 					firstName = user.name;
 					lastInitial = "";
 
-					nameET.setText(firstName);
+					nameB.setText(firstName);
 
 				} else {
 					firstName = namePrefs.getString(
@@ -904,7 +948,7 @@ public class DataWalk extends Activity implements LocationListener,
 									EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL,
 									"");
 
-					nameET.setText(firstName + " " + lastInitial);
+					nameB.setText(firstName + " " + lastInitial);
 				}
 
 			} else {
@@ -939,7 +983,8 @@ public class DataWalk extends Activity implements LocationListener,
 					projectID = DEFAULT_PROJECT;
 
 				// Set the project ID in preferences back to its default value
-				SharedPreferences prefs = getSharedPreferences(PROJ_PREFS_KEY, Context.MODE_PRIVATE);
+				SharedPreferences prefs = getSharedPreferences(PROJ_PREFS_KEY,
+						Context.MODE_PRIVATE);
 				SharedPreferences.Editor mEdit = prefs.edit();
 				mEdit.putString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
 				mEdit.putString(PROJ_ID_DEV, DEFAULT_PROJECT_DEV);
@@ -992,7 +1037,7 @@ public class DataWalk extends Activity implements LocationListener,
 						DEFAULT_USERNAME);
 				loginPass = mPrefs.getString(
 						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						DEFAULT_USERNAME);
+						DEFAULT_PASSWORD);
 
 				// Set the UI to the new login name
 				loggedInAsB.setText(loginName);
@@ -1009,7 +1054,7 @@ public class DataWalk extends Activity implements LocationListener,
 					firstName = user.name;
 					lastInitial = "";
 
-					nameET.setText(firstName);
+					nameB.setText(firstName);
 
 				}
 
@@ -1059,40 +1104,11 @@ public class DataWalk extends Activity implements LocationListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
-		case R.id.Upload:
-			// Launched the upload queue dialog
-			manageUploadQueue();
-			return true;
-
 		case R.id.reset:
 			// Launch the dialog asking if the user is sure he/she wants to
 			// reset to default settings
 			Intent i = new Intent(mContext, Reset.class);
 			startActivityForResult(i, RESET_REQUESTED);
-			return true;
-
-		case R.id.login:
-			// Launch the dialog that allows users to login to iSENSE
-			startActivityForResult(new Intent(this, Login.class),
-					LOGIN_ISENSE_REQUESTED);
-			return true;
-
-		case R.id.NameChange:
-			// Launch the dialog that allows users to enter his/her firstname
-			// and last initial
-			Intent iEnterName = new Intent(this, EnterName.class);
-			SharedPreferences classPrefs = getSharedPreferences(
-					ClassroomMode.PREFS_KEY_CLASSROOM_MODE, 0);
-			iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
-					classPrefs.getBoolean(
-							ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true));
-			startActivityForResult(iEnterName, NAME_REQUESTED);
-			return true;
-
-		case R.id.ExpNum:
-			// Allows the user to pick a project to upload to
-			Intent setup = new Intent(this, Setup.class);
-			startActivityForResult(setup, PROJECT_REQUESTED);
 			return true;
 
 		case R.id.About:
@@ -1109,37 +1125,37 @@ public class DataWalk extends Activity implements LocationListener,
 			// Shows the classroom settings dialog
 			startActivity(new Intent(this, ClassroomMode.class));
 			return true;
-		
+
 		case android.R.id.home:
-	    	
-	    	String other = (useDev) ? "production" : "dev";
-	       
-	    	switch (++actionBarTapCount) {
-	    	case 5:
-	    		w.make("2 more taps to enter " + other + " mode");
-	    		break;
-	    	case 6:
-	    		w.make("1 more tap to enter " + other + " mode");
-	    		break;
-	    	case 7:
-	    		w.make("Now in " + other + " mode");
-	    		useDev = !useDev;
-	    		if (api.getCurrentUser() != null) {
-	    			Runnable r = new Runnable() {
-	    				public void run() {
-	    					api.deleteSession();
-	    					api.useDev(useDev);
-	    				}
-	    			};
-	    			new Thread(r).start();
-	    		} else 
-	    			api.useDev(useDev);
-	    		actionBarTapCount = 0;
-	    		onCreateInit();
-	    		break;
-	    	}
-	    	
-	        return true;
+
+			String other = (useDev) ? "production" : "dev";
+
+			switch (++actionBarTapCount) {
+			case 5:
+				w.make("2 more taps to enter " + other + " mode");
+				break;
+			case 6:
+				w.make("1 more tap to enter " + other + " mode");
+				break;
+			case 7:
+				w.make("Now in " + other + " mode");
+				useDev = !useDev;
+				if (api.getCurrentUser() != null) {
+					Runnable r = new Runnable() {
+						public void run() {
+							api.deleteSession();
+							api.useDev(useDev);
+						}
+					};
+					new Thread(r).start();
+				} else
+					api.useDev(useDev);
+				actionBarTapCount = 0;
+				onCreateInit();
+				break;
+			}
+
+			return true;
 		}
 
 		return false;
@@ -1241,7 +1257,7 @@ public class DataWalk extends Activity implements LocationListener,
 						firstName = user.name;
 						lastInitial = "";
 
-						nameET.setText(firstName);
+						nameB.setText(firstName);
 					}
 
 				} else {
@@ -1259,9 +1275,10 @@ public class DataWalk extends Activity implements LocationListener,
 						// reset to default and log in again
 						final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 								DataWalk.mContext,
-								DataWalk.mContext.getSharedPreferences(
-										Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-										Context.MODE_PRIVATE));
+								DataWalk.mContext
+										.getSharedPreferences(
+												Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+												Context.MODE_PRIVATE));
 						SharedPreferences.Editor mEditor = mPrefs.edit();
 						mEditor.putString(
 								Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
@@ -1282,6 +1299,7 @@ public class DataWalk extends Activity implements LocationListener,
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 
 				// Update the UI to signal the fact that you aren't logged in
+				// TODO might still be logged in
 				loggedInAsB.setText(getResources().getString(
 						R.string.mobile_user));
 
@@ -1356,6 +1374,7 @@ public class DataWalk extends Activity implements LocationListener,
 			if (gpsWorking == true) {
 				w.make("Weak GPS signal.", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_WARN);
+				gpsWaitingCounter = 0;
 			}
 			gpsWorking = false;
 			// Rajia Will that fix the random velocity problem
@@ -1459,7 +1478,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 						/* TODO PLEASE REMOVE THIS --J */
 						// Rajia Stealing these Text Boxes for now
-						loggedInAsB.setText("Distance: "
+						/*loggedInAsB.setText("Distance: "
 								+ roundTwoDecimals(totalDistance * 0.000621371)
 								+ " Miles " + roundTwoDecimals(totalDistance)
 								+ " Meters");
@@ -1471,7 +1490,7 @@ public class DataWalk extends Activity implements LocationListener,
 								+ roundTwoDecimals(velocity * 2.23694)
 								+ " MPH " + roundTwoDecimals(velocity)
 								+ " M/Sec    ");
-
+						*/
 					}
 				});
 
@@ -1480,39 +1499,44 @@ public class DataWalk extends Activity implements LocationListener,
 				if ((timerTick % (mInterval / 1000)) == 0 && timerTick != 0) {
 
 					// Prepare a new row of data
-					JSONArray dataJSON = new JSONArray();
+					JSONObject dataJSON = new JSONObject();
 
 					// Determine how long you've been recording for
 					elapsedMillis += mInterval;
 					long time = startTime + elapsedMillis;
 
+					try {
 
-					// Store new values into JSON Object
-					dataJSON.put("u " + time);
-					dataJSON.put(""   + accel[3]);
-					dataJSON.put(""   + velocity);
-					dataJSON.put(""   + totalDistance);
-					dataJSON.put(""   + loc.getLatitude());
-					dataJSON.put(""   + loc.getLongitude());
-					
-					// Save this data point if GPS says it has a lock
-					if (gpsWorking) {
-						
-						dataSet.put(dataJSON);
-						
-						// Updated the number of points recorded here and on
-						// the main UI
-						dataPointCount++;
-						runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								pointsUploadedTV
-								.setText("Points Recorded: "
-										+ dataPointCount);
-							}
+						// Store new values into JSON Object
+						dataJSON.put("0", "u " + time);
+						dataJSON.put("1", accel[3]);
+						dataJSON.put("2", velocity);
+						dataJSON.put("3", totalDistance);
+						dataJSON.put("4", loc.getLatitude());
+						dataJSON.put("5", loc.getLongitude());
 
-						});
+						// Save this data point if GPS says it has a lock
+						if (gpsWorking) {
+
+							dataSet.put(dataJSON);
+
+							// Updated the number of points recorded here and on
+							// the main UI
+							dataPointCount++;
+							runOnUiThread(new Runnable() {
+
+								@Override
+								public void run() {
+									pointsUploadedTV
+											.setText("Points Recorded: "
+													+ dataPointCount);
+								}
+
+							});
+						}
+
+					} catch (JSONException e) {
+						e.printStackTrace();
 					}
 				}
 			}

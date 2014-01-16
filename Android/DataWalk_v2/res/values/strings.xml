@@ -40,10 +40,11 @@
     <string name="Exp_Num_Title">Select Project</string>
     <string name="About_Title">About</string>
     <string name="Help">\n\nThis app can record data regardless of Internet or Wifi connection. After finished recording data, the points you recorded will remain saved. Later, if you have internet connection, you can click on upload (a menu option located at the top of the app). This will show you the session name and time that your data was recorded. Clicking on the upload button will publish that information to iSENSE.\n\n </string>
-    <string name="ResetDefaults_Title">Reset Settings</string>
+    <string name="menu_reset">Reset Settings</string>
     <string name="gps_icon">GPS Icon</string>
     <string name="ten_seconds">10 seconds</string>
     <string name="john_smith">John S.</string>
     <string name="mobile_user">Mobile U.</string>
+    <string name="menu_reset_condensed">Reset</string>
 
 </resources>
