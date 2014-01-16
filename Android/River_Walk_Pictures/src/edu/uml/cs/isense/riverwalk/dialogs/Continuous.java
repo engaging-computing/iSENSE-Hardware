@@ -39,9 +39,11 @@ public class Continuous extends Activity {
 		public void onClick(View v) {
 			if (continuous_cb.isChecked()){							//Continuous checkbox is checked
 				Main.continuous = true;
+				Main.addPicture.setVisibility(View.GONE);
 				Main.takePicture.setText(R.string.takePicContinuous);
 			}else{													//Continuous checkbox is not checked
-				Main.continuous = false;							
+				Main.continuous = false;
+				Main.addPicture.setVisibility(View.VISIBLE);
 				Main.takePicture.setText(R.string.takePicSingle);
 			}
 		}

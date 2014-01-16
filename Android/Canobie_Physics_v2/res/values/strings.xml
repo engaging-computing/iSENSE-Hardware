@@ -99,7 +99,7 @@
     <string name="media_desc">Select one of the following options:</string>
     <string name="upload">Upload</string>
     <string name="okay">Ok</string>
-    <string name="sample_rate">Sample Interval: </string>
+    <string name="sample_rate">Sample Interval (milli-seconds): </string>
     <string name="select_fields_for">	    Please select the fields you would like to record for project #</string>
     
     <string name="syncTime">	    Synchronizing time is useful when using multiple devices on a ride at the
@@ -137,5 +137,7 @@
     <string name="ok">OK</string>
     <string name="selectProject">Select a Project</string>
     <string name="project_prompt">Select a Project</string>
+    <string name="project_name_dialog">Create a Project</string>
+    <string name="login_prompt_error">Login Error</string>
 
 </resources>
