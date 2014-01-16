@@ -10,10 +10,9 @@
 #define Data_Walk_QueueConstants_h
 
 // constants for QueueUploaderView's actionSheet
-#define QUEUE_DELETE        0
-#define QUEUE_RENAME        1
-#define QUEUE_CHANGE_DESC   2
-#define QUEUE_SELECT_PROJ   3
+#define QUEUE_RENAME        0
+#define QUEUE_CHANGE_DESC   1
+#define QUEUE_SELECT_PROJ   2
 #define QUEUE_LOGIN         500
 
 // options for project action sheet
