@@ -622,6 +622,9 @@ public class API {
 				}
 				newJobj.put(curIndex + "", existing.getJSONArray(currKey)); curIndex++;			
 			}
+
+			requestData.put("data", existing);
+
 			ArrayList<RProjectField> fields = getProjectFields(existingDs.project_id);
 			ArrayList<String> headers = new ArrayList<String>();
 			for(RProjectField rpf : fields) {
