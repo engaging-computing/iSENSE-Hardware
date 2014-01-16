@@ -70,7 +70,6 @@ import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
-import edu.uml.cs.isense.riverwalk.R;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
