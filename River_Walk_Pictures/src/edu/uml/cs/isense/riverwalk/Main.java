@@ -1,8 +1,6 @@
 package edu.uml.cs.isense.riverwalk;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -22,8 +20,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
@@ -832,21 +828,24 @@ public class Main extends Activity implements LocationListener {
 					.getString(R.string.queueCount) + uq.queueSize());
 
 			new UploadTask().execute();
+			
 		} else if (requestCode == SELECT_PICTURE_REQUESTED) {
-			
-			Uri selectedImageUri = data.getData();
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(selectedImageUri,filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-			
-			curTime = System.currentTimeMillis();
-			Log.d("Path:", selectedImageUri.getPath().toString());
-			picture = new File(picturePath);
-			  
-			new UploadTask().execute();
+			if (resultCode == Activity.RESULT_OK) {
+				Uri selectedImageUri = data.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+	            Cursor cursor = getContentResolver().query(selectedImageUri,filePathColumn, null, null, null);
+	            cursor.moveToFirst();
+	            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+	            String picturePath = cursor.getString(columnIndex);
+	            cursor.close();
+				
+				curTime = System.currentTimeMillis();
+				picture = new File(picturePath);
+				
+				Intent iDesc = new Intent(Main.this, Description.class);
+				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);			
+				//TODO
+			}
 		}
 	}
 
