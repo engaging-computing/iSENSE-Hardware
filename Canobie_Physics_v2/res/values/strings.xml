@@ -79,8 +79,8 @@
     <string name="picAndVidCount">Pictures and Videos taken: \0</string>
     <string name="menuDirections">Use Menu to Access Configurations</string>
     <string name="timeElapsed">Time Elapsed: 0:00</string>
-    <string name="sessionName">Session Name: </string>
-    <string name="experimentNum">Expm #: </string>
+    <string name="sessionName">Data Set Name: </string>
+    <string name="projectNum">Project #: </string>
     <string name="browse">  Browse&#8230;  </string>
     <string name="seatNum">Seat/Student #: </string>
     <string name="seatNumber">1</string>
@@ -95,11 +95,11 @@
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
     <string name="retry">Try Again</string>
     <string name="done">Done</string>
-    <string name="back">Back</string>
+    <string name="exit">Exit</string>
     <string name="media_desc">Select one of the following options:</string>
     <string name="upload">Upload</string>
-    <string name="okay">Okay</string>
-    <string name="sample_rate">Sample Interval: </string>
+    <string name="okay">Ok</string>
+    <string name="sample_rate">Sample Interval (milli-seconds): </string>
     <string name="select_fields_for">	    Please select the fields you would like to record for project #</string>
     
     <string name="syncTime">	    Synchronizing time is useful when using multiple devices on a ride at the
@@ -131,5 +131,13 @@
     <string name="loading">Loading&#x2026;</string>
     <string name="search">Search</string>
     <string name="select_later">I\'ll select one later</string>
+    <string name="setup">Setup</string>
+    <string name="time">Time</string>
+    <string name="media">Media</string>
+    <string name="ok">OK</string>
+    <string name="selectProject">Select a Project</string>
+    <string name="project_prompt">Select a Project</string>
+    <string name="project_name_dialog">Create a Project</string>
+    <string name="login_prompt_error">Login Error</string>
 
 </resources>

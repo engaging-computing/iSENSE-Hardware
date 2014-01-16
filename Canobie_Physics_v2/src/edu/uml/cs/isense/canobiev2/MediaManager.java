@@ -58,6 +58,8 @@ public class MediaManager extends Activity {
 				+ mediaCount);
 
 		takePic = (Button) findViewById(R.id.mediaPicture);
+		
+		/*Take Picture*/
 		takePic.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -83,6 +85,7 @@ public class MediaManager extends Activity {
 			}
 		});
 
+		/*Record Video*/
 		takeVid = (Button) findViewById(R.id.mediaVideo);
 		takeVid.setOnClickListener(new OnClickListener() {
 			@Override

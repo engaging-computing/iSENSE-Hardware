@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/MENU_ITEM_SETUP"
+          android:title="@string/setup"
+          android:showAsAction="ifRoom"/>
+    <item android:id="@+id/MENU_ITEM_LOGIN"
+          android:title="@string/login" 
+          android:showAsAction="ifRoom"/>
+    <item android:id="@+id/MENU_ITEM_UPLOAD"
+          android:title="@string/upload" 
+          android:showAsAction="ifRoom"/>
+    <item android:id="@+id/MENU_ITEM_TIME"
+          android:title="@string/time" 
+          android:showAsAction="ifRoom"/>
+     <item android:id="@+id/MENU_ITEM_MEDIA"
+          android:title="@string/media" 
+          android:showAsAction="ifRoom"/>
+</menu>
+
+
