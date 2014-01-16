@@ -99,8 +99,10 @@ public class API {
 	 */
 	public boolean createSession(String username, String password) {
 		try {
-			String result = makeRequest(baseURL, "login", "email="+URLEncoder.encode(username, "UTF-8")
-					+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
+			JSONObject jodata = new JSONObject();
+			jodata.put("email", username);
+			jodata.put("password", password);
+			String result = makeRequest(baseURL, "login","","POST",jodata);
 			System.out.println(result);
 			JSONObject j =  new JSONObject(result);
 			
@@ -578,11 +580,12 @@ public class API {
 		try {
 			requestData.put("data", data);
 			requestData.put("id", ""+projectId);
+			requestData.put("authenticity_token",authToken);
 			if(!datasetName.equals("")) 
 				requestData.put("title", datasetName);
-			
+			JSONObject jodata = new JSONObject();
 			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/jsonDataUpload", 
-					"authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+					"", "POST", requestData);
 			
 			JSONObject jobj = new JSONObject(reqResult);
 			System.out.println("Returning: " + jobj.toString());
@@ -596,8 +599,6 @@ public class API {
 
 	/**
 	 * Append new rows of data to the end of an existing data set
-	 * ** This currently works for horrible reasons regarding how the website handles
-	 * edit data sets ** Will fix hopefully --J TODO
 	 * 
 	 * @param dataSetId The ID of the data set to append to
 	 * @param newData The new data to append
@@ -607,37 +608,53 @@ public class API {
 	public boolean appendDataSetData(int dataSetId, JSONObject newData) {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
-		JSONObject existing = existingDs.data;
-		JSONObject newJobj = new JSONObject();
-		Iterator<?> keys = newData.keys();
 		try {
-			int curIndex = 0;
-			while(keys.hasNext()) {
-				String currKey = (String) keys.next();
-				JSONArray newDataPoints = newData.getJSONArray(currKey);
-				for(int i = 0; i < newDataPoints.length(); i++) {
-					existing.getJSONArray(currKey).put(newDataPoints.get(i));
+			JSONObject combined = existingDs.data;
+			//merge newdata into combined
+			Iterator<?> keys = newData.keys();
+			while (keys.hasNext()) 
+			{
+				String key = (String) keys.next();
+				for (int i = 0;i < newData.getJSONArray(key).length();i++)
+				{
+					combined.accumulate(key, newData.getJSONArray(key).get(i));
 				}
-				newJobj.put(curIndex + "", existing.getJSONArray(currKey)); curIndex++;			
 			}
-			ArrayList<RProjectField> fields = getProjectFields(existingDs.project_id);
-			ArrayList<String> headers = new ArrayList<String>();
-			for(RProjectField rpf : fields) {
-				headers.add(rpf.field_id + "");
+			//fill in blank spots
+			int maxDatapoints = 0; 
+			keys = combined.keys();
+			while (keys.hasNext())
+			{
+				String key = (String) keys.next();
+				if (combined.getJSONArray(key).length() > maxDatapoints)
+				{
+					maxDatapoints = combined.getJSONArray(key).length(); 
+				}
 			}
-			requestData.put("headers", new JSONArray(headers));
-			requestData.put("data", newJobj);
+			keys = combined.keys();
+			while (keys.hasNext())
+			{
+				String key = (String) keys.next();
+				while (combined.getJSONArray(key).length() < maxDatapoints)
+				{
+					combined.accumulate(key,""); 
+				}
+			}
+			requestData.put("data", combined);
 			requestData.put("id", ""+dataSetId);
-			
-			String result = makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
-			new JSONObject(result); // this line will throw an exception if it fails, thus returning false
+			requestData.put("authenticity_token",authToken);
+			String result = makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "", "POST", requestData);
+			JSONObject jresult = new JSONObject(result); // this line will throw an exception if it fails, thus returning false
+			if (jresult.get("status").toString().equalsIgnoreCase("success"))
+			{
+				return true;
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		
-		return true;
+		return false;
 	}
 
 	/**
@@ -873,7 +890,7 @@ public class API {
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
-
+			urlConnection.setDoOutput(true);
 			if(postData != null) {
 				System.out.println("Post data: " + postData);
 				mPostData = postData.toString().getBytes();
