@@ -22,6 +22,8 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
@@ -281,9 +283,8 @@ public class Main extends Activity implements LocationListener {
 					name.setError(null);
 				}
 				
-				Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
+				Intent intent = new Intent(Intent.ACTION_PICK);
+				intent.setType("image/*");
                 startActivityForResult(Intent.createChooser(intent,
                         "Select Picture"), SELECT_PICTURE_REQUESTED);
 				
@@ -704,7 +705,7 @@ public class Main extends Activity implements LocationListener {
 		});
 	}
 
-	// upload pictures
+	/* Add pictures and Data assosiated with picture to queue */
 	private Runnable uploader = new Runnable() {
 		@Override
 		public void run() {
@@ -833,31 +834,23 @@ public class Main extends Activity implements LocationListener {
 			new UploadTask().execute();
 		} else if (requestCode == SELECT_PICTURE_REQUESTED) {
 			
-			//TODO
 			Uri selectedImageUri = data.getData();
+			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImageUri,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+			
 			curTime = System.currentTimeMillis();
-			picture = new File(getRealPathFromURI(selectedImageUri));
+			Log.d("Path:", selectedImageUri.getPath().toString());
+			picture = new File(picturePath);
 			  
 			new UploadTask().execute();
 		}
 	}
 
-	// Convert the image URI to the direct file system path
-	@SuppressWarnings("deprecation")
-	public String getRealPathFromURI(Uri contentUri) {
-
-	    String [] proj={MediaStore.Images.Media.DATA};
-	    Cursor cursor = managedQuery( contentUri,
-	                    proj, // Which columns to return
-	                    null,       // WHERE clause; which rows to return (all rows)
-	                    null,       // WHERE clause selection arguments (none)
-	                    null); // Order-by clause (ascending by name)
-	    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	    cursor.moveToFirst();
-
-	    return cursor.getString(column_index);
-	}
-
+	
 	
 	
 	@Override
