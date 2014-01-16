@@ -80,16 +80,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#2C2"
+            android:background="@drawable/button_bar_green"
             android:text="@string/upload"
             android:textColor="#FFF"
             android:textSize="14sp"
             android:textStyle="bold" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#CCC" />
 
         <Button
             android:id="@+id/b_project"
@@ -103,18 +98,12 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/v_bar"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_above="@id/ll_project"
-        android:background="#CCC" />
 
     <RelativeLayout
         android:id="@+id/ll_nameandlogin"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_above="@id/v_bar"
+        android:layout_above="@id/ll_project"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
