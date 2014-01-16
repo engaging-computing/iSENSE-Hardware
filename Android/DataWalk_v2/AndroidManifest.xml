@@ -140,6 +140,9 @@
             android:label="Delete Selected Data Sets"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
+        <service
+            android:name=".Datawalk_Service"
+            />
     </application>
 
 </manifest>

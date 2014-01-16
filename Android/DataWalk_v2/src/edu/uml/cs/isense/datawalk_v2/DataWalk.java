@@ -78,6 +78,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private TextView rateBox;
 	private TextView latLong;
 	private Button startStop;
+	private Button stopB; 
 
 	/* Manager Controlling Globals */
 	private LocationManager mLocationManager;
@@ -95,13 +96,13 @@ public class DataWalk extends Activity implements LocationListener,
 	private Waffle w;
 
 	/* iSENSE API Globals and Constants */
-	private final String DEFAULT_USERNAME = "mobile";
+	private final String DEFAULT_USERNAME = "mobile.fake@example.com";
 	private final String DEFAULT_PASSWORD = "mobile";
-	private final String DEFAULT_PROJECT = "156";
-	private final String DEFAULT_PROJECT_DEV = "25";
+	private final String DEFAULT_PROJECT = "5";
+	private final String DEFAULT_PROJECT_DEV = "5";
 	private int actionBarTapCount = 0;
-	public static boolean useDev = false;
-	private String projectID = "156";
+	public static boolean useDev = true;
+	private String projectID = "5";
 
 	private String loginName = "";
 	private String loginPass = "";
@@ -256,8 +257,70 @@ public class DataWalk extends Activity implements LocationListener,
 			nameTxtBox.setText(getResources().getString(R.string.name)
 					+ ": " + firstName + " " + lastInitial);
 		}
+		/* Starts the code for the stop button */
+		stopB.setOnLongClickListener(new OnLongClickListener(){
+			@Override
+			public boolean onLongClick(View arg0){
+				//No longer recording so set buttons enabled
+				startStop.setEnabled(true);
+				startStop.setText("Hold to Start");
+				stopB.setEnabled(false);
+				// No longer recording so set menu flag to enabled
+				running = false;
+				useMenu = true;
+				if (android.os.Build.VERSION.SDK_INT >= 11)
+					invalidateOptionsMenu();
+				// Reset the text on the main button
+				startStop.setText(getString(R.string.startPrompt));
 
-		/* Starts the code for the main button. */
+				// Cancel the recording timer
+				recordTimer.cancel();
+
+				// Create the name of the session using the entered name
+				dataSetName = firstName + " " + lastInitial;
+
+				// Get user's project #, or the default if there is none
+				// saved
+				SharedPreferences prefs = getSharedPreferences(
+						PROJ_PREFS_KEY, Context.MODE_PRIVATE);
+				if (useDev)
+					projectID = prefs.getString(PROJ_ID_DEV,
+							DEFAULT_PROJECT_DEV);
+				else
+					projectID = prefs.getString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
+
+				// Set the project URL for view data
+				if (useDev)
+					projectURL = baseprojectURLDev + projectID + "/data_sets/";
+				else
+					projectURL = baseprojectURL + projectID + "/data_sets/";
+
+				// Save the newest DataSet to the Upload Queue if it has at
+				// least 1 point
+				QDataSet ds = new QDataSet( dataSetName, "Data Points: " + dataPointCount,
+                        QDataSet.Type.DATA, dataSet.toString(), null, projectID, null);
+        ds.setRequestDataLabelInOrder(true);
+				if (dataPointCount > 0) {
+					uq.addDataSetToQueue(ds);
+					// Tell the user recording has stopped
+					w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+
+				} else {
+					w.make("Data not saved because no points were recorded.",
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+
+				}
+
+				// Re-enable rotation in the main activity
+				OrientationManager.enableRotation(DataWalk.this);
+				return running;
+				
+			}//ends onLongClick
+			
+			
+		});//ends stopB on LongClick Listener
+		/* Starts the code for the start button. */
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
 			@SuppressLint("NewApi")
@@ -268,10 +331,10 @@ public class DataWalk extends Activity implements LocationListener,
 				vibrator.vibrate(300);
 				mMediaPlayer.setLooping(false);
 				mMediaPlayer.start();
-
-				// Handles when you press the button to STOP recording
-				if (running) {
-
+				//rajia commented out
+				/* Handles when you press the button to STOP recording
+				// if (running) { 
+					//stop button pressed
 					// No longer recording so set menu flag to enabled
 					running = false;
 					useMenu = true;
@@ -324,8 +387,12 @@ public class DataWalk extends Activity implements LocationListener,
 					OrientationManager.enableRotation(DataWalk.this);
 
 					// Handles when you press the button to START recording
-				} else {
-
+				//} //else { rajia commented out */
+				
+					//Recording Data so we can no longer hit start button.
+					startStop.setEnabled(false);
+					startStop.setText("Recording Data.");
+					stopB.setEnabled(true);
 					// Recording so set menu flag to disabled
 					useMenu = false;
 					if (android.os.Build.VERSION.SDK_INT >= 11)
@@ -354,15 +421,15 @@ public class DataWalk extends Activity implements LocationListener,
 					runRecordingTimer();
 
 					// Change the text on the main button
-					startStop.setText(getString(R.string.stopPrompt));
+					stopB.setText(getString(R.string.stopPrompt));
 
-				}
+				//} rajia commented out
 
 				return running;
 
 			}
 
-		});
+		});//ends start button clicked listener
 		
 		// additional initializations that are dependent on whether or not we're on dev
 		onCreateInit();
@@ -390,7 +457,8 @@ public class DataWalk extends Activity implements LocationListener,
 
 	private void initialize() {
 		// Initialize main UI elements
-		startStop = (Button) findViewById(R.id.startStop);
+		startStop = (Button) findViewById(R.id.newStartB);
+		stopB = (Button) findViewById(R.id.newStopB);
 		timeElapsedBox = (TextView) findViewById(R.id.timeElapsed);
 		pointsUploadedBox = (TextView) findViewById(R.id.pointCount);
 		expNumBox = (TextView) findViewById(R.id.expNumBx);
