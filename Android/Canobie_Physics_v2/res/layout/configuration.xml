@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/setupScroll"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
 
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:scrollbars="vertical" >
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/iSenseOnlyOptions"
@@ -25,7 +20,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical" >
 
             <TextView
@@ -57,36 +51,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/ExperimentLabel"
+            <Button
+                android:id="@+id/selectButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:paddingTop="15dip"
-                android:text="@string/experimentNum"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                android:layout_alignParentTop="true"
+                android:text="@string/selectProject" />
 
-            <EditText
-                android:id="@+id/ExperimentInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/BrowseButton"
-                android:layout_toRightOf="@id/ExperimentLabel"
-                android:digits="1234567890"
-                android:imeOptions="actionDone"
-                android:inputType="phone"
-                android:maxLength="5" />
-
-            <Button
-                android:id="@+id/BrowseButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/browse" />
         </RelativeLayout>
 
         <CheckBox
@@ -129,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:paddingTop="12dip"
+            android:paddingTop="25dp"
             android:text="@string/otherConfig"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
@@ -137,7 +111,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical" >
 
             <TextView
@@ -166,7 +139,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical" >
 
             <CheckBox
@@ -196,7 +168,16 @@
                 android:layout_below="@+id/isCanobie"
                 android:layout_toRightOf="@+id/rideNameLabel"
                 android:prompt="@string/rides_prompt" />
+            
+            <Button
+			    android:id="@+id/ok"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:text="@string/ok" 
+			    android:layout_alignParentBottom="true"/>
+	        
         </RelativeLayout>
+		
+		
+       
     </LinearLayout>
-
-</ScrollView>

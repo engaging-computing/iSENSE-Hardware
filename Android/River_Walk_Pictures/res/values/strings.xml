@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">iS River Walk</string>
+    <string name="app_name">iSense Pictures</string>
     <string name="experiments_no_items">No projects were found.</string>
     <string name="app_name_experiments">Projects</string>
     <string name="prompt">Would you like to try uploading any of the following?</string>
     <string name="upload">Upload</string>
     
-    <string name="firstName">Group Name: \0</string>
+    <string name="firstName">First Name/Last Initial: \0</string>
     <string name="takePicSingle">Press Here to Take a Picture</string>
     <string name="iSlogo">iSENSE Logo</string>
     <string name="queueCount">Picture Count: \0</string>
@@ -59,12 +59,12 @@
 	<string name="invasiveSpecies_short">Invasive Species</string>
 	
 	<string name="other">Other</string>
-	<string name="upload">Upload</string>
 	<string name="project">Project</string>
 	<string name="login">Login</string>
 	<string name="continuous">Continuously Take Photos</string>
 	<string name="interval">Time Interval (seconds):</string>
 	<string name="takePicContinuous">Press Here to Continuously Take Pictures</string>
+	<string name="addPicture">Upload a Picture from the Gallery</string>
     
 	
 	
