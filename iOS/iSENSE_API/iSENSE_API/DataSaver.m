@@ -35,8 +35,6 @@
     ds.projID = dataSet.projID;
     ds.uploadable = dataSet.uploadable;
     
-    // commitMOCChanges used to be here - moved down to bottom of function
-    
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
     
@@ -135,6 +133,9 @@
 
 -(bool)upload:(NSString *)parentName {
     API *api = [API getInstance];
+    
+    NSLog(@"Insisde DataSaver.m");
+    
     if ([api getCurrentUser] == nil) {
         
         NSLog(@"Not logged in.");
@@ -153,6 +154,9 @@
         // get the next dataset
         currentDS = [dataQueue objectForKey:currentKey];
         
+        NSLog(@"Number of pics: %d", ((NSArray *)currentDS.picturePaths).count);
+        NSLog(@"Number of datas: %d", ((NSArray *)currentDS.data).count);
+        
         // prevent uploading datasets from other sources (e.g. manual vs automatic)
         if (![currentDS.parentName isEqualToString:parentName]) continue;
         
@@ -162,10 +166,13 @@
         // check if the session is uploadable
         if (currentDS.uploadable.boolValue) {
             
+            NSLog(@"Inside uploading area");
+            
             dataSetsToUpload++;
             
             // organize data if no initial project was found
             if (currentDS.hasInitialProj.boolValue == FALSE) {
+                NSLog(@"HelloWorld");
                 if (currentDS.fields == nil) {
                     continue;
                 } else {
@@ -187,7 +194,7 @@
             // upload to iSENSE
             int returnID = -1;
             if (((NSArray *)currentDS.data).count) {
-                
+                NSLog(@"Shouldn't be here");
                 NSMutableDictionary *jobj = [[NSMutableDictionary alloc] init];
                 [jobj setObject:currentDS.data forKey:@"data"];
                 jobj = [[api rowsToCols:jobj] mutableCopy];
@@ -203,6 +210,8 @@
             
             // upload pictures to iSENSE
             if (((NSArray *)currentDS.picturePaths).count) {
+                
+                NSLog(@"Inside pictures area");
                 NSArray *pictures = (NSArray *) currentDS.picturePaths;
                 NSMutableArray *newPicturePaths = [NSMutableArray alloc];
                 bool failedAtLeastOnce = false;
@@ -211,7 +220,7 @@
                 for (int i = 0; i < pictures.count; i++) {
             
                     // track the images that fail to upload
-                    if (![api uploadDataSetMediaWithId:returnID withFile:pictures[i] andName:currentDS.name]) {
+                    if (![api uploadProjectMediaWithId:currentDS.projID.intValue withFile:pictures[i] andName:currentDS.name]) {
                         dataSetsFailed++;
                         failedAtLeastOnce = true;
                         [newPicturePaths addObject:pictures[i]];

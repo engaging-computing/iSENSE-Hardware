@@ -22,6 +22,24 @@
     return self;
 }
 
+- (IBAction)enterEditMode:(id)sender {
+    
+    if ([self.mTableView isEditing]) {
+        // If the tableView is already in edit mode, turn it off. Also change the title of the button to reflect the intended verb (‘Edit’, in this case).
+        [self.mTableView setEditing:NO animated:YES];
+        [self.editButtonItem setTitle:@"Edit"];
+    }
+    else {
+        
+        // Turn on edit mode
+        
+        [self.mTableView setEditing:YES animated:YES];
+        [self.editButtonItem setTitle:@"Done"];
+    }
+}
+
+
+
 -(id)initWithParentName:(NSString *)parentName {
     self = [super init];
     if (self) {
@@ -83,24 +101,24 @@
             [isenseBundle loadNibNamed:@"queue_layout-landscape~ipad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
             [isenseBundle loadNibNamed:@"queue_layout~ipad"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         }
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [isenseBundle loadNibNamed:@"queue_layout-landscape~iphone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
             [isenseBundle loadNibNamed:@"queue_layout~iphone"
                                           owner:self
                                         options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         }
     }
 }
@@ -133,13 +151,6 @@
     
     currentIndex = 0;
     
-    // add long press gesture listener to the table
-    UILongPressGestureRecognizer *lpgr = [[UILongPressGestureRecognizer alloc]
-                                          initWithTarget:self action:@selector(handleLongPressOnTableCell:)];
-    lpgr.minimumPressDuration = 0.5;
-    lpgr.delegate = self;
-    [self.mTableView addGestureRecognizer:lpgr];
-    
     // make table clear
     mTableView.backgroundColor = [UIColor clearColor];
     mTableView.backgroundView = nil;
@@ -165,42 +176,25 @@
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setBool:FALSE forKey:KEY_ATTEMPTED_UPLOAD];
     
+    self.editButtonItem.target = self;
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationItem.rightBarButtonItem.action = @selector(enterEditMode:);
+    
 }
 
-- (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer {
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        
-        CGPoint p = [gestureRecognizer locationInView:self.mTableView];
-        
-        NSIndexPath *indexPath = [self.mTableView indexPathForRowAtPoint:p];
-        if (indexPath != nil) {
-            
-            lastClickedCellIndex = [indexPath copy];
-            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
-            if (cell.isHighlighted) {
-                
-                if (![cell dataSetHasInitialProject]) {
-                    UIActionSheet *popupQuery = [[UIActionSheet alloc]
-                                                 initWithTitle:nil
-                                                 delegate:self
-                                                 cancelButtonTitle:@"Cancel"
-                                                 destructiveButtonTitle:@"Delete"
-                                                 otherButtonTitles:@"Rename", @"Change Description", @"Select Project", nil];
-                    popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-                    [popupQuery showInView:self.view];
-                } else {
-                    UIActionSheet *popupQuery = [[UIActionSheet alloc]
-                                                 initWithTitle:nil
-                                                 delegate:self
-                                                 cancelButtonTitle:@"Cancel"
-                                                 destructiveButtonTitle:@"Delete"
-                                                 otherButtonTitles:@"Rename", @"Change Description", nil];
-                    popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-                    [popupQuery showInView:self.view];
-                }
-            }
-        }
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    QueueCell *cell;
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:indexPath];
+        [limitedTempQueue removeObjectForKey:[cell getKey]];
+        [dataSaver removeDataSet:[cell getKey]];
+        [self.mTableView reloadData];
+        [mTableView reloadData];
     }
+    
+    
 }
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -209,22 +203,13 @@
     QueueCell *cell;
     
 	switch (buttonIndex) {
-        case QUEUE_DELETE:
-            
-            cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-            [limitedTempQueue removeObjectForKey:[cell getKey]];
-            [dataSaver removeDataSet:[cell getKey]];
-            [self.mTableView reloadData];
-            [mTableView reloadData];
-            
-            break;
             
         case QUEUE_RENAME:
             message = [[UIAlertView alloc] initWithTitle:@"Enter new data set name:"
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", nil];
+                                       otherButtonTitles:@"OK", nil];
             
             message.tag = QUEUE_RENAME;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
@@ -240,7 +225,7 @@
                                                  message:nil
                                                 delegate:self
                                        cancelButtonTitle:@"Cancel"
-                                       otherButtonTitles:@"Okay", nil];
+                                       otherButtonTitles:@"OK", nil];
             
             message.tag = QUEUE_CHANGE_DESC;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
@@ -299,7 +284,7 @@
                                                               message:nil
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
-                                                    otherButtonTitles:@"Okay", nil];
+                                                    otherButtonTitles:@"OK", nil];
             
             message.tag = PROJECT_MANUAL_ENTRY;
             [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
@@ -440,7 +425,11 @@
                 return;
             }
             
+            
+            NSLog(@"User: %@", [api getCurrentUser]);
+            
             if ([api getCurrentUser] != nil) {
+                NSLog(@"Uploading...");
                 [dataSaver upload:parent];
             }
             
@@ -469,12 +458,36 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView reloadData];
+    
     QueueCell *cell = (QueueCell *)[tableView cellForRowAtIndexPath:indexPath];
+    if (![cell isEditing]) {
     
-    [NSThread sleepForTimeInterval:0.07];
-    [cell setBackgroundColor:[UIColor clearColor]];
-    
-    [cell toggleChecked];
+        [NSThread sleepForTimeInterval:0.07];
+        [cell setBackgroundColor:[UIColor clearColor]];
+        
+        [cell toggleChecked];
+    } else {
+        if (![cell dataSetHasInitialProject]) {
+            UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                         initWithTitle:nil
+                                         delegate:self
+                                         cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:nil
+                                         otherButtonTitles:@"Rename", @"Change Description", @"Select Project", nil];
+            popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+            [popupQuery showInView:self.view];
+        } else {
+            UIActionSheet *popupQuery = [[UIActionSheet alloc]
+                                         initWithTitle:nil
+                                         delegate:self
+                                         cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:nil
+                                         otherButtonTitles:@"Rename", @"Change Description", nil];
+            popupQuery.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+            [popupQuery showInView:self.view];
+        }
+ 
+    }
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField{

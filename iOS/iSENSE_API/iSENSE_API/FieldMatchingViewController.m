@@ -24,24 +24,24 @@
             [isenseBundle loadNibNamed:@"FieldMatching-landscape~ipad"
                                  owner:self
                                options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
             [isenseBundle loadNibNamed:@"FieldMatching~ipad"
                                  owner:self
                                options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         }
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [isenseBundle loadNibNamed:@"FieldMatching-landscape~iphone"
                                  owner:self
                                options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         } else {
             [isenseBundle loadNibNamed:@"FieldMatching~iphone"
                                  owner:self
                                options:nil];
-            [self viewDidLoad];
+            //[self viewDidLoad];
         }
     }
 }

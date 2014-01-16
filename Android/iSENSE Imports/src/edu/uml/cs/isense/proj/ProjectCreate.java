@@ -1,4 +1,4 @@
-package edu.uml.cs.isense.collector.splash;
+package edu.uml.cs.isense.proj;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.R;
+import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.objects.RProjectField;
@@ -33,10 +33,23 @@ import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
+/**
+ * This Activity is designed to allow users to create a project on the
+ * iSENSE website.
+ * 
+ * @author iSENSE Android Development Team
+ */
 public class ProjectCreate extends Activity {
 
-	public static Context mContext;
-	public static Waffle w;
+	/**
+	 * Constant for an intent extra that can be passed as a boolean value
+	 * as true if the implementation wants to theme the navigation bar
+	 * to look rSENSE-y.
+	 */
+	public static final String THEME_NAV_BAR = "theme_nav_bar_constant";
+	
+	private static Context mContext;
+	private static Waffle w;
 
 	private API api;
 
@@ -48,6 +61,10 @@ public class ProjectCreate extends Activity {
 	private ArrayList<RProjectField> fields;
 
 	private int newProjID;
+	
+	/**
+	 * Constant for the new project ID returned by this class.
+	 */
 	public static final String NEW_PROJECT_ID = "new_proj_id";
 
 	private static final int FIELD_TYPE_TIMESTAMP = 0;
@@ -59,6 +76,7 @@ public class ProjectCreate extends Activity {
 	private ProgressDialog dia;
 
 	private int locationCount = 0;
+	private int timestampCount = 0;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -70,28 +88,30 @@ public class ProjectCreate extends Activity {
 		w = new Waffle(mContext);
 
 		api = API.getInstance();
-		api.useDev(Welcome.useDev);
 
-		// Action bar customization for API >= 14
-		if (android.os.Build.VERSION.SDK_INT >= 14) {
-			ActionBar bar = getActionBar();
-			bar.setBackgroundDrawable(new ColorDrawable(Color
-					.parseColor("#111133")));
-			bar.setIcon(getResources()
-					.getDrawable(R.drawable.rsense_logo_right));
-			bar.setDisplayShowTitleEnabled(false);
-			int actionBarTitleId = Resources.getSystem().getIdentifier(
-					"action_bar_title", "id", "android");
-			if (actionBarTitleId > 0) {
-				TextView title = (TextView) findViewById(actionBarTitleId);
-				if (title != null) {
-					title.setTextColor(Color.WHITE);
-					title.setTextSize(24.0f);
+		Bundle extras = getIntent().getExtras();
+		if (extras != null && extras.getBoolean(THEME_NAV_BAR)) {
+			// Action bar customization for API >= 14
+			if (android.os.Build.VERSION.SDK_INT >= 14) {
+				ActionBar bar = getActionBar();
+				bar.setBackgroundDrawable(new ColorDrawable(Color
+						.parseColor("#111133")));
+				bar.setIcon(getResources()
+						.getDrawable(R.drawable.rsense_logo_right));
+				bar.setDisplayShowTitleEnabled(false);
+				int actionBarTitleId = Resources.getSystem().getIdentifier(
+						"action_bar_title", "id", "android");
+				if (actionBarTitleId > 0) {
+					TextView title = (TextView) findViewById(actionBarTitleId);
+					if (title != null) {
+						title.setTextColor(Color.WHITE);
+						title.setTextSize(24.0f);
+					}
 				}
-			}
-			
-			// make the actionbar clickable
-			bar.setDisplayHomeAsUpEnabled(true);
+				
+				// make the actionbar clickable
+				bar.setDisplayHomeAsUpEnabled(true);
+			}	
 		}
 
 		projectName = (EditText) findViewById(R.id.project_create_name);
@@ -99,7 +119,6 @@ public class ProjectCreate extends Activity {
 		// Set listeners for the buttons
 		final Button cancel = (Button) findViewById(R.id.project_create_cancel);
 		cancel.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				finish();
 			}
@@ -107,7 +126,6 @@ public class ProjectCreate extends Activity {
 
 		final Button ok = (Button) findViewById(R.id.project_create_ok);
 		ok.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				// check to see if the project has a name
 				if (projectName.getText().toString().length() == 0) {
@@ -128,14 +146,14 @@ public class ProjectCreate extends Activity {
 						View cell = fieldScroll.getChildAt(i);
 						EditText fieldName = (EditText) cell
 								.findViewById(R.id.project_field_name);
-						if (fieldName.getText().toString().length() == 0) {
+						if (fieldName != null && fieldName.getText().toString().length() == 0) {
 							int fieldNum = i + 1;
 							w.make(getResources().getString(R.string.please_enter_name_field)
 									+ fieldNum,
 									Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 							fieldName.setError("Enter a field name");
 							return;
-						} else
+						} else if (fieldName != null)
 							fieldName.setError(null);
 
 					}
@@ -150,7 +168,6 @@ public class ProjectCreate extends Activity {
 		final Button addField = (Button) findViewById(R.id.project_create_add_field_button);
 		addField.setOnClickListener(new OnClickListener() {
 
-			@Override
 			public void onClick(View v) {
 				int position = fieldSpin.getSelectedItemPosition();
 
@@ -162,7 +179,15 @@ public class ProjectCreate extends Activity {
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 						return;
 					}
-
+				else if (position == FIELD_TYPE_TIMESTAMP)
+					if (timestampCount == 0)
+						timestampCount++;
+					else {
+						w.make(getResources().getString(R.string.one_timestamp_only),
+								Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+						return;
+					}
+				
 				addFieldType(position);
 			}
 
@@ -217,11 +242,12 @@ public class ProjectCreate extends Activity {
 
 		ImageView x = (ImageView) v.findViewById(R.id.project_field_x);
 		x.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View view) {
 				fieldScroll.removeView(v);
 				if ((Integer) v.getTag() == FIELD_TYPE_LOCATION) {
 					locationCount--;
+				} else if ((Integer) v.getTag() == FIELD_TYPE_TIMESTAMP) {
+					timestampCount--;
 				}
 			}
 		});
@@ -416,7 +442,7 @@ public class ProjectCreate extends Activity {
 			if (newProjID != 0) {
 
 				Intent iRet = new Intent();
-				iRet.putExtra(NEW_PROJECT_ID, newProjID);
+				iRet.putExtra(NEW_PROJECT_ID, "" + newProjID);
 				setResult(RESULT_OK, iRet);
 				finish();
 

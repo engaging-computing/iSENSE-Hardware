@@ -17,14 +17,6 @@
 	<string name="csv_failed_upload">.csv File Failed to Upload</string>
 	<string name="csv_success_upload">.csv File Uploaded Successfully</string>
 	
-	<!-- ProjectCreate.java -->
-	<string name="please_enter_proj_name">Please enter a new project name</string>
-	<string name="please_enter_field">Please enter at least one field for your project</string>
-	<string name="please_enter_name_field">Please enter a name for field #</string>
-	<string name="one_location_only">Cannot add more than one location</string>
-	<string name="login_isense_first">Please login to iSENSE first</string>
-	<string name="project_failed_create">Project failed to create - please try again</string>
-	
 	<!-- Step1Setup.java -->
 	<string name="please_data_set_name">Please enter a data set name first</string>
 	<string name="please_valid_samp">Please enter a valid sample interval</string>
