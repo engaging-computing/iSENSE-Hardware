@@ -599,6 +599,8 @@ public class API {
 
 	/**
 	 * Append new rows of data to the end of an existing data set
+	 * ** This currently works for horrible reasons regarding how the website handles
+	 * edit data sets ** Will fix hopefully --J TODO
 	 * 
 	 * @param dataSetId The ID of the data set to append to
 	 * @param newData The new data to append
@@ -608,6 +610,9 @@ public class API {
 	public boolean appendDataSetData(int dataSetId, JSONObject newData) {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
+		JSONObject existing = existingDs.data;
+		JSONObject newJobj = new JSONObject();
+		Iterator<?> keys = newData.keys();
 		try {
 			JSONObject combined = existingDs.data;
 			//merge newdata into combined
@@ -619,6 +624,7 @@ public class API {
 				{
 					combined.accumulate(key, newData.getJSONArray(key).get(i));
 				}
+				newJobj.put(curIndex + "", existing.getJSONArray(currKey)); curIndex++;			
 			}
 			//fill in blank spots
 			int maxDatapoints = 0; 
@@ -642,19 +648,16 @@ public class API {
 			}
 			requestData.put("data", combined);
 			requestData.put("id", ""+dataSetId);
-			requestData.put("authenticity_token",authToken);
-			String result = makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "", "POST", requestData);
-			JSONObject jresult = new JSONObject(result); // this line will throw an exception if it fails, thus returning false
-			if (jresult.get("status").toString().equalsIgnoreCase("success"))
-			{
-				return true;
-			}
+			
+			String result = makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			new JSONObject(result); // this line will throw an exception if it fails, thus returning false
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		return false;
+		
+		return true;
 	}
 
 	/**
@@ -890,7 +893,7 @@ public class API {
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
-			urlConnection.setDoOutput(true);
+
 			if(postData != null) {
 				System.out.println("Post data: " + postData);
 				mPostData = postData.toString().getBytes();
