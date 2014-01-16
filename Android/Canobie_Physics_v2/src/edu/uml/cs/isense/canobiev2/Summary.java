@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class Summary extends Activity {
 
-	private String millis = "", seconds = "", minutes = "", 
+	private String seconds = "", minutes = "", 
 			append = "", date = "", points = "";
 	
 	@Override
@@ -21,7 +21,6 @@ public class Summary extends Activity {
 		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		Bundle extras = getIntent().getExtras();
-		millis  = extras.getString("millis");
 		seconds = extras.getString("seconds");
 		minutes = extras.getString("minutes");
 		append  = extras.getString("append");
@@ -30,7 +29,7 @@ public class Summary extends Activity {
 		
 		final TextView message = (TextView) findViewById(R.id.summary_text);
 		message.setText("Elapsed time: " + minutes + ":"
-				+ seconds + "." + millis
+				+ seconds
 				+ "\n" + "Data points: " + points
 				+ "\n" + "End date and time:\n"
 				+ date + "\n" + append);

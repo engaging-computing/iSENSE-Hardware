@@ -5,7 +5,7 @@
     android:versionName="2.1" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="false"
@@ -36,18 +37,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
-            android:label="Login"
-            android:theme="@style/DialogTheme" />
-        <activity
-            android:name=".experiment.BrowseExperiments"
-            android:label="Experiments"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".SyncTime"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="SyncTime"
-            android:screenOrientation="portrait"
+            android:name=".Configuration"
+            android:label="Configuration"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".MediaManager"
@@ -59,13 +50,7 @@
             android:label="Session Summary"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme" />
-        <activity
-            android:name=".ChooseSensorDialog"
-            android:configChanges="orientation|keyboardHidden"
-            android:label="Choose Compatible Sensors"
-            android:screenOrientation="portrait"
-            android:theme="@style/DialogTheme" />
-        
+               
         
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
@@ -83,18 +68,11 @@
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
             android:theme="@style/theme_dialog_white" />
+      
         <activity
-            android:name="edu.uml.cs.isense.exp.BrowseExperiments"
-            android:label="Experiments"
-            android:theme="@style/theme_dialog_white" />
-        <activity
-            android:name="edu.uml.cs.isense.exp.NoQR"
-            android:label="No QR Code Scanner Found"
-            android:theme="@style/theme_dialog_white" />
-        <activity
-            android:name="edu.uml.cs.isense.exp.Setup"
-            android:label="Select an Experiment"
-            android:theme="@style/theme_dialog_white" />
+            android:name="edu.uml.cs.isense.proj.BrowseProjects"
+            android:label="Browse Projects"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueSummary"
             android:label="Summary"
@@ -103,6 +81,37 @@
             android:name="edu.uml.cs.isense.dfm.FieldMatching"
             android:label="Select Fields"
             android:theme="@style/theme_dialog_white" />
+         <activity
+            android:name="edu.uml.cs.isense.credentials.Login"
+            android:label="@string/login_prompt"
+            android:theme="@style/theme_dialog_white" />
+         <activity
+            android:name="edu.uml.cs.isense.credentials.LoginError"
+            android:label="@string/login_prompt_error"
+            android:theme="@style/theme_dialog_white" />
+         <activity
+            android:name="edu.uml.cs.isense.proj.Setup"
+            android:label="@string/project_prompt"
+            android:theme="@style/theme_dialog_white" />
+          <activity
+            android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
+            android:label="@string/project_name_dialog"
+            android:theme="@style/theme_dialog_white" />
+         <activity
+            android:name="edu.uml.cs.isense.sync.SyncTime"
+            android:label="Sync Time"
+            android:theme="@style/AppTheme" />
+          <activity
+            android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
+            android:label="Delete Selected"
+            android:theme="@style/theme_dialog_white" />
+          <activity
+            android:name="edu.uml.cs.isense.queue.NoInitialProject"
+            android:label="Select a Project"
+            android:theme="@style/theme_dialog_white" />
+        
+         
+         
     </application>
 
 </manifest>

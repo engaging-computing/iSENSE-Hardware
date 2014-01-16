@@ -374,7 +374,6 @@ static RPerson *currentUser;
         
         person.person_id = [inner objectForKey:@"id"];
         person.name = [inner objectForKey:@"name"];
-        person.username = [inner objectForKey:@"username"];
         person.url = [inner objectForKey:@"url"];
         person.gravatar = [inner objectForKey:@"gravatar"];
         person.timecreated = [inner objectForKey:@"createdAt"];
@@ -409,7 +408,6 @@ static RPerson *currentUser;
     NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET andPostData:nil];
     person.person_id = [result objectForKey:@"id"];
     person.name = [result objectForKey:@"name"];
-    person.username = [result objectForKey:@"username"];
     person.url = [result objectForKey:@"url"];
     person.gravatar = [result objectForKey:@"gravatar"];
     person.timecreated = [result objectForKey:@"createdAt"];
@@ -652,12 +650,8 @@ static RPerson *currentUser;
  */
 -(int)uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
     
-    // append a timestamp to the name of the data set
-    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
-       
-    // Make sure there aren't any illegal characters in the name
-    name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-    
+    NSLog(@"Inside API.m");
+
     // Tries to get the mime type of the specified file
     NSString *mimeType = [self getMimeType:name];
    
@@ -707,10 +701,15 @@ static RPerson *currentUser;
         NSLog(@"Error received from server: %@", requestError);
         return -1;
     }
+
+    
+    NSString *urlString = [NSString stringWithContentsOfURL:[urlResponse URL] encoding:NSUTF8StringEncoding error:&requestError];
+    
+    NSLog(@"Error:%@", urlString);
     
     NSNumber *mediaObjectId = (NSNumber *)urlResponse;
        
-    return mediaObjectId.intValue;
+    return 1;
 }
 
 /**

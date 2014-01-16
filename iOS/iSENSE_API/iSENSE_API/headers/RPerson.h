@@ -14,7 +14,6 @@
 
 @property (strong) NSNumber *person_id;
 @property (strong) NSString *name;
-@property (strong) NSString *username;
 @property (strong) NSString *url;
 @property (strong) NSString *timecreated;
 @property (strong) NSString *gravatar;
