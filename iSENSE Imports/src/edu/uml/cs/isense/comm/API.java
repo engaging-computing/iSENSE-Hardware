@@ -583,7 +583,6 @@ public class API {
 			requestData.put("authenticity_token",authToken);
 			if(!datasetName.equals("")) 
 				requestData.put("title", datasetName);
-			JSONObject jodata = new JSONObject();
 			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/jsonDataUpload", 
 					"", "POST", requestData);
 			
@@ -610,9 +609,6 @@ public class API {
 	public boolean appendDataSetData(int dataSetId, JSONObject newData) {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
-		JSONObject existing = existingDs.data;
-		JSONObject newJobj = new JSONObject();
-		Iterator<?> keys = newData.keys();
 		try {
 			JSONObject combined = existingDs.data;
 			//merge newdata into combined
@@ -624,7 +620,6 @@ public class API {
 				{
 					combined.accumulate(key, newData.getJSONArray(key).get(i));
 				}
-				newJobj.put(curIndex + "", existing.getJSONArray(currKey)); curIndex++;			
 			}
 			//fill in blank spots
 			int maxDatapoints = 0; 
@@ -893,7 +888,7 @@ public class API {
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
-
+			urlConnection.setDoOutput(true);
 			if(postData != null) {
 				System.out.println("Post data: " + postData);
 				mPostData = postData.toString().getBytes();
