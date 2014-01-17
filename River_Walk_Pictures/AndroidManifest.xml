@@ -132,6 +132,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Create New Project"
             android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
+            android:label="Create New Project"
+            android:theme="@style/AppThemeDialog" />
     </application>
 
 </manifest>
