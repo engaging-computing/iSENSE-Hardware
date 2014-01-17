@@ -39,6 +39,7 @@ public class ProjectNameDialog extends Activity {
 					nameInput.setError(null);
 					Intent data = new Intent();
 					data.putExtra("new_proj_name", name);
+					System.out.println("proj_name: " + name);
 					setResult(RESULT_OK, data);
 					finish();
 				}
