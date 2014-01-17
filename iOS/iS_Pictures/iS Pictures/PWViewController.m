@@ -44,41 +44,24 @@
             [[NSBundle mainBundle] loadNibNamed:@"PWViewController~landscape_iPad"
                                           owner:self
                                         options:nil];
-            if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) {
-                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar~landscape_iPad.png"]];
-            } else {
-                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar~landscape_iPad.png"]];
-            }
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"PWViewController_iPad"
                                           owner:self
                                         options:nil];
-            if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) {
-               titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPad.png"]];
-            } else {
-                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPad.png"]];
-            }
         }
+        titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPhone.png"]];          
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [[NSBundle mainBundle] loadNibNamed:@"PWViewController~landscape_iPhone"
                                           owner:self
                                         options:nil];
-            if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) {
-                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar~landscape_iPhone.png"]];
-            } else {
-                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar~landscape_iPhone.png"]];
-            }
+            titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar~landscape_iPhone.png"]];
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"PWViewController_iPhone"
                                           owner:self
                                         options:nil];
             
-            if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)] == YES && [[UIScreen mainScreen] scale] == 2.00) {
-                titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPhone.png"]];
-            } else {
-              titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPhone.png"]];  
-            }           
+            titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navBar_iPhone.png"]];            
 
         }
     }
@@ -87,8 +70,6 @@
     
     [login_status setText:loginstat];
     
-    
-    [[UINavigationBar appearance] setTitleView:titleView];
     self.navigationItem.titleView = titleView;
     
 }

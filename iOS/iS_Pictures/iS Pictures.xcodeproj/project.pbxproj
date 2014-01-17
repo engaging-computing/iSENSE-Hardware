@@ -30,15 +30,17 @@
 		766173571880D1620094680C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 766173561880D1620094680C /* QuartzCore.framework */; };
 		7661735B1880D1CC0094680C /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7661735A1880D1CC0094680C /* Accelerate.framework */; };
 		7661735D1880D5770094680C /* menuIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7661735C1880D5770094680C /* menuIcon.png */; };
+		767059531889B38800FB98C8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7670594E1889B38800FB98C8 /* Default-568h@2x.png */; };
+		767059541889B38800FB98C8 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 7670594F1889B38800FB98C8 /* Default.png */; };
+		767059551889B38800FB98C8 /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 767059501889B38800FB98C8 /* Default~iphone.png */; };
+		767059561889B38800FB98C8 /* launchImage-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 767059511889B38800FB98C8 /* launchImage-iPad.png */; };
+		767059571889B38800FB98C8 /* launchImage-iPad~retina.png in Resources */ = {isa = PBXBuildFile; fileRef = 767059521889B38800FB98C8 /* launchImage-iPad~retina.png */; };
 		76762199187F0DC600A473B7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76762198187F0DC600A473B7 /* UIKit.framework */; };
 		7676219B187F0DC600A473B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7676219A187F0DC600A473B7 /* Foundation.framework */; };
 		7676219D187F0DC600A473B7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7676219C187F0DC600A473B7 /* CoreGraphics.framework */; };
 		767621A3187F0DC600A473B7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 767621A1187F0DC600A473B7 /* InfoPlist.strings */; };
 		767621A5187F0DC600A473B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 767621A4187F0DC600A473B7 /* main.m */; };
 		767621A9187F0DC600A473B7 /* PWAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 767621A8187F0DC600A473B7 /* PWAppDelegate.m */; };
-		767621AB187F0DC600A473B7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 767621AA187F0DC600A473B7 /* Default.png */; };
-		767621AD187F0DC600A473B7 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 767621AC187F0DC600A473B7 /* Default@2x.png */; };
-		767621AF187F0DC600A473B7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 767621AE187F0DC600A473B7 /* Default-568h@2x.png */; };
 		767621B2187F0DC600A473B7 /* PWViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 767621B1187F0DC600A473B7 /* PWViewController.m */; };
 		767621B5187F0DC600A473B7 /* PWViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 767621B3187F0DC600A473B7 /* PWViewController_iPhone.xib */; };
 		767621B8187F0DC600A473B7 /* PWViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 767621B6187F0DC600A473B7 /* PWViewController_iPad.xib */; };
@@ -50,6 +52,7 @@
 		7680C90E1886E9EA00BC1E98 /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7680C90D1886E9EA00BC1E98 /* libzbar.a */; };
 		7680C911188718D000BC1E98 /* PWViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7680C910188718D000BC1E98 /* PWViewController~landscape_iPhone.xib */; };
 		7680C91318872F2B00BC1E98 /* PWViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7680C91218872F2B00BC1E98 /* PWViewController~landscape_iPad.xib */; };
+		7680C9151888700700BC1E98 /* navBar~landscape_iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 7680C9141888700700BC1E98 /* navBar~landscape_iPhone.png */; };
 		76E57E9F1885C82600C9107C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76E57E9E1885C82600C9107C /* AssetsLibrary.framework */; };
 		76E57EA11885E51400C9107C /* river_walk_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA01885E51400C9107C /* river_walk_57x57.png */; };
 		76E57EA31885E51B00C9107C /* river_walk_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA21885E51B00C9107C /* river_walk_114x114.png */; };
@@ -114,6 +117,11 @@
 		766173561880D1620094680C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		7661735A1880D1CC0094680C /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		7661735C1880D5770094680C /* menuIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menuIcon.png; sourceTree = "<group>"; };
+		7670594E1889B38800FB98C8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		7670594F1889B38800FB98C8 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		767059501889B38800FB98C8 /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~iphone.png"; sourceTree = "<group>"; };
+		767059511889B38800FB98C8 /* launchImage-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "launchImage-iPad.png"; sourceTree = "<group>"; };
+		767059521889B38800FB98C8 /* launchImage-iPad~retina.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "launchImage-iPad~retina.png"; sourceTree = "<group>"; };
 		76762195187F0DC600A473B7 /* iS Pictures.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iS Pictures.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		76762198187F0DC600A473B7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7676219A187F0DC600A473B7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -124,9 +132,6 @@
 		767621A6187F0DC600A473B7 /* iS Pictures-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iS Pictures-Prefix.pch"; sourceTree = "<group>"; };
 		767621A7187F0DC600A473B7 /* PWAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWAppDelegate.h; sourceTree = "<group>"; };
 		767621A8187F0DC600A473B7 /* PWAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PWAppDelegate.m; sourceTree = "<group>"; };
-		767621AA187F0DC600A473B7 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		767621AC187F0DC600A473B7 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		767621AE187F0DC600A473B7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		767621B0187F0DC600A473B7 /* PWViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PWViewController.h; sourceTree = "<group>"; };
 		767621B1187F0DC600A473B7 /* PWViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PWViewController.m; sourceTree = "<group>"; };
 		767621B4187F0DC600A473B7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PWViewController_iPhone.xib; sourceTree = "<group>"; };
@@ -139,6 +144,7 @@
 		7680C90D1886E9EA00BC1E98 /* libzbar.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libzbar.a; path = "iS Pictures/ZBarSDK/libzbar.a"; sourceTree = "<group>"; };
 		7680C910188718D000BC1E98 /* PWViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "PWViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		7680C91218872F2B00BC1E98 /* PWViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "PWViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
+		7680C9141888700700BC1E98 /* navBar~landscape_iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navBar~landscape_iPhone.png"; sourceTree = "<group>"; };
 		76E57E9C1885AC9D00C9107C /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		76E57E9E1885C82600C9107C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		76E57EA01885E51400C9107C /* river_walk_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = river_walk_57x57.png; path = ../river_walk_57x57.png; sourceTree = "<group>"; };
@@ -236,6 +242,12 @@
 		7676219F187F0DC600A473B7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				7670594E1889B38800FB98C8 /* Default-568h@2x.png */,
+				7670594F1889B38800FB98C8 /* Default.png */,
+				767059501889B38800FB98C8 /* Default~iphone.png */,
+				767059511889B38800FB98C8 /* launchImage-iPad.png */,
+				767059521889B38800FB98C8 /* launchImage-iPad~retina.png */,
+				7680C9141888700700BC1E98 /* navBar~landscape_iPhone.png */,
 				76E57EA61885E52C00C9107C /* river_walk_144x144.png */,
 				76E57EA41885E52600C9107C /* river_walk_72x72.png */,
 				76E57EA21885E51B00C9107C /* river_walk_114x114.png */,
@@ -253,9 +265,6 @@
 				767621A1187F0DC600A473B7 /* InfoPlist.strings */,
 				767621A4187F0DC600A473B7 /* main.m */,
 				767621A6187F0DC600A473B7 /* iS Pictures-Prefix.pch */,
-				767621AA187F0DC600A473B7 /* Default.png */,
-				767621AC187F0DC600A473B7 /* Default@2x.png */,
-				767621AE187F0DC600A473B7 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -395,9 +404,7 @@
 			files = (
 				767621A3187F0DC600A473B7 /* InfoPlist.strings in Resources */,
 				766173461880BF230094680C /* iSENSE_API_Bundle.bundle in Resources */,
-				767621AB187F0DC600A473B7 /* Default.png in Resources */,
-				767621AD187F0DC600A473B7 /* Default@2x.png in Resources */,
-				767621AF187F0DC600A473B7 /* Default-568h@2x.png in Resources */,
+				767059571889B38800FB98C8 /* launchImage-iPad~retina.png in Resources */,
 				767621B5187F0DC600A473B7 /* PWViewController_iPhone.xib in Resources */,
 				767621B8187F0DC600A473B7 /* PWViewController_iPad.xib in Resources */,
 				7661735D1880D5770094680C /* menuIcon.png in Resources */,
@@ -405,9 +412,13 @@
 				76318B3118833395008D3A1F /* upload2.png in Resources */,
 				76318B3218833395008D3A1F /* users.png in Resources */,
 				76318B35188333B1008D3A1F /* barcode.png in Resources */,
+				767059531889B38800FB98C8 /* Default-568h@2x.png in Resources */,
+				767059541889B38800FB98C8 /* Default.png in Resources */,
+				767059551889B38800FB98C8 /* Default~iphone.png in Resources */,
 				76318B36188333B1008D3A1F /* info.png in Resources */,
 				76318B3D18837B93008D3A1F /* AboutViewController_iPad.xib in Resources */,
 				76318B3E18837B93008D3A1F /* AboutViewController_iPhone.xib in Resources */,
+				767059561889B38800FB98C8 /* launchImage-iPad.png in Resources */,
 				76318B4018837B93008D3A1F /* AboutViewController~landscape_iPad.xib in Resources */,
 				76318B4118837B93008D3A1F /* AboutViewController~landscape_iPhone.xib in Resources */,
 				76318B4B18842337008D3A1F /* navBar_iPhone.png in Resources */,
@@ -420,6 +431,7 @@
 				7680C9071886E4F300BC1E98 /* ZBarSDK in Resources */,
 				7680C911188718D000BC1E98 /* PWViewController~landscape_iPhone.xib in Resources */,
 				7680C91318872F2B00BC1E98 /* PWViewController~landscape_iPad.xib in Resources */,
+				7680C9151888700700BC1E98 /* navBar~landscape_iPhone.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
