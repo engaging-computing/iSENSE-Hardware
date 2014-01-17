@@ -61,6 +61,7 @@ import edu.uml.cs.isense.collector.dialogs.MediaManager;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.proj.Setup;
@@ -127,7 +128,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		mContext = this;
 
-		api = API.getInstance(mContext);
+		api = API.getInstance();
 		api.useDev(Welcome.useDev);
 
 		// Action bar customization for API >= 14
@@ -147,6 +148,9 @@ public class ManualEntry extends Activity implements OnClickListener,
 					title.setTextSize(24.0f);
 				}
 			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
 
 			manualLogo = (ImageView) findViewById(R.id.manual_logo);
 			manualLogo.setVisibility(View.GONE);
@@ -217,7 +221,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 				dataSetName.setError(null);
 
 			if (projID.equals("")) {
-				w.make("Invalid or no selected project.", Waffle.LENGTH_SHORT,
+				w.make(getResources().getString(R.string.inval_or_no_proj), 
+						Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_X);
 			} else if (dataSetName.getText().toString().length() == 0) {
 				dataSetName.setError("Enter a data set name");
@@ -249,7 +254,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 					loginName = loginName.substring(0, 18) + "...";
 				loginLabel.setText(getResources()
 						.getString(R.string.loggedInAs) + loginName);
-				w.make("Login successful", Waffle.LENGTH_LONG,
+				w.make(getResources().getString(R.string.login_success), 
+						Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			} else if (resultCode == Login.RESULT_ERROR) {
 				Intent i = new Intent(mContext, Login.class);
@@ -288,7 +294,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			boolean success = uq.buildQueueFromFile();
 			if (!success) {
-				w.make("Could not re-build queue from file!", Waffle.IMAGE_X);
+				w.make(getResources().getString(R.string.could_not_build_queue), 
+						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 
 		}
@@ -304,11 +311,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 	private void fillDataFieldEntryList(int projID) {
 
 		if (fieldOrder.size() == 0) {
-			if (api.hasConnectivity()) {
-				w.make("Project not found or has no fields",
+			if (Connection.hasConnectivity(mContext)) {
+				w.make(getResources().getString(R.string.proj_not_found_no_fields),
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			} else {
-				w.make("Cannot retrieve project fields with no internet connection",
+				w.make(getResources().getString(R.string.no_fields_no_internet),
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			}
 			return;
@@ -322,35 +329,33 @@ public class ManualEntry extends Activity implements OnClickListener,
 		projectLabel.setText(getResources().getString(R.string.usingProject)
 				+ projID);
 
-		int tagIndex = 0;
-
 		for (RProjectField projField : fieldOrder) {
 
 			switch (projField.type) {
 
 			case RProjectField.TYPE_LAT:
-				addDataField(projField, TYPE_LATITUDE, tagIndex);
+				addDataField(projField, TYPE_LATITUDE, projField.field_id);
 				break;
 
 			case RProjectField.TYPE_LON:
-				addDataField(projField, TYPE_LONGITUDE, tagIndex);
+				addDataField(projField, TYPE_LONGITUDE, projField.field_id);
 				break;
 
 			case RProjectField.TYPE_TIMESTAMP:
-				addDataField(projField, TYPE_TIME, tagIndex);
+				addDataField(projField, TYPE_TIME, projField.field_id);
 				break;
 
 			case RProjectField.TYPE_TEXT:
-				addDataField(projField, TYPE_TEXT_FIELD, tagIndex);
+				addDataField(projField, TYPE_TEXT_FIELD, projField.field_id);
 				break;
 
 			default:
-				addDataField(projField, TYPE_NUMBER_FIELD, tagIndex);
+				addDataField(projField, TYPE_NUMBER_FIELD, projField.field_id);
 				break;
 
 			}
 
-			tagIndex++;
+			//tagIndex++;
 
 		}
 
@@ -358,7 +363,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	}
 
-	private void addDataField(RProjectField projField, int type, int tagIndex) {
+	private void addDataField(RProjectField projField, int type, long field_id) {
 		LinearLayout dataField = (LinearLayout) View.inflate(this,
 				R.layout.manualentryfield, null);
 		TextView fieldName = (TextView) dataField
@@ -369,7 +374,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		fieldContents.setSingleLine(true);
 		fieldContents.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-		fieldContents.setTag(tagIndex);
+		fieldContents.setTag(field_id);
 
 		if (type != TYPE_NUMBER_FIELD && type != TYPE_TEXT_FIELD) {
 			fieldContents.setText("Auto");
@@ -440,7 +445,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 	public void onBackPressed() {
 
 		if (!w.isDisplaying)
-			w.make("Double press \"Back\" to exit");
+			w.make(getResources().getString(R.string.double_press_back));
 		else if (w.canPerformTask)
 			super.onBackPressed();
 
@@ -479,6 +484,11 @@ public class ManualEntry extends Activity implements OnClickListener,
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 
 			return true;
+			
+		case android.R.id.home:
+	    	onBackPressed();
+	    	
+	        return true;
 
 		}
 		return false;
@@ -590,7 +600,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		} else {
 			if (throughUploadButton) {
 				throughUploadButton = false;
-				w.make("There is no data to upload", Waffle.LENGTH_LONG,
+				w.make(getResources().getString(R.string.no_data_to_upload),
+						Waffle.LENGTH_LONG,
 						Waffle.IMAGE_CHECK);
 			}
 		}
@@ -683,8 +694,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			String uploadTime = makeThisDatePretty(System.currentTimeMillis());
 
-			ds = new QDataSet(QDataSet.Type.DATA, dataSetName.getText()
-					.toString(), uploadTime, projID, data, null);
+			ds = new QDataSet(dataSetName.getText().toString(), uploadTime, 
+					QDataSet.Type.DATA, data, null, projID, null);
 
 			return null;
 		}
@@ -694,10 +705,12 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 			if (ds != null) {
 				uq.addDataSetToQueue(ds);
-				w.make("Saved data successfully.", Waffle.IMAGE_CHECK);
+				w.make(getResources().getString(R.string.data_saved), 
+						Waffle.IMAGE_CHECK);
 
 			} else {
-				w.make("Fatal error in saving data!", Waffle.IMAGE_X);
+				w.make(getResources().getString(R.string.data_not_saved),
+						Waffle.IMAGE_X);
 			}
 
 			dia.dismiss();
@@ -770,10 +783,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 			String projID = projPrefs.getString(PREFERENCES_PROJ_ID, null);
 			if (projID != null) {
 				for (File picture : MediaManager.pictureArray) {
-					QDataSet picDS = new QDataSet(QDataSet.Type.PIC, name,
-							uploadTime, projID, null, picture);
+					QDataSet picDS = new QDataSet(name, uploadTime, QDataSet.Type.PIC, null, picture, projID, null);
 					uq.addDataSetToQueue(picDS);
-
 				}
 
 			}

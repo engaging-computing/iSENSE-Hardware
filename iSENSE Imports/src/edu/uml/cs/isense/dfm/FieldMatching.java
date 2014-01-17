@@ -36,6 +36,11 @@ public class FieldMatching extends Activity {
 	 * to easily convert order into a String[].
 	 */
 	public static final String DFM_ORDER_LIST = "dfm_order_list";
+	
+	/**
+	 * The list of actual fields from the project.
+	 */
+	public static final String DFM_REAL_ORDER_LIST = "dfm_real_order_list";
 
 	/**
 	 * The list of fields the user accepts with.  In other words, it will be a
@@ -75,10 +80,15 @@ public class FieldMatching extends Activity {
 		OrientationManager.disableRotation((Activity) mContext);
 		
 		LinkedList<String> fields = null;
+		LinkedList<String> realFields = null;
+		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			String[] sa = extras.getStringArray(DFM_ORDER_LIST);
-			fields = DataFieldManager.convertStringArrayToLinkedList(sa);
+			String[] orderArr = extras.getStringArray(DFM_ORDER_LIST);
+			fields = DataFieldManager.convertStringArrayToLinkedList(orderArr);
+			
+			String[] realOrderArr = extras.getStringArray(DFM_REAL_ORDER_LIST);
+			realFields = DataFieldManager.convertStringArrayToLinkedList(realOrderArr);
 			
 			shouldBuildPrefsString = extras.getBoolean(SHOULD_BUILD_PREFS_STRING, true);
 		} else {
@@ -90,15 +100,14 @@ public class FieldMatching extends Activity {
 		if (fields == null || fields.isEmpty()) {
 			isEmpty = true;
 		} else {
+			int i = 0;
 			for (String field : fields) {
+				String realField = realFields.get(i++);
+				
 				View v = View.inflate(mContext, R.layout.field_match_cell, null);
 
 				TextView name = (TextView) v.findViewById(R.id.field_match_cell_name);
-				if (field.contains(getString(R.string.null_string))) {
-					String subStr = field.replace(getString(R.string.null_string), "");
-					name.setText(subStr);
-				} else
-					name.setText(field);
+				name.setText(realField);
 				
 				Spinner selector = (Spinner) v.findViewById(R.id.field_match_cell_spinner);
 				
