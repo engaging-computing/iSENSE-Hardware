@@ -37,7 +37,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/ll_rcrdinterval"
+        android:id="@+id/rl_rcrdinterval"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_below="@id/ll_location"
@@ -98,9 +98,8 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-
     <RelativeLayout
-        android:id="@+id/ll_nameandlogin"
+        android:id="@+id/rl_nameandlogin"
         android:layout_width="match_parent"
         android:layout_height="85dp"
         android:layout_above="@id/ll_project"
@@ -148,44 +147,61 @@
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/tv_login"
             android:background="@drawable/button_rsense"
-            android:text="@string/mobile_user"
+            android:text="@string/not_logged_in"
             android:textColor="@color/rsense_button_text"
             android:textSize="14sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/ll_timeandcount"
+        android:id="@+id/ll_recordingextras"
         android:layout_width="match_parent"
         android:layout_height="85dp"
-        android:layout_above="@id/ll_nameandlogin"
+        android:layout_above="@id/rl_nameandlogin"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone"
+        android:weightSum="4" >
 
         <TextView
             android:id="@+id/tv_elapsedtime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
             android:text="@string/timeElapsed" />
 
         <TextView
             android:id="@+id/tv_pointcount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/pointsUploaded" />
+
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/distance" />
+
+        <TextView
+            android:id="@+id/tv_velocity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/velocity" />
     </LinearLayout>
 
     <Button
         android:id="@+id/b_startstop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/ll_timeandcount"
-        android:layout_below="@id/ll_rcrdinterval"
+        android:layout_above="@id/ll_recordingextras"
+        android:layout_below="@id/rl_rcrdinterval"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/button_rsense"
