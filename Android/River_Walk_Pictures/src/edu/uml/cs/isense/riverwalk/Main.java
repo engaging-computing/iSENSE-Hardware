@@ -1,8 +1,6 @@
 package edu.uml.cs.isense.riverwalk;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -22,9 +20,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Criteria;
@@ -76,6 +71,7 @@ public class Main extends Activity implements LocationListener {
 	private static final int EXPERIMENT_REQUESTED = 104;
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
+	private static final int SELECT_PICTURE_REQUESTED = 107;
 	
 	public static boolean continuous = false;
 	public static int continuousInterval = 1;
@@ -108,11 +104,13 @@ public class Main extends Activity implements LocationListener {
 	private static int waitingCounter = 0;
 	private static String descriptionStr = "";
 
+
 	public static Context mContext;
 
 	private Waffle w;
 	private File picture;
 	public static Button takePicture;
+	public static Button addPicture;
 	static boolean useMenu = true;
 
 	// private ProgressDialog dia;
@@ -140,7 +138,7 @@ public class Main extends Activity implements LocationListener {
 		f = new Fields();
 
 		api = API.getInstance();
-		api.useDev(false);
+		api.useDev(true);
 
 		uq = new UploadQueue("generalpictures", mContext, api);
 
@@ -167,10 +165,13 @@ public class Main extends Activity implements LocationListener {
 		preview = (FrameLayout) findViewById(R.id.camera_preview);
 		preview.getLayoutParams().height = 0;
 		
+		addPicture = (Button) findViewById(R.id.addPicture);
 		takePicture = (Button) findViewById(R.id.takePicture);
+		
 		if(continuous == true){
 			takePicture.setText(R.string.takePicContinuous);
 		}
+		
 		takePicture.setOnClickListener(new OnClickListener() {
 
 			// Push take picture button
@@ -263,6 +264,29 @@ public class Main extends Activity implements LocationListener {
 				}
 			}
 		});
+		
+		
+		/* Add a Picture to upload queue from gallery */
+		addPicture.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+				if (name.getText().length() == 0) {
+					name.setError("Enter a name");
+					return;
+				} else {
+					name.setError(null);
+				}
+				
+				Intent intent = new Intent(Intent.ACTION_PICK);
+				intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent,
+                        "Select Picture"), SELECT_PICTURE_REQUESTED);
+				
+			}
+			
+		});
 
 	}
 
@@ -339,12 +363,8 @@ public class Main extends Activity implements LocationListener {
 
 				} else {
 					return null;
-				}
-				
-				
+				}		
 			}
-			
-			
 			return null;
 		}
 
@@ -611,76 +631,34 @@ public class Main extends Activity implements LocationListener {
 		return android.os.Build.VERSION.SDK_INT;
 	}
 
+	
 	@SuppressLint("NewApi")
 	public static File convertImageUriToFile(Uri imageUri) {
+		   int apiLevel = getApiLevel();
+           if (apiLevel >= 11) {
 
-		Bitmap bmp = null;
-		Bitmap scaled = null;
-		try {
-			bmp = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(imageUri));
-			int h = 1536;  // height in pixels
-			int w = 2048; // width in pixels    
-			scaled = Bitmap.createScaledBitmap(bmp, h, w, true);
-			//imageUri = scaled;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		
-		
-		
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
+                   String[] proj = { MediaStore.Images.Media.DATA,
+                                   MediaStore.Images.Media._ID,
+                                   MediaStore.Images.ImageColumns.ORIENTATION };
+                   String selection = null;
+                   String[] selectionArgs = null;
+                   String sortOrder = null;
 
-			String[] proj = { MediaStore.Images.Media.DATA,
-					MediaStore.Images.Media._ID,
-					MediaStore.Images.ImageColumns.ORIENTATION };
-			String selection = null;
-			String[] selectionArgs = null;
-			String sortOrder = null;
+                   CursorLoader cursorLoader = new CursorLoader(mContext, imageUri,
+                                   proj, selection, selectionArgs, sortOrder);
 
-			CursorLoader cursorLoader = new CursorLoader(mContext, imageUri,
-					proj, selection, selectionArgs, sortOrder);
+                   Cursor cursor = cursorLoader.loadInBackground();
 
-			Cursor cursor = cursorLoader.loadInBackground();
-
-			int file_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			int orientation_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-			if (cursor.moveToFirst()) {
-				@SuppressWarnings("unused")
-				String orientation = cursor.getString(orientation_ColumnIndex);
-				
-				//create a file to write bitmap data
-				File f = new File(cursor.getString(file_ColumnIndex));
-				//Convert bitmap to byte array
-		
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				scaled.compress(CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-				byte[] bitmapdata = bos.toByteArray();
-				try {
-					bos.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				
-				//write the bytes in file
-				FileOutputStream fos;
-				try {
-					fos = new FileOutputStream(f);
-					fos.write(bitmapdata);
-					fos.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				return f;
-
-			}
-			return null;
+                   int file_ColumnIndex = cursor
+                                   .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                   int orientation_ColumnIndex = cursor
+                                   .getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+                   if (cursor.moveToFirst()) {
+                           @SuppressWarnings("unused")
+                           String orientation = cursor.getString(orientation_ColumnIndex);
+                           return new File(cursor.getString(file_ColumnIndex));
+                   }
+                   return null;
 
 		} else {
 
@@ -723,7 +701,7 @@ public class Main extends Activity implements LocationListener {
 		});
 	}
 
-	// upload pictures
+	/* Add pictures and Data assosiated with picture to queue */
 	private Runnable uploader = new Runnable() {
 		@Override
 		public void run() {
@@ -774,7 +752,7 @@ public class Main extends Activity implements LocationListener {
 			System.out.println("projectNum = " + projNum);
 
 			uq.addDataSetToQueue(ds);
-
+			//TODO
 		}
 	};
 
@@ -801,18 +779,10 @@ public class Main extends Activity implements LocationListener {
 
 			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
-
 				picture = convertImageUriToFile(imageUri);
-
-				uq.buildQueueFromFile();
-				queueCount.setText(getResources()
-						.getString(R.string.queueCount) + uq.queueSize());
 				
 				Intent iDesc = new Intent(Main.this, Description.class);
 				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
-				
-
-				new UploadTask().execute();
 
 			}
 
@@ -849,18 +819,39 @@ public class Main extends Activity implements LocationListener {
 				startActivity(new Intent(
 						Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 			}
+			
 		} else if (requestCode == DESCRIPTION_REQUESTED) {
+			descriptionStr = Description.photo_description; 
+			
+			uq.buildQueueFromFile();
+			queueCount.setText(getResources()
+					.getString(R.string.queueCount) + uq.queueSize());
 
-			descriptionStr = Description.photo_description; // set
-															// descriptionStr
-															// equal to
-															// photo_description
-															// in
-															// Description.java
-
+			new UploadTask().execute();
+			
+		} else if (requestCode == SELECT_PICTURE_REQUESTED) {
+			if (resultCode == Activity.RESULT_OK) {
+				Uri selectedImageUri = data.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+	            Cursor cursor = getContentResolver().query(selectedImageUri,filePathColumn, null, null, null);
+	            cursor.moveToFirst();
+	            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+	            String picturePath = cursor.getString(columnIndex);
+	            cursor.close();
+				
+				curTime = System.currentTimeMillis();
+				picture = new File(picturePath);
+				
+				Intent iDesc = new Intent(Main.this, Description.class);
+				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);			
+				//TODO
+			}
 		}
 	}
 
+	
+	
+	
 	@Override
 	public void onLocationChanged(Location location) {
 		loc = location;

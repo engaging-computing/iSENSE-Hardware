@@ -1746,7 +1746,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 						mContext, f);
 
-				dfm.getOrderWithExternalAsyncTask(); // TODO this was added
+				dfm.getOrderWithExternalAsyncTask();
 				
 				String fields = mPrefs.getString("accepted_fields", "");
 				getFieldsFromPrefsString(fields);
