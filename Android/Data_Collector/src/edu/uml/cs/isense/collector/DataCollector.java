@@ -1862,8 +1862,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@SuppressLint("NewApi")
 	private void setActionBarNormal() {
-		// Action bar customization for API >= 14
-		if (android.os.Build.VERSION.SDK_INT >= 14) {
+		// Action bar customization for API >= 11
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
 					.parseColor("#111133")));
@@ -1887,8 +1887,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@SuppressLint("NewApi")
 	private void setActionBarRecording() {
-		// Action bar customization for API >= 14
-		if (android.os.Build.VERSION.SDK_INT >= 14) {
+		// Action bar customization for API >= 11
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
 					.parseColor("#07420E")));

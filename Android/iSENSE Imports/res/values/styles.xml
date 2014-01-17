@@ -20,4 +20,13 @@
         <item name="android:topDark">#FF0000</item>
     </style>
 
+    <style name="AppThemeDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="AppThemeQueue" parent="@android:style/Theme.Dialog">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

@@ -142,5 +142,11 @@
 	<string name="login_isense_first">Please login to iSENSE first</string>
 	<string name="project_failed_create">Project failed to create - please try again</string>
 	<!-- End Project Create -->
+	
+	<!-- Action Bar -->
+	<string name="two_more_taps">2 more taps to enter\u0020</string>
+	<string name="one_more_tap">1 more tap to enter\u0020</string>
+	<string name="now_in_mode">Now in\u0020</string>
+	<string name="mode_type">\u0020mode</string>
     
 </resources>
