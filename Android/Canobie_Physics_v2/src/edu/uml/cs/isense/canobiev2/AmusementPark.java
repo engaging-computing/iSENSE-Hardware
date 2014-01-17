@@ -54,7 +54,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -242,7 +241,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					} else {
 						srate = Integer.parseInt(rate);
 						
-						new SensorCheckTask().execute();
+						//new SensorCheckTask().execute();
 						
 						isRunning = true;
 
@@ -956,7 +955,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			dfm = new DataFieldManager(Integer.parseInt(eidInput), api,
 					mContext, f);
-			dfm.getOrder();
+			dfm.getOrderWithExternalAsyncTask();
+			
+			getEnabledFields();
 			
 			publishProgress(100);
 			return null;
@@ -986,8 +987,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				Setup.PROJECT_ID, "-1")), api, mContext, f);
 		dfm.getOrder();
 
-		for (int i = 0; i < Fields.NUM_FIELDS; i++)
-			dfm.enabledFields[i] = true;
+		dfm.enableAllFields();
 
 		String acceptedFields = getResources().getString(R.string.time) + ","
 				+ getResources().getString(R.string.accel_x) + ","

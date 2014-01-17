@@ -2,6 +2,7 @@
 
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/AppTheme.ActionBar</item>
+        <item name="android:actionBarWidgetTheme">@style/AppTheme.Widget</item>
         <item name="android:popupMenuStyle">@style/AppTheme.PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/AppTheme.DropDownListView</item>
     </style>
@@ -30,7 +31,7 @@
         <item name="android:displayOptions">showHome|useLogo</item>
         <item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleTextStyle</item>
     </style>
-    
+
     <style name="AppTheme.ActionBar.TitleTextStyle">
         <item name="android:color">@color/actionbar_text</item>
     </style>

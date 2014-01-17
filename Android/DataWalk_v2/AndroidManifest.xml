@@ -35,7 +35,7 @@
             android:name=".DataWalk"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/display_name"
-            android:theme="@style/theme_blue" >
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -140,6 +140,11 @@
             android:label="Delete Selected Data Sets"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.ProjectCreate"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Create New Project"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
