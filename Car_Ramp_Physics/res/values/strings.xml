@@ -64,6 +64,6 @@
 	<string name="view">View</string>
 	<string name="not_logged_in">Not Logged In</string>
 	<string name="linear_accel">Linear Acceleration:   </string>
-	<string name="createProject">Create New Project</string>
+	<string name="new_proj_name_title">Create New Project</string>
     
 </resources>
