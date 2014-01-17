@@ -58,6 +58,7 @@ import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
+import edu.uml.cs.isense.dfm.FieldMatching;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.proj.Setup;
@@ -113,6 +114,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final int RESET_REQUESTED = 6003;
 	public static final int SAVE_MODE_REQUESTED = 10005;
 	public static final String ACCEL_SETTINGS = "ACCEL_SETTINGS";
+	private static final int FIELD_MATCHING_REQUESTED = 7498;
+	private static final int ALTER_DATA_PROJ_REQUESTED = 6698;
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
@@ -191,6 +194,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		uq.buildQueueFromFile();
 
 		w = new Waffle(mContext);
+		
+		new OnCreateLoginTask().execute();
 
 		// Save the default login info
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -226,8 +231,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startActivityForResult(new Intent(mContext, SaveModeDialog.class),
 					SAVE_MODE_REQUESTED);
 		}
-
-		new OnCreateLoginTask().execute();
 
 		loggedInAs = (TextView) findViewById(R.id.loginStatus);
 		if (api.getCurrentUser() != null) {
@@ -476,8 +479,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}, 0, INTERVAL);
 
 				}
-
-				CarRampPhysicsV2.this.invalidateOptionsMenu();
+				
+				if (android.os.Build.VERSION.SDK_INT >= 11) {
+					CarRampPhysicsV2.this.invalidateOptionsMenu();
+				}
 
 				return running;
 
@@ -749,7 +754,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		CarRampPhysicsV2.menu = menu;
 		menu.setGroupEnabled(0, useMenu);
-		return true;
+		return useMenu;
 	}
 
 	@Override
@@ -909,6 +914,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				dfm = new DataFieldManager(Integer.parseInt(projectNumber),
 						api, mContext, f);
 				dfm.getOrder();
+				
 				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
 				if (dfm.getOrderList().contains(
 						mContext.getString(R.string.accel_x))) {
@@ -956,7 +962,18 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 
 				}
+				/*
+				Intent iFieldMatch = new Intent(mContext, FieldMatching.class);
+
+				String[] dfmOrderList = dfm.convertOrderToStringArray();
+
+				iFieldMatch.putExtra(FieldMatching.DFM_ORDER_LIST, dfmOrderList);
+				iFieldMatch.putExtra(FieldMatching.SHOULD_BUILD_PREFS_STRING, false);
+				startActivityForResult(iFieldMatch, FIELD_MATCHING_REQUESTED);
+				*/
 			}
+			
+			
 		} else if (reqCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
 
@@ -1202,6 +1219,28 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				}
 
 			}
+		} else if (reqCode == FIELD_MATCHING_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				if (FieldMatching.acceptedFields.isEmpty()) {
+					Intent iProj = new Intent(mContext, Setup.class);
+					iProj.putExtra("from_where", "main");
+					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+				} else if (!FieldMatching.compatible) {
+					Intent iProj = new Intent(mContext, Setup.class);
+					iProj.putExtra("from_where", "main");
+					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+				} else {
+					SharedPreferences mPrefs = getSharedPreferences(
+							"PROJID", 0);
+					String projectInput = mPrefs.getString("project_id",
+							"No Proj.");
+
+				}
+			} else if (resultCode == RESULT_CANCELED) {
+				Intent iProj = new Intent(mContext, Setup.class);
+				iProj.putExtra("from_where", "main");
+				startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+			}
 		} else if (reqCode == SAVE_MODE_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				saveMode = true;
@@ -1342,7 +1381,36 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static int upload(String obj) {
 
 		int dataSetID = -1;
+<<<<<<< HEAD
+		// switch (type) {
+		// case DATA:
+
+		// check for closed experiment
+		// if (sid == -1) {
+		//
+		// if (addr.equals("")) {
+		// sid = UploadQueue.getRapi().createSession(eid, name, desc,
+		// "N/A", "N/A", "United States");
+		// } else {
+		// sid = UploadQueue.getRapi().createSession(eid, name, desc,
+		// addr, city + ", " + state, country);
+		// }
+		//
+		// // Failure to create session or not logged in
+		// if (sid == -1) {
+		// success = false;
+		// break;
+		// } else QueueLayout.lastSID = sid;
+		// }
+		//
+		// // Experiment Closed Checker
+		// if (sid == -400) {
+		// success = false;
+		// break;
+		// } else {
+=======
 		
+>>>>>>> upstream/master
 		try {
 			JSONArray dataJSON = new JSONArray(obj);
 			if (!(dataJSON.isNull(0))) {
@@ -1366,6 +1434,60 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		} catch (JSONException e) {
 
 		}
+<<<<<<< HEAD
+		// }
+		// break;
+		// pictures and stuff
+		// case PIC:
+		// if (sid == -1) sid = QueueLayout.lastSID;
+		// if (name.equals("")) {
+		// success = UploadQueue.getRapi().uploadPictureToSession(
+		// picture, eid, sid, "*Session Name Not Provided*",
+		// "N/A");
+		// } else {
+		// success = UploadQueue.getRapi().uploadPictureToSession(
+		// picture, eid, sid, name, "N/A");
+		// }
+		//
+		// break;
+		//
+		// case BOTH:
+		// if (sid == -1) {
+		//
+		// if (addr.equals("")) {
+		// sid = UploadQueue.getRapi().createSession(eid, name, desc,
+		// "N/A", "N/A", "United States");
+		// } else {
+		// sid = UploadQueue.getRapi().createSession(eid, name, desc,
+		// addr, city + ", " + state, country);
+		// }
+		//
+		// if (sid == -1) {
+		// success = false;
+		// break;
+		// } else QueueLayout.lastSID = sid;
+		// }
+		//
+		// // Experiment Closed Checker
+		// if (sid == -400) {
+		// success = false;
+		// break;
+		// } else {
+		// JSONArray dataJSON = prepDataForUpload();
+		// if (!(dataJSON.isNull(0))) {
+		//
+		// success = UploadQueue.getRapi().putSessionData(sid, eid,
+		// dataJSON);
+		// success = UploadQueue.getRapi().uploadPictureToSession(
+		// picture, eid, sid, name, "N/A");
+		//
+		// }
+		// }
+		//
+		// break;
+		// }
+=======
+>>>>>>> upstream/master
 
 		return dataSetID;
 	}
