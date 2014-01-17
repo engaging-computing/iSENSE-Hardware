@@ -118,7 +118,7 @@
 		            android:id="@+id/myLocation"
 		            android:layout_width="fill_parent"
 		            android:layout_height="wrap_content"
-		            android:text="@+string/noLocation0"
+		            android:text="@string/noLocation0"
 		            android:textColor="@android:color/black"
 		            android:textSize="16sp"
 		            android:layout_marginBottom="20dp"/>
