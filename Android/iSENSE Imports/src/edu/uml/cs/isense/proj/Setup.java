@@ -93,6 +93,8 @@ public class Setup extends Activity implements OnClickListener {
 
 		mContext = this;
 
+		api = API.getInstance();
+		
 		w = new Waffle(mContext);
 
 		okay = (Button) findViewById(R.id.project_ok);
@@ -254,7 +256,7 @@ public class Setup extends Activity implements OnClickListener {
 		} else if (requestCode == NAME_FOR_NEW_PROJECT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				if (data.hasExtra("new_proj_name")) {
-
+					// TODO -- @Jeremy asynctaskify this
 					ArrayList<RProjectField> fields = getArrayOfFields();
 					int projectNum = api.createProject(
 							data.getStringExtra("new_proj_name"), fields);
