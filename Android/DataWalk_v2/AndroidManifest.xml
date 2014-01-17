@@ -144,7 +144,7 @@
             android:name="edu.uml.cs.isense.proj.ProjectCreate"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Create New Project"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppThemeDialog" />
     </application>
 
 </manifest>
