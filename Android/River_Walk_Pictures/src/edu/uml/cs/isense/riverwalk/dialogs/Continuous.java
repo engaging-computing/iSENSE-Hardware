@@ -39,9 +39,11 @@ public class Continuous extends Activity {
 		public void onClick(View v) {
 			if (continuous_cb.isChecked()){							//Continuous checkbox is checked
 				Main.continuous = true;
+				Main.addPicture.setVisibility(View.GONE);
 				Main.takePicture.setText(R.string.takePicContinuous);
 			}else{													//Continuous checkbox is not checked
-				Main.continuous = false;							
+				Main.continuous = false;
+				Main.addPicture.setVisibility(View.VISIBLE);
 				Main.takePicture.setText(R.string.takePicSingle);
 			}
 		}
@@ -57,13 +59,15 @@ public class Continuous extends Activity {
 	ok.setOnClickListener(new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Main.continuousInterval = Integer.parseInt(continuous_time.getText().toString());
-			finish();
+			try{
+				Main.continuousInterval = Integer.parseInt(continuous_time.getText().toString());
+				if (Main.continuousInterval == 0)
+					Main.continuousInterval = 1;
+				finish();
+			} catch(NumberFormatException e) {
+				continuous_time.setError("Please Enter a Value.");
+			}
 		}
 	});	
-	
-	
-	
-	
 	}
 }

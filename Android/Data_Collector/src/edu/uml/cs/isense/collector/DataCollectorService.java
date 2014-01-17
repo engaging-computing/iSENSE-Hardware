@@ -93,7 +93,7 @@ public class DataCollectorService extends Service {
 					// parameter
 					if (terminate)
 						break;
-					
+				
 					// Get current execution time
 					long curExecution = System.currentTimeMillis();
 
@@ -101,6 +101,7 @@ public class DataCollectorService extends Service {
 					DataCollector.pollForData();
 
 					// Wait for a period of srate - execution time
+
 					wait(srate - (System.currentTimeMillis() - curExecution));
 
 				} catch (Exception e) {

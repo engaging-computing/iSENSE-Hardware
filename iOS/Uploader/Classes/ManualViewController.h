@@ -26,6 +26,8 @@
 	NSString *dataSetName;
     RotationDataSaver *rds;
     
+    BOOL backFromQueue;
+    
     CLLocationManager *locationManager;
     
 }
@@ -45,13 +47,12 @@
 - (BOOL) containsAcceptedNumbers:(NSString *)mString;
 
 - (void)   fillDataFieldEntryList:(int)projID withData:(NSMutableArray *) data andResetGlobal:(BOOL)reset;
-- (int)    addDataField:(RProjectField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data;
+- (int)    addDataField:(RProjectField *)projField withType:(int)type andObjNumber:(int)objNum andData:(NSString *)data andTag:(long)tag;
 - (void)   hideKeyboard;
 - (CGRect) setScrollViewItem:(int)type toSizeWithY:(CGFloat)y;
 - (void)   cleanRDSData;
 
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
-- (BOOL)   handleNewQRCode:(NSURL *)url;
 
 - (void)saveDataSet:(NSMutableArray *)dataJSON withDescription:(NSString *)description;
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation;
@@ -72,7 +73,6 @@
 @property (nonatomic, strong) UITextField           *lastField;
 
 // Non-UI Properties
-@property (nonatomic, copy)   NSString               *qrResults;
 @property (nonatomic, strong) CLLocationManager      *locationManager;
 @property (nonatomic, assign) int                     projNum;
 @property (nonatomic, assign) bool                    keyboardDismissProper;

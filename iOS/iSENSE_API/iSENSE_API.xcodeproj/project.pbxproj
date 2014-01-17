@@ -36,7 +36,7 @@
 		39FF262916DFA8760062C3DC /* Session.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262116DFA8760062C3DC /* Session.m */; };
 		39FF262A16DFA8760062C3DC /* SessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FF262216DFA8760062C3DC /* SessionData.m */; };
 		76444EDF180F069300C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EDE180F069300C41E3D /* MobileCoreServices.framework */; };
-		76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */; };
+		76EA36A4187F31B1002B95C2 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39FF25E016DFA28A0062C3DC /* libiSENSE_API.a */; };
 		B712DE231796D17000A30CAC /* DataSaver.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE211796D17000A30CAC /* DataSaver.h */; };
 		B712DE241796D17000A30CAC /* QDataSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B712DE221796D17000A30CAC /* QDataSet.h */; };
 		B727479A183682A400893A13 /* FieldMatching~iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B76026D4183532D8003FAFF9 /* FieldMatching~iphone.xib */; };
@@ -221,7 +221,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39216FDF176F5C790070DFCC /* CoreFoundation.framework in Frameworks */,
-				76509995178DC8A700425A27 /* libiSENSE_API.a in Frameworks */,
+				76EA36A4187F31B1002B95C2 /* libiSENSE_API.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

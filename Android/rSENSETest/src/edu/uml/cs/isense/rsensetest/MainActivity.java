@@ -16,15 +16,13 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
-import edu.uml.cs.isense.supplements.FileBrowser;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -35,6 +33,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	int FILEPICK = 0;
 	int MEDIAPROJPICK = 1;
 	int MEDIADATASET = 2;
+	
+	int projectId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		btnDev.setOnClickListener(this);
 		btnProd.setOnClickListener(this);
 
-		api = API.getInstance(this);
+		api = API.getInstance();
 		//api.setBaseUrl("http://129.63.17.17:3000");
 	}
 
@@ -60,7 +60,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if(api.hasConnectivity()) {
+		if(Connection.hasConnectivity(getApplicationContext())) {
 			if ( v == btnDev ) {
 				api.useDev(true);
 				status.setText("Starting test on rsense-dev...\n");
@@ -118,7 +118,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class UsersTask extends AsyncTask<Void, Void, RPerson> {
 		@Override
 		protected RPerson doInBackground(Void... params) {
-			return api.getUser("NickAVV");
+			return api.getUser(1);
 		}
 
 		@Override
@@ -145,6 +145,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else {
 				status.append(Html.fromHtml("<font color=\"#dd0000\">Get (at most) 2 news items fail. Got "+blogs.size()+".</font><br>"));
 			}
+			//TODO- move next api call to the success case, once this succeeds on dev/live
+			new CreateProjectTask().execute();
 		}
 	}
 
@@ -200,16 +202,28 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class UploadTask extends AsyncTask<JSONObject, Void, Void> {
+	private class UploadTask extends AsyncTask<Void, Void, Integer> {
 		@Override
-		protected Void doInBackground(JSONObject... params) {
-			api.uploadDataSet(2, params[0], "mobile upload testfuyf");
-			return null;
+		protected Integer doInBackground(Void... params) {
+			JSONObject j = new JSONObject();
+			try {
+				j.put("1", new JSONArray().put("45"));
+				j.put("0", new JSONArray().put("2013/08/02 09:50:01"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return -1;
+			}
+			return api.uploadDataSet(projectId, j, "mobile upload test");
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			
+		protected void onPostExecute(Integer result) {
+			if(result == -1) {
+				status.append(Html.fromHtml("<font color=\"#dd0000\">Upload data set fail.</font><br>"));
+			} else {
+				status.append(Html.fromHtml("<font color=\"#00aa00\">Upload data set success.</font><br>"));
+				new DeleteProjectTask().execute();
+			}
 		}
 	}
 	
@@ -252,9 +266,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class CreateProjectTask extends AsyncTask<Void, Void, Void> {
+	private class CreateProjectTask extends AsyncTask<Void, Void, Integer> {
 		@Override
-		protected Void doInBackground(Void... params) {
+		protected Integer doInBackground(Void... params) {
 			ArrayList<RProjectField> fields = new ArrayList<RProjectField>();
 			
 			RProjectField time = new RProjectField();
@@ -268,13 +282,34 @@ public class MainActivity extends Activity implements OnClickListener {
 			amount.unit = "units";
 			fields.add(amount);
 			
-			api.createProject("Project from Mobile", fields);
-			return null;
+			return api.createProject("Test Project", fields);
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Integer result) {
+			if(result == -1) {
+				status.append(Html.fromHtml("<font color=\"#dd0000\">Create project fail.</font><br>"));
+			} else {
+				status.append(Html.fromHtml("<font color=\"#00aa00\">Create project success.</font><br>"));
+				projectId = result;
+				new UploadTask().execute();
+			}
+		}
+	}
+	private class DeleteProjectTask extends AsyncTask<Void, Void, Integer> {
+		@Override
+		protected Integer doInBackground(Void... params) {
 			
+			return api.deleteProject(projectId);
+		}
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			if(result == -1) {
+				status.append(Html.fromHtml("<font color=\"#dd0000\">Delete project fail.</font><br>"));
+			} else {
+				status.append(Html.fromHtml("<font color=\"#00aa00\">Delete project success.</font><br>"));
+			}
 		}
 	}
 

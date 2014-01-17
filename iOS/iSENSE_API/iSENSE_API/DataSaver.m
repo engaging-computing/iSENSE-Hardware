@@ -35,8 +35,6 @@
     ds.projID = dataSet.projID;
     ds.uploadable = dataSet.uploadable;
     
-    // commitMOCChanges used to be here - moved down to bottom of function
-    
     int newKey = arc4random();
     [dataQueue enqueue:dataSet withKey:newKey];
     
@@ -112,6 +110,15 @@
     
 }
 
+-(void) editDataSetWithKey:(NSNumber *)key andChangeFieldsTo:(NSMutableArray *)newFields {
+    
+    QDataSet *dataSet = [dataQueue objectForKey:key];
+    [dataSet setFields:newFields];
+    
+    [self commitMOCChanges];
+    
+}
+
 // commit changes to the managedObjectContext
 -(BOOL) commitMOCChanges {
     
@@ -126,6 +133,9 @@
 
 -(bool)upload:(NSString *)parentName {
     API *api = [API getInstance];
+    
+    NSLog(@"Insisde DataSaver.m");
+    
     if ([api getCurrentUser] == nil) {
         
         NSLog(@"Not logged in.");
@@ -144,6 +154,9 @@
         // get the next dataset
         currentDS = [dataQueue objectForKey:currentKey];
         
+        NSLog(@"Number of pics: %d", ((NSArray *)currentDS.picturePaths).count);
+        NSLog(@"Number of datas: %d", ((NSArray *)currentDS.data).count);
+        
         // prevent uploading datasets from other sources (e.g. manual vs automatic)
         if (![currentDS.parentName isEqualToString:parentName]) continue;
         
@@ -153,22 +166,40 @@
         // check if the session is uploadable
         if (currentDS.uploadable.boolValue) {
             
+            NSLog(@"Inside uploading area");
+            
             dataSetsToUpload++;
             
             // organize data if no initial project was found
-            if (currentDS.hasInitialProj.boolValue == FALSE)
-                currentDS.data = [DataFieldManager reOrderData:currentDS.data forProjectID:currentDS.projID.intValue API:api andFieldOrder:nil];
-            
+            if (currentDS.hasInitialProj.boolValue == FALSE) {
+                NSLog(@"HelloWorld");
+                if (currentDS.fields == nil) {
+                    continue;
+                } else {
+                    currentDS.data = [DataFieldManager reOrderData:currentDS.data
+                                                      forProjectID:currentDS.projID.intValue
+                                                    withFieldOrder:currentDS.fields
+                                                       andFieldIDs:nil];
+                }
+            } else {
+                // see if the elements are NSMutableArrays or NSMutableObjects: if arrays, reorder data
+                if ([[currentDS.data objectAtIndex:0] isKindOfClass:[NSMutableArray class]]) {
+                    currentDS.data = [DataFieldManager reOrderData:currentDS.data
+                                                      forProjectID:currentDS.projID.intValue
+                                                    withFieldOrder:currentDS.fields
+                                                       andFieldIDs:nil];
+                }
+            }
             
             // upload to iSENSE
             int returnID = -1;
             if (((NSArray *)currentDS.data).count) {
-                
+                NSLog(@"Shouldn't be here");
                 NSMutableDictionary *jobj = [[NSMutableDictionary alloc] init];
                 [jobj setObject:currentDS.data forKey:@"data"];
                 jobj = [[api rowsToCols:jobj] mutableCopy];
                 
-                returnID = [api uploadDataSetWithId:currentDS.projID.intValue withData:jobj andName:currentDS.name];
+                returnID = [api jsonDataUploadWithId:currentDS.projID.intValue withData:jobj andName:currentDS.name];
                 NSLog(@"Data set ID: %d", returnID);
                 
                 if (returnID == 0 || returnID == -1) {
@@ -179,6 +210,8 @@
             
             // upload pictures to iSENSE
             if (((NSArray *)currentDS.picturePaths).count) {
+                
+                NSLog(@"Inside pictures area");
                 NSArray *pictures = (NSArray *) currentDS.picturePaths;
                 NSMutableArray *newPicturePaths = [NSMutableArray alloc];
                 bool failedAtLeastOnce = false;
@@ -187,7 +220,7 @@
                 for (int i = 0; i < pictures.count; i++) {
             
                     // track the images that fail to upload
-                    if (![api uploadDataSetMediaWithId:returnID withFile:pictures[i] andName:currentDS.name]) {
+                    if (![api uploadProjectMediaWithId:currentDS.projID.intValue withFile:pictures[i] andName:currentDS.name]) {
                         dataSetsFailed++;
                         failedAtLeastOnce = true;
                         [newPicturePaths addObject:pictures[i]];

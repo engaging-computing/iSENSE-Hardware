@@ -17,7 +17,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
             android:text="@string/media_desc"
-            android:textSize="16dp" />
+            android:textSize="16sp" />
 
         <LinearLayout
             android:id="@+id/picAndVidLayout"
@@ -50,7 +50,7 @@
             android:id="@+id/mediaBack"
             android:layout_width="fill_parent"
             android:layout_height="60dp"
-            android:text="@string/back"
+            android:text="@string/exit"
             android:layout_marginRight="4dp"
             android:layout_marginLeft="4dp" />
 

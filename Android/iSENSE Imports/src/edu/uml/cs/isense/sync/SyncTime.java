@@ -24,7 +24,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -65,7 +65,6 @@ public class SyncTime extends Activity {
 
 	/* Managers */
 	private ProgressDialog dia;
-	private API api;
 	private Waffle w;
 
 	public enum SyncTimeExceptionType {
@@ -85,7 +84,6 @@ public class SyncTime extends Activity {
 
 		// Initialize important variables
 		mContext = this;
-		api = API.getInstance(mContext);
 		w = new Waffle(this);
 
 		// Action bar customization for API >= 11
@@ -122,7 +120,7 @@ public class SyncTime extends Activity {
 
 			public void onClick(View v) {
 
-				if (api.hasConnectivity()) {
+				if (Connection.hasConnectivity(mContext)) {
 
 					// Send the message on a new thread
 					new SendMessage().start();
@@ -140,7 +138,7 @@ public class SyncTime extends Activity {
 		receive.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				if (api.hasConnectivity()) {
+				if (Connection.hasConnectivity(mContext)) {
 
 					// Listen for a message on its own thread (async task)
 					new ReceiveTask().execute();

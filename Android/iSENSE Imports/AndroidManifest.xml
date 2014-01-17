@@ -70,5 +70,14 @@
         android:name="edu.uml.cs.isense.credentials.ClassroomMode"
         android:label="@string/classroom_mode"
         android:theme="@style/theme_dialog_white" />
+    <activity
+        android:name="edu.uml.cs.isense.proj.ProjectCreate"
+        android:configChanges="orientation|keyboardHidden|screenSize"
+        android:label="Create New Project"
+        android:theme="@style/AppTheme" />
+    <activity
+        android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
+        android:label="Enter Projet Name"
+        android:theme="@style/theme_dialog_white" />
 
 </manifest>
