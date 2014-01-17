@@ -16,10 +16,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
-	<uses-feature android:name="android.hardware.camera.autofocus"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="false"
@@ -67,8 +70,7 @@
             android:name=".dialogs.Continuous"
             android:label="Continuous Photo Shooting"
             android:theme="@style/AppThemeDialog" />
-        
-        
+
         <!-- from iSENSE imports -->
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
@@ -124,6 +126,11 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.LoginError"
             android:label="@string/login_error_prompt"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.ProjectCreate"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Create New Project"
             android:theme="@style/AppThemeDialog" />
     </application>
 
