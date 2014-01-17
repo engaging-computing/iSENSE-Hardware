@@ -47,10 +47,9 @@ import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
-//import org.opencv.samples.colorblobdetect.ColorBlobDetectionActivity;
-// iSENSE data upload
 
-public class ColorBlobDetectionActivity extends Activity implements
+
+public class PendulumTrackerActivity extends Activity implements
 		OnTouchListener, CvCameraViewListener2 {
 
 	private static final String TAG = "PendulumTracker::Activity";
@@ -66,8 +65,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 	API api;
 
 	// iSENSE login
-	//private static String userName = "sor"; // "videoAnalytics";
-	// private static String password = "sor"; // "videoAnalytics";
 	private static String userName = "mobile";
 	private static String password = "mobile";
 	
@@ -80,8 +77,6 @@ public class ColorBlobDetectionActivity extends Activity implements
 	Boolean sessionNameEntered = false;
 
 	private static String experimentNumber = "29"; // production = 29, dev = 39
-	//private static String experimentNumber = "38"; // dev
-	//private static String experimentNumber = "39"; // dev
 	private static String baseSessionUrl = "http://isenseproject.org/projects/"
 			+ experimentNumber + "data_sets/";
 	private static String baseSessionUrlDev = "http://rsense-dev.cs.uml.edu/projects/" 
@@ -131,7 +126,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 				Log.i(TAG, "OpenCV loaded successfully");
 				mOpenCvCameraView.enableView();
 				mOpenCvCameraView
-						.setOnTouchListener(ColorBlobDetectionActivity.this);
+						.setOnTouchListener(PendulumTrackerActivity.this);
 			}
 				break;
 			default: {
@@ -142,7 +137,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 		}
 	};
 
-	public ColorBlobDetectionActivity() {
+	public PendulumTrackerActivity() {
 		Log.i(TAG, "Instantiated new " + this.getClass());
 	}
 
@@ -495,7 +490,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 					item.setTitle(R.string.startCollection);
 				//}
 					
-				Toast.makeText(ColorBlobDetectionActivity.this,
+				Toast.makeText(PendulumTrackerActivity.this,
 						"Remember to press 'Start Data Collection' to begin!", Toast.LENGTH_SHORT).show();
 					
 				return true;
@@ -633,7 +628,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 		@Override
 		protected void onPreExecute() {
 
-			dia = new ProgressDialog(ColorBlobDetectionActivity.this);
+			dia = new ProgressDialog(PendulumTrackerActivity.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
 			dia.setCancelable(false);
@@ -656,7 +651,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			dia.setMessage("Done");
 			dia.cancel();
-			Toast.makeText(ColorBlobDetectionActivity.this,
+			Toast.makeText(PendulumTrackerActivity.this,
 					"Data upload successful!", Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -771,7 +766,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 				// start collecting data.
 				if ( !(firstName.length() > 0 && lastInitial.length() > 0) ) {
 					Toast.makeText(
-							ColorBlobDetectionActivity.this,
+							PendulumTrackerActivity.this,
 							"You must first START data collection to create session name.",
 							Toast.LENGTH_LONG).show();
 					return;
@@ -787,7 +782,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 					}
 					else {
 						Toast.makeText(
-								ColorBlobDetectionActivity.this,
+								PendulumTrackerActivity.this,
 								"You must first START data collection to upload data.",
 								Toast.LENGTH_LONG).show();
 					}
@@ -795,7 +790,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 				else {
 					// no! no! no! try again.
 					Toast.makeText(
-							ColorBlobDetectionActivity.this,
+							PendulumTrackerActivity.this,
 							"Not logged into rSENSE. Try again.",
 							Toast.LENGTH_LONG).show();
 					return;
@@ -805,7 +800,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 			 // I am not connected to the internet - oops.
 			 else {
 				Toast.makeText(
-						ColorBlobDetectionActivity.this,
+						PendulumTrackerActivity.this,
 						"You are not connected to the Intertubes. Check connectivity and try again (previously recorded data will be saved).",
 						Toast.LENGTH_LONG).show();
 				return;
