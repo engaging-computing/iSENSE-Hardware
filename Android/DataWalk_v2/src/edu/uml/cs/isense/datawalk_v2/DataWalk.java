@@ -15,8 +15,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -32,6 +30,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.view.Menu;
@@ -182,15 +181,6 @@ public class DataWalk extends Activity implements LocationListener,
 		// Initialize action bar customization for API >= 11
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
-			int actionBarTitleId = Resources.getSystem().getIdentifier(
-					"action_bar_title", "id", "android");
-			if (actionBarTitleId > 0) {
-				TextView title = (TextView) findViewById(actionBarTitleId);
-				if (title != null) {
-					title.setTextColor(Color.WHITE);
-					title.setTextSize(24.0f);
-				}
-			}
 
 			// make the actionbar clickable
 			bar.setDisplayHomeAsUpEnabled(true);
@@ -1100,19 +1090,39 @@ public class DataWalk extends Activity implements LocationListener,
 			return true;
 
 		case android.R.id.home:
+			CountDownTimer cdt = null;
+
+			// Give user 10 seconds to switch dev/prod mode
+			if (actionBarTapCount == 0) {
+				cdt = new CountDownTimer(5000, 5000) {
+					public void onTick(long millisUntilFinished) {
+					}
+
+					public void onFinish() {
+						actionBarTapCount = 0;
+					}
+				}.start();
+			}
 
 			String other = (useDev) ? "production" : "dev";
 
 			switch (++actionBarTapCount) {
 			case 5:
-				w.make("2 more taps to enter " + other + " mode");
+				w.make(getResources().getString(R.string.two_more_taps) + other
+						+ getResources().getString(R.string.mode_type));
 				break;
 			case 6:
-				w.make("1 more tap to enter " + other + " mode");
+				w.make(getResources().getString(R.string.one_more_tap) + other
+						+ getResources().getString(R.string.mode_type));
 				break;
 			case 7:
-				w.make("Now in " + other + " mode");
+				w.make(getResources().getString(R.string.now_in_mode) + other
+						+ getResources().getString(R.string.mode_type));
 				useDev = !useDev;
+
+				if (cdt != null)
+					cdt.cancel();
+
 				if (api.getCurrentUser() != null) {
 					Runnable r = new Runnable() {
 						public void run() {
@@ -1123,8 +1133,8 @@ public class DataWalk extends Activity implements LocationListener,
 					new Thread(r).start();
 				} else
 					api.useDev(useDev);
+
 				actionBarTapCount = 0;
-				onCreateInit();
 				break;
 			}
 

@@ -10,66 +10,66 @@
     <activity
         android:name=".queue.QueueLayout"
         android:label="Upload Data"
-        android:theme="@style/theme_queue_layout" />
+        android:theme="@style/AppThemeQueue" />
     <activity
         android:name=".queue.QueueAlter"
         android:label="Alter Data Set"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".queue.QueueEditData"
         android:label="Edit Data"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".queue.QueueEditRename"
         android:label="Rename Data Set"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".queue.QueueDeleteSelected"
         android:label="Delete Selected Data Sets"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".queue.NoInitialProject"
         android:label="No Associated Projects"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".proj.BrowseProjects"
         android:label="Projects" />
     <activity
         android:name=".proj.NoQR"
         android:label="No QR Code Scanner Found"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".proj.Setup"
         android:label="Select a Project"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".dfm.FieldMatching"
         android:label="Select Fields"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".supplements.FileBrowser"
         android:label="Select a File"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".queue.QueueSummary"
         android:label="Summary"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".credentials.Login"
         android:label="@string/login_prompt"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".credentials.ClassroomMode"
         android:label="@string/classroom_mode"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".credentials.EnterName"
         android:label="@string/enter_name_prompt"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".credentials.LoginError"
         android:label="@string/login_error_prompt"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".proj.ProjectCreate"
         android:configChanges="orientation|keyboardHidden|screenSize"
@@ -78,6 +78,6 @@
     <activity
         android:name=".proj.ProjectNameDialog"
         android:label="Enter Projet Name"
-        android:theme="@style/theme_dialog_white" />
+        android:theme="@style/AppThemeDialog" />
 
 </manifest>

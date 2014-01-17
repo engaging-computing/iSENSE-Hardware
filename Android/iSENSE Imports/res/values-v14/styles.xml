@@ -5,6 +5,7 @@
         <item name="android:actionBarWidgetTheme">@style/AppTheme.Widget</item>
         <item name="android:popupMenuStyle">@style/AppTheme.PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/AppTheme.DropDownListView</item>
+        <item name="android:homeAsUpIndicator">@null</item>
     </style>
 
     <style name="PDTheme" parent="@android:style/Theme.Holo.Dialog">

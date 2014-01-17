@@ -55,8 +55,8 @@ public class API {
 	private static API instance = null;
 	
 	private String baseURL = "";
-	private final String publicURL = "http://129.63.16.128";
-	private final String devURL = "http://129.63.16.30";
+	private final String publicURL = "http://rsense.cs.uml.edu";
+	private final String devURL = "http://rsense-dev.cs.uml.edu";
 	
 	String authToken = "";
 	RPerson currentUser;
