@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">iSENSE Pendulum Tracker</string>
+    <string name="display_name">iS Pendulum Tracker</string>
+    <string name="promptForName">Enter name for session:</string>
+    <string name="startInstructions">(1) center pendulum in box\n(2) pull pendulum to edge of screen</string>
+    <string name="startHere">Start here!</string>
+    <string name="startCollection">Start data collection</string>
+    <string name="stopCollection">Stop data collection</string>
+</resources>
