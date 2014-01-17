@@ -32,7 +32,7 @@
         android:label="@string/display_name"
         android:theme="@android:style/Theme.Holo" >
         <activity
-            android:name=".ColorBlobDetectionActivity"
+            android:name=".PendulumTrackerActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/display_name"
             android:screenOrientation="landscape" >
