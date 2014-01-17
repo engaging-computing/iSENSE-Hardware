@@ -42,6 +42,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
@@ -76,12 +78,16 @@ public class DataWalk extends Activity implements LocationListener,
 	private TextView pointsUploadedTV;
 	private TextView latitudeTV;
 	private TextView longitudeTV;
+	private TextView distanceTV;
+	private TextView velocityTV;
 	private Button rcrdIntervalB;
 	private Button projNumB;
 	private Button nameB;
 	private Button startStopB;
 	private Button uploadB;
 	private Button loggedInAsB;
+	private RelativeLayout nameAndLoginRL;
+	private LinearLayout recordingExtrasLL;
 
 	/* Manager Controlling Globals */
 	private LocationManager mLocationManager;
@@ -99,8 +105,6 @@ public class DataWalk extends Activity implements LocationListener,
 	private Waffle w;
 
 	/* iSENSE API Globals and Constants */
-	private final String DEFAULT_USERNAME = "mobile.fake@example.com";
-	private final String DEFAULT_PASSWORD = "mobile";
 	private final String DEFAULT_PROJECT = "156";
 	private final String DEFAULT_PROJECT_DEV = "25";
 	private int actionBarTapCount = 0;
@@ -162,9 +166,6 @@ public class DataWalk extends Activity implements LocationListener,
 	float deltaTime = 0;
 	boolean bFirstPoint = true;
 	float totalDistance = 0;
-	float relDistance = 0;
-
-	/* Menu Items */
 
 	@SuppressLint("NewApi")
 	/**
@@ -268,6 +269,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 				// Handles when you press the button to STOP recording
 				if (running) {
+					// Swap the layouts below the recording button
+					nameAndLoginRL.setVisibility(View.VISIBLE);
+					recordingExtrasLL.setVisibility(View.GONE);
 
 					// No longer recording so set menu flag to enabled
 					running = false;
@@ -329,6 +333,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 					// Handles when you press the button to START recording
 				} else {
+					// Swap the layouts below the recording button
+					nameAndLoginRL.setVisibility(View.GONE);
+					recordingExtrasLL.setVisibility(View.VISIBLE);
 
 					// Recording so set menu flag to disabled
 					useMenu = false;
@@ -344,12 +351,12 @@ public class DataWalk extends Activity implements LocationListener,
 					nameB.setText(firstName + " " + lastInitial);
 					pointsUploadedTV.setText("Points Recorded: " + "0");
 					elapsedTimeTV.setText("Time Elapsed:" + " 0 seconds");
-					loggedInAsB.setText(loginName);
 					// Reset the number of data points and the current dataSet
 					// ID
 					dataPointCount = 0;
 					dataSetID = -1;
-					// TODO CHECK IF THIS KEEPS SCREEN ON
+					// TODO CHECK IF THIS KEEPS SCREEN ON OR REMOVE THIS WHEN
+					// THE APP IS SERVICE BASED
 					// Prevent the screen from turning off and prevent rotation
 					getWindow().addFlags(
 							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -385,17 +392,12 @@ public class DataWalk extends Activity implements LocationListener,
 			projectID = prefs.getString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
 
 		projNumB.setText("to project " + projectID);
-
-		// SharedPreferences.Editor mEdit = mPrefs.edit();
-		// mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT).commit();
-
-		// Attempt to login with saved credentials, otherwise try default
-		// credentials
-		new AttemptLoginTask().execute();
 	}
 
 	private void initialize() {
 		// Initialize main UI elements
+		nameAndLoginRL = (RelativeLayout) findViewById(R.id.rl_nameandlogin);
+		recordingExtrasLL = (LinearLayout) findViewById(R.id.ll_recordingextras);
 		startStopB = (Button) findViewById(R.id.b_startstop);
 		projNumB = (Button) findViewById(R.id.b_project);
 		uploadB = (Button) findViewById(R.id.b_upload);
@@ -406,6 +408,8 @@ public class DataWalk extends Activity implements LocationListener,
 		pointsUploadedTV = (TextView) findViewById(R.id.tv_pointcount);
 		latitudeTV = (TextView) findViewById(R.id.tv_longitude);
 		longitudeTV = (TextView) findViewById(R.id.tv_latitude);
+		distanceTV = (TextView) findViewById(R.id.tv_distance);
+		velocityTV = (TextView) findViewById(R.id.tv_velocity);
 		pointsUploadedTV.setText("Points Recorded: " + dataPointCount);
 		elapsedTimeTV.setText("Time Elapsed: " + timerTick + " seconds");
 
@@ -526,16 +530,7 @@ public class DataWalk extends Activity implements LocationListener,
 		if (Connection.hasConnectivity(this)) {
 			if (android.os.Build.VERSION.SDK_INT >= 11)
 				invalidateOptionsMenu();
-			// setProjectIdtoUsersChoice();
-			AutoLogin();
-			// projectID = projectId;
-			// loginNow = false;
-		} // else {
-			// if (android.os.Build.VERSION.SDK_INT >= 11)
-			// invalidateOptionsMenu();
-			// // loginNow = true;
-			// //setProjectIdEmpty();
-			// }
+		}
 
 		// Get the last know recording interval
 		mInterval = Integer.parseInt(getSharedPreferences(INTERVAL_PREFS_KEY,
@@ -574,12 +569,12 @@ public class DataWalk extends Activity implements LocationListener,
 
 	}// ends onResume
 
-	/**
-	 * Logs the user in automatically
-	 */
-	private void AutoLogin() {
-		// TODO Auto-generated method stub
-		// I don't know why this is here --J
+	@Override
+	protected void onStart() {
+		// Log in automatically
+		new AttemptLoginTask().execute();
+
+		super.onStart();
 	}
 
 	/**
@@ -610,21 +605,6 @@ public class DataWalk extends Activity implements LocationListener,
 			mEdit.putString(PROJ_ID_PRODUCTION, projectID);
 		mEdit.commit();
 	}
-
-	// /**
-	// * Sets project ID to default
-	// */
-	// private void setProjectIDToDefault() {
-	// // Auto-generated method stub
-	// projectID = DEFAULT_PROJECT;
-	// // Set the project ID in preferences back to -1
-	// SharedPreferences prefs = getSharedPreferences(Setup.PROJ_PREFS_ID,
-	// Context.MODE_PRIVATE);
-	// SharedPreferences.Editor mEdit = prefs.edit();
-	// mEdit.putString(Setup.PROJECT_ID, DEFAULT_PROJECT);
-	// mEdit.commit();
-	//
-	// }
 
 	/**
 	 * Handles application behavior on back press.
@@ -714,14 +694,7 @@ public class DataWalk extends Activity implements LocationListener,
 			menu.getItem(1).setEnabled(false);
 			menu.getItem(2).setEnabled(false);
 			menu.getItem(3).setEnabled(false);
-		}
-		/*
-		 * else if (canChangeProjectNum == false){
-		 * menu.getItem(3).setEnabled(false); menu.getItem(4).setEnabled(false);
-		 * }
-		 */
-		//
-		else {
+		} else {
 			menu.getItem(0).setEnabled(true);
 			menu.getItem(1).setEnabled(true);
 			menu.getItem(2).setEnabled(true);
@@ -973,8 +946,8 @@ public class DataWalk extends Activity implements LocationListener,
 
 				// Set variables to default
 				mInterval = DEFAULT_INTERVAL;
-				loginName = DEFAULT_USERNAME;
-				loginPass = DEFAULT_PASSWORD;
+				loginName = Login.DEFAULT_USERNAME;
+				loginPass = Login.DEFAULT_PASSWORD;
 				firstName = "";
 				lastInitial = "";
 				if (useDev)
@@ -1034,13 +1007,14 @@ public class DataWalk extends Activity implements LocationListener,
 								Context.MODE_PRIVATE));
 				loginName = mPrefs.getString(
 						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-						DEFAULT_USERNAME);
+						Login.DEFAULT_USERNAME);
 				loginPass = mPrefs.getString(
 						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						DEFAULT_PASSWORD);
+						Login.DEFAULT_PASSWORD);
 
 				// Set the UI to the new login name
-				loggedInAsB.setText(loginName);
+				RPerson user = api.getCurrentUser();
+				loggedInAsB.setText(user.name);
 
 				SharedPreferences namePrefs = getSharedPreferences(
 						EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
@@ -1049,7 +1023,6 @@ public class DataWalk extends Activity implements LocationListener,
 						.getBoolean(
 								EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
 								true)) {
-					RPerson user = api.getCurrentUser();
 
 					firstName = user.name;
 					lastInitial = "";
@@ -1188,10 +1161,10 @@ public class DataWalk extends Activity implements LocationListener,
 							Context.MODE_PRIVATE));
 			loginName = mPrefs.getString(
 					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-					DEFAULT_USERNAME);
+					Login.DEFAULT_USERNAME);
 			loginPass = mPrefs.getString(
 					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-					DEFAULT_PASSWORD);
+					Login.DEFAULT_PASSWORD);
 
 		}
 
@@ -1233,11 +1206,12 @@ public class DataWalk extends Activity implements LocationListener,
 							loginName);
 					mEditor.putString(
 							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							loginName);
+							loginPass);
 					mEditor.commit();
 
 					// Update the UI with the new logged in username
-					loggedInAsB.setText(loginName);
+					RPerson user = api.getCurrentUser();
+					loggedInAsB.setText(user.name);
 
 					// Update label if in classroom mode and using login for
 					// name
@@ -1253,7 +1227,6 @@ public class DataWalk extends Activity implements LocationListener,
 									.getBoolean(
 											EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
 											true)) {
-						RPerson user = api.getCurrentUser();
 						firstName = user.name;
 						lastInitial = "";
 
@@ -1262,33 +1235,24 @@ public class DataWalk extends Activity implements LocationListener,
 
 				} else {
 
-					// Failed to login with these credentials, so try again
-					if (loginName.length() == 0 || loginPass.length() == 0) {
-						startActivityForResult(
-								new Intent(mContext, Login.class),
-								LOGIN_ISENSE_REQUESTED);
+					// Tell the user his/her credentials are wrong
+					w.make("Invalid username or password.", Waffle.LENGTH_LONG,
+							Waffle.IMAGE_X);
 
-						// Tell the user his/her credentials are wrong
-						w.make("Invalid username or password.",
-								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-					} else {
-						// reset to default and log in again
-						final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-								DataWalk.mContext,
-								DataWalk.mContext
-										.getSharedPreferences(
-												Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-												Context.MODE_PRIVATE));
-						SharedPreferences.Editor mEditor = mPrefs.edit();
-						mEditor.putString(
-								Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-								DEFAULT_USERNAME);
-						mEditor.putString(
-								Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-								DEFAULT_PASSWORD);
-						mEditor.commit();
-						new AttemptLoginTask().execute();
-					}
+					// reset to default and log in again
+					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+							DataWalk.mContext,
+							DataWalk.mContext.getSharedPreferences(
+									Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+									Context.MODE_PRIVATE));
+					SharedPreferences.Editor mEditor = mPrefs.edit();
+					mEditor.putString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+							Login.DEFAULT_USERNAME);
+					mEditor.putString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+							Login.DEFAULT_PASSWORD);
+					mEditor.commit();
 
 				}
 
@@ -1299,9 +1263,9 @@ public class DataWalk extends Activity implements LocationListener,
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 
 				// Update the UI to signal the fact that you aren't logged in
-				// TODO might still be logged in
-				loggedInAsB.setText(getResources().getString(
-						R.string.mobile_user));
+				// TODO Consider the case when the user might still be logged as
+				// something else
+				loggedInAsB.setText(R.string.not_logged_in);
 
 			}
 
@@ -1413,9 +1377,6 @@ public class DataWalk extends Activity implements LocationListener,
 		// Initialize Total Distance
 		totalDistance = 0;
 
-		// Initialize Relative Distance
-		relDistance = 0;
-
 		// Creates a new timer that runs every second
 		recordTimer = new Timer();
 		recordTimer.scheduleAtFixedRate(new TimerTask() {
@@ -1454,10 +1415,6 @@ public class DataWalk extends Activity implements LocationListener,
 
 						// Rajia Accumlate total distance
 						totalDistance += distance;
-
-						// Total Distance Computed Differently relative to first
-						// location
-						// relDistance = loc.distanceTo(firstLoc);
 					}
 
 				}
@@ -1476,21 +1433,17 @@ public class DataWalk extends Activity implements LocationListener,
 									+ " seconds");
 						}
 
-						/* TODO PLEASE REMOVE THIS --J */
-						// Rajia Stealing these Text Boxes for now
-						/*loggedInAsB.setText("Distance: "
+						// Update distance and velocity text boxes
+						distanceTV.setText("Distance: "
 								+ roundTwoDecimals(totalDistance * 0.000621371)
 								+ " Miles " + roundTwoDecimals(totalDistance)
 								+ " Meters");
-						// + " Relative: "+
-						// roundTwoDecimals(relDistance*0.000621371)+" Miles " +
-						// roundTwoDecimals(relDistance)+ " Meters" );
 
-						rcrdIntervalB.setText("Velocity: "
+						velocityTV.setText("Velocity: "
 								+ roundTwoDecimals(velocity * 2.23694)
 								+ " MPH " + roundTwoDecimals(velocity)
 								+ " M/Sec    ");
-						*/
+
 					}
 				});
 
