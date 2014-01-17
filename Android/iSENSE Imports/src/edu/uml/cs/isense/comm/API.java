@@ -888,7 +888,7 @@ public class API {
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
-			urlConnection.setDoOutput(true);
+			//urlConnection.setDoOutput(true);
 			if(postData != null) {
 				System.out.println("Post data: " + postData);
 				mPostData = postData.toString().getBytes();

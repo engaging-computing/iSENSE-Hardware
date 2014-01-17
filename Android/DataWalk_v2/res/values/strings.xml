@@ -10,8 +10,8 @@
     <string name="password">Password:</string>
     <string name="login">Login</string>
     <string name="enableGPS">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
-    <string name="Rate_Is">Set Recording Interval</string>
-    <string name="Exp_Num_Is">Project Number: </string>
+    <string name="recording_interval">Recording Interval:</string>
+    <string name="project_num">to project #</string>
     <string name="logged_in_as">Logged in As: </string>
     <string name="Upload">Upload</string>
     <string name="help">Help</string>
@@ -21,18 +21,16 @@
     <string name="ExitMsg">You exited the app while data was still being recorded.  Data has stopped recording.</string>
     <string name="firstNameLabel"> First Name: </string>
     <string name="lastInitialLabel"> Last Initial: </string>
-    <string name="startPrompt">Hold to Start</string>
+    <string name="start_prompt">Hold to Start</string>
     <string name="logoDescription">iSense Logo</string>
-    <string name="stopPrompt">Recording Data. Hold to Stop</string>
+    <string name="stop_prompt">Recording Data. Hold to Stop</string>
     <string name="timeElapsed">Time Elapsed:   seconds</string>
-    <string name="noLocation0">Latitude: waiting for GPS\nLongitude: waiting for GPS</string>
-    <string name="noLocation1">Latitude: waiting for GPS .\nLongitude: waiting for GPS .</string>
-    <string name="noLocation2">Latitude: waiting for GPS . .\nLongitude: waiting for GPS . .</string>
-    <string name="noLocation3">Latitude: waiting for GPS . . .\nLongitude: waiting for GPS . . .</string>
-    <string name="noLocation4">Latitude: waiting for GPS . . . .\nLongitude: waiting for GPS . . . .</string>
+    <string name="latitude">Latitude: </string>
+    <string name="longitude">Longitude: </string>
     <string name="pointsUploaded">Points Uploaded: 0</string>
     <string name="nameWithColon">Name: </string>
     <string name="name">Name</string>
+    <string name="not_logged_in">Not Logged In</string>
     <string name="Reset">Reset</string>
     <string name="digits_restriction">
 	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
@@ -43,6 +41,13 @@
     <string name="Exp_Num_Title">Select Project</string>
     <string name="About_Title">About</string>
     <string name="Help">\n\nThis app can record data regardless of Internet or Wifi connection. After finished recording data, the points you recorded will remain saved. Later, if you have internet connection, you can click on upload (a menu option located at the top of the app). This will show you the session name and time that your data was recorded. Clicking on the upload button will publish that information to iSENSE.\n\n </string>
-    <string name="ResetDefaults_Title">Reset Settings</string>
+    <string name="menu_reset">Reset Settings</string>
+    <string name="gps_icon">GPS Icon</string>
+    <string name="ten_seconds">10 seconds</string>
+    <string name="john_smith">John S.</string>
+    <string name="mobile_user">Mobile U.</string>
+    <string name="menu_reset_condensed">Reset</string>
+    <string name="velocity">Velocity:</string>
+    <string name="distance">Distance:</string>
 
 </resources>

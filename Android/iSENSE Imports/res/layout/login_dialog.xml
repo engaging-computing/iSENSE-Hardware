@@ -13,32 +13,36 @@
 
     <EditText
         android:id="@id/edittext_username"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/edittext_password"
+        android:layout_alignParentRight="true"
         android:layout_toRightOf="@id/textview_username"
         android:digits="@string/digits_restriction"
         android:imeOptions="actionNext"
         android:inputType="textEmailAddress"
+        android:maxLength="100"
         android:singleLine="true" />
 
     <TextView
         android:id="@+id/textview_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/edittext_password"
+        android:layout_alignBottom="@id/edittext_password"
         android:layout_margin="5dp"
         android:text="@string/password" />
 
     <EditText
         android:id="@id/edittext_password"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/edittext_username"
+        android:layout_alignParentRight="true"
         android:layout_below="@id/edittext_username"
         android:layout_toRightOf="@id/textview_password"
         android:digits="@string/digits_restriction"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
+        android:maxLength="40"
         android:paddingLeft="6dip"
         android:singleLine="true" />
 
