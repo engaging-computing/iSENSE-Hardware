@@ -93,6 +93,8 @@ public class Setup extends Activity implements OnClickListener {
 
 		mContext = this;
 
+		api = API.getInstance();
+		
 		w = new Waffle(mContext);
 
 		okay = (Button) findViewById(R.id.project_ok);
@@ -254,7 +256,7 @@ public class Setup extends Activity implements OnClickListener {
 		} else if (requestCode == NAME_FOR_NEW_PROJECT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				if (data.hasExtra("new_proj_name")) {
-
+					// TODO -- @Jeremy asynctaskify this
 					ArrayList<RProjectField> fields = getArrayOfFields();
 					int projectNum = api.createProject(
 							data.getStringExtra("new_proj_name"), fields);
@@ -355,28 +357,16 @@ public class Setup extends Activity implements OnClickListener {
 			fields.add(Lon);
 
 		} else if (APPNAME.equals("Canobie")) {
-			RProjectField time = new RProjectField();
+						
+		} else if (APPNAME.equals("Pictures")) {
+			
+			RProjectField time, Lat, Lon;
+			
+			time = new RProjectField();
 			time.name = "Time";
 			time.type = RProjectField.TYPE_TIMESTAMP;
 			fields.add(time);
-
-			RProjectField aT, Vel, TD, Lat, Lon;
-
-			aT = new RProjectField();
-			aT.name = "Accel-Magnitude";
-			aT.type = RProjectField.TYPE_NUMBER;
-			aT.unit = "m/s^2";
-
-			Vel = new RProjectField();
-			Vel.name = "Velocity";
-			Vel.type = RProjectField.TYPE_NUMBER;
-			Vel.unit = "m/s";
-
-			TD = new RProjectField();
-			TD.name = "Total Distance";
-			TD.type = RProjectField.TYPE_NUMBER;
-			TD.unit = "m";
-
+			
 			Lat = new RProjectField();
 			Lat.name = "Latitude";
 			Lat.type = RProjectField.TYPE_LAT;
@@ -386,13 +376,10 @@ public class Setup extends Activity implements OnClickListener {
 			Lon.name = "Longitude";
 			Lon.type = RProjectField.TYPE_LON;
 			Lon.unit = "deg";
-
-			fields.add(aT);
-			fields.add(Vel);
-			fields.add(TD);
+			
+			fields.add(time);
 			fields.add(Lat);
 			fields.add(Lon);
-			
 		}
 
 		return fields;

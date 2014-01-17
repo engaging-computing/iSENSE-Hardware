@@ -574,6 +574,8 @@ public class Main extends Activity implements LocationListener {
 		case R.id.MENU_ITEM_BROWSE:
 			Intent iExperiment = new Intent(getApplicationContext(),
 					Setup.class);
+			iExperiment.putExtra("constrictFields", true);
+			iExperiment.putExtra("app_name", "Pictures");
 			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
 			return true;
 
