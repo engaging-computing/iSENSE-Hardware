@@ -210,7 +210,10 @@ public class QDataSet implements Serializable {
 
 			case BOTH:
 				dataSetID = uploadData();
-				dataSetID = UploadQueue.getAPI().uploadDataSetMedia(dataSetID, picture);
+				if (dataSetID != -1)
+					dataSetID = UploadQueue.getAPI().uploadDataSetMedia(dataSetID, picture);
+				else
+					dataSetID = UploadQueue.getAPI().uploadProjectMedia(Integer.valueOf(projID), picture);
 				break;
 				
 			}
