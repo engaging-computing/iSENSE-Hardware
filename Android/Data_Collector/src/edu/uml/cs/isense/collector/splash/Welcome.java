@@ -6,6 +6,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
@@ -33,6 +37,31 @@ public class Welcome extends Activity {
 
 	private static final int PROJECT_SELECTION_REQUESTED = 100;
 	private static final int PROJECT_CREATE_REQUESTED = 101;
+	
+	@SuppressLint("NewApi")
+	private void setActionBarNormal() {
+		// Action bar customization for API >= 11
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
+			ActionBar bar = getActionBar();
+			bar.setBackgroundDrawable(new ColorDrawable(Color
+					.parseColor("#111133")));
+			bar.setIcon(getResources()
+					.getDrawable(R.drawable.rsense_logo_right));
+			bar.setDisplayShowTitleEnabled(false);
+			int actionBarTitleId = Resources.getSystem().getIdentifier(
+					"action_bar_title", "id", "android");
+			if (actionBarTitleId > 0) {
+				TextView title = (TextView) findViewById(actionBarTitleId);
+				if (title != null) {
+					title.setTextColor(Color.WHITE);
+					title.setTextSize(24.0f);
+				}
+			}
+			
+			// make the actionbar clickable
+			bar.setDisplayHomeAsUpEnabled(true);
+		}
+	}
 
 	@SuppressLint("NewApi")
 	@Override
@@ -49,10 +78,8 @@ public class Welcome extends Activity {
 
 		// Action bar customization for API >= 11
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
-			ActionBar bar = getActionBar();
-
-			// make the actionbar clickable
-			bar.setDisplayHomeAsUpEnabled(true);
+			this.setActionBarNormal();
+			
 		}
 
 		// Set listeners for the buttons

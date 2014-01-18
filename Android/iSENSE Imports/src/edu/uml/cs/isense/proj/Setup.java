@@ -357,7 +357,46 @@ public class Setup extends Activity implements OnClickListener {
 			fields.add(Lon);
 
 		} else if (APPNAME.equals("Canobie")) {
-						
+			
+			RProjectField time = new RProjectField();
+			time.name = "Time";
+			time.type = RProjectField.TYPE_TIMESTAMP;
+			fields.add(time);
+
+			RProjectField aX, aY, aZ, aT;
+			aX = new RProjectField();
+			aY = new RProjectField();
+			aZ = new RProjectField();
+			aT = new RProjectField();
+
+			String b = "Accel-";
+			aX.name = b + "X";
+			aY.name = b + "Y";
+			aZ.name = b + "Z";
+			aT.name = b + "Total";
+
+			aX.type = aY.type = aZ.type = aT.type = RProjectField.TYPE_NUMBER;
+			aX.unit = aY.unit = aZ.unit = aT.unit = "m/s^2";
+			
+			RProjectField Lat, Lon;
+			
+			Lat = new RProjectField();
+			Lat.name = "Latitude";
+			Lat.type = RProjectField.TYPE_LAT;
+			Lat.unit = "deg";
+
+			Lon = new RProjectField();
+			Lon.name = "Longitude";
+			Lon.type = RProjectField.TYPE_LON;
+			Lon.unit = "deg";
+
+			fields.add(aX);
+			fields.add(aY);
+			fields.add(aZ);
+			fields.add(aT);
+			fields.add(Lat);
+			fields.add(Lon);
+			
 		} else if (APPNAME.equals("Pictures")) {
 			
 			RProjectField time, Lat, Lon;
