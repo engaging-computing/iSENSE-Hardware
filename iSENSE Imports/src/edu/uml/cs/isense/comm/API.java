@@ -104,6 +104,7 @@ public class API {
 			jodata.put("password", password);
 			String result = makeRequest(baseURL, "login","","POST",jodata);
 			System.out.println(result);
+			System.out.println("login: Username: " + username + " Password: " + password);
 			JSONObject j =  new JSONObject(result);
 			
 			authToken = j.getString("authenticity_token");
