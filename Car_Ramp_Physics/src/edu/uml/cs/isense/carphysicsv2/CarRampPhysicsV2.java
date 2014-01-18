@@ -18,7 +18,6 @@
 package edu.uml.cs.isense.carphysicsv2;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -79,6 +78,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static final String DEFAULT_PROJ_PROD = "12";
 	public static final String DEFAULT_PROJ_DEV = "3";
 	public static boolean useDev = false;
+	public static boolean promptForName = true;
 
 	public static final String VIS_URL_PROD = "http://isenseproject.org/projects/";
 	public static final String VIS_URL_DEV = "http://rsense-dev.cs.uml.edu/projects/";
@@ -128,11 +128,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	private int elapsedMillis = 0;
 
 	DecimalFormat toThou = new DecimalFormat("######0.000");
-
-	ArrayList<Double> accelerX;
-	ArrayList<Double> accelerY;
-	ArrayList<Double> accelerZ;
-	ArrayList<Double> acceler;
 
 	int i = 0;
 	int len = 0;
@@ -201,11 +196,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			// make the actionbar clickable
 			bar.setDisplayHomeAsUpEnabled(true);
 		}
-
-		accelerX = new ArrayList<Double>();
-		accelerY = new ArrayList<Double>();
-		accelerZ = new ArrayList<Double>();
-		acceler = new ArrayList<Double>();
 
 		f = new Fields();
 		uq = new UploadQueue("carrampphysics", mContext, api);
