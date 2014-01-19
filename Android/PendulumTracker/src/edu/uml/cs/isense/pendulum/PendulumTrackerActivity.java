@@ -29,17 +29,20 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -47,11 +50,13 @@ import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
-//import org.opencv.samples.colorblobdetect.ColorBlobDetectionActivity;
-// iSENSE data upload
+import edu.uml.cs.isense.credentials.EnterName;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
-public class ColorBlobDetectionActivity extends Activity implements
-		OnTouchListener, CvCameraViewListener2 {
+
+public class PendulumTrackerActivity extends Activity implements
+		//OnTouchListener, CvCameraViewListener2 {
+		OnLongClickListener, CvCameraViewListener2 {
 
 	private static final String TAG = "PendulumTracker::Activity";
 	
@@ -66,22 +71,18 @@ public class ColorBlobDetectionActivity extends Activity implements
 	API api;
 
 	// iSENSE login
-	//private static String userName = "sor"; // "videoAnalytics";
-	// private static String password = "sor"; // "videoAnalytics";
-	private static String userName = "mobile";
-	private static String password = "mobile";
+	//private static String userName = "mobile";
+	//private static String password = "mobile";
 	
 	private TextView initInstr;
 	
 	// create session name based upon first name and last initial user enters
 	static String firstName = "";
 	static String lastInitial = "";
-	private final int ENTERNAME_REQUEST = -4;
+	public static final int ENTERNAME_REQUEST = 1098;
 	Boolean sessionNameEntered = false;
 
 	private static String experimentNumber = "29"; // production = 29, dev = 39
-	//private static String experimentNumber = "38"; // dev
-	//private static String experimentNumber = "39"; // dev
 	private static String baseSessionUrl = "http://isenseproject.org/projects/"
 			+ experimentNumber + "data_sets/";
 	private static String baseSessionUrlDev = "http://rsense-dev.cs.uml.edu/projects/" 
@@ -106,22 +107,25 @@ public class ColorBlobDetectionActivity extends Activity implements
 	private Mat mRgba;
 	private Scalar mBlobColorRgba;
 	private Scalar mBlobColorHsv;
-	// private ColorBlobDetector mDetector;
+	
 	private MarkerDetector mDetector;
 	private Mat mSpectrum;
 	private Size SPECTRUM_SIZE;
 	private Scalar CONTOUR_COLOR;
 
 	private CameraBridgeViewBase mOpenCvCameraView;
-	static boolean mDataCollectionEnabled = false;
+	static volatile boolean mDataCollectionEnabled = false; // volatile because written on 1 thread, read-only on another
 	static boolean mSessionCreated = false;
 	private boolean mDisplayStatus = false;
 
 	// start / stop icons
+	Menu menu;
+	MenuItem startStopButton;
 	Drawable startIcon;
 	Drawable stopIcon;
 	
 	Handler mHandler ;
+	
 	
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 		@Override
@@ -131,7 +135,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 				Log.i(TAG, "OpenCV loaded successfully");
 				mOpenCvCameraView.enableView();
 				mOpenCvCameraView
-						.setOnTouchListener(ColorBlobDetectionActivity.this);
+						//.setOnTouchListener(PendulumTrackerActivity.this);
+						.setOnLongClickListener(PendulumTrackerActivity.this); // is like setting button.setOnTouchListener()
 			}
 				break;
 			default: {
@@ -142,7 +147,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 		}
 	};
 
-	public ColorBlobDetectionActivity() {
+	public PendulumTrackerActivity() {
 		Log.i(TAG, "Instantiated new " + this.getClass());
 	}
 
@@ -154,7 +159,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 		// set context (for starting new Intents,etc)
 		mContext = this;
-
+		
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		// set CBD activity content from xml layout file.
 		// all Views, e.g. JavaCameraView will be inflated (e.g. created)
@@ -186,8 +191,27 @@ public class ColorBlobDetectionActivity extends Activity implements
 		//Menu menu = (Menu) findViewById(R.layout.menu);
 		//menu.getItem(R.id.menu_start).setIcon(startIcon);
 	
+		 
+		 // TODO: add remembe-me login stuff here!
+		 new OnCreateLoginTask().execute();
+		 
 		// Event handler
 		 mHandler = new Handler();
+
+
+		 /*
+			// Save the default login info
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					PendumlumTrackerActivity.mContext,
+					PendumlumTrackerActivity.mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							Context.MODE_PRIVATE));
+			if (mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "").equals("")) {
+				SharedPreferences.Editor mEdit = mPrefs.edit();
+				mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USER).commit();
+				mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_USER).commit();
+			}
+		*/
+
 		
 	}
     
@@ -238,9 +262,14 @@ public class ColorBlobDetectionActivity extends Activity implements
 		mRgba.release();
 	}
 
+	@Override
+	public boolean onLongClick(View v) {
 	
-	public boolean onTouch(View v, MotionEvent event) {
+	//public boolean onTouch(View v, MotionEvent event) {
 		
+	
+		Toast.makeText(PendulumTrackerActivity.this,
+				"I've been touched by an angel...." , Toast.LENGTH_SHORT).show();
 		/*
 		int cols = mRgba.cols();
 		int rows = mRgba.rows();
@@ -293,10 +322,11 @@ public class ColorBlobDetectionActivity extends Activity implements
 		touchedRegionRgba.release();
 		touchedRegionHsv.release();
 
-		return false; // don't need subsequent touch events
+		return false; // allows subsequent touch events
 		*/
 	
-		return true;
+		//return true;
+		return false;
 	}
 
 
@@ -456,6 +486,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.layout.menu, menu);
+		
 		return true;
 	}
 
@@ -477,46 +508,29 @@ public class ColorBlobDetectionActivity extends Activity implements
 			// START experiment and data collection
 		case R.id.menu_start:
 			
+			//  Selected item becomes start/stop button (for onActivityResult())
+			startStopButton = item;
+			
+			// Create session with first name/last initial
 			if(this.mSessionCreated == false)
 			{
 				if (firstName.length() == 0 || lastInitial.length() == 0) {
 					// Boolean dontPromptMeTwice = true;
 					startActivityForResult(
-							new Intent(mContext, Login.class),
+							new Intent(mContext, EnterName.class), // used to be login activity
 							ENTERNAME_REQUEST);
 				}
-				
-				
-				// Need to create a Task for this!
-				//if(this.mSessionCreated == true)
-				//{	
-					// set STOP button and text
-					item.setIcon(startIcon);
-					item.setTitle(R.string.startCollection);
-				//}
-					
-				Toast.makeText(ColorBlobDetectionActivity.this,
-						"Remember to press 'Start Data Collection' to begin!", Toast.LENGTH_SHORT).show();
+			
 					
 				return true;
 			}
 				
-			// START data collction
+			// START data collection
 			if(this.mDataCollectionEnabled == false)
 			{
-				
-				// create session name with user first name and last initial
-				// if we are logged in
-	/*			if (firstName.length() == 0 || lastInitial.length() == 0) {
-					// Boolean dontPromptMeTwice = true;
-					startActivityForResult(
-							new Intent(mContext, LoginActivity.class),
-							ENTERNAME_REQUEST);
-				}
-				
-	*/
-				// disable data collection before uploading data to iSENSE
+				// be sure to disable data collection before uploading data to iSENSE
 				this.mDataCollectionEnabled = true;
+				
 				// set STOP button and text
 				item.setIcon(stopIcon);
 				item.setTitle(R.string.stopCollection);
@@ -525,12 +539,13 @@ public class ColorBlobDetectionActivity extends Activity implements
 			else
 			{
 				// enable data collection before uploading data to iSENSE
-				mDataCollectionEnabled = false;
+				this.mDataCollectionEnabled = false;
+				
 				// set START button and text
 				item.setIcon(startIcon);
 				item.setTitle(R.string.startCollection);
 				
-				new LoginBeforeUploadTask().execute();			
+				new UploadDataTask().execute();			
 			
 			}
 
@@ -573,6 +588,37 @@ public class ColorBlobDetectionActivity extends Activity implements
 		}
 		return true;
 	}
+	
+	
+	// do these things after an Activity is finished
+	public void onActivityResult(int reqCode, int resultCode, Intent data) {
+		
+		super.onActivityResult(reqCode, resultCode, data);
+		
+		// Enter session name
+		if (reqCode == ENTERNAME_REQUEST) {
+			
+			if (resultCode == RESULT_OK) {
+				
+				this.mSessionCreated = true;
+			
+				Toast.makeText(PendulumTrackerActivity.this,
+						"Session created. Press 'Start Data Collection' to begin!" , Toast.LENGTH_SHORT).show();
+					
+						
+				// set START button and text
+				startStopButton.setIcon(startIcon);
+				startStopButton.setTitle(R.string.startCollection);
+				
+				// how come this doesn't work???
+				//menu.getItem(R.id.menu_start).setIcon(startIcon);
+				//startStopButton = (MenuItem)menu.findItem(R.id.menu_start);
+					
+				
+			}
+		}
+	}
+	
 
 	void exitNeatly()
 	{
@@ -610,7 +656,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			Log.i(TAG, "Uploading new dataset"); 
 			
-			sessionId = api.uploadDataSet(projectID, jobj, nameOfSession
+			sessionId = api.jsonDataUpload(projectID, jobj, nameOfSession
 					+ " (location not found)");
 			
 			if(sessionId == -1)
@@ -633,7 +679,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 		@Override
 		protected void onPreExecute() {
 
-			dia = new ProgressDialog(ColorBlobDetectionActivity.this);
+			dia = new ProgressDialog(PendulumTrackerActivity.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			dia.setMessage("Please wait while your data is uploaded to iSENSE...");
 			dia.setCancelable(false);
@@ -656,7 +702,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 			dia.setMessage("Done");
 			dia.cancel();
-			Toast.makeText(ColorBlobDetectionActivity.this,
+			Toast.makeText(PendulumTrackerActivity.this,
 					"Data upload successful!", Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -713,8 +759,46 @@ public class ColorBlobDetectionActivity extends Activity implements
 
 	// 
 
+	public class OnCreateLoginTask extends AsyncTask<Void, Integer, Void> {
+
+		boolean status;
+		boolean loginStatus = false;
+		boolean connect = false;
+		boolean upload = false;
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			if (Connection.hasConnectivity(mContext)) {
+				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+						PendulumTrackerActivity.mContext,
+						PendulumTrackerActivity.mContext.getSharedPreferences(
+								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO, Context.MODE_PRIVATE));
+				loginStatus = api.createSession(mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, ""),
+						mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, ""));
+				
+			
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			
+			String msg = "Logged into iSENSE successfully.";
+			
+			if(!loginStatus)
+				msg = "Could not log into iSENSE.";
+				
+			Toast.makeText(
+					PendulumTrackerActivity.this,
+						msg,
+						Toast.LENGTH_LONG).show();
+		
+		}
+	}
+	
 	// Control task for uploading data
-	private class LoginBeforeUploadTask extends AsyncTask<Void, Integer, Void> {
+	private class UploadDataTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean status;
 		boolean loginStatus = false;
@@ -722,11 +806,13 @@ public class ColorBlobDetectionActivity extends Activity implements
 		boolean upload = false;
 
 		// network thread!
+		
 		@Override
+
 		protected Void doInBackground(Void... voids) {
 	
 			// login to iSENSE if not already			
-		
+		/*
 			connect = Connection.hasConnectivity(mContext);
 			
 			Log.i(TAG, "Connectivity status = " + connect);
@@ -742,8 +828,16 @@ public class ColorBlobDetectionActivity extends Activity implements
 				if (api.getCurrentUser() == null) {			
 			
 						Log.i(TAG, "Connected to the 'net: initial iSENSE loginStatus = " + loginStatus);
-						loginStatus = api.createSession(userName, password);
-	
+						
+						//loginStatus = api.createSession(userName, password);
+						
+						final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+								PendulumTrackerActivity.mContext,
+								PendulumTrackerActivity.mContext.getSharedPreferences(
+										Login.PREFERENCES_KEY_OBSCURRED_USER_INFO, Context.MODE_PRIVATE));
+						// create session and login
+						loginStatus = api.createSession(mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, ""),
+								mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, ""));
 				}
 				else
 					loginStatus = true;
@@ -755,6 +849,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 				Log.i(TAG, "NOT Connected to the 'net. What happened?");
 			}
 			
+			*/
 	
 			return null;
 			
@@ -765,13 +860,16 @@ public class ColorBlobDetectionActivity extends Activity implements
 		protected void onPostExecute(Void voids) {
 		
 			// am i connected to the internet?
+			connect = Connection.hasConnectivity(mContext);
+			
 			if (connect) {
 				
 				// check to see if a session name has been created before we 
 				// start collecting data.
-				if ( !(firstName.length() > 0 && lastInitial.length() > 0) ) {
+				if ( ! PendulumTrackerActivity.mSessionCreated) {
+					
 					Toast.makeText(
-							ColorBlobDetectionActivity.this,
+							PendulumTrackerActivity.this,
 							"You must first START data collection to create session name.",
 							Toast.LENGTH_LONG).show();
 					return;
@@ -780,14 +878,13 @@ public class ColorBlobDetectionActivity extends Activity implements
 				// am I logged in/session created to iSENSE?
 				if (loginStatus) {
 					// yes! yes! yes! so upload my data
-					
 					if( !mDataCollectionEnabled && mDataSet.length() > 0)
 					{	
 						new uploadTask().execute();
 					}
 					else {
 						Toast.makeText(
-								ColorBlobDetectionActivity.this,
+								PendulumTrackerActivity.this,
 								"You must first START data collection to upload data.",
 								Toast.LENGTH_LONG).show();
 					}
@@ -795,8 +892,8 @@ public class ColorBlobDetectionActivity extends Activity implements
 				else {
 					// no! no! no! try again.
 					Toast.makeText(
-							ColorBlobDetectionActivity.this,
-							"Not logged into rSENSE. Try again.",
+							PendulumTrackerActivity.this,
+							"Not logged into iSENSE. Try again.",
 							Toast.LENGTH_LONG).show();
 					return;
 				}
@@ -805,7 +902,7 @@ public class ColorBlobDetectionActivity extends Activity implements
 			 // I am not connected to the internet - oops.
 			 else {
 				Toast.makeText(
-						ColorBlobDetectionActivity.this,
+						PendulumTrackerActivity.this,
 						"You are not connected to the Intertubes. Check connectivity and try again (previously recorded data will be saved).",
 						Toast.LENGTH_LONG).show();
 				return;
@@ -816,5 +913,12 @@ public class ColorBlobDetectionActivity extends Activity implements
 		}
 
 	}
+
+	/*@Override
+	public boolean onLongClick(View v) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	*/
 
 }
