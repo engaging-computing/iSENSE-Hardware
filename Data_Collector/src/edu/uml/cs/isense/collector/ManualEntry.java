@@ -439,18 +439,6 @@ public class ManualEntry extends Activity implements OnClickListener,
 		manageUploadQueue();
 	}
 
-	// Overridden to prevent user from exiting app unless back button is pressed
-	// twice
-	@Override
-	public void onBackPressed() {
-
-		if (!w.isDisplaying)
-			w.make(getResources().getString(R.string.double_press_back));
-		else if (w.canPerformTask)
-			super.onBackPressed();
-
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 

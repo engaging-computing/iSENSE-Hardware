@@ -1011,6 +1011,49 @@ public class DataFieldManager extends Application {
 		return this.fieldIDs;
 	}
 	
+	private ArrayList<Integer> getFieldTypes() {
+		
+		ArrayList<Integer> fieldTypes = new ArrayList<Integer>();
+		
+		for (RProjectField field:this.projFields) {
+			fieldTypes.add(field.type);
+		}
+		
+		return fieldTypes;
+		
+		
+	}
+	
+	/* Checks if project contains a timestamp
+	 */
+	
+	public boolean projectContainsTimeStamp() {
+		ArrayList<Integer> fields = this.getFieldTypes();
+		
+		for (Integer i:fields) {
+			if (i.intValue() == RProjectField.TYPE_TIMESTAMP) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/* Checks if project contains a location (latitude and longitude)
+	 */
+	
+	public boolean projectContainsLocation() {
+		ArrayList<Integer> fields = this.getFieldTypes();
+		
+		for (Integer i:fields) {
+			if (i.intValue() == RProjectField.TYPE_LAT || i.intValue() == RProjectField.TYPE_LON) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Enables all fields for recording data
 	 */
