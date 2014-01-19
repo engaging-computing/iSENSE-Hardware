@@ -267,9 +267,6 @@ public class Setup extends Activity implements OnClickListener {
 					finish();
 
 				}
-			} else {
-				setResult(RESULT_CANCELED);
-				finish();
 			}
 		} else if (requestCode == NEW_PROJ_REQUESTED) {
 			if (resultCode == RESULT_OK) {
