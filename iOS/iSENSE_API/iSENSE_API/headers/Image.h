@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Image : NSObject {
+@interface OldImage : NSObject {
 
 }
 

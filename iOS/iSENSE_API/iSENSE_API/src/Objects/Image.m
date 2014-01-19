@@ -8,7 +8,7 @@
 
 #import "Image.h"
 
-@implementation Image
+@implementation OldImage
 	@synthesize experiment_id;
 	@synthesize picture_id;
 
