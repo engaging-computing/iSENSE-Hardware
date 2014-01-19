@@ -36,5 +36,9 @@
         android:showAsAction="ifRoom"
         android:title="@string/reset">
     </item>
+    <item android:id="@+id/classroomMode"
+        android:showAsAction="ifRoom"
+        android:title="@string/classroom_mode">
+    </item>
 
 </menu>
