@@ -1,13 +1,9 @@
 package edu.uml.cs.isense.pendulum;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;

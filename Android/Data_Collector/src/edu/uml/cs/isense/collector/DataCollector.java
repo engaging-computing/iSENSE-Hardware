@@ -435,7 +435,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make(getResources().getString(R.string.no_back_use_home_instead),
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else
-				w.make(getResources().getString(R.string.double_press_back));
+				super.onBackPressed();
 
 		} else if (w.canPerformTask && !running) {
 			super.onBackPressed();
@@ -1746,7 +1746,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 						mContext, f);
 
-				dfm.getOrderWithExternalAsyncTask(); // TODO this was added
+				dfm.getOrderWithExternalAsyncTask();
 				
 				String fields = mPrefs.getString("accepted_fields", "");
 				getFieldsFromPrefsString(fields);
@@ -1862,8 +1862,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@SuppressLint("NewApi")
 	private void setActionBarNormal() {
-		// Action bar customization for API >= 14
-		if (android.os.Build.VERSION.SDK_INT >= 14) {
+		// Action bar customization for API >= 11
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
 					.parseColor("#111133")));
@@ -1887,8 +1887,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 	@SuppressLint("NewApi")
 	private void setActionBarRecording() {
-		// Action bar customization for API >= 14
-		if (android.os.Build.VERSION.SDK_INT >= 14) {
+		// Action bar customization for API >= 11
+		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
 			bar.setBackgroundDrawable(new ColorDrawable(Color
 					.parseColor("#07420E")));

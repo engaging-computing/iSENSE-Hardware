@@ -437,7 +437,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 			OrientationManager.enableRotation(QueueLayout.this);
 		}
 	}
-
 	// Create an uploader particular to the DataSet to be uploaded in the queue
 	private void createRunnable(final QDataSet ds) {
 		sdUploader = new Runnable() {
