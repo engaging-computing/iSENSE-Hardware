@@ -156,7 +156,9 @@ public class Main extends Activity implements LocationListener {
 
 		api = API.getInstance();
 		api.useDev(useDev);
-
+		
+		attemptLoginOnAppStart();
+		
 		uq = new UploadQueue("generalpictures", mContext, api);
 
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
@@ -187,6 +189,7 @@ public class Main extends Activity implements LocationListener {
 
 		if (continuous == true) {
 			takePicture.setText(R.string.takePicContinuous);
+			addPicture.setVisibility(View.GONE);
 		}
 
 		takePicture.setOnClickListener(new OnClickListener() {
@@ -1004,6 +1007,36 @@ public class Main extends Activity implements LocationListener {
 			uploadError = false;
 		}
 	}
+	
+	// gets the user's name if not already provided + login to web site
+		private void attemptLoginOnAppStart() {
+
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					mContext, getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							Context.MODE_PRIVATE));
+
+			if (mPrefs.getString(
+					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+					.equals("")
+					&& mPrefs.getString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+							"").equals("")) {
+				mPrefs.edit()
+				.putString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+						Login.DEFAULT_USERNAME).commit();
+				mPrefs.edit()
+				.putString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+						Login.DEFAULT_PASSWORD).commit();
+			}
+
+			if (Connection.hasConnectivity(mContext)) {
+				new LoginTask().execute();
+
+			}
+		}
 
 	// gets the user's name if not already provided + login to web site
 	private void attemptLogin() {
