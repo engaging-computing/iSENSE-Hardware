@@ -157,7 +157,7 @@ public class Main extends Activity implements LocationListener {
 
 		api = API.getInstance();
 		api.useDev(useDev);
-		
+		 
 		
 		attemptLoginOnAppStart();
 		
