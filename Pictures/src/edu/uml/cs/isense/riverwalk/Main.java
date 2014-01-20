@@ -1060,7 +1060,7 @@ public class Main extends Activity implements LocationListener {
 			new LoginTask().execute();
 
 		}
-	}
+	} 
 
 	// initialize location listener to get a pair of coordinates
 	private void initLocManager() {
