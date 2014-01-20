@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/MENU_ITEM_SETUP"
           android:title="@string/setup"
-          android:showAsAction="ifRoom"/>
+          android:showAsAction="always"/>
     <item android:id="@+id/MENU_ITEM_LOGIN"
           android:title="@string/login" 
-          android:showAsAction="ifRoom"/>
+          android:showAsAction="always"/>
     <item android:id="@+id/MENU_ITEM_UPLOAD"
           android:title="@string/upload" 
           android:showAsAction="ifRoom"/>

@@ -57,6 +57,7 @@ import android.widget.ToggleButton;
 import edu.uml.cs.isense.carphysicsv2.dialogs.AboutActivity;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.ClassroomMode;
 import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
@@ -76,7 +77,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	public static String projectNumber = "12";
 	public static final String DEFAULT_PROJ_PROD = "12";
-	public static final String DEFAULT_PROJ_DEV = "3";
+	public static final String DEFAULT_PROJ_DEV = "12";
 	public static boolean useDev = false;
 	public static boolean promptForName = true;
 
@@ -234,10 +235,51 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		if (savedInstanceState == null) {
 			if (firstName.equals("") || lastInitial.equals("")) {
-				if (!dontPromptMeTwice) {
-					startActivityForResult(
-							new Intent(mContext, EnterName.class),
-							RESULT_GOT_NAME);
+				SharedPreferences classPrefs = getSharedPreferences(
+						ClassroomMode.PREFS_KEY_CLASSROOM_MODE, MODE_PRIVATE);
+				SharedPreferences namePrefs = getSharedPreferences(
+						EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
+				boolean classroomMode = classPrefs.getBoolean(
+						ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true);
+
+				if (!classroomMode) {
+					if (namePrefs
+							.getBoolean(
+									EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
+									true)
+							&& Connection.hasConnectivity(mContext)) {
+						RPerson user = api.getCurrentUser();
+						if (user != null) {
+							firstName = user.name;
+							lastInitial = "";
+
+							//nameB.setText(firstName);
+						}
+
+					} else {
+						firstName = namePrefs.getString(
+								EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME,
+								"");
+						lastInitial = namePrefs
+								.getString(
+										EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL,
+										"");
+
+						if (firstName.length() == 0) {
+							Intent iEnterName = new Intent(this, EnterName.class);
+							iEnterName.putExtra(
+									EnterName.PREFERENCES_CLASSROOM_MODE,
+									classroomMode);
+							startActivityForResult(iEnterName, RESULT_GOT_NAME);
+						} else {
+							//nameB.setText(firstName + " " + lastInitial);
+						}
+					}
+				} else {
+					Intent iEnterName = new Intent(this, EnterName.class);
+					iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+							classroomMode);
+					startActivityForResult(iEnterName, RESULT_GOT_NAME);
 				}
 			}
 		}
@@ -280,46 +322,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		new DecimalFormat("#,##0.0");
 
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_x))) {
-			values.setText("X: ");
-		}
-
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_y))) {
-			if (dfm.getOrderList().contains(
-					mContext.getString(R.string.accel_x))) {
-				values.setText(values.getText() + " Y: ");
-			} else {
-				values.setText("Y: ");
-			}
-		}
-
-		if (dfm.getOrderList().contains(mContext.getString(R.string.accel_z))) {
-			if (dfm.getOrderList().contains(
-					mContext.getString(R.string.accel_x))
-					|| dfm.getOrderList().contains(
-							mContext.getString(R.string.accel_y))) {
-				values.setText(values.getText() + " Z: ");
-			} else {
-				values.setText("Z: ");
-			}
-
-		}
-
-		if (dfm.getOrderList().contains(
-				mContext.getString(R.string.accel_total))) {
-
-			if (dfm.getOrderList().contains(
-					mContext.getString(R.string.accel_x))
-					|| dfm.getOrderList().contains(
-							mContext.getString(R.string.accel_y))
-					|| dfm.getOrderList().contains(
-							mContext.getString(R.string.accel_z))) {
-				values.setText(values.getText() + " Magnitude: ");
-			} else {
-				values.setText("Magnitude: ");
-			}
-
-		}
+		
 
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -799,9 +802,18 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			createSingleInputDialog("Change Recording Length", "",
 					RECORDING_LENGTH_REQUESTED);
 			return true;
+		case R.id.classroomMode:
+			startActivity(new Intent(this, ClassroomMode.class));
+			return true;
 		case R.id.changename:
-			startActivityForResult(new Intent(this, EnterName.class),
-					RESULT_GOT_NAME);
+			Intent iEnterName = new Intent(mContext, EnterName.class);
+			SharedPreferences classPrefs = getSharedPreferences(
+					ClassroomMode.PREFS_KEY_CLASSROOM_MODE, 0);
+			iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+					classPrefs.getBoolean(
+							ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE,
+							true));
+			startActivityForResult(iEnterName, RESULT_GOT_NAME);
 			return true;
 		case R.id.reset:
 			startActivityForResult(new Intent(this, ResetToDefaults.class),

@@ -32,7 +32,7 @@
         android:label="@string/display_name"
         android:theme="@android:style/Theme.Holo" >
         <activity
-            android:name=".ColorBlobDetectionActivity"
+            android:name=".PendulumTrackerActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/display_name"
             android:screenOrientation="landscape" >
@@ -43,13 +43,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="edu.uml.cs.isense.credentials.EnterName"
+            android:label="@string/enter_name_prompt"
+            android:theme="@style/AppThemeDialog" />
+        <activity
             android:name="edu.uml.cs.isense.credentials.Login"
             android:label="@string/login_prompt"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/AppThemeDialog" />
         <activity
             android:name="edu.uml.cs.isense.credentials.LoginError"
             android:label="@string/login_error_prompt"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/AppThemeDialog" />
     </application>
 
     <!--
