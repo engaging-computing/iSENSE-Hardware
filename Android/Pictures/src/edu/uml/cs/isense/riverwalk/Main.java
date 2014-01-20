@@ -27,6 +27,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -74,6 +75,8 @@ public class Main extends Activity implements LocationListener {
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 	private static final int SELECT_PICTURE_REQUESTED = 107;
+	
+	private MediaPlayer mMediaPlayer;
 
 	public static boolean continuous = false;
 	public static int continuousInterval = 1;
@@ -144,6 +147,8 @@ public class Main extends Activity implements LocationListener {
 		}
 
 		useMenu = true;
+		
+		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 
 		w = new Waffle(mContext);
 
@@ -236,6 +241,10 @@ public class Main extends Activity implements LocationListener {
 
 					// Continuously take pictures
 				} else if (continuous == true) {
+					
+					mMediaPlayer.setLooping(false);
+					mMediaPlayer.start();
+					
 					if (recording == false) {
 						// disable menu
 						useMenu = false;
@@ -247,7 +256,7 @@ public class Main extends Activity implements LocationListener {
 						int pixels = (int) (dps * scale + 0.5f);
 						preview.getLayoutParams().height = pixels;
 
-						takePicture.setBackgroundColor(0xFF00FF00);
+						takePicture.setBackgroundResource(R.drawable.button_rsense_green);
 						takePicture.setTextColor(0xFF000000);
 						takePicture.setText("Recording Press to Stop");
 

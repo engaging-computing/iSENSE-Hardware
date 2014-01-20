@@ -138,6 +138,12 @@
         <activity
             android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
             android:label="@string/new_proj_name_title"
+            tools:ignore="MissingRegistered"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.ClassroomMode"
+            android:label="@string/classroom_mode"
+            android:theme="@style/AppThemeDialog"
             tools:ignore="MissingRegistered" />
     </application>
 
