@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,7 +95,7 @@ public class Setup extends Activity implements OnClickListener {
 		mContext = this;
 
 		api = API.getInstance();
-		
+
 		w = new Waffle(mContext);
 
 		okay = (Button) findViewById(R.id.project_ok);
@@ -196,8 +197,8 @@ public class Setup extends Activity implements OnClickListener {
 			startActivityForResult(iProject, PROJECT_CODE);
 		} else if (id == R.id.createProjectBtn) {
 			if (!Connection.hasConnectivity(mContext))
-				w.make("Internet connection required to create project", Waffle.LENGTH_LONG,
-						Waffle.IMAGE_WARN);
+				w.make("Internet connection required to create project",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
 			else {
 				if (!constrictFields) {
 					Intent iProjCreate = new Intent(getApplicationContext(),
@@ -255,17 +256,10 @@ public class Setup extends Activity implements OnClickListener {
 			}
 		} else if (requestCode == NAME_FOR_NEW_PROJECT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
+				ArrayList<RProjectField> fields = getArrayOfFields();
 				if (data.hasExtra("new_proj_name")) {
-					// TODO -- @Jeremy asynctaskify this
-					ArrayList<RProjectField> fields = getArrayOfFields();
-					int projectNum = api.createProject(
+					new CreateProjectTask().execute(
 							data.getStringExtra("new_proj_name"), fields);
-					String s = projectNum + "";
-					SharedPreferences.Editor mEditor = mPrefs.edit();
-					mEditor.putString(PROJECT_ID, s).commit();
-					setResult(RESULT_OK);
-					finish();
-
 				}
 			}
 		} else if (requestCode == NEW_PROJ_REQUESTED) {
@@ -281,6 +275,33 @@ public class Setup extends Activity implements OnClickListener {
 			} else {
 				setResult(RESULT_CANCELED);
 				finish();
+			}
+		}
+	}
+
+	class CreateProjectTask extends AsyncTask<Object, Void, Integer> {
+
+		@Override
+		protected void onPostExecute(Integer projNum) {
+			super.onPostExecute(projNum);
+
+			SharedPreferences.Editor mEditor = mPrefs.edit();
+			mEditor.putString(PROJECT_ID, projNum + "").commit();
+			setResult(RESULT_OK);
+			finish();
+		}
+
+		@Override
+		protected Integer doInBackground(Object... params) {
+			String projName = (String) params[0];
+
+			// Make sure there are RProjectFields
+			if (params[1] instanceof ArrayList<?>) {
+				@SuppressWarnings("unchecked")
+				ArrayList<RProjectField> fields = (ArrayList<RProjectField>) params[1];
+				return api.createProject(projName, fields);
+			} else {
+				return -1;
 			}
 		}
 	}
@@ -354,7 +375,7 @@ public class Setup extends Activity implements OnClickListener {
 			fields.add(Lon);
 
 		} else if (APPNAME.equals("Canobie")) {
-			
+
 			RProjectField time = new RProjectField();
 			time.name = "Time";
 			time.type = RProjectField.TYPE_TIMESTAMP;
@@ -374,9 +395,9 @@ public class Setup extends Activity implements OnClickListener {
 
 			aX.type = aY.type = aZ.type = aT.type = RProjectField.TYPE_NUMBER;
 			aX.unit = aY.unit = aZ.unit = aT.unit = "m/s^2";
-			
+
 			RProjectField Lat, Lon;
-			
+
 			Lat = new RProjectField();
 			Lat.name = "Latitude";
 			Lat.type = RProjectField.TYPE_LAT;
@@ -393,16 +414,16 @@ public class Setup extends Activity implements OnClickListener {
 			fields.add(aT);
 			fields.add(Lat);
 			fields.add(Lon);
-			
+
 		} else if (APPNAME.equals("Pictures")) {
-			
+
 			RProjectField time, Lat, Lon;
-			
+
 			time = new RProjectField();
 			time.name = "Time";
 			time.type = RProjectField.TYPE_TIMESTAMP;
 			fields.add(time);
-			
+
 			Lat = new RProjectField();
 			Lat.name = "Latitude";
 			Lat.type = RProjectField.TYPE_LAT;
@@ -412,7 +433,7 @@ public class Setup extends Activity implements OnClickListener {
 			Lon.name = "Longitude";
 			Lon.type = RProjectField.TYPE_LON;
 			Lon.unit = "deg";
-			
+
 			fields.add(time);
 			fields.add(Lat);
 			fields.add(Lon);

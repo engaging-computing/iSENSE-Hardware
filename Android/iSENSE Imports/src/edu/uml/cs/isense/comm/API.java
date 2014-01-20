@@ -425,7 +425,6 @@ public class API {
 
 				person.person_id = inner.getInt("id");
 				person.name = inner.getString("name");
-				person.username = inner.getString("username");
 				person.url = inner.getString("url");
 				person.gravatar = inner.getString("gravatar");
 				person.timecreated = inner.getString("createdAt");
