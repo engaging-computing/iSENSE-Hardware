@@ -157,9 +157,6 @@ public class Main extends Activity implements LocationListener {
 		api = API.getInstance();
 		api.useDev(useDev);
 		
-		if (api.getCurrentUser() != null) {
-			api.deleteSession();
-		}
 		
 		attemptLoginOnAppStart();
 		
@@ -632,13 +629,16 @@ public class Main extends Activity implements LocationListener {
 					cdt.cancel();
 
 				if (api.getCurrentUser() != null) {
-					
-					api.deleteSession();
-					api.useDev(useDev);
+					Runnable r = new Runnable() {
+						public void run() {
+							api.deleteSession();
+							api.useDev(useDev);
+						}
+					};
+					new Thread(r).start();
 				} else
 					api.useDev(useDev);
-				
-				attemptLoginOnAppStart();
+				attemptLogin();
 				actionBarTapCount = 0;
 				break;
 			}
@@ -1060,7 +1060,7 @@ public class Main extends Activity implements LocationListener {
 			new LoginTask().execute();
 
 		}
-	} 
+	}
 
 	// initialize location listener to get a pair of coordinates
 	private void initLocManager() {
