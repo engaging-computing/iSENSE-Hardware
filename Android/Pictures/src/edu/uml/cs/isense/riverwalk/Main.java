@@ -520,15 +520,6 @@ public class Main extends Activity implements LocationListener {
 		return mediaFile;
 	}
 
-	// double tap back button to exit
-	@Override
-	public void onBackPressed() {
-		if (!w.isDisplaying) {
-			w.make("Double press \"Back\" to exit.", Waffle.LENGTH_SHORT);
-		} else if (w.canPerformTask)
-			super.onBackPressed();
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -678,7 +669,7 @@ public class Main extends Activity implements LocationListener {
 		}
 
 		if (uq.emptyQueue()) {
-			w.make("No data to upload.", Waffle.IMAGE_CHECK);
+			w.make("No data to upload.", Waffle.IMAGE_X);
 			return;
 		}
 
@@ -817,11 +808,22 @@ public class Main extends Activity implements LocationListener {
 
 				dataJSON.put(dfm.putData());
 			}
-
-			QDataSet ds = new QDataSet(name.getText().toString()
-					+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
-					makeThisDatePretty(curTime), QDataSet.Type.BOTH,
-					dataJSON.toString(), picture, projNum, null);
+			
+			QDataSet ds;
+			
+			if (dfm.projectContainsTimeStamp() && dfm.projectContainsLocation()) {
+				ds = new QDataSet(name.getText().toString()
+						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
+						makeThisDatePretty(curTime), QDataSet.Type.BOTH,
+						dataJSON.toString(), picture, projNum, null);
+			} else {
+				ds = new QDataSet(name.getText().toString()
+						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
+						makeThisDatePretty(curTime), QDataSet.Type.PIC,
+						null, picture, projNum, null);
+			}
+			
+			
 
 			System.out.println("projectNum = " + projNum);
 
