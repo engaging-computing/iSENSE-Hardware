@@ -157,6 +157,10 @@ public class Main extends Activity implements LocationListener {
 		api = API.getInstance();
 		api.useDev(useDev);
 		
+		if (api.getCurrentUser() != null) {
+			api.deleteSession();
+		}
+		
 		attemptLoginOnAppStart();
 		
 		uq = new UploadQueue("generalpictures", mContext, api);
@@ -628,16 +632,13 @@ public class Main extends Activity implements LocationListener {
 					cdt.cancel();
 
 				if (api.getCurrentUser() != null) {
-					Runnable r = new Runnable() {
-						public void run() {
-							api.deleteSession();
-							api.useDev(useDev);
-						}
-					};
-					new Thread(r).start();
+					
+					api.deleteSession();
+					api.useDev(useDev);
 				} else
 					api.useDev(useDev);
-
+				
+				attemptLoginOnAppStart();
 				actionBarTapCount = 0;
 				break;
 			}
