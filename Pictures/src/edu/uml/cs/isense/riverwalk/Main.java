@@ -165,11 +165,11 @@ public class Main extends Activity implements LocationListener {
 
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		if (mPrefs.getString("project_id", "").equals("")) {
-			if (dfm == null) {
-				dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
-						"project_id", "-1")), api, mContext, f);
-				dfm.getOrder();
-			}
+			
+		     SharedPreferences.Editor editor = mPrefs.edit();
+		     editor.putString("project_id", "259");
+		     editor.commit();
+			
 		}
 
 		projectLabel = (TextView) findViewById(R.id.projectLabel);
