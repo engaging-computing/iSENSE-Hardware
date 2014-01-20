@@ -435,7 +435,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 				w.make(getResources().getString(R.string.no_back_use_home_instead),
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 			else
-				w.make(getResources().getString(R.string.double_press_back));
+				super.onBackPressed();
 
 		} else if (w.canPerformTask && !running) {
 			super.onBackPressed();

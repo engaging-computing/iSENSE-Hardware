@@ -756,7 +756,7 @@ public class API {
 					i = in.read();
 				}
 				String output = bo.toString();
-				System.out.println("Returning from uploadDataSetMedia: " + output);
+				System.out.println("Returning from uploadProjectMedia: " + output);
 				try {
 					JSONObject jobj = new JSONObject(output);
 					int mediaObjID = jobj.getInt("id");
