@@ -55,7 +55,6 @@
         <activity
             android:name="edu.uml.cs.isense.queue.QueueLayout"
             android:label="Upload Data"
-<<<<<<< HEAD
             android:theme="@style/AppThemeQueue" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueAlter"
@@ -69,22 +68,8 @@
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
             android:theme="@style/AppThemeDialog" />
-=======
-            android:theme="@style/DialogTheme" />
-        <activity
-            android:name="edu.uml.cs.isense.queue.QueueAlter"
-            android:label="Alter Data Set"
-            android:theme="@style/DialogTheme" />
-        <activity
-            android:name="edu.uml.cs.isense.queue.QueueEditData"
-            android:label="Edit Data"
-            android:theme="@style/DialogTheme" />
-        <activity
-            android:name="edu.uml.cs.isense.queue.QueueEditRename"
-            android:label="Rename Data Set"
-            android:theme="@style/DialogTheme" />
->>>>>>> origin/bd859
-      
+
+        
         <activity
             android:name="edu.uml.cs.isense.proj.BrowseProjects"
             android:label="Browse Projects"
@@ -92,7 +77,6 @@
         <activity
             android:name="edu.uml.cs.isense.queue.QueueSummary"
             android:label="Summary"
-<<<<<<< HEAD
             android:theme="@style/AppThemeDialog" />
         <activity
             android:name="edu.uml.cs.isense.dfm.FieldMatching"
@@ -114,29 +98,7 @@
             android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
             android:label="@string/project_name_dialog"
             android:theme="@style/AppThemeDialog" />
-=======
-            android:theme="@style/DialogTheme" />
-        <activity
-            android:name="edu.uml.cs.isense.dfm.FieldMatching"
-            android:label="Select Fields"
-            android:theme="@style/DialogTheme" />
-         <activity
-            android:name="edu.uml.cs.isense.credentials.Login"
-            android:label="@string/login_prompt"
-            android:theme="@style/DialogTheme" />
-         <activity
-            android:name="edu.uml.cs.isense.credentials.LoginError"
-            android:label="@string/login_prompt_error"
-            android:theme="@style/DialogTheme" />
-         <activity
-            android:name="edu.uml.cs.isense.proj.Setup"
-            android:label="@string/project_prompt"
-            android:theme="@style/DialogTheme" />
-          <activity
-            android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
-            android:label="@string/project_name_dialog"
-            android:theme="@style/DialogTheme" />
->>>>>>> origin/bd859
+
          <activity
             android:name="edu.uml.cs.isense.sync.SyncTime"
             android:label="Sync Time"
@@ -144,21 +106,12 @@
           <activity
             android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
             android:label="Delete Selected"
-<<<<<<< HEAD
+
             android:theme="@style/AppThemeDialog" />
           <activity
             android:name="edu.uml.cs.isense.queue.NoInitialProject"
             android:label="Select a Project"
             android:theme="@style/AppThemeDialog" />
-=======
-            android:theme="@style/DialogTheme" />
-          <activity
-            android:name="edu.uml.cs.isense.queue.NoInitialProject"
-            android:label="Select a Project"
-            android:theme="@style/DialogTheme" />
->>>>>>> origin/bd859
-        
-         
          
     </application>
 
