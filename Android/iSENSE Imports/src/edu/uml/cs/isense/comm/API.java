@@ -48,8 +48,8 @@ import edu.uml.cs.isense.objects.RTutorial;
  */
 
 public class API {
-	private String version_major = "3";
-	private String version_minor = "1c";
+	private String version_major = "4";
+	private String version_minor = "0";
 	private String version;
 
 	private static API instance = null;
