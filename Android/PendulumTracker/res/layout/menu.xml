@@ -13,6 +13,10 @@
          android:id="@+id/menu_upload"
          android:title="Stop and upload to iSENSE"
          android:showAsAction="ifRoom|withText"/-->
+     <!--item 
+         android:id="@+id/menu_touchmode"
+         android:title="Use touchscreen mode"
+         android:showAsAction="never"/-->
      <item 
          android:id="@+id/menu_exit"
          android:title="Exit Pendulator"
