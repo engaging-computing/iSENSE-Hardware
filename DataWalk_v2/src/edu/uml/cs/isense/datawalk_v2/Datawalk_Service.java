@@ -11,19 +11,19 @@ private static final String TAG	= Datawalk_Service.class.getSimpleName();
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		Log.d("TAG", "onCreate'd");
+		Log.d(TAG, "onCreate'd");
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Log.d("TAG", "onDestroy'd");
+		Log.d(TAG, "onDestroy'd");
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.d("TAG", "onBind'd");
+		Log.d(TAG, "onBind'd");
 		return null;
 	}
 

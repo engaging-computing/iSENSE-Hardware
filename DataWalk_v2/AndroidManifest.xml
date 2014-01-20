@@ -141,6 +141,7 @@
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
         <service
+            android:enabled="true"
             android:name=".Datawalk_Service"
             />
     </application>
