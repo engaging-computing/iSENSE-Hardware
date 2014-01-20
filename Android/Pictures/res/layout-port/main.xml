@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
 	    android:orientation="vertical" >
 	
 	    <RelativeLayout
@@ -25,7 +25,7 @@
 	
 	        <EditText
 	            android:id="@+id/name"
-	            android:layout_width="fill_parent"
+	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:layout_toRightOf="@+id/nameLabel"
 	            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
@@ -40,17 +40,17 @@
 	    
 	
 	    <RelativeLayout
-	        android:layout_width="fill_parent"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal"
 	        android:weightSum="2" >
 	
 	        <TextView
-	            android:id="@+id/ExperimentLabel"
+	            android:id="@+id/projectLabel"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:gravity="left"
-	            android:text="@string/experiment"
+	            android:text="@string/project"
 	            android:textColor="@android:color/black"
 	            android:textSize="16sp" 
 	            android:paddingLeft = "10dp"/>
@@ -71,7 +71,7 @@
 	    
 	    <Button
 	        android:id="@+id/takePicture"
-	        android:layout_width="fill_parent"
+	        android:layout_width="match_parent"
 	        android:layout_height="0dp"
 	        android:layout_margin="20dp"
 	        android:layout_weight="0.50"
@@ -83,7 +83,7 @@
 	    
 	     <Button
 	        android:id="@+id/addPicture"
-	        android:layout_width="fill_parent"
+	        android:layout_width="match_parent"
 	        android:layout_height="0dp"
 	        android:layout_margin="20dp"
 	        android:layout_weight="0.50"
@@ -109,7 +109,7 @@
 		
 		        <TextView
 		            android:id="@+id/myLocation"
-		            android:layout_width="fill_parent"
+		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content"
 		            android:text="@string/noLocation0"
 		            android:textColor="@android:color/black"
