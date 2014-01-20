@@ -130,6 +130,7 @@ public class API {
 							+ URLEncoder.encode(authToken, "UTF-8"), "DELETE",
 					null);
 			currentUser = null;
+			authToken = "";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
