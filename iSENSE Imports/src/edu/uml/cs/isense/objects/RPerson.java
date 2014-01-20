@@ -8,6 +8,7 @@ package edu.uml.cs.isense.objects;
 public class RPerson {
     public int person_id;
     public String name="";
+    public String username="";
     public String url="";
     public String timecreated="";
     public String gravatar="";
