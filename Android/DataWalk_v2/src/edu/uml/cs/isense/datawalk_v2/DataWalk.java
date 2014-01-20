@@ -1130,6 +1130,7 @@ public class DataWalk extends Activity implements LocationListener,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
+
 		case R.id.Upload:
 			// Launched the upload queue dialog
 			manageUploadQueue();
