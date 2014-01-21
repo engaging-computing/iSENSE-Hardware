@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical">
-	   
-	<LinearLayout 
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
 	    android:orientation="vertical" >
 	
 	    <RelativeLayout
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:background="@android:color/transparent"
 	        android:orientation="vertical"
 	        android:layout_marginTop="5dp"
 	        android:layout_marginLeft="5dp"
@@ -22,15 +16,14 @@
 	            android:id="@+id/nameLabel"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:background="@android:color/transparent"
 	            android:paddingTop="12dip"
-	            android:text="@string/firstName"
+	            android:text="@+string/firstName"
 	            android:textColor="@android:color/black"
 	            android:textSize="18sp" />
 	
 	        <EditText
 	            android:id="@+id/name"
-	            android:layout_width="fill_parent"
+	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:layout_toRightOf="@+id/nameLabel"
 	            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()"
@@ -45,17 +38,17 @@
 	    
 	
 	    <RelativeLayout
-	        android:layout_width="fill_parent"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal"
 	        android:weightSum="2" >
 	
 	        <TextView
-	            android:id="@+id/ExperimentLabel"
+	            android:id="@+id/projectLabel"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:gravity="left"
-	            android:text="@string/experiment"
+	            android:text="@string/project"
 	            android:textColor="@android:color/black"
 	            android:textSize="16sp" 
 	            android:paddingLeft = "10dp"/>
@@ -71,67 +64,73 @@
 	            android:textColor="@android:color/black"
 	            android:textSize="16sp"
 	            android:paddingRight = "10dp" />
-
-	        
 	
 	     </RelativeLayout>
 	    
-	    <LinearLayout
-	        android:layout_width="fill_parent"
-	        android:layout_height="179dp"
-	        android:orientation="horizontal" >
-		        
-		    <Button
-		        android:id="@+id/takePicture"
-		        android:layout_width="fill_parent"
-		        android:layout_height="fill_parent"
-		        android:layout_margin="20dp"
-		        android:layout_weight="0.50"
-		        android:background="@drawable/button_rsense"
-		        android:paddingTop="16dip"
-		        android:text="@string/takePicSingle"
-		        android:textColor="#0066FF"
-		        android:textSize="30sp" />
-		    
-		     <Button
-		        android:id="@+id/addPicture"
-		        android:layout_width="fill_parent"
-		        android:layout_height="fill_parent"
-		        android:layout_margin="20dp"
-		        android:layout_weight="0.50"
-		        android:background="@drawable/button_rsense"
-		        android:paddingTop="16dip"
-		        android:text="@string/addPicture"
-		        android:textColor="#0066FF"
-		        android:textSize="30sp" />
-		    
-		     <FrameLayout
-				    android:id="@+id/camera_preview"
-				    android:layout_width="176dp"
-				    android:layout_height="144dp"
-				    android:visibility="gone"
-				   	android:layout_margin="20dp"/>   
-	       
-	     </LinearLayout>
+	     <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:orientation="vertical" >
+	        
+		     <LinearLayout
+		        android:id="@+id/buttonBlock"
+		        android:layout_above= "@+id/locationBlock"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:orientation="horizontal" >
+			        
+			    <Button
+			        android:id="@+id/takePicture"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:layout_margin="20dp"
+			        android:layout_weight="0.50"
+			        android:background="@drawable/button_rsense"
+			        android:paddingTop="16dip"
+			        android:text="@string/takePicSingle"
+			        android:textColor="#0066FF"
+			        android:textSize="30sp" />
+			    
+			     <Button
+			        android:id="@+id/addPicture"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:layout_margin="20dp"
+			        android:layout_weight="0.50"
+			        android:background="@drawable/button_rsense"
+			        android:paddingTop="16dip"
+			        android:text="@string/addPicture"
+			        android:textColor="#0066FF"
+			        android:textSize="30sp" />
+			    
+			     <FrameLayout
+					    android:id="@+id/camera_preview"
+					    android:layout_width="176dp"
+					    android:layout_height="144dp"
+					    android:visibility="gone"
+					   	android:layout_margin="20dp"/>   
+		       
+		     </LinearLayout>
+		       
+		
+			 <LinearLayout
+			        android:id="@+id/locationBlock"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_alignParentBottom = "true"
+			        android:orientation="vertical" 
+			        android:layout_centerHorizontal= "true">
+			
+			        <TextView
+			            android:id="@+id/myLocation"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:text="@string/noLocation0"
+			            android:textColor="@android:color/black"
+			            android:textSize="16sp"
+			            android:layout_marginBottom="20dp"/>
+			  </LinearLayout> 
+		 </RelativeLayout>
+			 
 	
-	     <LinearLayout
-		        android:id="@+id/locationBlock"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:orientation="vertical" 
-		        android:layout_gravity="center_horizontal">
-		
-		        <TextView
-		            android:id="@+id/myLocation"
-		            android:layout_width="fill_parent"
-		            android:layout_height="wrap_content"
-		            android:text="@string/noLocation0"
-		            android:textColor="@android:color/black"
-		            android:textSize="16sp"
-		            android:layout_marginBottom="20dp"/>
-		  </LinearLayout>   
-		 
-		
-		  
 	</LinearLayout>
-</RelativeLayout>

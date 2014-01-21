@@ -109,7 +109,6 @@
             android:label="Select a Project"
             android:theme="@style/AppThemeDialog" />     
          
-         
     </application>
 
 </manifest>

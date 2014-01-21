@@ -1,6 +1,7 @@
 package edu.uml.cs.isense.pendulum;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +50,7 @@ import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 
 public class PendulumTrackerActivity extends Activity implements
@@ -63,7 +65,7 @@ public class PendulumTrackerActivity extends Activity implements
 
 	// iSENSE member variables
 	// use development site
-	Boolean useDevSite = true;
+	Boolean useDevSite = false;
 	// iSENSE uploader
 	API api;
 
@@ -76,6 +78,7 @@ public class PendulumTrackerActivity extends Activity implements
 	Boolean sessionNameEntered = false;
 
 	private static String experimentNumber = "29"; // production = 29, dev = 39
+	
 	private static String baseSessionUrl = "http://isenseproject.org/projects/"
 			+ experimentNumber + "data_sets/";
 	private static String baseSessionUrlDev = "http://rsense-dev.cs.uml.edu/projects/"
@@ -111,8 +114,9 @@ public class PendulumTrackerActivity extends Activity implements
 															// written on 1
 															// thread, read-only
 															// on another
-	static boolean mSessionCreated = false;
+	private static boolean mSessionCreated = false;
 	private boolean mDisplayStatus = false;
+	private boolean mEnableTouchMode = false;
 
 	// start / stop icons
 	Menu menu;
@@ -186,9 +190,10 @@ public class PendulumTrackerActivity extends Activity implements
 		startIcon = getResources().getDrawable(R.drawable.start_icon);
 		stopIcon = getResources().getDrawable(R.drawable.stop_icon);
 
-		// Menu menu = (Menu) findViewById(R.layout.menu);
-		// menu.getItem(R.id.menu_start).setIcon(startIcon);
-
+		startStopButton = (MenuItem) findViewById(R.id.menu_start);
+		//Menu menu = (Menu) findViewById(R.layout.menu);
+		//startStopButton = menu.getItem(R.id.menu_start);
+		
 		// TODO: add remembe-me login stuff here!
 		// Jeremy Note: Actually the remembering happens automagically
 		// in the API calls
@@ -250,8 +255,30 @@ public class PendulumTrackerActivity extends Activity implements
 
 		// public boolean onTouch(View v, MotionEvent event) {
 
-		Toast.makeText(PendulumTrackerActivity.this,
-				"I've been touched by an angel....", Toast.LENGTH_SHORT).show();
+		/*
+		if(this.mSessionCreated)
+		{
+	
+			if(!this.mDataCollectionEnabled)
+			{	
+				this.mDataCollectionEnabled = true;
+				Toast.makeText(PendulumTrackerActivity.this,
+						"STARTING Data Collection", Toast.LENGTH_SHORT).show();
+				
+				startStopButton.setVisible(false);
+			}
+			else if(this.mDataCollectionEnabled)
+			{	
+				this.mDataCollectionEnabled = false;
+				Toast.makeText(PendulumTrackerActivity.this,
+						"STOPPING Data Collection", Toast.LENGTH_SHORT).show();
+				
+				startStopButton.setVisible(true);
+			}
+		}
+		
+		*/
+		
 		/*
 		 * int cols = mRgba.cols(); int rows = mRgba.rows();
 		 * 
@@ -522,9 +549,39 @@ public class PendulumTrackerActivity extends Activity implements
 				new LoginThenUploadTask().execute();
 
 			}
-
+			
 			return true;
 
+		// BETA/Experimental touch screen mode using onLongClick
+/*		case R.id.menu_touchmode:
+			
+			
+			//mEnableTouchMode = (mDataCollectionEnabled && mEnableTouchMode) ? false : true; 
+			
+			// only enable mode if not in data collection mode (e.g., mDataCollectionEnable = true;
+			if(!this.mDataCollectionEnabled)
+			{	
+				if(!this.mEnableTouchMode)
+				{
+					this.mEnableTouchMode = true;
+				
+					startStopButton.setVisible(false);
+					
+					Toast.makeText(PendulumTrackerActivity.this,
+							"Touch screen mode enabled.", Toast.LENGTH_SHORT).show();
+				
+				}
+				else 
+				{
+					this.mEnableTouchMode = false;
+					startStopButton.setVisible(true);
+					
+					Toast.makeText(PendulumTrackerActivity.this,
+							"Touch screen mode disabled.", Toast.LENGTH_SHORT).show();
+				}
+			}
+			return true;
+*/			
 		case R.id.menu_exit:
 
 			// Exit app neatly
@@ -610,9 +667,14 @@ public class PendulumTrackerActivity extends Activity implements
 			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy, HH:mm:ss");
 			Date dt = new Date();
 			dateString = sdf.format(dt);
-
-			String nameOfSession = firstName + " " + lastInitial + ". - "
-					+ dateString;
+			
+			final SharedPreferences mPrefs = getSharedPreferences(
+							EnterName.PREFERENCES_KEY_USER_INFO,
+							Context.MODE_PRIVATE);
+		
+			String nameOfSession = mPrefs.getString(EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME, "") 
+									+ mPrefs.getString(EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL, "")
+									+ " - " + dateString;
 
 			Log.i(TAG, "Uploading data set...");
 
@@ -627,9 +689,8 @@ public class PendulumTrackerActivity extends Activity implements
 			int projectID = Integer.parseInt(experimentNumber);
 
 			Log.i(TAG, "Uploading new dataset");
-
-			sessionId = api.jsonDataUpload(projectID, jobj, nameOfSession
-					+ " (location not found)");
+			sessionId = api.jsonDataUpload(projectID, jobj, nameOfSession);
+					//+ " (location not found)");
 
 			if (sessionId == -1)
 				Log.i(TAG, "Dataset failed to upload!");
@@ -715,11 +776,22 @@ public class PendulumTrackerActivity extends Activity implements
 																// /*-
 																// 14400000*/);
 
+		// new! works!
+		ArrayList<RProjectField> pf = api.getProjectFields(Integer.parseInt(experimentNumber));
+		
+		
 		/* Convert floating point to String to send data via HTML */
 		try {
-			/* Posn-x */dataJSON.put("1", x);
-			/* Posn-y */dataJSON.put("2", y);
-			/* Time */dataJSON.put("0", "u " + currentTime);
+			/* Posn-x */dataJSON.put( "" + pf.get(1).field_id, x);
+			/* Posn-y */dataJSON.put( "" + pf.get(2).field_id, y);
+			/* Time */dataJSON.put( "" + pf.get(0).field_id , "u " + currentTime);
+			
+			
+			/* Posn-x *///dataJSON.put("1", x);
+			/* Posn-y *///dataJSON.put("2", y);
+			/* Time *///dataJSON.put("0", "u " + currentTime);
+			
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

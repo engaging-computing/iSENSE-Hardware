@@ -16,7 +16,7 @@
 	<string name="noLocation2">Lat: waiting for GPS . .\nLong: waiting for GPS . .</string>
 	<string name="noLocation3">Lat: waiting for GPS . . .\nLong: waiting for GPS . . .</string>
 	
-	<string name="experiment">Project: \0</string>
+	<string name="projectLabel">Project: \0</string>
 	
 	<string name="loading">Loading &#8230;</string>
 	<string name="search">Search</string>

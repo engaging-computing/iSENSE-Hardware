@@ -140,11 +140,16 @@
             android:label="Delete Selected Data Sets"
             android:theme="@style/AppThemeDialog"
             tools:ignore="MissingRegistered" />
-        <activity
+	<activity
             android:name="edu.uml.cs.isense.proj.ProjectCreate"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Create New Project"
             android:theme="@style/AppThemeDialog" />
+        <service
+            android:enabled="true"
+            android:name=".Datawalk_Service"
+            />
+       
     </application>
 
 </manifest>
