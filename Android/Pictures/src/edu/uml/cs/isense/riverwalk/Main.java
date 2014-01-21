@@ -165,7 +165,15 @@ public class Main extends Activity implements LocationListener {
 		
 		uq = new UploadQueue("generalpictures", mContext, api);
 
-		setDefaultProject();
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		if (mPrefs.getString("project_id", "").equals("")) {
+			setDefaultProject();
+		} else {
+			projectLabel = (TextView) findViewById(R.id.projectLabel);
+			projectLabel.setText(getResources().getString(R.string.projectLabel)
+					+ mPrefs.getString("project_id", "None Set"));
+		}
+		
 
 		mHandler = new Handler();
 
@@ -337,33 +345,22 @@ public class Main extends Activity implements LocationListener {
 	}
 	
 	
-	private void setDefaultProject(){ //TODO
-		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-		
-		/* check if using default project*/
-		if (mPrefs.getString("project_id", "").equals("248") || api.isUsingDevMode() == true) {
-			defaultProject = true;
-		}
-		
-		if (mPrefs.getString("project_id", "").equals("259") || api.isUsingDevMode() == false) {
-			defaultProject = true;
-		}
-		
+	private void setDefaultProject(){ 
+		//TODO
 		/*if no project set or using a default project set the correct default project based on live or dev mode*/
-		if (mPrefs.getString("project_id", "").equals("") || defaultProject == true) {
-		     if (api.isUsingDevMode() == true){
-		    	SharedPreferences.Editor editor = mPrefs.edit();
-		     	editor.putString("project_id", "248");
-		     	editor.commit();
-		     } else if (api.isUsingDevMode() == false) {
-		    	 SharedPreferences.Editor editor = mPrefs.edit();
-			     editor.putString("project_id", "259");
-			     editor.commit();
-		     }
-		     defaultProject = true;
-		} else {
-			defaultProject = false;
-		}
+		
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+
+	     if (api.isUsingDevMode() == false){
+	    	SharedPreferences.Editor editor = mPrefs.edit();
+	     	editor.putString("project_id", "248");
+	     	editor.commit();
+	     } else if (api.isUsingDevMode() == true) {
+	    	 SharedPreferences.Editor editor = mPrefs.edit();
+		     editor.putString("project_id", "259");
+		     editor.commit();
+	     }
+		
 		projectLabel = (TextView) findViewById(R.id.projectLabel);
 		projectLabel.setText(getResources().getString(R.string.projectLabel)
 				+ mPrefs.getString("project_id", "None Set"));
@@ -894,7 +891,6 @@ public class Main extends Activity implements LocationListener {
 			System.out.println("projectNum = " + projNum);
 
 			uq.addDataSetToQueue(ds);
-			// TODO
 		}
 	};
 
@@ -991,7 +987,6 @@ public class Main extends Activity implements LocationListener {
 
 				Intent iDesc = new Intent(Main.this, Description.class);
 				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
-				// TODO
 			}
 		}
 	}
