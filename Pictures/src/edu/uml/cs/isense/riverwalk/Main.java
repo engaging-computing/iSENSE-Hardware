@@ -130,6 +130,8 @@ public class Main extends Activity implements LocationListener {
 	private static Camera mCamera;
 	private CameraPreview mPreview;
 	private FrameLayout preview;
+	
+	private boolean defaultProject = false;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -163,16 +165,7 @@ public class Main extends Activity implements LocationListener {
 		
 		uq = new UploadQueue("generalpictures", mContext, api);
 
-		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-		if (mPrefs.getString("project_id", "").equals("")) {
-		     SharedPreferences.Editor editor = mPrefs.edit();
-		     editor.putString("project_id", "259");
-		     editor.commit();
-		}
-
-		projectLabel = (TextView) findViewById(R.id.projectLabel);
-		projectLabel.setText(getResources().getString(R.string.projectLabel)
-				+ mPrefs.getString("project_id", "None Set"));
+		setDefaultProject();
 
 		mHandler = new Handler();
 
@@ -343,6 +336,38 @@ public class Main extends Activity implements LocationListener {
 	    imageUri = savedInstanceState.getParcelable("image_uri");
 	}
 	
+	
+	private void setDefaultProject(){ //TODO
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+		
+		/* check if using default project*/
+		if (mPrefs.getString("project_id", "").equals("248") || api.isUsingDevMode() == true) {
+			defaultProject = true;
+		}
+		
+		if (mPrefs.getString("project_id", "").equals("259") || api.isUsingDevMode() == false) {
+			defaultProject = true;
+		}
+		
+		/*if no project set or using a default project set the correct default project based on live or dev mode*/
+		if (mPrefs.getString("project_id", "").equals("") || defaultProject == true) {
+		     if (api.isUsingDevMode() == true){
+		    	SharedPreferences.Editor editor = mPrefs.edit();
+		     	editor.putString("project_id", "248");
+		     	editor.commit();
+		     } else if (api.isUsingDevMode() == false) {
+		    	 SharedPreferences.Editor editor = mPrefs.edit();
+			     editor.putString("project_id", "259");
+			     editor.commit();
+		     }
+		     defaultProject = true;
+		} else {
+			defaultProject = false;
+		}
+		projectLabel = (TextView) findViewById(R.id.projectLabel);
+		projectLabel.setText(getResources().getString(R.string.projectLabel)
+				+ mPrefs.getString("project_id", "None Set"));
+	}
 	
 	// continuously take pictures in AsyncTask (a seperate thread)
 	private class continuouslytakephotos extends AsyncTask<Void, Void, Boolean> {
@@ -666,6 +691,7 @@ public class Main extends Activity implements LocationListener {
 					api.useDev(useDev);
 				attemptLogin();
 				actionBarTapCount = 0;
+				setDefaultProject();
 				break;
 			}
 
@@ -912,7 +938,9 @@ public class Main extends Activity implements LocationListener {
 				projectLabel.setText(getResources().getString(
 						R.string.projectLabel)
 						+ eidString);
-
+				
+				defaultProject = false;
+				
 				dfm = new DataFieldManager(Integer.parseInt(eidString), api,
 						mContext, f);
 				dfm.getOrder();
