@@ -33,7 +33,7 @@
             tools:ignore="MissingRegistered" />
         <activity
             android:name=".DataWalk"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="keyboardHidden|screenSize"
             android:label="@string/display_name"
             android:theme="@style/AppTheme" >
             <intent-filter>
