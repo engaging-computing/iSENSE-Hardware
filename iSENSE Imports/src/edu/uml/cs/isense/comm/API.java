@@ -1025,6 +1025,10 @@ public class API {
 
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
+			if (!reqType.equals("GET"))
+			{
+				urlConnection.setDoOutput(true);
+			}
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
 			// urlConnection.setDoOutput(true);
