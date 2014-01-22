@@ -101,7 +101,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	/*Values obtained from Configuration*/
 	public static int projectNum = -1;
 	public static String dataName = "";
-	public static String rate = "";
+	public static String rate = "50";
 	public static String rideNameString = "NOT SET";
 	public static String stNumber = "1";
 	public static Boolean projectLaterChecked = false;
@@ -212,9 +212,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					// Stop the recording and reset UI if running
 					if (isRunning) {
 						isRunning = false;
-						useMenu = true;
-						setupDone = false;
-						
+						useMenu = true;						
 
 						// Unregister sensors to save battery
 						mSensorManager.unregisterListener(AmusementPark.this);
@@ -225,7 +223,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						// Reset main UI
 						time.setText(getResources().getString(
 								R.string.timeElapsed));
-						rideName.setText("Ride/St#: NOT SET");
 						values.setText("X: " + "\nY: " + "\nZ: ");
 								
 
