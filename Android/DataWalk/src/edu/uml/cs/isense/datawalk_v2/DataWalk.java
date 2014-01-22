@@ -245,7 +245,7 @@ public class DataWalk extends Activity implements LocationListener,
 		} else {
 			nameB.setText(firstName + " " + lastInitial);
 		}
-		
+
 		/* Starts the code for the main button. */
 		startStopB.setOnLongClickListener(new OnLongClickListener() {
 
@@ -397,8 +397,8 @@ public class DataWalk extends Activity implements LocationListener,
 		rcrdIntervalB = (Button) findViewById(R.id.b_rcrdinterval);
 		elapsedTimeTV = (TextView) findViewById(R.id.tv_elapsedtime);
 		pointsUploadedTV = (TextView) findViewById(R.id.tv_pointcount);
-		latitudeTV = (TextView) findViewById(R.id.tv_longitude);
-		longitudeTV = (TextView) findViewById(R.id.tv_latitude);
+		longitudeTV = (TextView) findViewById(R.id.tv_longitude);
+		latitudeTV = (TextView) findViewById(R.id.tv_latitude);
 		distanceTV = (TextView) findViewById(R.id.tv_distance);
 		velocityTV = (TextView) findViewById(R.id.tv_velocity);
 		pointsUploadedTV.setText("Points Recorded: " + dataPointCount);
