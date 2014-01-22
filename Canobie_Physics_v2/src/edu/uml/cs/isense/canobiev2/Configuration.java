@@ -1,7 +1,6 @@
 package edu.uml.cs.isense.canobiev2;
 
 import edu.uml.cs.isense.proj.Setup;
-import android.R.string;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;

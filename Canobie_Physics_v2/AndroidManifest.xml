@@ -39,7 +39,7 @@
         <activity
             android:name=".Configuration"
             android:label="Configuration"
-            android:theme="@style/AppThemeDialog" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".MediaManager"
             android:label="Media Manager"
