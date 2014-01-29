@@ -55,8 +55,8 @@ public class API {
 	private static API instance = null;
 
 	private String baseURL = "";
-	private final String publicURL = "http://isenseproject.org";
-	private final String devURL = "http://rsense-dev.cs.uml.edu";
+	private final String publicURL = "http://isenseproject.org/api/v1";
+	private final String devURL = "http://rsense-dev.cs.uml.edu/api/v1";
 
 	String authToken = "";
 	RPerson currentUser;
@@ -105,7 +105,6 @@ public class API {
 			jodata.put("email", email);
 			jodata.put("password", password);
 			String result = makeRequest(baseURL, "login", "", "POST", jodata);
-			System.out.println(result);
 			JSONObject j = new JSONObject(result);
 
 			authToken = j.getString("authenticity_token");
