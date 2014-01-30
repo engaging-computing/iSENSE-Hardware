@@ -161,10 +161,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int SETUP_REQUESTED = 5;
 	private final int LOGIN_REQUESTED = 6;
 
-	private int dataPointCount = 0, elapsedSecs;
+	private int dataPointCount = 0;
+	private int elapsedSecs;
 
 	/* Used with Sync Time */
-	private long currentTime = 0;
 	private long timeOffset = 0;	
 	
 	/* Used to set time elapsed */
@@ -260,8 +260,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						elapsedSecs = 0;
 						dataPointCount = 0;
 
-						currentTime = getUploadTime();
-
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -277,7 +275,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									.registerListener(
 											AmusementPark.this,
 											mSensorManager
-													.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+													.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 											SensorManager.SENSOR_DELAY_FASTEST);
 							mSensorManager
 									.registerListener(
@@ -297,7 +295,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						
 						
 						new TimeElapsedTask().execute();
-						//TODO
+					
 						recordingTimer = new Timer();
 						recordingTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
@@ -359,8 +357,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			folder.mkdir();
 		}
 		
-		//TODO rides.getSelectedItem()
-		String sdFileName = rideName + "-" + stNumber + "-"
+		String sdFileName = rideNameString + "-" + stNumber + "-"
 				+ dateString + ".csv";
 		File sdFile = new File(folder, sdFileName);
 
@@ -497,7 +494,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onSensorChanged(SensorEvent event) {
 		DecimalFormat toThou = new DecimalFormat("######0.000");
 		DecimalFormat threeDigit = new DecimalFormat("#,##0.000");
-		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+		if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
 			if (dfm.enabledFields[Fields.ACCEL_X]
 					|| dfm.enabledFields[Fields.ACCEL_Y]
 					|| dfm.enabledFields[Fields.ACCEL_Z]
@@ -599,8 +596,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}
 		} else if (requestCode == CHOOSE_SENSORS_REQUESTED) {
 			startStop.setEnabled(true);
-			/* TODO fieldMatching.acceptedFields */
-			// acceptedFields = fieldMatcher.acceptedFields;
 			dfm.setEnabledFields(acceptedFields);
 			
 		} else if (requestCode == SETUP_REQUESTED) {
@@ -656,7 +651,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			if (api.getCurrentUser() == null) {
 				login(false);
 			}
-
+			
 			// Creates a new JSONObject that wraps the data and changes it from row major to column major
 			JSONObject data = new JSONObject();
 			try {
@@ -666,17 +661,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				e.printStackTrace();
 			}
 
-//			// Tries to upload the data set
-//			int dataSetId = api.uploadDataSet(Integer.parseInt(projId), data, name);
-//			uploadSuccessful = (dataSetId <= 0) ? true : false;
+			//TODO ERROR
 			
 			// Saves data to queue for later upload
-			if (!uploadSuccessful) {
 				QDataSet ds = new QDataSet(name, getResources().getString(R.id.description), QDataSet.Type.DATA,
 						dataSet.toString(), null, projId, null);
-				
 				uq.addDataSetToQueue(ds);
-			}
+	
 
 			// Empties the picture array
 			pictures.clear();
@@ -719,15 +710,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			dia.dismiss();
 
 			MediaManager.mediaCount = 0;
-
-			if (uploadSuccessful) {
-				w.make("Data was not uploaded - saved instead",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-			} else {
-				w.make("Upload Success", Waffle.LENGTH_SHORT,
-						Waffle.IMAGE_CHECK);
-				manageUploadQueue();
-			}
+			
+			w.make("Data Saved to Queue", Waffle.LENGTH_SHORT,
+					Waffle.IMAGE_CHECK);
+			manageUploadQueue();
+			
 
 			Date date = new Date();
 			showSummary(date, sdFileName);
@@ -739,7 +726,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * Writes the passed in time to the main screen.
 	 * 
 	 * @param seconds
-	 */
+	 */ 
 	public void setTime(int seconds) {
 		elapsedSecs = seconds;
 		
@@ -876,14 +863,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	void login(boolean enterNewCredentials) {
 
 		if (enterNewCredentials) {
-			// TODO call the login activity
+			
 		} else {
 
 			new LoginTask().execute();
 
 			// login to iSENSE
-			//TODO
-			
 		}
 	}
 	
@@ -910,21 +895,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void voids) {
 		}
 	}
-	
-
-	/**
-	 * Returns the milliseconds elapsed since the Epoch. This includes the time
-	 * offset from SyncTime.
-	 * 
-	 * @return Did you read the description?
-	 */
-	private long getUploadTime() {
-		Calendar c = Calendar.getInstance();
-		SharedPreferences mPrefs = getSharedPreferences(TIME_OFFSET_PREFS_ID, 0);
-		timeOffset = mPrefs.getLong(TIME_OFFSET_KEY, 0);
-
-		return (((long) c.getTimeInMillis()) + timeOffset);
-	}
 
 	/**
 	 * Task for checking sensor availability along with enabling/disabling
@@ -948,7 +918,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-			//TODO
 			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
 			String eidInput = mPrefs.getString(Setup.PROJECT_ID, "");
 
@@ -1131,7 +1100,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 	
 	/**
-	 * Turns elapsedSecs into readable strings.
+	 * Turns elapsedMillis into readable strings.
 	 * 
 	 * @author jpoulin
 	 */
@@ -1144,10 +1113,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		 * 
 		 * @param seconds
 		 */
+		
+		
 		ElapsedTime(int seconds) {
 			int minutes;
 			
-		
 			minutes = seconds / 60;
 			seconds %= 60;
 			
@@ -1173,13 +1143,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * @param sdFileName Name of the written csv
 	 */
 	private void showSummary(Date date, String sdFileName) {
-
+		//TODO
 		ElapsedTime time = new ElapsedTime(elapsedSecs);
 		
 		Intent iSummary = new Intent(mContext, Summary.class);
 		iSummary.putExtra("seconds", time.elapsedSeconds)
 				.putExtra("minutes", time.elapsedMinutes)
-				.putExtra("append", "Filename: \n" + sdFileName)
 				.putExtra("date", getNiceDateString(date))
 				.putExtra("points", "" + dataPointCount);
 
@@ -1200,7 +1169,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[Fields.ACCEL_TOTAL]) {
 				mSensorManager.registerListener(AmusementPark.this,
 						mSensorManager
-								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+								.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
@@ -1251,7 +1220,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 */
 	private void recordData() {
 		 dataPointCount++;
-         elapsedSecs += srate;
          
          DecimalFormat toThou = new DecimalFormat("######0.000");
 
@@ -1284,7 +1252,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
                                                  + Math.pow(Double.parseDouble(f.mag_y), 2)
                                                  + Math.pow(Double.parseDouble(f.mag_z), 2));
          if (dfm.enabledFields[Fields.TIME])
-                 f.timeMillis = currentTime + elapsedSecs;
+                 f.timeMillis = System.currentTimeMillis();         
          if (dfm.enabledFields[Fields.TEMPERATURE_C])
                  f.temperature_c = temperature;
          if (dfm.enabledFields[Fields.TEMPERATURE_F])

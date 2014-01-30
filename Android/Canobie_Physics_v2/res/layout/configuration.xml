@@ -16,6 +16,32 @@
             android:text="@string/iSenseConfig"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
+        
+         <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp" >
+
+            <TextView
+                android:id="@+id/sample_rate_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/sample_rate"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/srate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/sample_rate_prompt"
+                android:digits="0123456789"
+                android:imeOptions="actionDone"
+                android:inputType="phone"
+                android:maxLength="20" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -72,31 +98,7 @@
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="5dp" >
-
-            <TextView
-                android:id="@+id/sample_rate_prompt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="@string/sample_rate"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/srate"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/sample_rate_prompt"
-                android:digits="0123456789"
-                android:imeOptions="actionDone"
-                android:inputType="phone"
-                android:maxLength="20" />
-        </RelativeLayout>
+       
 
         <TextView
             android:id="@+id/otherOptions"

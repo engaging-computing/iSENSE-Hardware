@@ -89,6 +89,8 @@ public class Configuration extends Activity {
 				if (projectLater.isChecked()) {
 					AmusementPark.projectNum = -1; 
 					
+					select.setError(null);
+					
 					SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
 					SharedPreferences.Editor mEdit = mPrefs.edit();
 					mEdit.putString(Setup.PROJECT_ID, "-1").commit();
@@ -154,6 +156,7 @@ public class Configuration extends Activity {
 			dataset.setError("Please Enter a Data Set Name.");
 			selected = false;
 		} else {
+			dataset.setError(null);
 			AmusementPark.dataName = dataset.getText().toString();
 		}
 		
@@ -163,7 +166,10 @@ public class Configuration extends Activity {
 			if (AmusementPark.projectNum == -1) {
 				selected = false;
 				select.setError("Please Select a Project.");
-			} 			
+			} else {
+				select.setError(null);
+			}
+			
 		}
 		
 		
@@ -171,10 +177,12 @@ public class Configuration extends Activity {
 			sampleRate.setError("Please Enter a Value.");
 			selected = false;
 		} else {
+			sampleRate.setError(null);
 			if (Integer.decode(sampleRate.getText().toString()) < 50) {
 				sampleRate.setError("Value must at least 50.");
 				selected = false;
 			} else {
+				sampleRate.setError(null);
 				AmusementPark.rate = sampleRate.getText().toString();		
 			}
 			
@@ -186,6 +194,7 @@ public class Configuration extends Activity {
 			studentNumber.setError("Please Enter Seat/Student");
 			selected = false;
 		} else {
+			studentNumber.setError(null);
 			AmusementPark.stNumber = studentNumber.getText().toString();
 		}
 		
