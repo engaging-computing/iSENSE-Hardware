@@ -17,6 +17,36 @@
             android:textColor="@android:color/black"
             android:textSize="16sp" />
         
+         <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/nameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="12dip"
+                android:text="@string/sessionName"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/dataName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/nameLabel"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLength="50"
+                android:singleLine="true"
+                android:text="" >
+            </EditText>
+        </RelativeLayout>
+        
+        
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,37 +73,7 @@
                 android:maxLength="20" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/nameLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="12dip"
-                android:text="@string/sessionName"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/dataName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/nameLabel"
-                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@"
-                android:imeOptions="actionDone"
-                android:inputType="text"
-                android:maxLength="50"
-                android:singleLine="true"
-                android:text="" >
-
-                <requestFocus />
-            </EditText>
-        </RelativeLayout>
-
+       
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
