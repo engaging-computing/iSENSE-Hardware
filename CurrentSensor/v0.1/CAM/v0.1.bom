@@ -1,0 +1,15 @@
+Partlist exported from C:/Users/ECG/iSENSE-Hardware/CurrentSensor/v0.1/v0.1.sch at 1/13/2012 3:18:22 PM
+
+Part Value   Device     Package   Description               
+C1   0.1u    C-USC0805  C0805     CAPACITOR, American symbol
+C2   0.1u    C-USC0805  C0805     CAPACITOR, American symbol
+C3   10u     C-USC0805  C0805     CAPACITOR, American symbol
+IC1  MCP6001 MCP6001    SOT-23-5L                           
+IC2  MCP1525 MCP1525    SOT23                               
+R1   1k      R-US_R0805 R0805     RESISTOR, American symbol 
+R2   30k     R-US_R0805 R0805     RESISTOR, American symbol 
+R3   3k      R-US_R0805 R0805     RESISTOR, American symbol 
+R4   3k      R-US_R0805 R0805     RESISTOR, American symbol 
+R5   10k     R-US_R0805 R0805     RESISTOR, American symbol 
+R6   10k     R-US_R0805 R0805     RESISTOR, American symbol 
+R7   1       R-US_R2512 R2512     RESISTOR, American symbol 

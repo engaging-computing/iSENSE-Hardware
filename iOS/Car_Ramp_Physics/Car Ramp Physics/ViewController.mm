@@ -673,18 +673,67 @@
     
 }
 
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    
+    // ADD: get the decode results
+    id<NSFastEnumeration> results =
+    [info objectForKey: ZBarReaderControllerResults];
+    ZBarSymbol *symbol = nil;
+    for(symbol in results)
+        // EXAMPLE: just grab the first barcode
+        break;
+    
+    // EXAMPLE: do something useful with the barcode data
+    NSLog(@"QR Data: %@", symbol.data);
+    
+    NSRange range = [symbol.data rangeOfString:@"projects"];
+    
+    NSMutableCharacterSet *_slashes = [NSMutableCharacterSet characterSetWithCharactersInString:@"/"];
+    
+    NSString *proj = [[symbol.data substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:_slashes];
+    
+    projNum= [proj intValue];
+    
+    NSLog(@"ExpNum: %d", projNum);
+    
+    // ADD: dismiss the controller (NB dismiss from the *reader*!)
+    [picker dismissModalViewControllerAnimated: YES];
+    if (projNum != 0) {
+        
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setInteger:projNum forKey:KEY_PROJECT_ID];
+        
+    }
+    
+    
+    
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+}
+
+
 - (void) QRCode {
     [project dismissWithClickedButtonIndex:2 animated:YES];
-    if ([[UIApplication sharedApplication]
-         canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-        NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=carPhysics%3A//EAN"];
-        [[UIApplication sharedApplication] openURL:urlp2s];
-    } else {
-        NSURL *urlapp = [NSURL URLWithString:
-                         @"http://itunes.com/app/pic2shop"];
-        [[UIApplication sharedApplication] openURL:urlapp];
-    }
-}
+    ZBarReaderViewController *reader = [ZBarReaderViewController new];
+    reader.readerDelegate = self;
+    reader.supportedOrientationsMask = ZBarOrientationMaskAll;
+    
+    ZBarImageScanner *scanner = reader.scanner;
+    // TODO: (optional) additional reader configuration here
+    
+    // EXAMPLE: disable rarely used I2/5 to improve performance
+    [scanner setSymbology: ZBAR_I25
+                   config: ZBAR_CFG_ENABLE
+                       to: 0];
+    
+    // present and release the controller
+    [self presentModalViewController: reader
+                            animated: YES];}
 
 - (void) projCode {
     [project dismissWithClickedButtonIndex:0 animated:YES];
