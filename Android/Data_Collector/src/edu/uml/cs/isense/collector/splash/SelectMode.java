@@ -117,7 +117,7 @@ public class SelectMode extends Activity {
 		String csvUploaderText = "<font COLOR=\"#0066FF\">"
 				+ "Upload a .csv File From My Device" + "</font>" + "<br/>"
 				+ "<font COLOR=\"#D9A414\">"
-				+ "(requires project and Internet)" + "</font>";
+				+ "(requires project)" + "</font>";
 		csvUploader.setText(Html.fromHtml(csvUploaderText));
 
 		// Determine if we should disable manual entry and .csv uploader
@@ -135,7 +135,7 @@ public class SelectMode extends Activity {
 				String c = "<font COLOR=\"#0066FF\">"
 						+ "Upload a .csv File From My Device" + "</font>"
 						+ "<br/>" + "<font COLOR=\"#B88804\">"
-						+ "(requires project and Internet)" + "</font>";
+						+ "(requires project)" + "</font>";
 				csvUploader.setText(Html.fromHtml(c));
 			}
 		}
@@ -222,10 +222,10 @@ public class SelectMode extends Activity {
 			api.createSession(
 					mPrefs.getString(
 							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-							""),
+							Login.DEFAULT_USERNAME),
 					mPrefs.getString(
 							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							""));
+							Login.DEFAULT_PASSWORD));
 
 			publishProgress(100);
 			return null;

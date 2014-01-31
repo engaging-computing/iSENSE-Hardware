@@ -53,11 +53,15 @@ public class API {
 	private String version;
 	
 	private static API instance = null;
+	
 	private String baseURL = "";
-	private final String publicURL = "http://129.63.16.128";
-	private final String devURL = "http://129.63.16.30";
+	private final String publicURL = "http://rsense.cs.uml.edu";
+	private final String devURL = "http://rsense-dev.cs.uml.edu";
+	
 	String authToken = "";
 	RPerson currentUser;
+	
+	private boolean usingDev = false;
 	
 	public static final int CREATED_AT = 0;
 	public static final int UPDATED_AT = 1;
@@ -95,9 +99,12 @@ public class API {
 	 */
 	public boolean createSession(String username, String password) {
 		try {
-			String result = makeRequest(baseURL, "login", "email="+URLEncoder.encode(username, "UTF-8")
-					+"&password="+URLEncoder.encode(password, "UTF-8"), "POST", null);
+			JSONObject jodata = new JSONObject();
+			jodata.put("email", username);
+			jodata.put("password", password);
+			String result = makeRequest(baseURL, "login","","POST",jodata);
 			System.out.println(result);
+			System.out.println("login: Username: " + username + " Password: " + password);
 			JSONObject j =  new JSONObject(result);
 			
 			authToken = j.getString("authenticity_token");
@@ -483,7 +490,7 @@ public class API {
 			result.timecreated = j.getString("createdAt");
 			result.fieldCount = j.getInt("fieldCount");
 			result.datapointCount = j.getInt("datapointCount");
-			result.data = rowsToCols(j.getJSONObject("data"));
+			result.data = rowsToCols(new JSONObject().put("data", j.getJSONArray("data")));
 			result.project_id = j.getJSONObject("project").getInt("id");
 
 		} catch (Exception e) {
@@ -559,7 +566,7 @@ public class API {
 		return -1;
 	}
 	
-	/** TODO - change name from manualUpload to whatever it'll be.  eventually this will go away and become new uploadDataSet
+	/**
 	 * Uploads a new data set to a project on iSENSE
 	 * 
 	 * @param projectId The ID of the project to upload data to
@@ -576,11 +583,11 @@ public class API {
 		try {
 			requestData.put("data", data);
 			requestData.put("id", ""+projectId);
+			requestData.put("authenticity_token",authToken);
 			if(!datasetName.equals("")) 
 				requestData.put("title", datasetName);
-			
 			String reqResult = makeRequest(baseURL, "projects/"+projectId+"/jsonDataUpload", 
-					"authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+					"", "POST", requestData);
 			
 			JSONObject jobj = new JSONObject(reqResult);
 			System.out.println("Returning: " + jobj.toString());
@@ -594,35 +601,61 @@ public class API {
 
 	/**
 	 * Append new rows of data to the end of an existing data set
+	 * ** This currently works for horrible reasons regarding how the website handles
+	 * edit data sets ** Will fix hopefully --J TODO
 	 * 
 	 * @param dataSetId The ID of the data set to append to
 	 * @param newData The new data to append
+	 * 
+	 * @return success or failure
 	 */
-	public void appendDataSetData(int dataSetId, JSONObject newData) {
+	public boolean appendDataSetData(int dataSetId, JSONObject newData) {
 		JSONObject requestData = new JSONObject();
 		RDataSet existingDs = getDataSet(dataSetId);
-		JSONObject existing = existingDs.data;
-		Iterator<?> keys = newData.keys();
 		try {
-			while(keys.hasNext()) {
-				String currKey = (String) keys.next();
-				JSONArray newDataPoints = newData.getJSONArray(currKey);
-				for(int i = 0; i < newDataPoints.length(); i++) {
-					existing.getJSONArray(currKey).put(newDataPoints.get(i));
+			JSONObject combined = existingDs.data;
+			//merge newdata into combined
+			Iterator<?> keys = newData.keys();
+			while (keys.hasNext()) 
+			{
+				String key = (String) keys.next();
+				for (int i = 0;i < newData.getJSONArray(key).length();i++)
+				{
+					combined.accumulate(key, newData.getJSONArray(key).get(i));
 				}
 			}
-			ArrayList<RProjectField> fields = getProjectFields(existingDs.project_id);
-			ArrayList<String> headers = new ArrayList<String>();
-			for(RProjectField rpf : fields) {
-				headers.add(rpf.name);
+			//fill in blank spots
+			int maxDatapoints = 0; 
+			keys = combined.keys();
+			while (keys.hasNext())
+			{
+				String key = (String) keys.next();
+				if (combined.getJSONArray(key).length() > maxDatapoints)
+				{
+					maxDatapoints = combined.getJSONArray(key).length(); 
+				}
 			}
-			requestData.put("headers", new JSONArray(headers));
-			requestData.put("data", existing);
+			keys = combined.keys();
+			while (keys.hasNext())
+			{
+				String key = (String) keys.next();
+				while (combined.getJSONArray(key).length() < maxDatapoints)
+				{
+					combined.accumulate(key,""); 
+				}
+			}
+			requestData.put("data", combined);
 			requestData.put("id", ""+dataSetId);
-			makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			
+			String result = makeRequest(baseURL, "data_sets/"+dataSetId+"/edit", "authenticity_token="+URLEncoder.encode(authToken, "UTF-8"), "POST", requestData);
+			new JSONObject(result); // this line will throw an exception if it fails, thus returning false
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
+		
+		return true;
 	}
 
 	/**
@@ -726,7 +759,7 @@ public class API {
 					i = in.read();
 				}
 				String output = bo.toString();
-				System.out.println("Returning from uploadDataSetMedia: " + output);
+				System.out.println("Returning from uploadProjectMedia: " + output);
 				try {
 					JSONObject jobj = new JSONObject(output);
 					int mediaObjID = jobj.getInt("id");
@@ -858,7 +891,7 @@ public class API {
 			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
-
+			//urlConnection.setDoOutput(true);
 			if(postData != null) {
 				System.out.println("Post data: " + postData);
 				mPostData = postData.toString().getBytes();
@@ -908,6 +941,16 @@ public class API {
 	 */
 	public void useDev(boolean use) {
 		baseURL = use ? devURL : publicURL;
+		usingDev = use;
+	}
+	
+	/**
+	 * Returns whether or not the API is using dev mode.
+	 * 
+	 * @return True if the API is using the development website, false otherwise.
+	 */
+	public boolean isUsingDevMode() {
+		return usingDev;
 	}
 	
 	/**

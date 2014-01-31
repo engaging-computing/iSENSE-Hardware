@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.uml.cs.isense.riverwalk"
+    android:versionCode="5"
+    android:versionName="2.0.1" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".Main"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".experiments.BrowseExperiments"
+            android:label="@string/app_name_experiments"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".dialogs.NoGps"
+            android:label="No GPS Found"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".dialogs.NoConnectivity"
+            android:label="No Connectivity"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".dialogs.ReadyUpload"
+            android:label="Ready To Upload"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".experiments.ExperimentDialog"
+            android:label="Experiment ID"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".dialogs.NoQR"
+            android:label="No Barcode Scanner Found"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".dialogs.Description"
+            android:label="Describe Photo"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name=".dialogs.Continuous"
+            android:label="Continuous Photo Shooting"
+            android:theme="@style/AppThemeDialog" />
+
+        <!-- from iSENSE imports -->
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueLayout"
+            android:label="Upload Data"
+            android:theme="@style/AppThemeQueue" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueAlter"
+            android:label="Alter Data Set"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditData"
+            android:label="Edit Data"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueEditRename"
+            android:label="Rename Data Set"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
+            android:label="Delete Selected Data Sets"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.NoInitialProject"
+            android:label="No Associated Projects"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.BrowseProjects"
+            android:label="Projects" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.NoQR"
+            android:label="No QR Code Scanner Found"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.Setup"
+            android:label="Select a Project"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.supplements.FileBrowser"
+            android:label="Select a File"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.queue.QueueSummary"
+            android:label="Summary"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.dfm.FieldMatching"
+            android:label="Select Fields"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.Login"
+            android:label="@string/login_prompt"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.LoginError"
+            android:label="@string/login_error_prompt"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.ProjectCreate"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Create New Project"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
+            android:label="Create New Project"
+            android:theme="@style/AppThemeDialog" />
+    </application>
+
+</manifest>

@@ -1,7 +1,0 @@
-<resources>
-
-    <style name="AppTheme" parent="android:Theme.Holo.Light" />
-    <style name="DialogTheme" parent="android:Theme.Dialog" />
-	<style name="DialogThemeDark" parent="android:Theme.Dialog" />
-    
-</resources>

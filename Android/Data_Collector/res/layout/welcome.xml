@@ -1,67 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="20dp"
     android:layout_marginTop="20dp"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:weightSum="6.15" >
 
     <TextView
         android:id="@+id/welcome_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
+        android:layout_weight="1.1"
         android:text="@string/welcome_str"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
-    <LinearLayout
-        android:id="@+id/welcome_button_layout"
-        android:layout_below="@id/welcome_text"
+    <Button
+        android:id="@+id/welcome_select_project"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical"
-        android:weightSum="3" >
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_rsense"
+        android:text="@string/continue_with_exist"
+        android:layout_weight="1"
+        android:textColor="@color/rsense_button_text"
+        android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/welcome_select_project"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_rsense"
-            android:text="@string/continue_with_exist"
-            android:textColor="#0066FF"
-            android:textSize="18sp" />
+    <Button
+        android:id="@+id/welcome_no_project"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_rsense"
+        android:layout_weight="1"
+        android:text="@string/select_proj_later"
+        android:textColor="@color/rsense_button_text"
+        android:textSize="16sp" />
+    
+    <TextView
+        android:id="@+id/new_to_isense_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:text="@string/reg_or_tutorials"
+        android:textSize="16sp" />
+    
+    <Button
+        android:id="@+id/welcome_register_for_isense"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_rsense"
+        android:text="@string/reg_account"
+        android:layout_weight="1.055"
+        android:textColor="@color/rsense_button_text"
+        android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/welcome_create_project"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_rsense"
-            android:text="@string/create_new_proj"
-            android:textColor="#0066FF"
-            android:textSize="18sp" />
+    <Button
+        android:id="@+id/welcome_view_tutorials"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button_rsense"
+        android:layout_weight="1.055"
+        android:text="@string/view_tutorials"
+        android:textColor="@color/rsense_button_text"
+        android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/welcome_no_project"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_rsense"
-            android:text="@string/select_proj_later"
-            android:textColor="#0066FF"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

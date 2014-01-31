@@ -21,10 +21,12 @@ import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.FieldMatching;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -224,37 +226,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.upload) {
-
-			if (allSelectedDataSetsHaveProjects()) {
-				if (!Connection.hasConnectivity(mContext)) {
-					w.make("No internet connection found", Waffle.IMAGE_X);
-					return;
-				}
-
-				if (api.getCurrentUser() == null) {
-					w.make("Login information not found - please login again",
-							Waffle.IMAGE_X);
-					return;
-				}
-
-				lastSID = -1;
-				if (uq.mirrorQueue.isEmpty()) {
-					uq.storeAndReRetrieveQueue(true);
-					setResultAndFinish(RESULT_OK);
-					return;
-				} else {
-					dataSetUploadStatus = new LinkedList<String>();
-					new UploadSDTask().execute();
-					// clear the queue so we can re-add un-uploaded data sets
-					// from the mirrorQueue
-					uq.queue = new LinkedList<QDataSet>();
-				}
-			} else {
-				Intent iNoInitialProject = new Intent(QueueLayout.this,
-						NoInitialProject.class);
-				startActivity(iNoInitialProject);
-			}
-
+			runUploadSanityChecks();
 		} else if (id == R.id.cancel) {
 			setResultAndFinish(RESULT_CANCELED);
 			finish();
@@ -285,6 +257,42 @@ public class QueueLayout extends Activity implements OnClickListener {
 			startActivityForResult(iDelSel, QUEUE_DELETE_SELECTED_REQUESTED);
 		}
 
+	}
+	
+	private void runUploadSanityChecks() {
+		if (allSelectedDataSetsHaveProjects()) {
+			if (!Connection.hasConnectivity(mContext)) {
+				w.make("No internet connection found", Waffle.IMAGE_X);
+				return;
+			}
+
+			if (api.getCurrentUser() == null) {
+				new LoginTask().execute();
+				return;
+			}
+
+			prepareForUpload();
+			
+		} else {
+			Intent iNoInitialProject = new Intent(QueueLayout.this,
+					NoInitialProject.class);
+			startActivity(iNoInitialProject);
+		}
+	}
+	
+	private void prepareForUpload() {
+		lastSID = -1;
+		if (uq.mirrorQueue.isEmpty()) {
+			uq.storeAndReRetrieveQueue(true);
+			setResultAndFinish(RESULT_OK);
+			return;
+		} else {
+			dataSetUploadStatus = new LinkedList<String>();
+			new UploadSDTask().execute();
+			// clear the queue so we can re-add un-uploaded data sets
+			// from the mirrorQueue
+			uq.queue = new LinkedList<QDataSet>();
+		}
 	}
 
 	private boolean allSelectedDataSetsHaveProjects() {
@@ -388,7 +396,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					data = new JSONObject(uploadSet.getData());
 				} catch (JSONException e) {
 					data = null;
-				} catch (NullPointerException npe) { // TODO - what is causing this npe?
+				} catch (NullPointerException npe) {
 					data = null;
 				} finally {
 					if (data != null) {
@@ -429,7 +437,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 			OrientationManager.enableRotation(QueueLayout.this);
 		}
 	}
-
 	// Create an uploader particular to the DataSet to be uploaded in the queue
 	private void createRunnable(final QDataSet ds) {
 		sdUploader = new Runnable() {
@@ -849,6 +856,59 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			break;
 		}
+
+	}
+	
+	// Attempts to login with current user information
+	private class LoginTask extends AsyncTask<Void, Void, Void> {
+
+		private ProgressDialog dia;
+		boolean success;
+		
+		@Override
+		protected void onPreExecute() {
+			OrientationManager.disableRotation(QueueLayout.this);
+
+			dia = new ProgressDialog(QueueLayout.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Attempting to find login information...");
+			dia.setCancelable(false);
+			dia.show();
+			
+			super.onPreExecute();
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					QueueLayout.mContext,
+					QueueLayout.mContext.getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							Context.MODE_PRIVATE));
+
+			success = api
+					.createSession(
+								mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, Login.DEFAULT_USERNAME),
+								mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, Login.DEFAULT_PASSWORD));
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+
+			OrientationManager.enableRotation(QueueLayout.this);
+			if (dia != null) dia.cancel();
+			
+			if (success)
+				prepareForUpload();
+			else
+				w.make("Login information not found - please login again",
+						Waffle.IMAGE_WARN);
+			
+			super.onPostExecute(result);
+		}
+
 
 	}
 

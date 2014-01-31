@@ -80,7 +80,7 @@ public class QDataSet implements Serializable {
 	 * File containing the media in the data set.
 	 */
 	private File picture;
-	
+
 	/**
 	 * Used with FieldMatching when no initial project is set.
 	 */
@@ -102,20 +102,22 @@ public class QDataSet implements Serializable {
 	 * @param picture
 	 *            - If type is QDataSet.PIC, we look here.
 	 */
-	public QDataSet(String name, String desc, Type type, String data, 
+	public QDataSet(String name, String desc, Type type, String data,
 			File picture, String projID, LinkedList<String> fields) {
 		// name and description of data set
 		this.name = name;
 		this.desc = desc;
-		
+
 		// type (data/media) and the associated data and/or media
 		this.type = type;
 		if (data != null)
 			this.data = data;
-		else
+		else {
 			this.data = null;
+			System.out.println("Nullfrog");
+		}
 		this.picture = picture;
-		
+
 		// project and fields
 		this.projID = projID;
 		if (fields != null)
@@ -124,7 +126,7 @@ public class QDataSet implements Serializable {
 			fields = new LinkedList<String>();
 		this.hasInitialProject = projID.equals("-1") ? false : true;
 		this.requestDataLabelInOrder = false;
-		
+
 		// randomized key
 		this.key = new Random().nextLong();
 	}
@@ -145,43 +147,57 @@ public class QDataSet implements Serializable {
 	 *         failed
 	 */
 	public int upload(API api, Context c) {
-		// if no project is associated with this data set yet, we can't upload it
+		// if no project is associated with this data set yet, we can't upload
+		// it
 		if (this.projID.equals("-1"))
 			return -1;
 
-		// if the data is already in a forced order and just needs to be labeled with the
+		// if the data is already in a forced order and just needs to be labeled
+		// with the
 		// project's field IDs, we'll do so here
 		if (this.requestDataLabelInOrder) {
 			try {
 				// see if the elements of the JSONArray are JSONArrays
-				JSONArray ja = new JSONArray(data);
-				ja.getJSONArray(0);
-			
-				// if we got here, the data is a JSONArray of JSONArrays: convert it
-				DataFieldManager dfm = new DataFieldManager(Integer.parseInt(this.projID), api, c, null);
-				this.data = dfm.convertInternalDataToJSONObject(ja).toString();
+				if (data != null) {
+					JSONArray ja = new JSONArray(data);
+					ja.getJSONArray(0);
+
+					// if we got here, the data is a JSONArray of JSONArrays:
+					// convert it
+					DataFieldManager dfm = new DataFieldManager(
+							Integer.parseInt(this.projID), api, c, null);
+					this.data = dfm.convertInternalDataToJSONObject(ja)
+							.toString();
+				}
 			} catch (JSONException e) {
 				// we have a JSONArray of JSONObjects: this is bad
 				return -1;
 			}
 		} else {
-			// if there was no initial project, we must reOrder the data with the fields from FieldMatching
+			// if there was no initial project, we must reOrder the data with
+			// the fields from FieldMatching
 			if (!this.hasInitialProject) {
 				this.data = DataFieldManager.reOrderData(prepDataForUpload(),
 						this.projID, c, this.fields, null);
 			}
-		
-			// otherwise, if we have a JSONArray for data, we must reOrder it as well using fields
+
+			// otherwise, if we have a JSONArray for data, we must reOrder it as
+			// well using fields
 			try {
 				// see if the elements of the JSONArray are JSONArrays
-				JSONArray ja = new JSONArray(data);
-				ja.getJSONArray(0);
-			
-				// if we got here, the data is a JSONArray of JSONArrays: reOrder it
-				this.data = DataFieldManager.reOrderData(ja, this.projID, c, this.fields, null);
-			
+				if (data != null) {
+					JSONArray ja = new JSONArray(data);
+					ja.getJSONArray(0);
+
+					// if we got here, the data is a JSONArray of JSONArrays:
+					// reOrder it
+					this.data = DataFieldManager.reOrderData(ja, this.projID,
+							c, this.fields, null);
+				}
+
 			} catch (JSONException e) {
-				// we have a JSONArray of JSONObjects for data already - continue without reOrdering
+				// we have a JSONArray of JSONObjects for data already -
+				// continue without reOrdering
 			}
 		}
 
@@ -205,23 +221,25 @@ public class QDataSet implements Serializable {
 				break;
 
 			case PIC:
-				dataSetID = UploadQueue.getAPI().uploadProjectMedia(Integer.parseInt(projID), picture);				
+				dataSetID = UploadQueue.getAPI().uploadProjectMedia(
+						Integer.parseInt(projID), picture);
 				break;
 
 			case BOTH:
 				dataSetID = uploadData();
-				dataSetID = UploadQueue.getAPI().uploadDataSetMedia(dataSetID, picture);
+				dataSetID = UploadQueue.getAPI().uploadDataSetMedia(dataSetID,
+						picture);
 				break;
-				
+
 			}
 		}
 
 		return dataSetID;
 	}
-	
+
 	private int uploadData() {
-		int dataSetID = - 1;
-		
+		int dataSetID = -1;
+
 		JSONArray dataJSON = prepDataForUpload();
 		if (!(dataJSON.isNull(0))) {
 
@@ -238,10 +256,9 @@ public class QDataSet implements Serializable {
 
 			dataSetID = UploadQueue.getAPI().jsonDataUpload(
 					Integer.parseInt(projID), jobj, name);
-			System.out.println("Data set ID from Upload is: "
-					+ dataSetID);
+			System.out.println("Data set ID from Upload is: " + dataSetID);
 		}
-		
+
 		return dataSetID;
 	}
 
@@ -271,11 +288,11 @@ public class QDataSet implements Serializable {
 	protected boolean getHasInitialProject() {
 		return this.hasInitialProject;
 	}
-	
+
 	protected void setFields(LinkedList<String> fieldList) {
 		this.fields = fieldList;
 	}
-	
+
 	protected LinkedList<String> getFields() {
 		return this.fields;
 	}
@@ -382,12 +399,12 @@ public class QDataSet implements Serializable {
 	public File getPicture() {
 		return this.picture;
 	}
-	
+
 	/**
-	 * Set this parameter for this data set if you passed in a JSONArray
-	 * of JSONArrays for a data set with data, in order, of a project you
-	 * want to associate with project fields, in order, at upload time.  If
-	 * you understood ANY of that, fantastic.
+	 * Set this parameter for this data set if you passed in a JSONArray of
+	 * JSONArrays for a data set with data, in order, of a project you want to
+	 * associate with project fields, in order, at upload time. If you
+	 * understood ANY of that, fantastic.
 	 * 
 	 * @param rdlio
 	 */

@@ -1,7 +1,7 @@
 /***************************************************************************************************/
 /***************************************************************************************************/
 /**                                                                                               **/
-/**      IIIIIIIIIIIII            General Purpose Amusement Park Appication      SSSSSSSSS        **/
+/**      IIIIIIIIIIIII            General Purpose Amusement Park Application      SSSSSSSSS       **/
 /**           III                                                               SSS               **/
 /**           III                    Original Creator: John Fertita            SSS                **/
 /**           III                    Optimized By:     Jeremy Poulin,           SSS               **/
@@ -55,17 +55,19 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
-import edu.uml.cs.isense.dfm.SensorCompatibility;
+import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
@@ -77,27 +79,36 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
 	/* Default Constants */
-	private final String DEFAULT_USERNAME = "mobile";
+	private final String DEFAULT_USERNAME = "mobile.fake@example.com";
 	private final String DEFAULT_PASSWORD = "mobile";
-	private final String USERNAME_KEY = "username";
-	private final String PASSWORD_KEY = "password";
 	private final String ACTIVITY_NAME = "canobielake";
-	private final String PROJ_PREFS_ID = "PROJID";
-	private final String PROJ_ID = "project_id";
 	private final String TIME_OFFSET_PREFS_ID = "time_offset";
 	private final String TIME_OFFSET_KEY = "timeOffset";
 
 	/* UI Handles */
-	private EditText experimentInput;
-	private Spinner rides;
-	private TextView rideName;
+	public static EditText experimentInput;
+	public static TextView rideName;
 	private TextView time;
 	private TextView values;
 	private Button startStop;
-
+	public static EditText dataset; 
+	public static EditText project;
+	public static CheckBox projectLater;
+	public static EditText sampleRate;
+	public static EditText studentNumber;
+	public static CheckBox isCanobie;
+	
+	/*Values obtained from Configuration*/
+	public static int projectNum = -1;
+	public static String dataName = "";
+	public static String rate = "";
+	public static String rideNameString = "NOT SET";
+	public static String stNumber = "1";
+	public static Boolean projectLaterChecked = false;
+	public static Boolean canobieChecked = true;
+	
 	/* Managers and Their Variables */
 	public static DataFieldManager dfm;
-	public static SensorCompatibility sc;
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
 	private Location loc;
@@ -120,13 +131,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private boolean isRunning = false;
 	private boolean uploadSuccessful = false;
 	private static boolean useMenu = true;
-	private static boolean setupDone = false;
+	public static boolean setupDone = false;
 
 	/* Recording Constants */
 	private final int SAMPLE_INTERVAL = 50;
 
 	/* Recording Variables */
-	private String rideNameString = "NOT SET";
 	private float rawAccel[];
 	private float rawMag[];
 	private float accel[];
@@ -146,19 +156,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	/* Start Activity Codes*/
 	private final int QUEUE_UPLOAD_REQUESTED = 1;
-	private final int EXPERIMENT_CODE = 2;
 	private final int CHOOSE_SENSORS_REQUESTED = 3;
 	private final int SYNC_TIME_REQUESTED = 4;
+	private final int SETUP_REQUESTED = 5;
+	private final int LOGIN_REQUESTED = 6;
 
-	private int dataPointCount = 0, elapsedMillis;
+	private int dataPointCount = 0, elapsedSecs;
 
 	/* Used with Sync Time */
 	private long currentTime = 0;
 	private long timeOffset = 0;	
+	
+	/* Used to set time elapsed */
+	private String sec = "";
+	private int min = 0;
 
-	String nameOfDataSet = "";
 
-	private static String stNumber = "1";
+
 
 	public static JSONArray dataSet;
 
@@ -166,7 +180,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
+		
 		// Think pointer to this activity
 		mContext = this;
 
@@ -178,14 +192,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			@Override
 			public boolean onLongClick(View arg0) {
-
-				if (!setupDone || rideName.getText().toString() == null) {
-
-					startStop.setEnabled(false);
+				if ((!setupDone)) {
 					w.make("You must setup before recording data.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-
-					// TODO Launch setup
 
 					isRunning = false;
 					return isRunning;
@@ -197,11 +206,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
 
-					// Stop the recording
+					
+
+					// Stop the recording and reset UI if running
 					if (isRunning) {
 						isRunning = false;
-						setupDone = false;
 						useMenu = true;
+						setupDone = false;
+						
 
 						// Unregister sensors to save battery
 						mSensorManager.unregisterListener(AmusementPark.this);
@@ -213,21 +225,30 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						time.setText(getResources().getString(
 								R.string.timeElapsed));
 						rideName.setText("Ride/St#: NOT SET");
+						values.setText("X: " + "\nY: " + "\nZ: ");
+								
 
 						// Cancel the recording timer
 						recordingTimer.cancel();
+						
+						//Add data to Queue to be uploaded
+						new AddToQueueTask().execute(); 
+						
 
 						return isRunning;
 
 						// Start the recording
 					} else {
+						srate = Integer.parseInt(rate);
+						
+						//new SensorCheckTask().execute();
+						
 						isRunning = true;
 
 						// Check to see if a valid project was chosen. If not,
-						// enable all fields for recording.
-						SharedPreferences mPrefs = getSharedPreferences(
-								PROJ_PREFS_ID, MODE_PRIVATE);
-						if (mPrefs.getString(PROJ_ID, "").equals("-1")) {
+						// (projectNum is -1) enable all fields for recording.
+						
+						if (projectNum == -1) {
 							enableAllFields();
 						}
 
@@ -238,7 +259,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						registerSensors();
 
 						dataSet = new JSONArray();
-						elapsedMillis = 0;
+						elapsedSecs = 0;
 						dataPointCount = 0;
 
 						currentTime = getUploadTime();
@@ -275,17 +296,18 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						startStop
 								.setBackgroundResource(R.drawable.button_rsense_stop);
 						startStop.setTextColor(Color.parseColor("#FFFFFF"));
-
+						
+						new TimeElapsedTask().execute();
+						//TODO
 						recordingTimer = new Timer();
 						recordingTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
 								recordData();
 							}
-						}, 0, srate);
+						}, srate, srate);
 					}
-
+					
 					return isRunning;
-
 				}
 			}
 
@@ -337,8 +359,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		if (!folder.exists()) {
 			folder.mkdir();
 		}
-
-		String sdFileName = rides.getSelectedItem() + "-" + stNumber + "-"
+		
+		//TODO rides.getSelectedItem()
+		String sdFileName = rideName + "-" + stNumber + "-"
 				+ dateString + ".csv";
 		File sdFile = new File(folder, sdFileName);
 
@@ -408,6 +431,15 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu (Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return true;
+	}
+	
+
+	
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (!useMenu) {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
@@ -425,23 +457,29 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		return true;
 	}
 
+	
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_ITEM_SETUP:
-			startStop.setEnabled(false);
+		case R.id.MENU_ITEM_SETUP:
+			//startStop.setEnabled(false);
+			Intent iSetup = new Intent(AmusementPark.this, Configuration.class);
+			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
-		case MENU_ITEM_LOGIN:
+		case R.id.MENU_ITEM_LOGIN:
+			startActivityForResult(new Intent(getApplicationContext(),
+					Login.class), LOGIN_REQUESTED);
 			login(true);
 			return true;
-		case MENU_ITEM_UPLOAD:
+		case R.id.MENU_ITEM_UPLOAD:
 			manageUploadQueue();
 			return true;
-		case MENU_ITEM_TIME:
-			Intent iTime = new Intent(AmusementPark.this, SyncTime.class);
-			startActivityForResult(iTime, SYNC_TIME_REQUESTED);
+		case R.id.MENU_ITEM_TIME:
+			startActivityForResult(new Intent(getApplicationContext(),
+					SyncTime.class), SYNC_TIME_REQUESTED);
 			return true;
-		case MENU_ITEM_MEDIA:
+		case R.id.MENU_ITEM_MEDIA:
 			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
 			startActivity(iMedia);
 			return true;
@@ -475,7 +513,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				String yPrepend = accel[1] > 0 ? "+" : "";
 				String zPrepend = accel[2] > 0 ? "+" : "";
 
-				if (!isRunning) {
+				if (isRunning) {
 					values.setText("X: " + xPrepend
 							+ threeDigit.format(accel[0]) + "\nY: " + yPrepend
 							+ threeDigit.format(accel[1]) + "\nZ: " + zPrepend
@@ -546,13 +584,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == EXPERIMENT_CODE) {
-			if (resultCode == Activity.RESULT_OK) {
-				int eid = data.getExtras().getInt(
-						"edu.uml.cs.isense.experiments.exp_id");
-				experimentInput.setText("" + eid);
-			}
-		} else if (requestCode == SYNC_TIME_REQUESTED) {
+		if (requestCode == SYNC_TIME_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				timeOffset = data.getExtras().getLong("offset");
 				SharedPreferences mPrefs = getSharedPreferences(
@@ -571,6 +603,28 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			/* TODO fieldMatching.acceptedFields */
 			// acceptedFields = fieldMatcher.acceptedFields;
 			dfm.setEnabledFields(acceptedFields);
+			
+		} else if (requestCode == SETUP_REQUESTED) {
+				rideName.setText("Ride/St#: " + rideNameString +"/" + stNumber);
+				
+				SharedPreferences mPrefs = getSharedPreferences(
+						Setup.PROJ_PREFS_ID, 0);
+				final SharedPreferences.Editor mEdit = mPrefs.edit();
+				mEdit.putString(Setup.PROJECT_ID, Integer.toString(projectNum));
+				mEdit.commit();
+				
+				
+		} else if (requestCode == LOGIN_REQUESTED) {
+			if (resultCode == Activity.RESULT_OK) {
+				
+				w.make("Login successful", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
+				
+			} else if (resultCode == Login.RESULT_ERROR) {
+				
+				startActivityForResult(new Intent(mContext, Login.class), LOGIN_REQUESTED);
+
+			}
+			
 		}
 
 	}
@@ -593,11 +647,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			String dateString = sdf.format(dt);
 
 			// Create name from time stamp
-			String name = nameOfDataSet + " - " + dateString;
+			String name = dataName + " - " + dateString;
 
 			// Retrieve project id
-			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
-			String projId = mPrefs.getString(PROJ_ID, "");
+			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+			String projId = mPrefs.getString(Setup.PROJECT_ID, "");
 
 			// Make sure the user is logged in
 			if (api.getCurrentUser() == null) {
@@ -613,14 +667,15 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				e.printStackTrace();
 			}
 
-			// Tries to upload the data set
-			int dataSetId = api.uploadDataSet(Integer.parseInt(projId), data, name);
-			uploadSuccessful = (dataSetId <= 0) ? true : false;
+//			// Tries to upload the data set
+//			int dataSetId = api.uploadDataSet(Integer.parseInt(projId), data, name);
+//			uploadSuccessful = (dataSetId <= 0) ? true : false;
 			
-			// Saves data for later upload
+			// Saves data to queue for later upload
 			if (!uploadSuccessful) {
-				QDataSet ds = new QDataSet(QDataSet.Type.DATA, name,
-						getResources().getString(R.id.description), projId, dataSet.toString(), null);
+				QDataSet ds = new QDataSet(name, getResources().getString(R.id.description), QDataSet.Type.DATA,
+						dataSet.toString(), null, projId, null);
+				
 				uq.addDataSetToQueue(ds);
 			}
 
@@ -637,14 +692,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * 
 	 * @author jpoulin
 	 */
-	private class UploadTask extends AsyncTask<String, Void, String> {
+	private class AddToQueueTask extends AsyncTask<String, Void, String> {
 
 		ProgressDialog dia;
 
 		@Override
 		protected String doInBackground(String... strings) {
 			uploader.run();
-			return strings[0];
+			return null; //strings[0];
 		}
 
 		@Override
@@ -652,7 +707,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			dia = new ProgressDialog(AmusementPark.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data and media are uploaded to iSENSE...");
+			dia.setMessage("Please wait while your data and media saved to Queue");
 			dia.setCancelable(false);
 			dia.show();
 
@@ -687,17 +742,52 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * @param seconds
 	 */
 	public void setTime(int seconds) {
-		int min = seconds / 60;
+		elapsedSecs = seconds;
+		
+		min = seconds / 60;
 		int secInt = seconds % 60;
 
-		String sec = "";
+		sec = "";
 		if (secInt <= 9)
 			sec = "0" + secInt;
 		else
 			sec = "" + secInt;
+		
 
-		time.setText("Time Elapsed: " + min + ":" + sec);
+		runOnUiThread(new Runnable() {
+		    public void run() {
+		    	time.setText("Time Elapsed: " + min + ":" + sec);
+		    }
+		});
+
 	}
+	
+	private class TimeElapsedTask extends AsyncTask<Void, Integer, Void> {
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			for(int time = 0; isRunning; time++ ) {
+				setTime(time);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void voids) {
+			
+		}
+	}
+	
+	
+	
 
 	/**
 	 * Everything needed to be initialized for onCreate in one helpful function.
@@ -711,16 +801,16 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Preferences
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences("USER_INFO",
+				AmusementPark.mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
 
 		// If the is no previously store username/password, write in the default
 		// credentials
-		if (mPrefs.getString(USERNAME_KEY, "").equals("")
-				|| mPrefs.getString(PASSWORD_KEY, "").equals("")) {
+		if (mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME).equals(DEFAULT_USERNAME)
+				|| mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD).equals("")) {
 			final SharedPreferences.Editor mEdit = mPrefs.edit();
-			mEdit.putString(USERNAME_KEY, DEFAULT_USERNAME);
-			mEdit.putString(PASSWORD_KEY, DEFAULT_PASSWORD);
+			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME);
+			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD);
 			mEdit.commit();
 		}
 
@@ -733,7 +823,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// These store our media objects
 		pictures = new ArrayList<File>();
 		videos = new ArrayList<File>();
-
+		
+		
 		// OMG a button!
 		startStop = (Button) findViewById(R.id.startStop);
 
@@ -758,7 +849,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		rawAccel = new float[3];
 		rawMag = new float[3];
 		mag = new float[3];
-
+		
 		// Fire up the GPS chip (not literally)
 		Criteria c = new Criteria();
 		c.setAccuracy(Criteria.ACCURACY_FINE);
@@ -775,7 +866,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		// Most important feature. Makes the button beep.
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
-
 	}
 
 	/**
@@ -790,17 +880,38 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			// TODO call the login activity
 		} else {
 
+			new LoginTask().execute();
+
+			// login to iSENSE
+			//TODO
+			
+		}
+	}
+	
+	private class LoginTask extends AsyncTask<Void, Integer, Void> {
+		@Override
+		protected void onPreExecute() {
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
 			// Get user info from encrypted preferences
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					AmusementPark.mContext,
 					AmusementPark.mContext.getSharedPreferences("USER_INFO",
 							Context.MODE_PRIVATE));
+			
+			api.createSession(mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME),
+					mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD));
+			
+			return null;
+		}
 
-			// login to iSENSE
-			api.createSession(mPrefs.getString(USERNAME_KEY, DEFAULT_USERNAME),
-					mPrefs.getString(PASSWORD_KEY, PASSWORD_KEY));
+		@Override
+		protected void onPostExecute(Void voids) {
 		}
 	}
+	
 
 	/**
 	 * Returns the milliseconds elapsed since the Epoch. This includes the time
@@ -830,7 +941,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			dia = new ProgressDialog(AmusementPark.this);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Gathering experiment fields...");
+			dia.setMessage("Gathering project fields...");
 			dia.setCancelable(false);
 			dia.show();
 
@@ -838,16 +949,16 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-
-			SharedPreferences mPrefs = getSharedPreferences(PROJ_PREFS_ID, 0);
-			String eidInput = mPrefs.getString(PROJ_ID, "");
+			//TODO
+			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+			String eidInput = mPrefs.getString(Setup.PROJECT_ID, "");
 
 			dfm = new DataFieldManager(Integer.parseInt(eidInput), api,
 					mContext, f);
-			dfm.getOrder();
-
-			sc = dfm.checkCompatibility();
-
+			dfm.getOrderWithExternalAsyncTask();
+			
+			getEnabledFields();
+			
 			publishProgress(100);
 			return null;
 
@@ -857,10 +968,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		protected void onPostExecute(Void voids) {
 			dia.setMessage("Done");
 			dia.cancel();
-
-			Intent i = new Intent(mContext, SensorCompatibility.class);
-			startActivityForResult(i, CHOOSE_SENSORS_REQUESTED);
-
 		}
 	}
 
@@ -868,12 +975,147 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * Set all dfm's fields to enabled. 
 	 */
 	private void enableAllFields() {
+		setUpDFMWithAllFields();
+	}
+	
+	private void setUpDFMWithAllFields() {
+		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+		SharedPreferences.Editor mEdit = mPrefs.edit();
+		mEdit.putString(Setup.PROJECT_ID, "-1").commit();
 
-		dfm = new DataFieldManager(-1, api, mContext, f);
+		dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
+				Setup.PROJECT_ID, "-1")), api, mContext, f);
 		dfm.getOrder();
+
 		dfm.enableAllFields();
 
+		String acceptedFields = getResources().getString(R.string.time) + ","
+				+ getResources().getString(R.string.accel_x) + ","
+				+ getResources().getString(R.string.accel_y) + ","
+				+ getResources().getString(R.string.accel_z) + ","
+				+ getResources().getString(R.string.accel_total) + ","
+				+ getResources().getString(R.string.latitude) + ","
+				+ getResources().getString(R.string.longitude) + ","
+				+ getResources().getString(R.string.magnetic_x) + ","
+				+ getResources().getString(R.string.magnetic_y) + ","
+				+ getResources().getString(R.string.magnetic_z) + ","
+				+ getResources().getString(R.string.magnetic_total) + ","
+				+ getResources().getString(R.string.heading_deg) + ","
+				+ getResources().getString(R.string.heading_rad) + ","
+				+ getResources().getString(R.string.temperature_c) + ","
+				+ getResources().getString(R.string.pressure) + ","
+				+ getResources().getString(R.string.altitude) + ","
+				+ getResources().getString(R.string.luminous_flux) + ","
+				+ getResources().getString(R.string.temperature_f) + ","
+				+ getResources().getString(R.string.temperature_k);
+
+		mEdit.putString("accepted_fields", acceptedFields).commit();
 	}
+
+	private void initDfm() {
+
+		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+		String projectInput = mPrefs.getString(Setup.PROJECT_ID, "");
+
+		if (projectInput.equals("-1")) {
+			setUpDFMWithAllFields();
+		} else {
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f);
+			dfm.getOrder();
+
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+			getEnabledFields();
+
+		}
+	}
+
+	// (currently 2 of these methods exist - one also in step1setup)
+		private void getEnabledFields() {
+
+			try {
+				for (String s : acceptedFields) {
+					if (s.length() != 0)
+						break;
+				}
+			} catch (NullPointerException e) {
+				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+				String fields = mPrefs.getString("accepted_fields", "");
+				getFieldsFromPrefsString(fields);
+			}
+
+			for (String s : acceptedFields) {
+				if (s.equals(getString(R.string.time)))
+					dfm.enabledFields[Fields.TIME] = true;
+
+				else if (s.equals(getString(R.string.accel_x)))
+					dfm.enabledFields[Fields.ACCEL_X] = true;
+
+				else if (s.equals(getString(R.string.accel_y)))
+					dfm.enabledFields[Fields.ACCEL_Y] = true;
+
+				else if (s.equals(getString(R.string.accel_z)))
+					dfm.enabledFields[Fields.ACCEL_Z] = true;
+
+				else if (s.equals(getString(R.string.accel_total)))
+					dfm.enabledFields[Fields.ACCEL_TOTAL] = true;
+
+				else if (s.equals(getString(R.string.latitude)))
+					dfm.enabledFields[Fields.LATITUDE] = true;
+
+				else if (s.equals(getString(R.string.longitude)))
+					dfm.enabledFields[Fields.LONGITUDE] = true;
+
+				else if (s.equals(getString(R.string.magnetic_x)))
+					dfm.enabledFields[Fields.MAG_X] = true;
+
+				else if (s.equals(getString(R.string.magnetic_y)))
+					dfm.enabledFields[Fields.MAG_Y] = true;
+
+				else if (s.equals(getString(R.string.magnetic_z)))
+					dfm.enabledFields[Fields.MAG_Z] = true;
+
+				else if (s.equals(getString(R.string.magnetic_total)))
+					dfm.enabledFields[Fields.MAG_TOTAL] = true;
+
+				else if (s.equals(getString(R.string.heading_deg)))
+					dfm.enabledFields[Fields.HEADING_DEG] = true;
+
+				else if (s.equals(getString(R.string.heading_rad)))
+					dfm.enabledFields[Fields.HEADING_RAD] = true;
+
+				else if (s.equals(getString(R.string.temperature_c)))
+					dfm.enabledFields[Fields.TEMPERATURE_C] = true;
+
+				else if (s.equals(getString(R.string.temperature_f)))
+					dfm.enabledFields[Fields.TEMPERATURE_F] = true;
+
+				else if (s.equals(getString(R.string.temperature_k)))
+					dfm.enabledFields[Fields.TEMPERATURE_K] = true;
+
+				else if (s.equals(getString(R.string.pressure)))
+					dfm.enabledFields[Fields.PRESSURE] = true;
+
+				else if (s.equals(getString(R.string.altitude)))
+					dfm.enabledFields[Fields.ALTITUDE] = true;
+
+				else if (s.equals(getString(R.string.luminous_flux)))
+					dfm.enabledFields[Fields.LIGHT] = true;
+
+			}
+		}
+
+		private void getFieldsFromPrefsString(String fieldList) {
+
+			String[] fields = fieldList.split(",");
+			acceptedFields = new LinkedList<String>();
+
+			for (String f : fields) {
+				acceptedFields.add(f);
+			}
+		}
+	
 
 	/**
 	 * Prompts the user to upload the rest of their content
@@ -890,25 +1132,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 	
 	/**
-	 * Turns elapsedMillis into readable strings.
+	 * Turns elapsedSecs into readable strings.
 	 * 
 	 * @author jpoulin
 	 */
 	private class ElapsedTime {
-		private String elapsedMillis;
 		private String elapsedSeconds;
 		private String elapsedMinutes;
 		
 		/**
 		 * Everybody likes strings.
 		 * 
-		 * @param milliseconds
+		 * @param seconds
 		 */
-		ElapsedTime(int milliseconds) {
-			int seconds, minutes;
+		ElapsedTime(int seconds) {
+			int minutes;
 			
-			seconds = milliseconds / 1000;
-			milliseconds %= 1000;
+		
 			minutes = seconds / 60;
 			seconds %= 60;
 			
@@ -918,13 +1158,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				elapsedSeconds = "" + seconds;
 			}
 
-			if (milliseconds < 10) {
-				elapsedMillis = "00" + milliseconds;
-			} else if (milliseconds < 100) {
-				elapsedMillis = "0" + milliseconds;
-			} else {
-				elapsedMillis = "" + milliseconds;
-			}
 
 			if (minutes < 10) {
 				elapsedMinutes = "0" + minutes;
@@ -942,11 +1175,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 */
 	private void showSummary(Date date, String sdFileName) {
 
-		ElapsedTime time = new ElapsedTime(elapsedMillis);
+		ElapsedTime time = new ElapsedTime(elapsedSecs);
 		
 		Intent iSummary = new Intent(mContext, Summary.class);
-		iSummary.putExtra("millis", time.elapsedMillis)
-				.putExtra("seconds", time.elapsedSeconds)
+		iSummary.putExtra("seconds", time.elapsedSeconds)
 				.putExtra("minutes", time.elapsedMinutes)
 				.putExtra("append", "Filename: \n" + sdFileName)
 				.putExtra("date", getNiceDateString(date))
@@ -1019,64 +1251,65 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * Records a data point, puts it into the dataSet object, and writes it to a csv string.
 	 */
 	private void recordData() {
-		dataPointCount++;
-		elapsedMillis += srate;
-		
-		DecimalFormat toThou = new DecimalFormat("######0.000");
+		 dataPointCount++;
+         elapsedSecs += srate;
+         
+         DecimalFormat toThou = new DecimalFormat("######0.000");
 
-		if (dfm.enabledFields[Fields.ACCEL_X])
-			f.accel_x = toThou.format(accel[0]);
-		if (dfm.enabledFields[Fields.ACCEL_Y])
-			f.accel_y = toThou.format(accel[1]);
-		if (dfm.enabledFields[Fields.ACCEL_Z])
-			f.accel_z = toThou.format(accel[2]);
-		if (dfm.enabledFields[Fields.ACCEL_TOTAL])
-			f.accel_total = toThou.format(accel[3]);
-		if (dfm.enabledFields[Fields.LATITUDE])
-			f.latitude = loc.getLatitude();
-		if (dfm.enabledFields[Fields.LONGITUDE])
-			f.longitude = loc.getLongitude();
-		if (dfm.enabledFields[Fields.HEADING_DEG])
-			f.angle_deg = toThou.format(orientation[0]);
-		if (dfm.enabledFields[Fields.HEADING_RAD])
-			f.angle_rad = ""
-					+ (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
-		if (dfm.enabledFields[Fields.MAG_X])
-			f.mag_x = "" + mag[0];
-		if (dfm.enabledFields[Fields.MAG_Y])
-			f.mag_y = "" + mag[1];
-		if (dfm.enabledFields[Fields.MAG_Z])
-			f.mag_z = "" + mag[2];
-		if (dfm.enabledFields[Fields.MAG_TOTAL])
-			f.mag_total = ""
-					+ Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
-							+ Math.pow(Double.parseDouble(f.mag_y), 2)
-							+ Math.pow(Double.parseDouble(f.mag_z), 2));
-		if (dfm.enabledFields[Fields.TIME])
-			f.timeMillis = currentTime + elapsedMillis;
-		if (dfm.enabledFields[Fields.TEMPERATURE_C])
-			f.temperature_c = temperature;
-		if (dfm.enabledFields[Fields.TEMPERATURE_F])
-			if (temperature.equals(""))
-				f.temperature_f = temperature;
-			else
-				f.temperature_f = ""
-						+ ((Double.parseDouble(temperature) * 1.8) + 32);
-		if (dfm.enabledFields[Fields.TEMPERATURE_K])
-			if (temperature.equals(""))
-				f.temperature_k = temperature;
-			else
-				f.temperature_k = ""
-						+ (Double.parseDouble(temperature) + 273.15);
-		if (dfm.enabledFields[Fields.PRESSURE])
-			f.pressure = pressure;
-		if (dfm.enabledFields[Fields.ALTITUDE])
-			f.altitude = "" + loc.getAltitude();
-		if (dfm.enabledFields[Fields.LIGHT])
-			f.lux = light;
+         if (dfm.enabledFields[Fields.ACCEL_X])
+                 f.accel_x = toThou.format(accel[0]);
+         if (dfm.enabledFields[Fields.ACCEL_Y])
+                 f.accel_y = toThou.format(accel[1]);
+         if (dfm.enabledFields[Fields.ACCEL_Z])
+                 f.accel_z = toThou.format(accel[2]);
+         if (dfm.enabledFields[Fields.ACCEL_TOTAL])
+                 f.accel_total = toThou.format(accel[3]);
+         if (dfm.enabledFields[Fields.LATITUDE])
+                 f.latitude = loc.getLatitude();
+         if (dfm.enabledFields[Fields.LONGITUDE])
+                 f.longitude = loc.getLongitude();
+         if (dfm.enabledFields[Fields.HEADING_DEG])
+         if (dfm.enabledFields[Fields.HEADING_RAD])
+                 f.angle_deg = toThou.format(orientation[0]);
+                 f.angle_rad = ""
+                                 + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+         if (dfm.enabledFields[Fields.MAG_X])
+                 f.mag_x = "" + mag[0];
+         if (dfm.enabledFields[Fields.MAG_Y])
+                 f.mag_y = "" + mag[1];
+         if (dfm.enabledFields[Fields.MAG_Z])
+                 f.mag_z = "" + mag[2];
+         if (dfm.enabledFields[Fields.MAG_TOTAL])
+                 f.mag_total = ""
+                                 + Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
+                                                 + Math.pow(Double.parseDouble(f.mag_y), 2)
+                                                 + Math.pow(Double.parseDouble(f.mag_z), 2));
+         if (dfm.enabledFields[Fields.TIME])
+                 f.timeMillis = currentTime + elapsedSecs;
+         if (dfm.enabledFields[Fields.TEMPERATURE_C])
+                 f.temperature_c = temperature;
+         if (dfm.enabledFields[Fields.TEMPERATURE_F])
+                 if (temperature.equals(""))
+                         f.temperature_f = temperature;
+                 else
+                         f.temperature_f = ""
+                                         + ((Double.parseDouble(temperature) * 1.8) + 32);
+         if (dfm.enabledFields[Fields.TEMPERATURE_K])
+                 if (temperature.equals(""))
+                         f.temperature_k = temperature;
+                 else
+                         f.temperature_k = ""
+                                         + (Double.parseDouble(temperature) + 273.15);
+         if (dfm.enabledFields[Fields.PRESSURE])
+                 f.pressure = pressure;
+         if (dfm.enabledFields[Fields.ALTITUDE])
+                 f.altitude = "" + loc.getAltitude();
+         if (dfm.enabledFields[Fields.LIGHT])
+                 f.lux = light;
 
-		dataSet.put(dfm.putData());
-		dataToBeWrittenToFile = dfm.writeSdCardLine();
+         dataSet.put(dfm.putData());
+         dataToBeWrittenToFile = dfm.writeSdCardLine();
+
 	}
 
 }
