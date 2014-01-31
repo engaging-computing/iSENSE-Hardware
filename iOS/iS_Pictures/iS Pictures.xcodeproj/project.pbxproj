@@ -53,6 +53,8 @@
 		7680C911188718D000BC1E98 /* PWViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7680C910188718D000BC1E98 /* PWViewController~landscape_iPhone.xib */; };
 		7680C91318872F2B00BC1E98 /* PWViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7680C91218872F2B00BC1E98 /* PWViewController~landscape_iPad.xib */; };
 		7680C9151888700700BC1E98 /* navBar~landscape_iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 7680C9141888700700BC1E98 /* navBar~landscape_iPhone.png */; };
+		7698EB5B189C4D9400C6E80F /* ProjectBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7698EB59189C4D9400C6E80F /* ProjectBrowserViewController.m */; };
+		7698EB5C189C4D9400C6E80F /* ProjectBrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7698EB5A189C4D9400C6E80F /* ProjectBrowserViewController.xib */; };
 		76E57E9F1885C82600C9107C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76E57E9E1885C82600C9107C /* AssetsLibrary.framework */; };
 		76E57EA11885E51400C9107C /* river_walk_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA01885E51400C9107C /* river_walk_57x57.png */; };
 		76E57EA31885E51B00C9107C /* river_walk_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA21885E51B00C9107C /* river_walk_114x114.png */; };
@@ -145,6 +147,9 @@
 		7680C910188718D000BC1E98 /* PWViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "PWViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		7680C91218872F2B00BC1E98 /* PWViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "PWViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
 		7680C9141888700700BC1E98 /* navBar~landscape_iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navBar~landscape_iPhone.png"; sourceTree = "<group>"; };
+		7698EB58189C4D9400C6E80F /* ProjectBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBrowserViewController.h; sourceTree = "<group>"; };
+		7698EB59189C4D9400C6E80F /* ProjectBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBrowserViewController.m; sourceTree = "<group>"; };
+		7698EB5A189C4D9400C6E80F /* ProjectBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProjectBrowserViewController.xib; sourceTree = "<group>"; };
 		76E57E9C1885AC9D00C9107C /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		76E57E9E1885C82600C9107C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		76E57EA01885E51400C9107C /* river_walk_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = river_walk_57x57.png; path = ../river_walk_57x57.png; sourceTree = "<group>"; };
@@ -191,6 +196,9 @@
 		7676218C187F0DC600A473B7 = {
 			isa = PBXGroup;
 			children = (
+				7698EB58189C4D9400C6E80F /* ProjectBrowserViewController.h */,
+				7698EB59189C4D9400C6E80F /* ProjectBrowserViewController.m */,
+				7698EB5A189C4D9400C6E80F /* ProjectBrowserViewController.xib */,
 				7661733C1880BF0C0094680C /* iSENSE_API.xcodeproj */,
 				7676219E187F0DC600A473B7 /* iS Pictures */,
 				76762197187F0DC600A473B7 /* Frameworks */,
@@ -412,6 +420,7 @@
 				76318B3118833395008D3A1F /* upload2.png in Resources */,
 				76318B3218833395008D3A1F /* users.png in Resources */,
 				76318B35188333B1008D3A1F /* barcode.png in Resources */,
+				7698EB5C189C4D9400C6E80F /* ProjectBrowserViewController.xib in Resources */,
 				767059531889B38800FB98C8 /* Default-568h@2x.png in Resources */,
 				767059541889B38800FB98C8 /* Default.png in Resources */,
 				767059551889B38800FB98C8 /* Default~iphone.png in Resources */,
@@ -447,6 +456,7 @@
 				767621B2187F0DC600A473B7 /* PWViewController.m in Sources */,
 				766173531880D0AB0094680C /* RNGridMenu.m in Sources */,
 				76318B2518833128008D3A1F /* StringGrabber.m in Sources */,
+				7698EB5B189C4D9400C6E80F /* ProjectBrowserViewController.m in Sources */,
 				76318B3F18837B93008D3A1F /* AboutViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

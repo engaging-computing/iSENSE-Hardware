@@ -18,6 +18,7 @@
 #import "PWAppDelegate.h"
 #import "Constants.h"
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "ProjectBrowserViewController.h"
 
 @interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProjectBrowseViewControllerDelegate, ZBarReaderDelegate>
 

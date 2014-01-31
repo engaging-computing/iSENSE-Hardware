@@ -41,7 +41,7 @@
 					<object class="IBUILabel" id="154338405">
 						<reference key="NSNextResponder" ref="257609194"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 11}, {103, 21}}</string>
+						<string key="NSFrame">{{20, 11}, {51, 21}}</string>
 						<reference key="NSSuperview" ref="257609194"/>
 						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -50,7 +50,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-						<string key="IBUIText">Group Name:</string>
+						<string key="IBUIText">Name:</string>
 						<object class="NSColor" key="IBUITextColor" id="1031986774">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -72,7 +72,7 @@
 					<object class="IBUITextField" id="969019317">
 						<reference key="NSNextResponder" ref="257609194"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{131, 7}, {873, 30}}</string>
+						<string key="NSFrame">{{79, 7}, {925, 30}}</string>
 						<reference key="NSSuperview" ref="257609194"/>
 						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>

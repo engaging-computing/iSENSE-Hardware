@@ -72,12 +72,16 @@
     
     self.navigationItem.titleView = titleView;
     
+    
+    
 }
 
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     [self willRotateToInterfaceOrientation:self.interfaceOrientation duration:0];
+    
+    [picCntLbl setText:[NSString stringWithFormat:@"Picture Count: %d", dataSaver.dataQueue.count]];
 }
 
 
@@ -200,6 +204,7 @@
     UIImage *login = [UIImage imageNamed:@"users"];
     UIImage *about = [UIImage imageNamed:@"info"];
     UIImage *reset = [UIImage imageNamed:@"reset"];
+    UIImage *test = [UIImage imageNamed:@"test"];
     
     void (^uploadBlock)() = ^() {
         NSLog(@"Upload button pressed");
@@ -257,13 +262,18 @@
         login_status.text = [@"Logged in as: " stringByAppendingString: userName];
     };
     
+    void (^testBlock)() = ^() {
+        ProjectBrowserViewController *test = [[ProjectBrowserViewController alloc] init];
+        [self.navigationController pushViewController:test animated:YES];
+    };
+    
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
     RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
     RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Login" action:loginBlock];
     RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
     RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
-    
-    NSArray *items = [[NSArray alloc] initWithObjects:uploadItem, codeItem, loginItem, aboutItem, resetItem, nil];
+    RNGridMenuItem *testItem = [[RNGridMenuItem alloc] initWithImage:test title:@"Test" action:testBlock];
+    NSArray *items = [[NSArray alloc] initWithObjects:uploadItem, codeItem, loginItem, aboutItem, resetItem, testItem, nil];
     
     menu = [[RNGridMenu alloc] initWithItems:items];
     
@@ -490,6 +500,8 @@
                 NSLog(@"DataSet added?: %@", s);
                 
                 NSLog(@"Count: %d", dataSaver.dataQueue.count);
+                
+                [picCntLbl setText:[NSString stringWithFormat:@"Picture Count: %d", dataSaver.dataQueue.count]];
             }
         }];
         
