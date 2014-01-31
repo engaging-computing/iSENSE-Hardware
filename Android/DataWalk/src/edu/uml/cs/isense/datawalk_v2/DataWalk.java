@@ -104,11 +104,12 @@ public class DataWalk extends Activity implements LocationListener,
 	private Waffle w;
 
 	/* iSENSE API Globals and Constants */
-	private final String DEFAULT_PROJECT = "156";
-	private final String DEFAULT_PROJECT_DEV = "25";
+	private final String DEFAULT_PROJECT = "5";
+	private final String DEFAULT_PROJECT_DEV = "5";
+
 	private int actionBarTapCount = 0;
-	public static boolean useDev = false;
-	private String projectID = "156";
+	public static boolean useDev = true;
+	private String projectID = "5";
 
 	private String loginName = "";
 	private String loginPass = "";
@@ -396,8 +397,8 @@ public class DataWalk extends Activity implements LocationListener,
 		rcrdIntervalB = (Button) findViewById(R.id.b_rcrdinterval);
 		elapsedTimeTV = (TextView) findViewById(R.id.tv_elapsedtime);
 		pointsUploadedTV = (TextView) findViewById(R.id.tv_pointcount);
-		latitudeTV = (TextView) findViewById(R.id.tv_longitude);
-		longitudeTV = (TextView) findViewById(R.id.tv_latitude);
+		longitudeTV = (TextView) findViewById(R.id.tv_longitude);
+		latitudeTV = (TextView) findViewById(R.id.tv_latitude);
 		distanceTV = (TextView) findViewById(R.id.tv_distance);
 		velocityTV = (TextView) findViewById(R.id.tv_velocity);
 		pointsUploadedTV.setText("Points Recorded: " + dataPointCount);
@@ -1134,6 +1135,7 @@ public class DataWalk extends Activity implements LocationListener,
 				} else
 					api.useDev(useDev);
 
+				// TODO CALL SOME LOGIN
 				actionBarTapCount = 0;
 				break;
 			}

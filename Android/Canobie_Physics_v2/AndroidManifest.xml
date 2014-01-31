@@ -39,17 +39,17 @@
         <activity
             android:name=".Configuration"
             android:label="Configuration"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppThemeDialog" />
         <activity
             android:name=".MediaManager"
             android:label="Media Manager"
-            android:theme="@style/DialogTheme" />
+            android:theme="@style/AppThemeDialog" />
         <activity
             android:name=".Summary"
             android:configChanges="orientation|keyboardHidden"
             android:label="Session Summary"
             android:screenOrientation="portrait"
-            android:theme="@style/DialogTheme" />
+            android:theme="@style/AppThemeDialog" />
                
         
         <activity
@@ -68,7 +68,8 @@
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
             android:theme="@style/AppThemeDialog" />
-      
+
+        
         <activity
             android:name="edu.uml.cs.isense.proj.BrowseProjects"
             android:label="Browse Projects"
@@ -97,6 +98,7 @@
             android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
             android:label="@string/project_name_dialog"
             android:theme="@style/AppThemeDialog" />
+
          <activity
             android:name="edu.uml.cs.isense.sync.SyncTime"
             android:label="Sync Time"
@@ -104,13 +106,12 @@
           <activity
             android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
             android:label="Delete Selected"
+
             android:theme="@style/AppThemeDialog" />
           <activity
             android:name="edu.uml.cs.isense.queue.NoInitialProject"
             android:label="Select a Project"
             android:theme="@style/AppThemeDialog" />
-        
-         
          
     </application>
 

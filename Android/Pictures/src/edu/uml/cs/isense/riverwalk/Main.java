@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -71,7 +72,7 @@ public class Main extends Activity implements LocationListener {
 	private static final int CAMERA_PIC_REQUESTED = 101;
 	private static final int LOGIN_REQUESTED = 102;
 	private static final int NO_GPS_REQUESTED = 103;
-	private static final int EXPERIMENT_REQUESTED = 104;
+	private static final int project_REQUESTED = 104;
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 	private static final int SELECT_PICTURE_REQUESTED = 107;
@@ -100,7 +101,7 @@ public class Main extends Activity implements LocationListener {
 	private static boolean showGpsDialog = true;
 
 	private EditText name;
-	private TextView experimentLabel;
+	private TextView projectLabel;
 	private Timer mTimer = null;
 	private Handler mHandler;
 	private TextView latLong;
@@ -129,6 +130,8 @@ public class Main extends Activity implements LocationListener {
 	private static Camera mCamera;
 	private CameraPreview mPreview;
 	private FrameLayout preview;
+	
+	private boolean defaultProject = false;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -156,21 +159,21 @@ public class Main extends Activity implements LocationListener {
 
 		api = API.getInstance();
 		api.useDev(useDev);
-
+		 
+		
+		attemptLoginOnAppStart();
+		
 		uq = new UploadQueue("generalpictures", mContext, api);
 
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 		if (mPrefs.getString("project_id", "").equals("")) {
-			if (dfm == null) {
-				dfm = new DataFieldManager(Integer.parseInt(mPrefs.getString(
-						"project_id", "-1")), api, mContext, f);
-				dfm.getOrder();
-			}
+			setDefaultProject();
+		} else {
+			projectLabel = (TextView) findViewById(R.id.projectLabel);
+			projectLabel.setText(getResources().getString(R.string.projectLabel)
+					+ mPrefs.getString("project_id", "None Set"));
 		}
-
-		experimentLabel = (TextView) findViewById(R.id.ExperimentLabel);
-		experimentLabel.setText(getResources().getString(R.string.experiment)
-				+ mPrefs.getString("project_id", "None Set"));
+		
 
 		mHandler = new Handler();
 
@@ -187,6 +190,7 @@ public class Main extends Activity implements LocationListener {
 
 		if (continuous == true) {
 			takePicture.setText(R.string.takePicContinuous);
+			addPicture.setVisibility(View.GONE);
 		}
 
 		takePicture.setOnClickListener(new OnClickListener() {
@@ -205,9 +209,9 @@ public class Main extends Activity implements LocationListener {
 				}
 
 				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-				String experimentNum = mPrefs.getString("project_id", "Error");
+				String projectNum = mPrefs.getString("project_id", "Error");
 
-				if (experimentNum.equals("Error")) {
+				if (projectNum.equals("Error")) {
 					w.make("Please select an project first.",
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					return;
@@ -223,14 +227,18 @@ public class Main extends Activity implements LocationListener {
 						imageUri = getContentResolver().insert(
 								MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 								values);
+						
+						//OrientationManager.disableRotation(Main.this);
 
 						Intent intent = new Intent(
 								MediaStore.ACTION_IMAGE_CAPTURE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+						
 
-						OrientationManager.disableRotation(Main.this);
 						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
+						//OrientationManager.enableRotation(Main.this);
+
 
 					} else {
 						w.make("Cannot write to external storage.",
@@ -279,14 +287,14 @@ public class Main extends Activity implements LocationListener {
 					} else {
 						Main.takePicture.setText(R.string.takePicContinuous);
 						Main.takePicture.setTextColor(0xFF0066FF);
-						Main.takePicture
-								.setBackgroundResource(R.drawable.button_rsense);
+						Main.takePicture.setBackgroundResource(R.drawable.button_rsense);
 						recording = false;
 					}
 				}
 			}
 		});
-
+		
+		
 		/* Add a Picture to upload queue from gallery */
 		addPicture.setOnClickListener(new OnClickListener() {
 
@@ -311,7 +319,53 @@ public class Main extends Activity implements LocationListener {
 		});
 
 	}
+	
+	/**
+	 * Here we store the file url as it will be null after returning from camera
+	 * app
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+	    super.onSaveInstanceState(outState);
+	 
+	    // save file url in bundle as it will be null on scren orientation
+	    // changes
+	    outState.putParcelable("image_uri", imageUri);
+	}
+	 
+	/*
+	 * Here we restore the fileUri again
+	 */
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+	    super.onRestoreInstanceState(savedInstanceState);
+	 
+	    // get the file url
+	    imageUri = savedInstanceState.getParcelable("image_uri");
+	}
+	
+	
+	private void setDefaultProject(){ 
+		//TODO
+		/*if no project set or using a default project set the correct default project based on live or dev mode*/
+		
+		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 
+	     if (api.isUsingDevMode() == false){
+	    	SharedPreferences.Editor editor = mPrefs.edit();
+	     	editor.putString("project_id", "248");
+	     	editor.commit();
+	     } else if (api.isUsingDevMode() == true) {
+	    	 SharedPreferences.Editor editor = mPrefs.edit();
+		     editor.putString("project_id", "259");
+		     editor.commit();
+	     }
+		
+		projectLabel = (TextView) findViewById(R.id.projectLabel);
+		projectLabel.setText(getResources().getString(R.string.projectLabel)
+				+ mPrefs.getString("project_id", "None Set"));
+	}
+	
 	// continuously take pictures in AsyncTask (a seperate thread)
 	private class continuouslytakephotos extends AsyncTask<Void, Void, Boolean> {
 		@Override
@@ -411,10 +465,8 @@ public class Main extends Activity implements LocationListener {
 			Main.takePicture.setBackgroundResource(R.drawable.button_rsense);
 
 			OrientationManager.enableRotation(Main.this);
-
-			preview.getLayoutParams().height = 0;
 			preview.removeView(mPreview);
-			preview.setVisibility(View.INVISIBLE);
+			preview.setVisibility(View.GONE);
 
 			recording = false;
 
@@ -572,11 +624,11 @@ public class Main extends Activity implements LocationListener {
 			return true;
 
 		case R.id.MENU_ITEM_BROWSE:
-			Intent iExperiment = new Intent(getApplicationContext(),
+			Intent iproject = new Intent(getApplicationContext(),
 					Setup.class);
-			iExperiment.putExtra("constrictFields", true);
-			iExperiment.putExtra("app_name", "Pictures");
-			startActivityForResult(iExperiment, EXPERIMENT_REQUESTED);
+			iproject.putExtra("constrictFields", true);
+			iproject.putExtra("app_name", "Pictures");
+			startActivityForResult(iproject, project_REQUESTED);
 			return true;
 
 		case R.id.MENU_ITEM_LOGIN:
@@ -634,8 +686,9 @@ public class Main extends Activity implements LocationListener {
 					new Thread(r).start();
 				} else
 					api.useDev(useDev);
-
+				attemptLogin();
 				actionBarTapCount = 0;
+				setDefaultProject();
 				break;
 			}
 
@@ -826,6 +879,7 @@ public class Main extends Activity implements LocationListener {
 						makeThisDatePretty(curTime), QDataSet.Type.BOTH,
 						dataJSON.toString(), picture, projNum, null);
 			} else {
+				Log.e("fantastag","fantastag");
 				ds = new QDataSet(name.getText().toString()
 						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
 						makeThisDatePretty(curTime), QDataSet.Type.PIC,
@@ -837,15 +891,14 @@ public class Main extends Activity implements LocationListener {
 			System.out.println("projectNum = " + projNum);
 
 			uq.addDataSetToQueue(ds);
-			// TODO
 		}
 	};
 
 	private void initDfm() { // sets up data field manager
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
-		String experimentInput = mPrefs.getString("project_id", "");
-		System.out.println("experimentInput =" + experimentInput);
-		dfm = new DataFieldManager(Integer.parseInt(experimentInput), api,
+		String projectInput = mPrefs.getString("project_id", "");
+		System.out.println("projectInput =" + projectInput);
+		dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
 				mContext, f);
 		dfm.getOrderWithExternalAsyncTask();
 		dfm.enableAllFields();
@@ -871,17 +924,19 @@ public class Main extends Activity implements LocationListener {
 
 			}
 
-		} else if (requestCode == EXPERIMENT_REQUESTED) { // obtains data fields
+		} else if (requestCode == project_REQUESTED) { // obtains data fields
 															// from project on
 															// isense
 			if (resultCode == Activity.RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 				String eidString = mPrefs.getString("project_id", "");
 
-				experimentLabel.setText(getResources().getString(
-						R.string.experiment)
+				projectLabel.setText(getResources().getString(
+						R.string.projectLabel)
 						+ eidString);
-
+				
+				defaultProject = false;
+				
 				dfm = new DataFieldManager(Integer.parseInt(eidString), api,
 						mContext, f);
 				dfm.getOrder();
@@ -932,7 +987,6 @@ public class Main extends Activity implements LocationListener {
 
 				Intent iDesc = new Intent(Main.this, Description.class);
 				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
-				// TODO
 			}
 		}
 	}
@@ -1004,6 +1058,36 @@ public class Main extends Activity implements LocationListener {
 			uploadError = false;
 		}
 	}
+	
+	// gets the user's name if not already provided + login to web site
+		private void attemptLoginOnAppStart() {
+
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					mContext, getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							Context.MODE_PRIVATE));
+
+			if (mPrefs.getString(
+					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+					.equals("")
+					&& mPrefs.getString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+							"").equals("")) {
+				mPrefs.edit()
+				.putString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+						Login.DEFAULT_USERNAME).commit();
+				mPrefs.edit()
+				.putString(
+						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+						Login.DEFAULT_PASSWORD).commit();
+			}
+
+			if (Connection.hasConnectivity(mContext)) {
+				new LoginTask().execute();
+
+			}
+		}
 
 	// gets the user's name if not already provided + login to web site
 	private void attemptLogin() {

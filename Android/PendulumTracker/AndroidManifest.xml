@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.uml.cs.isense.pendulum"
-    android:versionCode="25"
-    android:versionName="2.1.3" >
+    android:versionCode="26"
+    android:versionName="2.1.4" >
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -42,19 +42,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-       <activity
-	        android:name="edu.uml.cs.isense.credentials.EnterName"
-	        android:label="@string/enter_name_prompt"
-	        android:theme="@style/theme_dialog_white" />
-	   <!--  activity
+        <activity
+            android:name="edu.uml.cs.isense.credentials.EnterName"
+            android:label="@string/enter_name_prompt"
+            android:theme="@style/AppThemeDialog" />
+        <activity
             android:name="edu.uml.cs.isense.credentials.Login"
             android:label="@string/login_prompt"
-            android:theme="@style/theme_dialog_white" /-->
+            android:theme="@style/AppThemeDialog" />
         <activity
             android:name="edu.uml.cs.isense.credentials.LoginError"
             android:label="@string/login_error_prompt"
-            android:theme="@style/theme_dialog_white" />
+            android:theme="@style/AppThemeDialog" />
     </application>
 
     <!--
