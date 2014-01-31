@@ -95,16 +95,16 @@ public class API {
 	 * Log in to iSENSE. After calling this function, authenticated API
 	 * functions will work properly.
 	 * 
-	 * @param username
-	 *            The username of the user to log in as
+	 * @param email
+	 *            The email address of the user to log in as
 	 * @param password
 	 *            The password of the user to log in as
 	 * @return True if login succeeds, false if it doesn't
 	 */
-	public boolean createSession(String username, String password) {
+	public boolean createSession(String email, String password) {
 		try {
 			JSONObject jodata = new JSONObject();
-			jodata.put("email", username);
+			jodata.put("email", email);
 			jodata.put("password", password);
 			String result = makeRequest(baseURL, "login", "", "POST", jodata);
 			System.out.println(result);
@@ -1029,7 +1029,14 @@ public class API {
 
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
+<<<<<<< HEAD
 			//urlConnection.setDoOutput(true);
+=======
+			if (!reqType.equals("GET"))
+			{
+				urlConnection.setDoOutput(true);
+			}
+>>>>>>> upstream/master
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
 			// urlConnection.setDoOutput(true);

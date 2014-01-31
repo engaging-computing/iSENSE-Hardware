@@ -634,14 +634,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		@Override
 		public void run() {
 
-			// Create a time stamp for the dataSet
-			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy, HH:mm:ss",
-					Locale.US);
-			Date dt = new Date();
-			String dateString = sdf.format(dt);
-
 			// Create name from time stamp
-			String name = dataName + " - " + dateString;
+			String name = dataName;
 
 			// Retrieve project id
 			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
@@ -656,7 +650,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			JSONObject data = new JSONObject();
 			try {
 				data.put("data", dataSet);
-				data = api.rowsToCols(data);
+				data = UploadQueue.getAPI().rowsToCols(data);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
