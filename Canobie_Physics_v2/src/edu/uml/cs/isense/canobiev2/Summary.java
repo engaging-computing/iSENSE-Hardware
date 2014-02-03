@@ -11,7 +11,7 @@ import android.widget.TextView;
 public class Summary extends Activity {
 
 	private String seconds = "", minutes = "", 
-			append = "", date = "", points = "";
+			date = "", points = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,6 @@ public class Summary extends Activity {
 		Bundle extras = getIntent().getExtras();
 		seconds = extras.getString("seconds");
 		minutes = extras.getString("minutes");
-		append  = extras.getString("append");
 		date    = extras.getString("date");
 		points  = extras.getString("points");
 		
@@ -32,7 +31,7 @@ public class Summary extends Activity {
 				+ seconds
 				+ "\n" + "Data points: " + points
 				+ "\n" + "End date and time:\n"
-				+ date + "\n" + append);
+				+ date + "\n" );
 		
 		final Button ok = (Button) findViewById(R.id.summary_ok);
 		ok.setOnClickListener(new OnClickListener() {
