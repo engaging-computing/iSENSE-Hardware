@@ -171,7 +171,7 @@ public class Main extends Activity implements LocationListener {
 		} else {
 			projectLabel = (TextView) findViewById(R.id.projectLabel);
 			projectLabel.setText(getResources().getString(R.string.projectLabel)
-					+ mPrefs.getString("project_id", "None Set"));
+					+ mPrefs.getString("project_id", ""));
 		}
 		
 
@@ -351,19 +351,21 @@ public class Main extends Activity implements LocationListener {
 		
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 
-	     if (api.isUsingDevMode() == false){
+	     if (api.isUsingDevMode() == true){
 	    	SharedPreferences.Editor editor = mPrefs.edit();
 	     	editor.putString("project_id", "248");
 	     	editor.commit();
-	     } else if (api.isUsingDevMode() == true) {
+	     } else if (api.isUsingDevMode() == false) {
 	    	 SharedPreferences.Editor editor = mPrefs.edit();
 		     editor.putString("project_id", "259");
 		     editor.commit();
 	     }
 		
 		projectLabel = (TextView) findViewById(R.id.projectLabel);
+		String project = mPrefs.getString("project_id", "");
+		Log.e("PRoject", project);
 		projectLabel.setText(getResources().getString(R.string.projectLabel)
-				+ mPrefs.getString("project_id", "None Set"));
+				+ project);
 	}
 	
 	// continuously take pictures in AsyncTask (a seperate thread)
@@ -672,7 +674,7 @@ public class Main extends Activity implements LocationListener {
 				w.make(getResources().getString(R.string.now_in_mode) + other
 						+ getResources().getString(R.string.mode_type));
 				useDev = !useDev;
-
+				
 				if (cdt != null)
 					cdt.cancel();
 
@@ -681,14 +683,23 @@ public class Main extends Activity implements LocationListener {
 						public void run() {
 							api.deleteSession();
 							api.useDev(useDev);
+							runOnUiThread(new Runnable(){
+							    public void run(){
+							    	setDefaultProject();
+							    }
+							});
 						}
 					};
 					new Thread(r).start();
-				} else
+				} else {
 					api.useDev(useDev);
+					setDefaultProject();
+				}
 				attemptLogin();
 				actionBarTapCount = 0;
-				setDefaultProject();
+				
+				
+				
 				break;
 			}
 
