@@ -673,7 +673,7 @@ public class API {
 	public int jsonDataUpload(int projectId, JSONObject data, String datasetName) {
 		// append timestamp to the data set name to ensure uniqueness
 		datasetName += appendedTimeStamp();
-
+		Log.e("data", data.toString());
 		JSONObject requestData = new JSONObject();
 
 		try {
@@ -1029,14 +1029,12 @@ public class API {
 
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
-<<<<<<< HEAD
-			//urlConnection.setDoOutput(true);
-=======
+
 			if (!reqType.equals("GET"))
 			{
 				urlConnection.setDoOutput(true);
 			}
->>>>>>> upstream/master
+
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
 			// urlConnection.setDoOutput(true);
