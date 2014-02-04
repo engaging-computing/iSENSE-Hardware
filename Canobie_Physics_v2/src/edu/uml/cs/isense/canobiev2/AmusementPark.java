@@ -628,7 +628,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		return android.os.Build.VERSION.SDK_INT;
 	}
 
-	// Calls the rapi primitives for actual uploading
+	// Calls the api primitives for actual uploading
 	private Runnable uploader = new Runnable() {
 
 		@Override
@@ -641,27 +641,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
 			String projId = mPrefs.getString(Setup.PROJECT_ID, "");
 
-			// Make sure the user is logged in
-			if (api.getCurrentUser() == null) {
-				login(false);
-			}
-			
-			// Creates a new JSONObject that wraps the data and changes it from row major to column major
-			JSONObject data = new JSONObject();
-			try {
-				data.put("data", dataSet);
-				data = UploadQueue.getAPI().rowsToCols(data);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-
 			//TODO ERROR
 			
 			// Saves data to queue for later upload
-				QDataSet ds = new QDataSet(name, getResources().getString(R.id.description), QDataSet.Type.DATA,
+				QDataSet ds = new QDataSet(name + " Ride: " + rideNameString, "Canobie Physics", QDataSet.Type.DATA,
 						dataSet.toString(), null, projId, null);
+				
 				uq.addDataSetToQueue(ds);
-	
+				
 
 			// Empties the picture array
 			pictures.clear();
@@ -1137,7 +1124,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 * @param sdFileName Name of the written csv
 	 */
 	private void showSummary(Date date, String sdFileName) {
-		//TODO
 		ElapsedTime time = new ElapsedTime(elapsedSecs);
 		
 		Intent iSummary = new Intent(mContext, Summary.class);
@@ -1269,7 +1255,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
                  f.lux = light;
 
          dataSet.put(dfm.putData());
-         dataToBeWrittenToFile = dfm.writeSdCardLine();
+        // dataToBeWrittenToFile = dfm.writeSdCardLine();
 
 	}
 
