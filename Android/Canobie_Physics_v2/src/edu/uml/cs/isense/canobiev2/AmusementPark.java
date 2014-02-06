@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -31,8 +30,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -54,6 +51,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -111,6 +109,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static DataFieldManager dfm;
 	private SensorManager mSensorManager;
 	private LocationManager mLocationManager;
+	private LocationManager mRoughLocManager;
 	private Location loc;
 	private Timer recordingTimer;
 	private UploadQueue uq;
@@ -295,7 +294,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						
 						
 						new TimeElapsedTask().execute();
-					
+						
+						initDfm();
 						recordingTimer = new Timer();
 						recordingTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
@@ -423,6 +423,16 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Rebuilds the upload queue
 		if (uq != null)
 			uq.buildQueueFromFile();
+		
+		
+		initLocManager();
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		initLocManager();
 
 	}
 
@@ -442,13 +452,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
+//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
+//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
 		}
 		return true;
 	}
@@ -475,10 +485,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			startActivityForResult(new Intent(getApplicationContext(),
 					SyncTime.class), SYNC_TIME_REQUESTED);
 			return true;
-		case R.id.MENU_ITEM_MEDIA:
-			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
-			startActivity(iMedia);
-			return true;
+//		case R.id.MENU_ITEM_MEDIA:
+//			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
+//			startActivity(iMedia);
+//			return true;
 		}
 		return false;
 	}
@@ -641,14 +651,15 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
 			String projId = mPrefs.getString(Setup.PROJECT_ID, "");
 
-			//TODO ERROR
+			//TODO FIX ALL DATA NOT BEING UPLOADED
+			
+			Log.e("DATASET", dataSet.toString());
 			
 			// Saves data to queue for later upload
-				QDataSet ds = new QDataSet(name + " Ride: " + rideNameString, "Canobie Physics", QDataSet.Type.DATA,
-						dataSet.toString(), null, projId, null);
-				
-				uq.addDataSetToQueue(ds);
-				
+			QDataSet ds = new QDataSet(name + " Ride: " + rideNameString, "Canobie Physics", QDataSet.Type.DATA,
+					dataSet.toString(), null, projId, null);
+			
+			uq.addDataSetToQueue(ds);
 
 			// Empties the picture array
 			pictures.clear();
@@ -668,12 +679,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		ProgressDialog dia;
 
 		@Override
-		protected String doInBackground(String... strings) {
-			uploader.run();
-			return null; //strings[0];
-		}
-
-		@Override
 		protected void onPreExecute() {
 
 			dia = new ProgressDialog(AmusementPark.this);
@@ -682,6 +687,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			dia.setCancelable(false);
 			dia.show();
 
+		}
+		
+		@Override
+		protected String doInBackground(String... strings) {
+			uploader.run();
+			return null; //strings[0];
 		}
 
 		@Override
@@ -818,18 +829,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		mag = new float[3];
 		
 		// Fire up the GPS chip (not literally)
-		Criteria c = new Criteria();
-		c.setAccuracy(Criteria.ACCURACY_FINE);
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			mLocationManager.requestLocationUpdates(
-					mLocationManager.getBestProvider(c, true), 0, 0,
-					AmusementPark.this);
-		} else {
-			// TODO Ask user to turn on GPS
-		}
+		initLocManager();
 
-		// This is the location we will get back from GPS
-		loc = new Location(mLocationManager.getBestProvider(c, true));
+		
 
 		// Most important feature. Makes the button beep.
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
@@ -925,6 +927,31 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 */
 	private void enableAllFields() {
 		setUpDFMWithAllFields();
+	}
+	
+	//set up GPS
+	private void initLocManager() {
+		Criteria c = new Criteria();
+		c.setAccuracy(Criteria.ACCURACY_FINE);
+
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		mRoughLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+				&& mRoughLocManager
+						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+
+			mLocationManager.requestLocationUpdates(
+					mLocationManager.getBestProvider(c, true), 0, 0, AmusementPark.this);
+			mRoughLocManager.requestLocationUpdates(
+					LocationManager.NETWORK_PROVIDER, 0, 0, AmusementPark.this);
+		} else {
+			//TODO ASK USER TO TURN ON GPS
+		}
+		
+		// This is the location we will get back from GPS
+		loc = new Location(mLocationManager.getBestProvider(c, true));
+		
 	}
 	
 	private void setUpDFMWithAllFields() {
