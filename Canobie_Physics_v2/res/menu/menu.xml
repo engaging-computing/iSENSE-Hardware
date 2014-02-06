@@ -12,9 +12,6 @@
     <item android:id="@+id/MENU_ITEM_TIME"
           android:title="@string/time" 
           android:showAsAction="ifRoom"/>
-     <item android:id="@+id/MENU_ITEM_MEDIA"
-          android:title="@string/media" 
-          android:showAsAction="ifRoom"/>
 </menu>
 
 
