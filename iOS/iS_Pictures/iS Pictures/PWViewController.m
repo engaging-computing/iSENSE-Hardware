@@ -167,6 +167,12 @@
     
 }
 
+- (void) didFinishChoosingProject:(ProjectBrowserViewController *) browser withID: (int) project_id {
+    projID = project_id;
+    NSLog(@"Project: %d",projID);
+    [self finishedChoosingProject];
+}
+
 - (void) finishedChoosingProject {
     if (projID != 0) {
         
@@ -264,6 +270,7 @@
     
     void (^testBlock)() = ^() {
         ProjectBrowserViewController *test = [[ProjectBrowserViewController alloc] init];
+        test.delegate = self;
         [self.navigationController pushViewController:test animated:YES];
     };
     

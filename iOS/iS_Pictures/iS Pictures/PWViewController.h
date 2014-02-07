@@ -20,7 +20,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "ProjectBrowserViewController.h"
 
-@interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProjectBrowseViewControllerDelegate, ZBarReaderDelegate>
+@interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProjectBrowseViewControllerDelegate, ZBarReaderDelegate, ProjectBrowserDelegate>
 
 @property(nonatomic) IBOutlet UITextField *groupNameField;
 @property(nonatomic) IBOutlet UILabel *projectIDLbl, *picCntLbl, *login_status;

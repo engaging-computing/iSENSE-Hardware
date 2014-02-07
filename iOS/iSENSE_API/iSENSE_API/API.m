@@ -10,8 +10,8 @@
 
 @implementation API
 
-#define LIVE_URL @"http://129.63.16.128"
-#define DEV_URL  @"http://129.63.16.30"
+#define LIVE_URL @"http://isenseproject.org"
+#define DEV_URL  @"http://rsense-dev.cs.uml.edu"
 
 #define GET     @"GET"
 #define POST    @"POST"
@@ -94,8 +94,18 @@ static RPerson *currentUser;
  */
 -(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
     
-    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"email=", [username UTF8String], @"&password=", [password UTF8String]];
-    NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withRequestType:POST andPostData:nil];
+    NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
+    [postData setValue:password forKey:@"password"];
+    [postData setValue:username forKey:@"email"];
+    NSError *error;
+    NSData *postReqData = [NSJSONSerialization dataWithJSONObject:postData
+                                                          options:0
+                                                            error:&error];
+    if (error) {
+        NSLog(@"Error parsing object to JSON: %@", error);
+        return FALSE;
+    }
+    NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:@"" withRequestType:POST andPostData:postReqData];
 
     authenticityToken = [result objectForKey:@"authenticity_token"];
     NSLog(@"API: Auth token from login: %@", authenticityToken);

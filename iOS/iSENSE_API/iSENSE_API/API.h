@@ -19,8 +19,8 @@
 
 // Version number of the API tested and passed on this version
 // number of the production iSENSE website.
-#define VERSION_MAJOR @"3"
-#define VERSION_MINOR @"1c"
+#define VERSION_MAJOR @"4"
+#define VERSION_MINOR @"1"
 
 typedef enum {
     CREATED_AT_DESC,
