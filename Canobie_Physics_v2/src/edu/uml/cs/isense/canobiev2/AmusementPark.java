@@ -112,7 +112,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private LocationManager mRoughLocManager;
 	private Location loc;
 	private Timer recordingTimer;
-	private UploadQueue uq;
+	public static UploadQueue uq;
 	private Vibrator vibrator;
 
 	/* Other Important Objects */
@@ -120,8 +120,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private Fields f;
 	private String dataToBeWrittenToFile;
 	private MediaPlayer mMediaPlayer;
-	public static ArrayList<File> pictures;
-	public static ArrayList<File> videos;
 	private API api;
 	public static Context mContext;
 	private Waffle w;
@@ -169,9 +167,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	/* Used to set time elapsed */
 	private String sec = "";
 	private int min = 0;
-
-
-
 
 	public static JSONArray dataSet;
 	
@@ -485,10 +480,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			startActivityForResult(new Intent(getApplicationContext(),
 					SyncTime.class), SYNC_TIME_REQUESTED);
 			return true;
-//		case R.id.MENU_ITEM_MEDIA:
-//			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
-//			startActivity(iMedia);
-//			return true;
+		case R.id.MENU_ITEM_MEDIA:
+			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
+			startActivity(iMedia);
+			return true;
 		}
 		return false;
 	}
@@ -660,11 +655,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					dataSet.toString(), null, projId, null);
 			
 			uq.addDataSetToQueue(ds);
-
-			// Empties the picture array
-			pictures.clear();
-			videos.clear();
-
 		}
 
 	};
@@ -700,8 +690,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			dia.setMessage("Done");
 			dia.dismiss();
-
-			MediaManager.mediaCount = 0;
 			
 			w.make("Data Saved to Queue", Waffle.LENGTH_SHORT,
 					Waffle.IMAGE_CHECK);
@@ -797,11 +785,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		// Create a new upload queue
 		uq = new UploadQueue(ACTIVITY_NAME, mContext, api);
-
-		// These store our media objects
-		pictures = new ArrayList<File>();
-		videos = new ArrayList<File>();
-		
 		
 		// OMG a button!
 		startStop = (Button) findViewById(R.id.startStop);
@@ -876,49 +859,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		@Override
 		protected void onPostExecute(Void voids) {
-		}
-	}
-
-	/**
-	 * Task for checking sensor availability along with enabling/disabling
-	 * 
-	 * @author jpoulin
-	 */
-	private class SensorCheckTask extends AsyncTask<Void, Integer, Void> {
-
-		ProgressDialog dia;
-
-		@Override
-		protected void onPreExecute() {
-
-			dia = new ProgressDialog(AmusementPark.this);
-			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Gathering project fields...");
-			dia.setCancelable(false);
-			dia.show();
-
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
-			String eidInput = mPrefs.getString(Setup.PROJECT_ID, "");
-
-			dfm = new DataFieldManager(Integer.parseInt(eidInput), api,
-					mContext, f);
-			dfm.getOrderWithExternalAsyncTask();
-			
-			getEnabledFields();
-			
-			publishProgress(100);
-			return null;
-
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-			dia.setMessage("Done");
-			dia.cancel();
 		}
 	}
 
