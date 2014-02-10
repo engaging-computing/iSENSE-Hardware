@@ -344,7 +344,6 @@ public class Main extends Activity implements LocationListener {
 	
 	
 	private void setDefaultProject(){ 
-		//TODO
 		/*if no project set or using a default project set the correct default project based on live or dev mode*/
 		
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
@@ -858,41 +857,46 @@ public class Main extends Activity implements LocationListener {
 				projNum = "-1";
 
 			if (loc.getLatitude() != 0) {
-				f.timeMillis = curTime;
+				if (dfm.enabledFields[Fields.TIME])
+					f.timeMillis = curTime;
 				System.out.println("curTime =" + f.timeMillis);
-				f.latitude = loc.getLatitude();
+				if (dfm.enabledFields[Fields.LATITUDE])
+					f.latitude = loc.getLatitude();
 				System.out.println("Latitude =" + f.latitude);
-				f.longitude = loc.getLongitude();
+				if (dfm.enabledFields[Fields.LONGITUDE])
+					f.longitude = loc.getLongitude();
 				System.out.println("Longitude =" + f.longitude);
-
+				
 				dataJSON.put(dfm.putData());
 
 			} else { // no gps
 				loc = mLocationManager
 						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				f.timeMillis = curTime;
+				if (dfm.enabledFields[Fields.TIME])
+					f.timeMillis = curTime;
 				System.out.println("curTime (no gps) =" + f.timeMillis);
-				f.latitude = loc.getLatitude();
+				if (dfm.enabledFields[Fields.LATITUDE])
+					f.latitude = loc.getLatitude();
 				System.out.println("Latitude (no gps) =" + f.latitude);
-				f.longitude = loc.getLongitude();
+				if (dfm.enabledFields[Fields.LONGITUDE])
+					f.longitude = loc.getLongitude();
 				System.out.println("Longitude (no gps) =" + f.longitude);
 				dataJSON.put(dfm.putData());
 			}
 			
 			QDataSet ds;
-			
-			if (dfm.projectContainsTimeStamp() && dfm.projectContainsLocation()) {
-				ds = new QDataSet(name.getText().toString()
-						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
-						makeThisDatePretty(curTime), QDataSet.Type.BOTH,
-						dataJSON.toString(), picture, projNum, null);
-			} else {
-				Log.e("fantastag","fantastag");
-				ds = new QDataSet(name.getText().toString()
-						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
-						makeThisDatePretty(curTime), QDataSet.Type.PIC,
-						null, picture, projNum, null);
-			}
+			//TODO CRASHES HERE IF PROJECT HAS NO DATA FIELDS
+			ds = new QDataSet(name.getText().toString()
+					+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
+					makeThisDatePretty(curTime), QDataSet.Type.BOTH,
+					dataJSON.toString(), picture, projNum, null);
+				
+				/*upload to project not a data set*/
+//				ds = new QDataSet(name.getText().toString()
+//						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
+//						makeThisDatePretty(curTime), QDataSet.Type.PIC,
+//						null, picture, projNum, null);
+
 			
 			
 

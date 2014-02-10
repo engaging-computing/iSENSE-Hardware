@@ -1222,7 +1222,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
                  f.lux = light;
 
          dataSet.put(dfm.putData());
-        // dataToBeWrittenToFile = dfm.writeSdCardLine();
+         dataToBeWrittenToFile = dfm.writeSdCardLine();
 
 	}
 
