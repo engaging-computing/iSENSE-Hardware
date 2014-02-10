@@ -209,22 +209,22 @@ public class DataFieldManager extends Application {
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.ACCEL_X])
+			if (enabledFields[Fields.ACCEL_X] && f.accel_x != null)
 				dataJSON.put(f.accel_x);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.ACCEL_Y])
+			if (enabledFields[Fields.ACCEL_Y] && f.accel_y != null)
 				dataJSON.put(f.accel_y);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.ACCEL_Z])
+			if (enabledFields[Fields.ACCEL_Z] && f.accel_z != null)
 				dataJSON.put(f.accel_z);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.ACCEL_TOTAL])
+			if (enabledFields[Fields.ACCEL_TOTAL] && f.accel_total!= null)
 				dataJSON.put(f.accel_total);
 			else
 				dataJSON.put("");
@@ -239,63 +239,63 @@ public class DataFieldManager extends Application {
 			else
 				dataJSON.put("");
 			
-			if (enabledFields[Fields.MAG_X])
+			if (enabledFields[Fields.MAG_X] && f.mag_x != null)
 				dataJSON.put(f.mag_x);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.MAG_Y])
+			if (enabledFields[Fields.MAG_Y] && f.mag_y != null)
 				dataJSON.put(f.mag_y);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.MAG_Z])
+			if (enabledFields[Fields.MAG_Z] && f.mag_z != null)
 				dataJSON.put(f.mag_z);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.MAG_TOTAL])
+			if (enabledFields[Fields.MAG_TOTAL] && f.mag_total != null)
 				dataJSON.put(f.mag_total);
 			else
 				dataJSON.put("");
 			
-			if (enabledFields[Fields.HEADING_DEG])
+			if (enabledFields[Fields.HEADING_DEG] && f.angle_deg != null)
 				dataJSON.put(f.angle_deg);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.HEADING_RAD])
+			if (enabledFields[Fields.HEADING_RAD] && f.angle_rad != null)
 				dataJSON.put(f.angle_rad);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.TEMPERATURE_C])
+			if (enabledFields[Fields.TEMPERATURE_C] && f.temperature_c != null)
 				dataJSON.put(f.temperature_c);
 			else
 				dataJSON.put("");
 			
-			if (enabledFields[Fields.PRESSURE])
+			if (enabledFields[Fields.PRESSURE] && f.pressure!= null)
 				dataJSON.put(f.pressure);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.ALTITUDE])
+			if (enabledFields[Fields.ALTITUDE] && f.altitude != null)
 
 				dataJSON.put(f.altitude);
 			else
 				dataJSON.put("");
 			
-			if (enabledFields[Fields.LIGHT])
+			if (enabledFields[Fields.LIGHT] && f.lux != null)
 				dataJSON.put(f.lux);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.TEMPERATURE_F])
+			if (enabledFields[Fields.TEMPERATURE_F] && f.temperature_f != null)
 				dataJSON.put(f.temperature_f);
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.TEMPERATURE_K])
+			if (enabledFields[Fields.TEMPERATURE_K] && f.temperature_k != null)
 				dataJSON.put(f.temperature_k);
 			else
 				dataJSON.put("");
