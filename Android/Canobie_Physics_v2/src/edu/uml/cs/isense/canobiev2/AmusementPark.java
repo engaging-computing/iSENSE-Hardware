@@ -281,12 +281,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 						dataToBeWrittenToFile = "Accel-X, Accel-Y, Accel-Z, Accel-Total, Mag-X, Mag-Y, Mag-Z, Mag-Total"
 								+ "Latitude, Longitude, Time\n";
-						startStop.setText(getResources().getString(
-								R.string.stopString));
-						startStop
-								.setBackgroundResource(R.drawable.button_rsense_green);
-						//startStop.setTextColor(Color.parseColor("#FFFFFF"));
-						
+						startStop.setText(getResources().getString(R.string.stopString));
+						startStop.setBackgroundResource(R.drawable.button_rsense_green);						
 						
 						new TimeElapsedTask().execute();
 						
@@ -949,7 +945,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	// (currently 2 of these methods exist - one also in step1setup)
 		private void getEnabledFields() {
-
 			try {
 				for (String s : acceptedFields) {
 					if (s.length() != 0)
@@ -1167,7 +1162,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 */
 	private void recordData() {
 		 dataPointCount++;
-         
          DecimalFormat toThou = new DecimalFormat("######0.000");
 
          if (dfm.enabledFields[Fields.ACCEL_X])
@@ -1185,8 +1179,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
          if (dfm.enabledFields[Fields.HEADING_DEG])
          if (dfm.enabledFields[Fields.HEADING_RAD])
                  f.angle_deg = toThou.format(orientation[0]);
-                 f.angle_rad = ""
-                                 + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+                 f.angle_rad = "" + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
          if (dfm.enabledFields[Fields.MAG_X])
                  f.mag_x = "" + mag[0];
          if (dfm.enabledFields[Fields.MAG_Y])
@@ -1194,10 +1187,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
          if (dfm.enabledFields[Fields.MAG_Z])
                  f.mag_z = "" + mag[2];
          if (dfm.enabledFields[Fields.MAG_TOTAL])
-                 f.mag_total = ""
-                                 + Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
-                                                 + Math.pow(Double.parseDouble(f.mag_y), 2)
-                                                 + Math.pow(Double.parseDouble(f.mag_z), 2));
+                 f.mag_total = "" + Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
+		                                 + Math.pow(Double.parseDouble(f.mag_y), 2)
+		                                 + Math.pow(Double.parseDouble(f.mag_z), 2));
          if (dfm.enabledFields[Fields.TIME])
                  f.timeMillis = System.currentTimeMillis();         
          if (dfm.enabledFields[Fields.TEMPERATURE_C])
@@ -1206,14 +1198,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
                  if (temperature.equals(""))
                          f.temperature_f = temperature;
                  else
-                         f.temperature_f = ""
-                                         + ((Double.parseDouble(temperature) * 1.8) + 32);
+                         f.temperature_f = "" + ((Double.parseDouble(temperature) * 1.8) + 32);
          if (dfm.enabledFields[Fields.TEMPERATURE_K])
                  if (temperature.equals(""))
                          f.temperature_k = temperature;
                  else
-                         f.temperature_k = ""
-                                         + (Double.parseDouble(temperature) + 273.15);
+                         f.temperature_k = "" + (Double.parseDouble(temperature) + 273.15);
          if (dfm.enabledFields[Fields.PRESSURE])
                  f.pressure = pressure;
          if (dfm.enabledFields[Fields.ALTITUDE])
