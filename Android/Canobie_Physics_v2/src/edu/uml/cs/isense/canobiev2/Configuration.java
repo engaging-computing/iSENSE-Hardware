@@ -78,6 +78,30 @@ public class Configuration extends Activity {
 		else
             rides.setAdapter(generalAdapter);
 		
+		dataset.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dataset.setError(null);
+			}
+			
+		});
+		
+		studentNumber.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				studentNumber.setError(null);
+			}
+			
+		});
+		
+		sampleRate.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sampleRate.setError(null);
+			}
+			
+		});
+		
 		
 		/*Checkbox on checked change listeners*/
 		projectLater.setOnCheckedChangeListener(new OnCheckedChangeListener(){
@@ -124,6 +148,7 @@ public class Configuration extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				select.setError(null);
 				Intent intent = new Intent(getApplicationContext(), Setup.class);
 				intent.putExtra("constrictFields", true);
 				intent.putExtra("app_name", "Canobie");

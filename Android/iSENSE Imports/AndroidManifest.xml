@@ -33,6 +33,7 @@
         android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".proj.BrowseProjects"
+        android:windowSoftInputMode="stateHidden"
         android:label="Projects" />
     <activity
         android:name=".proj.NoQR"
