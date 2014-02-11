@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -131,8 +130,6 @@ public class Main extends Activity implements LocationListener {
 	private CameraPreview mPreview;
 	private FrameLayout preview;
 	
-	private boolean defaultProject = false;
-
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -425,7 +422,6 @@ public class Main extends Activity implements LocationListener {
 							}
 						}
 					});
-
 					curTime = System.currentTimeMillis();
 					uploader.run();
 					uq.buildQueueFromFile();
@@ -885,7 +881,7 @@ public class Main extends Activity implements LocationListener {
 			}
 			
 			QDataSet ds;
-			//TODO CRASHES HERE IF PROJECT HAS NO DATA FIELDS
+			//TODO using as refrence for canobie app
 			ds = new QDataSet(name.getText().toString()
 					+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
 					makeThisDatePretty(curTime), QDataSet.Type.BOTH,
@@ -946,9 +942,7 @@ public class Main extends Activity implements LocationListener {
 				projectLabel.setText(getResources().getString(
 						R.string.projectLabel)
 						+ eidString);
-				
-				defaultProject = false;
-				
+								
 				dfm = new DataFieldManager(Integer.parseInt(eidString), api,
 						mContext, f);
 				dfm.getOrder();
