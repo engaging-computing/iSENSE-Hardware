@@ -351,7 +351,7 @@ public class MediaManager extends Activity {
 				
 			/*create a dataset with picture and add it to queue*/
 			ds = new QDataSet(dateString,
-					"media", QDataSet.Type.PIC,
+					"Media", QDataSet.Type.PIC,
 					null, f, projNum, null);
 
 			System.out.println("projectNum = " + projNum);
