@@ -96,6 +96,7 @@
             android:theme="@style/AppThemeDialog" />
         <activity
             android:name="edu.uml.cs.isense.proj.BrowseProjects"
+            android:windowSoftInputMode="stateHidden"
             android:label="Projects" />
         <activity
             android:name="edu.uml.cs.isense.proj.NoQR"

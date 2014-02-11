@@ -22,7 +22,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -49,6 +48,7 @@ import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.util.Log;
@@ -62,6 +62,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -72,7 +73,10 @@ import edu.uml.cs.isense.queue.UploadQueue;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
+import android.app.ActionBar;
 
+
+@SuppressLint("NewApi")
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
@@ -126,7 +130,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	/* Work Flow Variables */
 	private boolean isRunning = false;
-	private boolean uploadSuccessful = false;
 	private static boolean useMenu = true;
 	public static boolean setupDone = false;
 
@@ -150,6 +153,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int MENU_ITEM_UPLOAD = 2;
 	private final int MENU_ITEM_TIME = 3;
 	private final int MENU_ITEM_MEDIA = 4;
+	
+	/* Action Bar */
+	private static int actionBarTapCount = 0;
+	private static boolean useDev = true;
 
 	/* Start Activity Codes*/
 	private final int QUEUE_UPLOAD_REQUESTED = 1;
@@ -281,12 +288,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 						dataToBeWrittenToFile = "Accel-X, Accel-Y, Accel-Z, Accel-Total, Mag-X, Mag-Y, Mag-Z, Mag-Total"
 								+ "Latitude, Longitude, Time\n";
-						startStop.setText(getResources().getString(
-								R.string.stopString));
-						startStop
-								.setBackgroundResource(R.drawable.button_rsense_green);
-						//startStop.setTextColor(Color.parseColor("#FFFFFF"));
-						
+						startStop.setText(getResources().getString(R.string.stopString));
+						startStop.setBackgroundResource(R.drawable.button_rsense_green);						
 						
 						new TimeElapsedTask().execute();
 						
@@ -358,41 +361,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 		return sdFile;
 
-	}
-
-	/**
-	 * Attempts to write out a string to a file.
-	 * 
-	 * @param data
-	 *            The data in string form
-	 * @param sdFile
-	 *            The file to write the data to
-	 * @return True if success, false if failed with exception.
-	 */
-	private boolean writeToSDCard(String data, File sdFile) {
-		try {
-			// Prepare the writers
-			FileWriter gpxwriter = new FileWriter(sdFile);
-			BufferedWriter out = new BufferedWriter(gpxwriter);
-
-			// Write out the data
-			out.write(data);
-
-			// Close the output stream
-			if (out != null)
-				out.close();
-			if (gpxwriter != null)
-				gpxwriter.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
 	}
 
 	@Override
@@ -484,10 +452,90 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
 			startActivity(iMedia);
 			return true;
-		}
-		return false;
-	}
+		case android.R.id.home:
+			CountDownTimer cdt = null;
 
+			// Give user 10 seconds to switch dev/prod mode
+			if (actionBarTapCount == 0) {
+				cdt = new CountDownTimer(5000, 5000) {
+					public void onTick(long millisUntilFinished) {
+					}
+
+					public void onFinish() {
+						actionBarTapCount = 0;
+					}
+				}.start();
+			}
+
+			String other = (useDev) ? "production" : "dev";
+
+			switch (++actionBarTapCount) {
+			case 5:
+				w.make(getResources().getString(R.string.two_more_taps) + other
+						+ getResources().getString(R.string.mode_type));
+				break;
+			case 6:
+				w.make(getResources().getString(R.string.one_more_tap) + other
+						+ getResources().getString(R.string.mode_type));
+				break;
+			case 7:
+				w.make(getResources().getString(R.string.now_in_mode) + other
+						+ getResources().getString(R.string.mode_type));
+				useDev = !useDev;
+				
+				if (cdt != null)
+					cdt.cancel();
+
+				if (api.getCurrentUser() != null) {
+					Runnable r = new Runnable() {
+						public void run() {
+							api.deleteSession();
+							api.useDev(useDev);
+						}
+					};
+					new Thread(r).start();
+				} else {
+					api.useDev(useDev);
+				}
+				attemptLogin();
+				actionBarTapCount = 0;
+				
+				
+				
+				break;
+			}
+
+			return true;
+		
+		default:
+			return false;
+		}
+	}
+	
+	// gets the user's name if not already provided + login to web site
+		private void attemptLogin() {
+
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					mContext, getSharedPreferences(
+							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							Context.MODE_PRIVATE));
+
+			if (mPrefs.getString(
+					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+					.equals("")
+					&& mPrefs.getString(
+							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+							"").equals("")) {
+				return;
+			}
+
+			if (Connection.hasConnectivity(mContext)) {
+				new LoginTask().execute();
+
+			}
+		}
+
+	
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 	}
@@ -758,10 +806,19 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	/**
 	 * Everything needed to be initialized for onCreate in one helpful function.
 	 */
+	@SuppressLint("NewApi")
 	private void initVars() {
 
 		api = API.getInstance();
-		api.useDev(true);
+		api.useDev(useDev);
+		
+		// Initialize action bar customization for API >= 11
+				if (android.os.Build.VERSION.SDK_INT >= 11) {
+					ActionBar bar = getActionBar();
+
+					// make the actionbar clickable
+					bar.setDisplayHomeAsUpEnabled(true);
+				}
 
 		// Get the last stored username and password from Encrypted Shared
 		// Preferences
@@ -949,7 +1006,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	// (currently 2 of these methods exist - one also in step1setup)
 		private void getEnabledFields() {
-
 			try {
 				for (String s : acceptedFields) {
 					if (s.length() != 0)
@@ -1167,7 +1223,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	 */
 	private void recordData() {
 		 dataPointCount++;
-         
          DecimalFormat toThou = new DecimalFormat("######0.000");
 
          if (dfm.enabledFields[Fields.ACCEL_X])
@@ -1185,8 +1240,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
          if (dfm.enabledFields[Fields.HEADING_DEG])
          if (dfm.enabledFields[Fields.HEADING_RAD])
                  f.angle_deg = toThou.format(orientation[0]);
-                 f.angle_rad = ""
-                                 + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+                 f.angle_rad = "" + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
          if (dfm.enabledFields[Fields.MAG_X])
                  f.mag_x = "" + mag[0];
          if (dfm.enabledFields[Fields.MAG_Y])
@@ -1194,10 +1248,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
          if (dfm.enabledFields[Fields.MAG_Z])
                  f.mag_z = "" + mag[2];
          if (dfm.enabledFields[Fields.MAG_TOTAL])
-                 f.mag_total = ""
-                                 + Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
-                                                 + Math.pow(Double.parseDouble(f.mag_y), 2)
-                                                 + Math.pow(Double.parseDouble(f.mag_z), 2));
+                 f.mag_total = "" + Math.sqrt(Math.pow(Double.parseDouble(f.mag_x), 2)
+		                                 + Math.pow(Double.parseDouble(f.mag_y), 2)
+		                                 + Math.pow(Double.parseDouble(f.mag_z), 2));
          if (dfm.enabledFields[Fields.TIME])
                  f.timeMillis = System.currentTimeMillis();         
          if (dfm.enabledFields[Fields.TEMPERATURE_C])
@@ -1206,14 +1259,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
                  if (temperature.equals(""))
                          f.temperature_f = temperature;
                  else
-                         f.temperature_f = ""
-                                         + ((Double.parseDouble(temperature) * 1.8) + 32);
+                         f.temperature_f = "" + ((Double.parseDouble(temperature) * 1.8) + 32);
          if (dfm.enabledFields[Fields.TEMPERATURE_K])
                  if (temperature.equals(""))
                          f.temperature_k = temperature;
                  else
-                         f.temperature_k = ""
-                                         + (Double.parseDouble(temperature) + 273.15);
+                         f.temperature_k = "" + (Double.parseDouble(temperature) + 273.15);
          if (dfm.enabledFields[Fields.PRESSURE])
                  f.pressure = pressure;
          if (dfm.enabledFields[Fields.ALTITUDE])

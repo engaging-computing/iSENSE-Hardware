@@ -136,11 +136,13 @@ public class MediaManager extends Activity {
 			if (resultCode == RESULT_OK) {
 				f = convertImageUriToFile(imageUri);
 				pushPicture();
+				new UploadTask().execute();
 			}
 		} else if (requestCode == CAMERA_VID_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 				f = convertVideoUriToFile(videoUri, this);
 				pushVideo();
+				new UploadTask().execute();
 			}
 		}
 	}
@@ -212,7 +214,6 @@ public class MediaManager extends Activity {
 	// Card
 	@SuppressLint("NewApi")
 	public static File convertVideoUriToFile(Uri videoUri, Activity activity) {
-
 		int apiLevel = getApiLevel();
 		if (apiLevel >= 11) {
 
@@ -234,9 +235,7 @@ public class MediaManager extends Activity {
 			return null;
 
 		} else {
-
 			Cursor cursor = null;
-
 			try {
 				String[] proj = { MediaStore.Video.Media.DATA,
 						MediaStore.Video.Media._ID };
@@ -258,7 +257,6 @@ public class MediaManager extends Activity {
 				}
 			}
 		}
-
 	}
 
 	// Assists with differentiating between displays for dialogues
@@ -268,11 +266,6 @@ public class MediaManager extends Activity {
 
 	// Adds pictures to the SD Card
 	public void pushPicture() {
-		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
-		Date dt = new Date();
-
-		String dateString = sdf.format(dt);
-
 		File folder = new File(Environment.getExternalStorageDirectory()
 				+ "/iSENSE");
 
@@ -281,8 +274,19 @@ public class MediaManager extends Activity {
 		}
 		
 		AmusementPark.uq.buildQueueFromFile();
-		//TODO create file for picture
+	}
+	
+	
+	// Adds videos to the SD Card
+	public void pushVideo() {
+		File folder = new File(Environment.getExternalStorageDirectory()
+				+ "/iSENSE");
+
+		if (!folder.exists()) {
+			folder.mkdir();
+		}
 		
+		AmusementPark.uq.buildQueueFromFile();
 	}
 
 	private class UploadTask extends AsyncTask<Void, Integer, Void> { // adds
@@ -292,8 +296,6 @@ public class MediaManager extends Activity {
 
 	@Override
 	protected void onPreExecute() {
-	
-	
 	}
 	
 	@Override
@@ -317,7 +319,7 @@ public class MediaManager extends Activity {
 	// Do nothing - postRunnableWaffleError takes care of this
 	// Waffle
 	} else {
-	w.make("Picture saved!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+	w.make("Media saved!", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 	}
 	
 	AmusementPark.uq.buildQueueFromFile();
@@ -325,12 +327,6 @@ public class MediaManager extends Activity {
 	uploadError = false;
 	}
 }
-	
-	
-	// Adds videos to the SD Card
-	public void pushVideo() {
-		//TODO Copy pushPicture but with video
-	}
 	
 	private Runnable uploader = new Runnable() {
 		@Override
@@ -347,12 +343,16 @@ public class MediaManager extends Activity {
 			if (!Connection.hasConnectivity(mContext))
 				projNum = "-1";
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy--HH-mm-ss", Locale.US);
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy-HH:mm:ss", Locale.US);
 			Date dt = new Date();
 			String dateString = sdf.format(dt);
 			
-			QDataSet ds = new QDataSet(dateString, "Picture or Video", QDataSet.Type.PIC,
-					null, f, projNum, null);;
+			QDataSet ds;
+				
+			/*create a dataset with picture and add it to queue*/
+			ds = new QDataSet(dateString,
+					"Media", QDataSet.Type.PIC,
+					null, f, projNum, null);
 
 			System.out.println("projectNum = " + projNum);
 
