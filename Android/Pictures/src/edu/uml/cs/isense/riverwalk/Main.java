@@ -230,7 +230,7 @@ public class Main extends Activity implements LocationListener {
 						Intent intent = new Intent(
 								MediaStore.ACTION_IMAGE_CAPTURE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);	
 						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 						//OrientationManager.enableRotation(Main.this);
 
