@@ -266,7 +266,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				return;
 			}
 
-			if (api.getCurrentUser() == null) {
+			if (api.getCurrentUser()) {
 				new LoginTask().execute();
 				return;
 			}
@@ -886,7 +886,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 
-			success = api
+			api
 					.createSession(
 								mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, Login.DEFAULT_USERNAME),
 								mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, Login.DEFAULT_PASSWORD));

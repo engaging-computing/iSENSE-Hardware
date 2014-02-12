@@ -254,7 +254,7 @@ public class QDataSet implements Serializable {
 
 			System.out.println("JOBJ: " + jobj.toString());
 
-			dataSetID = UploadQueue.getAPI().jsonDataUpload(
+			dataSetID = UploadQueue.getAPI().uploadDataSet(
 					Integer.parseInt(projID), jobj, name);
 			System.out.println("Data set ID from Upload is: " + dataSetID);
 		}
