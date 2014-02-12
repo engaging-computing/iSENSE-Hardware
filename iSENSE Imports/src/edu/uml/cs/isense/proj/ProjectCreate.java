@@ -381,7 +381,7 @@ public class ProjectCreate extends Activity {
 							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 			
-			success = api
+			api
 					.createSession(
 							mPrefs.getString(
 									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,

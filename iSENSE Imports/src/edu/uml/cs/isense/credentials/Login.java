@@ -131,40 +131,35 @@ public class Login extends Activity {
 	 * preferences if it is successful. Otherwise, it calls LoginError.
 	 * 
 	 */
-	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
+	private class LoginTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
-		protected Boolean doInBackground(Void... voids) {
+		protected Void doInBackground(Void... voids) {
 			// Login call (passes success to onPostExecute)
-			Boolean success = api.createSession(username.getText().toString(),
+			api.createSession(username.getText().toString(),
 					password.getText().toString());
-			return success;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean success) {
-			if (success) {
-				/* Saved the user's credentials. */
-				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						baseContext, baseContext.getSharedPreferences(
-								PREFERENCES_KEY_OBSCURRED_USER_INFO,
-								MODE_PRIVATE));
-				mPrefs.edit()
-						.putString(
-								PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-								username.getText().toString()).commit();
-				mPrefs.edit()
-						.putString(
-								PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-								password.getText().toString()).commit();
+		protected void onPostExecute(Void v) {
+			/* Saved the user's credentials. */
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					baseContext, baseContext.getSharedPreferences(
+							PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							MODE_PRIVATE));
+			mPrefs.edit()
+			.putString(
+					PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+					username.getText().toString()).commit();
+			mPrefs.edit()
+			.putString(
+					PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+					password.getText().toString()).commit();
 
-				// return success
-				setResult(RESULT_OK);
-				finish();
-			} else {
-				// show LoginError
-				showFailure();
-			}
+			// return success
+			setResult(RESULT_OK);
+			finish();
 		}
 
 	}
