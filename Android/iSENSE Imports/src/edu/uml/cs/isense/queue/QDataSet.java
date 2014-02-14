@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 
@@ -184,6 +185,8 @@ public class QDataSet implements Serializable {
 			// otherwise, if we have a JSONArray for data, we must reOrder it as
 			// well using fields
 			try {
+				Log.e("Upload Time", data.toString());
+				
 				// see if the elements of the JSONArray are JSONArrays
 				if (data != null) {
 					JSONArray ja = new JSONArray(data);
