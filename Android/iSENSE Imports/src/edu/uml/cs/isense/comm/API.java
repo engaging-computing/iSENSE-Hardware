@@ -673,7 +673,7 @@ public class API {
 	public int jsonDataUpload(int projectId, JSONObject data, String datasetName) {
 		// append timestamp to the data set name to ensure uniqueness
 		datasetName += appendedTimeStamp();
-		Log.e("data", data.toString());
+		Log.e("data-API upload", data.toString());
 		JSONObject requestData = new JSONObject();
 
 		try {

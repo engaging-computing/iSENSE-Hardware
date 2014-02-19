@@ -178,8 +178,13 @@ public class QDataSet implements Serializable {
 			// if there was no initial project, we must reOrder the data with
 			// the fields from FieldMatching
 			if (!this.hasInitialProject) {
+				Log.e("QDataSet -- fields", this.fields.toString());
+				Log.e("QDataSet -- upPrepData", this.data);
+				Log.e("QDataSet -- prepData", prepDataForUpload().toString());
 				this.data = DataFieldManager.reOrderData(prepDataForUpload(),
 						this.projID, c, this.fields, null);
+				Log.e("QDataSet -- postData", this.data);
+				
 			}
 
 			// otherwise, if we have a JSONArray for data, we must reOrder it as
