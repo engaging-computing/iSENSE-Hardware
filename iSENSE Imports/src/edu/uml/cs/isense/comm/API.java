@@ -1029,14 +1029,12 @@ public class API {
 
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
-<<<<<<< HEAD
-			//urlConnection.setDoOutput(true);
-=======
+
 			if (!reqType.equals("GET"))
 			{
 				urlConnection.setDoOutput(true);
 			}
->>>>>>> upstream/master
+
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
 			// urlConnection.setDoOutput(true);
