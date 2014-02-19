@@ -604,7 +604,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 					alter.setProj(projectInput);
 					alter.setFields(FieldMatching.acceptedFields);
 					
-					Log.e("Where are we?", alter.getData().toString());
+					Log.e("in QueueLayout?", alter.getData().toString());
 
 					uq.removeItemWithKey(lastDataSetLongClicked.key);
 					scrollQueue.removeView(lastViewLongClicked);
