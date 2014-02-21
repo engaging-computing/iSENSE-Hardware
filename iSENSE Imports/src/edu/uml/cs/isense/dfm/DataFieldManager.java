@@ -13,6 +13,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RProjectField;
@@ -221,9 +222,9 @@ public class DataFieldManager extends Application {
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.ACCEL_X] && f.accel_x != null)
+			if (enabledFields[Fields.ACCEL_X] && f.accel_x != null) 
 				dataJSON.put(f.accel_x);
-			else
+				else
 				dataJSON.put("");
 
 			if (enabledFields[Fields.ACCEL_Y] && f.accel_y != null)
@@ -600,6 +601,8 @@ public class DataFieldManager extends Application {
 						if (s.equals(a.getResources().getString(
 								R.string.accel_x))) {
 							outRow.put(id + "", row.getString(Fields.ACCEL_X));
+							Log.e("DFM",s + " " + a.getResources().getString(
+									R.string.accel_x)); 
 							continue;
 						} else if (s.equals(a.getResources().getString(
 								R.string.accel_y))) {
@@ -680,6 +683,8 @@ public class DataFieldManager extends Application {
 							outRow.put(id + "", row.getString(Fields.PRESSURE));
 							continue;
 						} else {
+							Log.e("DFM", s + " " + a.getResources().getString(
+									R.string.time));
 							outRow.put(id + "", "");
 						}
 					} catch (JSONException e) {
