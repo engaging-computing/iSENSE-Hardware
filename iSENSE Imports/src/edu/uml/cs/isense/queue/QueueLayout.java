@@ -266,7 +266,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				return;
 			}
 
-			if (api.getCurrentUser()) {
+			if (api.getCurrentUser() != null) {
 				new LoginTask().execute();
 				return;
 			}

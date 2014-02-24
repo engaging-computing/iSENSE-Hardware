@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -131,8 +130,6 @@ public class Main extends Activity implements LocationListener {
 	private CameraPreview mPreview;
 	private FrameLayout preview;
 	
-	private boolean defaultProject = false;
-
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -171,7 +168,7 @@ public class Main extends Activity implements LocationListener {
 		} else {
 			projectLabel = (TextView) findViewById(R.id.projectLabel);
 			projectLabel.setText(getResources().getString(R.string.projectLabel)
-					+ mPrefs.getString("project_id", "None Set"));
+					+ mPrefs.getString("project_id", ""));
 		}
 		
 
@@ -234,8 +231,6 @@ public class Main extends Activity implements LocationListener {
 								MediaStore.ACTION_IMAGE_CAPTURE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-						
-
 						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 						//OrientationManager.enableRotation(Main.this);
 
@@ -346,24 +341,25 @@ public class Main extends Activity implements LocationListener {
 	
 	
 	private void setDefaultProject(){ 
-		//TODO
 		/*if no project set or using a default project set the correct default project based on live or dev mode*/
 		
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 
-	     if (api.isUsingDevMode() == false){
+	     if (api.isUsingDevMode() == true){
 	    	SharedPreferences.Editor editor = mPrefs.edit();
 	     	editor.putString("project_id", "248");
 	     	editor.commit();
-	     } else if (api.isUsingDevMode() == true) {
+	     } else if (api.isUsingDevMode() == false) {
 	    	 SharedPreferences.Editor editor = mPrefs.edit();
 		     editor.putString("project_id", "259");
 		     editor.commit();
 	     }
 		
 		projectLabel = (TextView) findViewById(R.id.projectLabel);
+		String project = mPrefs.getString("project_id", "");
+		Log.e("PRoject", project);
 		projectLabel.setText(getResources().getString(R.string.projectLabel)
-				+ mPrefs.getString("project_id", "None Set"));
+				+ project);
 	}
 	
 	// continuously take pictures in AsyncTask (a seperate thread)
@@ -426,7 +422,6 @@ public class Main extends Activity implements LocationListener {
 							}
 						}
 					});
-
 					curTime = System.currentTimeMillis();
 					uploader.run();
 					uq.buildQueueFromFile();
@@ -672,7 +667,7 @@ public class Main extends Activity implements LocationListener {
 				w.make(getResources().getString(R.string.now_in_mode) + other
 						+ getResources().getString(R.string.mode_type));
 				useDev = !useDev;
-
+				
 				if (cdt != null)
 					cdt.cancel();
 
@@ -681,14 +676,23 @@ public class Main extends Activity implements LocationListener {
 						public void run() {
 							api.deleteSession();
 							api.useDev(useDev);
+							runOnUiThread(new Runnable(){
+							    public void run(){
+							    	setDefaultProject();
+							    }
+							});
 						}
 					};
 					new Thread(r).start();
-				} else
+				} else {
 					api.useDev(useDev);
+					setDefaultProject();
+				}
 				attemptLogin();
 				actionBarTapCount = 0;
-				setDefaultProject();
+				
+				
+				
 				break;
 			}
 
@@ -849,42 +853,46 @@ public class Main extends Activity implements LocationListener {
 				projNum = "-1";
 
 			if (loc.getLatitude() != 0) {
-				f.timeMillis = curTime;
+				if (dfm.enabledFields[Fields.TIME])
+					f.timeMillis = curTime;
 				System.out.println("curTime =" + f.timeMillis);
-				f.latitude = loc.getLatitude();
+				if (dfm.enabledFields[Fields.LATITUDE])
+					f.latitude = loc.getLatitude();
 				System.out.println("Latitude =" + f.latitude);
-				f.longitude = loc.getLongitude();
+				if (dfm.enabledFields[Fields.LONGITUDE])
+					f.longitude = loc.getLongitude();
 				System.out.println("Longitude =" + f.longitude);
-
+				
 				dataJSON.put(dfm.putData());
 
 			} else { // no gps
 				loc = mLocationManager
 						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				f.timeMillis = curTime;
+				if (dfm.enabledFields[Fields.TIME])
+					f.timeMillis = curTime;
 				System.out.println("curTime (no gps) =" + f.timeMillis);
-				f.latitude = loc.getLatitude();
+				if (dfm.enabledFields[Fields.LATITUDE])
+					f.latitude = loc.getLatitude();
 				System.out.println("Latitude (no gps) =" + f.latitude);
-				f.longitude = loc.getLongitude();
+				if (dfm.enabledFields[Fields.LONGITUDE])
+					f.longitude = loc.getLongitude();
 				System.out.println("Longitude (no gps) =" + f.longitude);
-
 				dataJSON.put(dfm.putData());
 			}
 			
 			QDataSet ds;
-			
-			if (dfm.projectContainsTimeStamp() && dfm.projectContainsLocation()) {
-				ds = new QDataSet(name.getText().toString()
-						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
-						makeThisDatePretty(curTime), QDataSet.Type.BOTH,
-						dataJSON.toString(), picture, projNum, null);
-			} else {
-				Log.e("fantastag","fantastag");
-				ds = new QDataSet(name.getText().toString()
-						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
-						makeThisDatePretty(curTime), QDataSet.Type.PIC,
-						null, picture, projNum, null);
-			}
+			//TODO using as refrence for canobie app
+			ds = new QDataSet(name.getText().toString()
+					+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
+					makeThisDatePretty(curTime), QDataSet.Type.BOTH,
+					dataJSON.toString(), picture, projNum, null);
+				
+				/*upload to project not a data set*/
+//				ds = new QDataSet(name.getText().toString()
+//						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
+//						makeThisDatePretty(curTime), QDataSet.Type.PIC,
+//						null, picture, projNum, null);
+
 			
 			
 
@@ -934,9 +942,7 @@ public class Main extends Activity implements LocationListener {
 				projectLabel.setText(getResources().getString(
 						R.string.projectLabel)
 						+ eidString);
-				
-				defaultProject = false;
-				
+								
 				dfm = new DataFieldManager(Integer.parseInt(eidString), api,
 						mContext, f);
 				dfm.getOrder();

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.API.TargetType;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 
 /**
@@ -221,14 +222,14 @@ public class QDataSet implements Serializable {
 				break;
 
 			case PIC:
-				dataSetID = UploadQueue.getAPI().uploadProjectMedia(
-						Integer.parseInt(projID), picture);
+				dataSetID = UploadQueue.getAPI().uploadMedia(
+						Integer.parseInt(projID), picture, TargetType.DATA_SET);
 				break;
 
 			case BOTH:
 				dataSetID = uploadData();
-				dataSetID = UploadQueue.getAPI().uploadDataSetMedia(dataSetID,
-						picture);
+				dataSetID = UploadQueue.getAPI().uploadMedia(
+						Integer.parseInt(projID), picture, TargetType.DATA_SET);
 				break;
 
 			}
