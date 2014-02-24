@@ -72,6 +72,10 @@
         android:label="@string/login_error_prompt"
         android:theme="@style/AppThemeDialog" />
     <activity
+        android:name=".credentials.CredentialManager"
+        android:label="@string/credential_manager"
+        android:theme="@style/AppThemeDialog" />
+    <activity
         android:name=".proj.ProjectCreate"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:label="Create New Project"

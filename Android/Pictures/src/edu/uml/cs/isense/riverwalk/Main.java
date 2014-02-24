@@ -50,7 +50,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
-import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.credentials.CredentialManager;
+import edu.uml.cs.isense.credentials.CredentialManagerLogin;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
@@ -628,7 +629,7 @@ public class Main extends Activity implements LocationListener {
 
 		case R.id.MENU_ITEM_LOGIN:
 			startActivityForResult(new Intent(getApplicationContext(),
-					Login.class), LOGIN_REQUESTED);
+					CredentialManager.class), LOGIN_REQUESTED);
 			return true;
 
 		case R.id.MENU_ITEM_CONTINUOUS:
@@ -953,9 +954,9 @@ public class Main extends Activity implements LocationListener {
 				w.make("Login successful", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 
-			} else if (resultCode == Login.RESULT_ERROR) {
+			} else {
 
-				startActivityForResult(new Intent(mContext, Login.class),
+				startActivityForResult(new Intent(mContext, CredentialManager.class),
 						LOGIN_REQUESTED);
 
 			}
@@ -1070,23 +1071,23 @@ public class Main extends Activity implements LocationListener {
 
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					mContext, getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 
 			if (mPrefs.getString(
-					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+					CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
 					.equals("")
 					&& mPrefs.getString(
-							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+							CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
 							"").equals("")) {
 				mPrefs.edit()
 				.putString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-						Login.DEFAULT_USERNAME).commit();
+						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+						CredentialManagerLogin.DEFAULT_USERNAME).commit();
 				mPrefs.edit()
 				.putString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						Login.DEFAULT_PASSWORD).commit();
+						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+						CredentialManagerLogin.DEFAULT_PASSWORD).commit();
 			}
 
 			if (Connection.hasConnectivity(mContext)) {
@@ -1100,14 +1101,14 @@ public class Main extends Activity implements LocationListener {
 
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				mContext, getSharedPreferences(
-						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+						CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
 
 		if (mPrefs.getString(
-				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+				CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
 				.equals("")
 				&& mPrefs.getString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
 						"").equals("")) {
 			return;
 		}
@@ -1222,16 +1223,16 @@ public class Main extends Activity implements LocationListener {
 		protected Boolean doInBackground(Void... params) {
 			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 					mContext, mContext.getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 
 			boolean success = api
 					.createSession(
 							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+									CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
 									""),
 							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+									CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
 									""));
 			return success;
 		}

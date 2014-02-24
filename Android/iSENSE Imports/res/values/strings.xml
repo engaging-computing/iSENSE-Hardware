@@ -148,5 +148,7 @@
 	<string name="one_more_tap">1 more tap to enter\u0020</string>
 	<string name="now_in_mode">Now in\u0020</string>
 	<string name="mode_type">\u0020mode</string>
+	<string name="credential_manager">Credential Manager</string>
+	<string name="add_key">Add Contributor Key</string>
     
 </resources>
