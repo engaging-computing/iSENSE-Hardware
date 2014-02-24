@@ -108,6 +108,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static String stNumber = "1";
 	public static Boolean projectLaterChecked = false;
 	public static Boolean canobieChecked = true;
+	public static int spinnerid = 0;
+
 	
 	/* Managers and Their Variables */
 	public static DataFieldManager dfm;
@@ -415,24 +417,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
-//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
-//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
 		}
 		return true;
 	}
 
 	
-	
+	//TODO
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.MENU_ITEM_SETUP:
-			//startStop.setEnabled(false);
 			Intent iSetup = new Intent(AmusementPark.this, Configuration.class);
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
@@ -449,8 +450,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					SyncTime.class), SYNC_TIME_REQUESTED);
 			return true;
 		case R.id.MENU_ITEM_MEDIA:
-			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
-			startActivity(iMedia);
+			if ((!setupDone)) {
+				w.make("You must setup before using Media Manager.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+			} else {
+				Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
+				startActivity(iMedia);
+			}
 			return true;
 		case android.R.id.home:
 			CountDownTimer cdt = null;
@@ -652,7 +658,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			dfm.setEnabledFields(acceptedFields);
 			
 		} else if (requestCode == SETUP_REQUESTED) {
-				rideName.setText("Ride/St#: " + rideNameString +"/" + stNumber);
+				//TODO
+				
+				rideName.setText("Ride/Student#: " + rideNameString +"/" + stNumber);
 				
 				SharedPreferences mPrefs = getSharedPreferences(
 						Setup.PROJ_PREFS_ID, 0);
@@ -693,8 +701,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			// Retrieve project id
 			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
 			String projId = mPrefs.getString(Setup.PROJECT_ID, "");
-
-			//TODO FIX ALL DATA NOT BEING UPLOADED
 			
 			Log.e("DATASET", dataSet.toString());
 			
@@ -850,7 +856,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		values = (TextView) findViewById(R.id.values);
 		time = (TextView) findViewById(R.id.time);
 		rideName = (TextView) findViewById(R.id.ridename);
-		rideName.setText("Ride/St#: " + rideNameString);
+		rideName.setText("Ride/Student#: " + rideNameString);
 
 		// Start some managers
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -951,6 +957,27 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		
 	}
 	
+	
+
+	private void initDfm() {
+
+		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+		String projectInput = mPrefs.getString(Setup.PROJECT_ID, "");
+
+		if (projectInput.equals("-1")) {
+			setUpDFMWithAllFields();
+		} else {
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f);
+			dfm.getOrder();
+
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+			getEnabledFields();
+
+		}
+	}
+	
 	private void setUpDFMWithAllFields() {
 		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
@@ -983,25 +1010,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				+ getResources().getString(R.string.temperature_k);
 
 		mEdit.putString("accepted_fields", acceptedFields).commit();
-	}
-
-	private void initDfm() {
-
-		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
-		String projectInput = mPrefs.getString(Setup.PROJECT_ID, "");
-
-		if (projectInput.equals("-1")) {
-			setUpDFMWithAllFields();
-		} else {
-			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
-					mContext, f);
-			dfm.getOrder();
-
-			String fields = mPrefs.getString("accepted_fields", "");
-			getFieldsFromPrefsString(fields);
-			getEnabledFields();
-
-		}
 	}
 
 	// (currently 2 of these methods exist - one also in step1setup)

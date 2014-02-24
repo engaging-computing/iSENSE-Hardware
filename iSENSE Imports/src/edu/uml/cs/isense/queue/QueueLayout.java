@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -541,8 +542,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 				SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE",
 						0);
-				String projectInput = mPrefs.getString("project_id", "");
+				String projectInput = mPrefs.getString("project_id", "-1");
 
+				Log.e("DataSet -- QLayout -- Pre Change", lastDataSetLongClicked.getData().toString());
+				
 				LinkedList<String> fields = cfd
 						.getFieldsForProject(projectInput);
 				if (fields != null) {
@@ -555,8 +558,13 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 					uq.addDataSetToQueue(alter);
 					addViewToScrollQueue(alter);
-				} else
+					
+					Log.e("DataSet -- QLayout -- Post Change", alter.getData().toString());
+
+				} else {
+					Log.e("DataSet", "Starting prepForFieldMatchTask()");
 					new PrepForFieldMatchTask().execute();
+				}
 
 			}
 		} else if (requestCode == QUEUE_DELETE_SELECTED_REQUESTED) {
@@ -595,6 +603,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					QDataSet alter = lastDataSetLongClicked;
 					alter.setProj(projectInput);
 					alter.setFields(FieldMatching.acceptedFields);
+					
+					Log.e("in QueueLayout?", alter.getData().toString());
 
 					uq.removeItemWithKey(lastDataSetLongClicked.key);
 					scrollQueue.removeView(lastViewLongClicked);
@@ -633,7 +643,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		protected Void doInBackground(Void... voids) {
 
 			SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
-			String projectInput = mPrefs.getString("project_id", "");
+			String projectInput = mPrefs.getString("project_id", "-1");
 
 			Fields f = new Fields();
 			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
@@ -725,7 +735,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					boolean isFromDataCollector = (parentName
 							.equals("datacollector"))
 							|| (parentName.equals("carrampphysics"))
-							|| (parentName.equals("data_walk"));
+							|| (parentName.equals("data_walk"))
+							|| (parentName.equals("canobielake"));
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE,

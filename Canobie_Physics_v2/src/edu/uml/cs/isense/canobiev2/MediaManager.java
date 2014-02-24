@@ -40,12 +40,12 @@ public class MediaManager extends Activity {
 	private static Uri videoUri;
 
 	private static final int CAMERA_PIC_REQUESTED = 1;
-	private static final int CAMERA_VID_REQUESTED = 2;
+	private static final int UPLOAD_PIC_REQUESTED = 2;
 
 	private static Waffle w;
 	private static Context mContext;
 	private static Button takePic;
-	private static Button takeVid;
+	private static Button uploadPic;
 	private static Button back;
 	
 	private static File f;
@@ -66,6 +66,7 @@ public class MediaManager extends Activity {
 		w = new Waffle(mContext);
 
 		takePic = (Button) findViewById(R.id.mediaPicture);
+		uploadPic = (Button) findViewById(R.id.mediaUpload);
 		
 		/*Take Picture*/
 		takePic.setOnClickListener(new OnClickListener() {
@@ -91,31 +92,15 @@ public class MediaManager extends Activity {
 
 			}
 		});
-
-		/*Record Video*/
-		takeVid = (Button) findViewById(R.id.mediaVideo);
-		takeVid.setOnClickListener(new OnClickListener() {
+		
+		uploadPic.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-
-					ContentValues valuesVideos = new ContentValues();
-
-					videoUri = getContentResolver().insert(
-							MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-							valuesVideos);
-
-					Intent intentVid = new Intent(
-							MediaStore.ACTION_VIDEO_CAPTURE);
-					intentVid.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
-					intentVid.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-					startActivityForResult(intentVid, CAMERA_VID_REQUESTED);
-
-				} else {
-					w.make("Permission isn't granted to write to external storage.  Please enable to record videos.",
-							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-				}
+				Intent intent = new Intent(Intent.ACTION_PICK);
+				intent.setType("image/*");
+				startActivityForResult(
+						Intent.createChooser(intent, "Select Picture"),
+						UPLOAD_PIC_REQUESTED);
 			}
 		});
 
@@ -138,11 +123,19 @@ public class MediaManager extends Activity {
 				pushPicture();
 				new UploadTask().execute();
 			}
-		} else if (requestCode == CAMERA_VID_REQUESTED) {
+		} else if (requestCode == UPLOAD_PIC_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				f = convertVideoUriToFile(videoUri, this);
-				pushVideo();
+				Uri selectedImageUri = data.getData();
+				String[] filePathColumn = { MediaStore.Images.Media.DATA };
+				Cursor cursor = getContentResolver().query(selectedImageUri,
+						filePathColumn, null, null, null);
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				String picturePath = cursor.getString(columnIndex);
+				cursor.close();
+				pushPicture();
 				new UploadTask().execute();
+
 			}
 		}
 	}
@@ -207,55 +200,6 @@ public class MediaManager extends Activity {
 				}
 			}
 			// return new File(imageUri.getPath());
-		}
-	}
-
-	// Converts the recorded video's uri to a file that is save-able to the SD
-	// Card
-	@SuppressLint("NewApi")
-	public static File convertVideoUriToFile(Uri videoUri, Activity activity) {
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
-
-			String[] proj = { MediaStore.Video.Media.DATA,
-					MediaStore.Video.Media._ID };
-			String selection = null;
-			String[] selectionArgs = null;
-			String sortOrder = null;
-
-			CursorLoader cursorLoader = new CursorLoader(mContext, videoUri,
-					proj, selection, selectionArgs, sortOrder);
-
-			Cursor cursor = cursorLoader.loadInBackground();
-			int file_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-			if (cursor.moveToFirst()) {
-				return new File(cursor.getString(file_ColumnIndex));
-			}
-			return null;
-
-		} else {
-			Cursor cursor = null;
-			try {
-				String[] proj = { MediaStore.Video.Media.DATA,
-						MediaStore.Video.Media._ID };
-				ContentResolver cr = mContext.getContentResolver();
-				cursor = cr.query(videoUri, proj, // Which columns
-													// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
-						null); // Order-by clause (ascending by name)
-				int file_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-				if (cursor.moveToFirst()) {
-					return new File(cursor.getString(file_ColumnIndex));
-				}
-				return null;
-			} finally {
-				if (cursor != null) {
-					cursor.close();
-				}
-			}
 		}
 	}
 
