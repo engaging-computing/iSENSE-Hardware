@@ -1,7 +1,6 @@
 package edu.uml.cs.isense.canobiev2;
 
 import edu.uml.cs.isense.proj.Setup;
-import android.R.string;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -79,6 +78,30 @@ public class Configuration extends Activity {
 		else
             rides.setAdapter(generalAdapter);
 		
+		dataset.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dataset.setError(null);
+			}
+			
+		});
+		
+		studentNumber.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				studentNumber.setError(null);
+			}
+			
+		});
+		
+		sampleRate.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sampleRate.setError(null);
+			}
+			
+		});
+		
 		
 		/*Checkbox on checked change listeners*/
 		projectLater.setOnCheckedChangeListener(new OnCheckedChangeListener(){
@@ -89,6 +112,8 @@ public class Configuration extends Activity {
 				AmusementPark.projectLaterChecked = projectLater.isChecked();
 				if (projectLater.isChecked()) {
 					AmusementPark.projectNum = -1; 
+					
+					select.setError(null);
 					
 					SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
 					SharedPreferences.Editor mEdit = mPrefs.edit();
@@ -123,6 +148,7 @@ public class Configuration extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				select.setError(null);
 				Intent intent = new Intent(getApplicationContext(), Setup.class);
 				intent.putExtra("constrictFields", true);
 				intent.putExtra("app_name", "Canobie");
@@ -155,6 +181,7 @@ public class Configuration extends Activity {
 			dataset.setError("Please Enter a Data Set Name.");
 			selected = false;
 		} else {
+			dataset.setError(null);
 			AmusementPark.dataName = dataset.getText().toString();
 		}
 		
@@ -164,7 +191,10 @@ public class Configuration extends Activity {
 			if (AmusementPark.projectNum == -1) {
 				selected = false;
 				select.setError("Please Select a Project.");
-			} 			
+			} else {
+				select.setError(null);
+			}
+			
 		}
 		
 		
@@ -172,10 +202,12 @@ public class Configuration extends Activity {
 			sampleRate.setError("Please Enter a Value.");
 			selected = false;
 		} else {
+			sampleRate.setError(null);
 			if (Integer.decode(sampleRate.getText().toString()) < 50) {
 				sampleRate.setError("Value must at least 50.");
 				selected = false;
 			} else {
+				sampleRate.setError(null);
 				AmusementPark.rate = sampleRate.getText().toString();		
 			}
 			
@@ -187,6 +219,7 @@ public class Configuration extends Activity {
 			studentNumber.setError("Please Enter Seat/Student");
 			selected = false;
 		} else {
+			studentNumber.setError(null);
 			AmusementPark.stNumber = studentNumber.getText().toString();
 		}
 		

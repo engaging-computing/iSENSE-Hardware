@@ -8,14 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,11 +27,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.uml.cs.isense.objects.RDataSet;
-import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
-import edu.uml.cs.isense.objects.RTutorial;
 
 /**
  * A class which allows Android applications to interface with the iSENSE
@@ -100,10 +94,26 @@ public class API {
 	 * @param p_password
 	 *            The password of the user to log in as
 	 */
-	public boolean createSession(String p_email, String p_password) {
-		email = p_email;
-		password = p_password;
-		return true;
+	public RPerson createSession(String p_email, String p_password) {
+		try {
+			String reqResult = makeRequest(baseURL, "users/myInfo", "email=" + URLEncoder.encode(p_email, "UTF-8")
+				+ "&password=" + URLEncoder.encode(p_password, "UTF-8"),
+				"GET", null);
+			JSONObject j = new JSONObject(reqResult);
+			if(j.getString("username") != null) {
+				email = p_email;
+				password = p_password;
+				RPerson you = new RPerson();
+				you.name = j.getString("username");
+				you.gravatar = j.getString("gravatar");
+				currentUser = you;
+				return you;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	/**
@@ -112,6 +122,11 @@ public class API {
 	public void deleteSession() {
 		email = "";
 		password = "";
+		currentUser = null;
+	}
+	
+	public RPerson getCurrentUser() {
+		return currentUser;
 	}
 
 	/**
@@ -414,7 +429,6 @@ public class API {
 	 *         fails
 	 */
 	public int uploadDataSet(int projectId, JSONObject data, String conKey, String conName) {
-
 		JSONObject requestData = new JSONObject();
 		
 		try {
@@ -705,10 +719,12 @@ public class API {
 
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
+
 			if (!reqType.equals("GET"))
 			{
 				urlConnection.setDoOutput(true);
 			}
+
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
 			// urlConnection.setDoOutput(true);
@@ -840,11 +856,6 @@ public class API {
 			microString = "" + rMicroseconds;
 
 		return " - " + dateFormat.format(cal.getTime()) + microString;
-	}
-	
-	public boolean getCurrentUser() {
-		if (email != "") return true;
-		else return false;
 	}
 
 	/**
