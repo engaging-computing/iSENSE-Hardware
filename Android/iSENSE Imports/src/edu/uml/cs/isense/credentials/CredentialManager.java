@@ -36,7 +36,7 @@ public class CredentialManager extends TabActivity{
             tab1.setIndicator("Login");
             tab1.setContent(new Intent(this,CredentialManagerLogin.class));
             
-            tab2.setIndicator("Keys");
+            tab2.setIndicator("Contributor Keys");
             tab2.setContent(new Intent(this,CredentialManagerKeys.class));
 
             /** Add the tabs  to the TabHost to display. */

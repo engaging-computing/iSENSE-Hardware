@@ -138,13 +138,15 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.CredentialManager"
             android:label="Credential Manager"
-            android:theme="@style/AppThemeDialog" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name="edu.uml.cs.isense.credentials.CredentialManagerKeys"
-            android:theme="@style/AppThemeDialog" />
+            android:label="Credential Manager"
+            android:theme="@style/AppTheme" />
         <activity
-            android:name="edu.uml.cs.isense.credential.CredentialManagerLogin"
-            android:theme="@style/AppThemeDialog" />
+            android:name="edu.uml.cs.isense.credentials.CredentialManagerLogin"
+            android:label="Credential Manager"
+            android:theme="@style/AppTheme" />
         
         
         
