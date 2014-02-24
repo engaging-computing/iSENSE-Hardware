@@ -798,7 +798,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
-					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ, false);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ,
+							lastDataSetLongClicked.getProjID().equals("-1"));
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
