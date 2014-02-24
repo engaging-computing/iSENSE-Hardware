@@ -150,5 +150,6 @@
 	<string name="mode_type">\u0020mode</string>
 	<string name="credential_manager">Credential Manager</string>
 	<string name="add_key">Add Contributor Key</string>
+	<string name="key">Contributor Key:</string>
     
 </resources>

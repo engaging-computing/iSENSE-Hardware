@@ -159,7 +159,7 @@ public class Main extends Activity implements LocationListener {
 		api.useDev(useDev);
 		 
 		
-		attemptLoginOnAppStart();
+		//attemptLoginOnAppStart();
 		
 		uq = new UploadQueue("generalpictures", mContext, api);
 
@@ -168,8 +168,8 @@ public class Main extends Activity implements LocationListener {
 			setDefaultProject();
 		} else {
 			projectLabel = (TextView) findViewById(R.id.projectLabel);
-			projectLabel.setText(getResources().getString(R.string.projectLabel)
-					+ mPrefs.getString("project_id", ""));
+//			projectLabel.setText(getResources().getString(R.string.projectLabel)
+//					+ mPrefs.getString("project_id", ""));
 		}
 		
 
