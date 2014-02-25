@@ -3,40 +3,48 @@ package edu.uml.cs.isense.credentials;
 import java.util.ArrayList;
 
 import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.proj.Setup;
+import edu.uml.cs.isense.waffle.Waffle;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+
 
 public class CredentialManagerKeys extends Activity {
 	
 	private Button bAdd;
   	private ListView lvkeys;
+  	private EditText newkey;
   	public ArrayAdapter keysArray;
   	public static ArrayList<String> keys;
+  	private Waffle w;
+  	
+	private static final int PROJECT_REQUESTED = 104;
+
   	
 	        @Override
 	        public void onCreate(Bundle savedInstanceState) {
 	            super.onCreate(savedInstanceState);
 	            setContentView(R.layout.credential_manager_keys);
+	            w = new Waffle(this.getApplicationContext());
 	            	keys = readKeys (this, "ContributorKeys");
-	        	
-	        		bAdd = (Button) findViewById(R.id.button_add);
+	        		final Button cancel = (Button) findViewById(R.id.button_cancel);
+	        		final Button bAdd = (Button) findViewById(R.id.button_add);
 	        		lvkeys = (ListView) findViewById(R.id.lv_keys);
-	        		
+	        		newkey = (EditText) findViewById(R.id.edittext_key);
+
 	        		// This is the array adapter, it takes the context of the activity as a 
 	                // first parameter, the type of list view as a second parameter and your 
 	                // array as a third parameter.
@@ -56,7 +64,16 @@ public class CredentialManagerKeys extends Activity {
 	        		bAdd.setOnClickListener(new OnClickListener(){
 
 						public void onClick(View v) {
-							
+							if (newkey.length() != 0) {
+							Intent iproject = new Intent(getApplicationContext(),
+									Setup.class);
+							iproject.putExtra("constrictFields", true);
+							iproject.putExtra("app_name", "Pictures");
+							startActivityForResult(iproject, PROJECT_REQUESTED);
+							} else {
+								w.make("Empty Key", Waffle.LENGTH_SHORT,
+										Waffle.IMAGE_X);
+							}
 						}
 			
 	        		});
@@ -123,6 +140,26 @@ public class CredentialManagerKeys extends Activity {
 	        	    editor.putInt(prefix+"_size", list.size());
 	        	    editor.commit();
 	        	}
+	        	
+	        	@Override
+	        	protected void onActivityResult(int requestCode, int resultCode, Intent data) { // passes in a request code
+	        																					
+	        		super.onActivityResult(requestCode, resultCode, data);
+
+	        		if (requestCode == PROJECT_REQUESTED) { 
+	        			if (resultCode == Activity.RESULT_OK) {
+	        				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
+	        				String eidString = mPrefs.getString("project_id", "");
+	        			
+	        			}
+	        		
+	        		}
+	        		
+	        	}
+
+	        	
+	        	
+	        	
 
 }
 		
