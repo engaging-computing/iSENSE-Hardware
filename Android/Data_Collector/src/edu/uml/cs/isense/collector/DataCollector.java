@@ -877,14 +877,14 @@ public class DataCollector extends Activity implements SensorEventListener,
 							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 
-			boolean success = api
+			boolean success = (api
 					.createSession(
 							mPrefs.getString(
 									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
 									""),
 							mPrefs.getString(
 									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-									""));
+									"")) != null);
 			return success;
 		}
 
