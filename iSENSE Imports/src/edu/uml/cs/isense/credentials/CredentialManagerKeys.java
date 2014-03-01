@@ -41,9 +41,9 @@ public class CredentialManagerKeys extends Activity {
 	            w = new Waffle(this.getApplicationContext());
 	            	keys = readKeys (this, "ContributorKeys");
 	        		final Button cancel = (Button) findViewById(R.id.button_cancel);
-	        		final Button bAdd = (Button) findViewById(R.id.button_add);
-	        		lvkeys = (ListView) findViewById(R.id.lv_keys);
-	        		newkey = (EditText) findViewById(R.id.edittext_key);
+//	        		final Button bAdd = (Button) findViewById(R.id.button_add);
+//	        		lvkeys = (ListView) findViewById(R.id.lv_keys);
+//	        		newkey = (EditText) findViewById(R.id.edittext_key);
 
 	        		// This is the array adapter, it takes the context of the activity as a 
 	                // first parameter, the type of list view as a second parameter and your 
