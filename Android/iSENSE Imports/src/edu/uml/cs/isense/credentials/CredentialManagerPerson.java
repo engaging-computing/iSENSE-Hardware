@@ -11,12 +11,7 @@ import android.view.ViewGroup;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class CredentialManagerPerson extends Fragment {
-	@Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);    
-    }
-	
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -24,8 +19,9 @@ public class CredentialManagerPerson extends Fragment {
         return inflater.inflate(R.layout.credential_manager_person, container, false);
     }
 
-
-	
-    
-	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+	}
 }
