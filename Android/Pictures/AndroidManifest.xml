@@ -138,18 +138,8 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.CredentialManager"
             android:label="Credential Manager"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name="edu.uml.cs.isense.credentials.CredentialManagerKeys"
-            android:label="Credential Manager"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name="edu.uml.cs.isense.credentials.CredentialManagerLogin"
-            android:label="Credential Manager"
-            android:theme="@style/AppTheme" />
-        
-        
-        
         
     </application>
 

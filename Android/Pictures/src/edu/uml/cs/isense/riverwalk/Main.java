@@ -882,7 +882,6 @@ public class Main extends Activity implements LocationListener {
 			}
 			
 			QDataSet ds;
-			//TODO using as refrence for canobie app
 			ds = new QDataSet(name.getText().toString()
 					+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
 					makeThisDatePretty(curTime), QDataSet.Type.BOTH,
@@ -1068,27 +1067,28 @@ public class Main extends Activity implements LocationListener {
 	
 	// gets the user's name if not already provided + login to web site
 		private void attemptLoginOnAppStart() {
+			//TODO
 
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, getSharedPreferences(
-							CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			if (mPrefs.getString(
-					CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-					.equals("")
-					&& mPrefs.getString(
-							CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							"").equals("")) {
-				mPrefs.edit()
-				.putString(
-						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-						CredentialManagerLogin.DEFAULT_USERNAME).commit();
-				mPrefs.edit()
-				.putString(
-						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						CredentialManagerLogin.DEFAULT_PASSWORD).commit();
-			}
+//			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+//					mContext, getSharedPreferences(
+//							CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+//							Context.MODE_PRIVATE));
+//
+//			if (mPrefs.getString(
+//					CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+//					.equals("")
+//					&& mPrefs.getString(
+//							CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+//							"").equals("")) {
+//				mPrefs.edit()
+//				.putString(
+//						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+//						CredentialManagerLogin.DEFAULT_USERNAME).commit();
+//				mPrefs.edit()
+//				.putString(
+//						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+//						CredentialManagerLogin.DEFAULT_PASSWORD).commit();
+//			}
 
 			if (Connection.hasConnectivity(mContext)) {
 				new LoginTask().execute();
@@ -1098,20 +1098,20 @@ public class Main extends Activity implements LocationListener {
 
 	// gets the user's name if not already provided + login to web site
 	private void attemptLogin() {
-
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				mContext, getSharedPreferences(
-						CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
-
-		if (mPrefs.getString(
-				CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-				.equals("")
-				&& mPrefs.getString(
-						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						"").equals("")) {
-			return;
-		}
+//TODO 
+//		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+//				mContext, getSharedPreferences(
+//						CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+//						Context.MODE_PRIVATE));
+//
+//		if (mPrefs.getString(
+//				CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+//				.equals("")
+//				&& mPrefs.getString(
+//						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+//						"").equals("")) {
+//			return;
+//		}
 
 		if (Connection.hasConnectivity(mContext)) {
 			new LoginTask().execute();
@@ -1221,20 +1221,22 @@ public class Main extends Activity implements LocationListener {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, mContext.getSharedPreferences(
-							CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			boolean success = api
-					.createSession(
-							mPrefs.getString(
-									CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-									""),
-							mPrefs.getString(
-									CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-									""));
-			return success;
+			//TODO
+//			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+//					mContext, mContext.getSharedPreferences(
+//							CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
+//							Context.MODE_PRIVATE));
+//
+//			boolean success = api
+//					.createSession(
+//							mPrefs.getString(
+//									CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+//									""),
+//							mPrefs.getString(
+//									CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+//									""));
+//			return success;
+			return true;
 		}
 
 	}
