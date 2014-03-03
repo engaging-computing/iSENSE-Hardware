@@ -1,11 +1,12 @@
 package edu.uml.cs.isense.credentials;
 
 import edu.uml.cs.isense.R;
-import android.app.TabActivity;
-import android.content.Intent;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.os.Build;
 import android.os.Bundle;
-import android.widget.TabHost;
-import android.widget.TabHost.TabSpec;
 
 
 /**
@@ -14,34 +15,85 @@ import android.widget.TabHost.TabSpec;
  * @author iSENSE Android Development Team
  */
 
-@SuppressWarnings("deprecation") //Necessary for Pre-Android 3.0
-public class CredentialManager extends TabActivity{
+public class CredentialManager extends Activity {
+	FragmentManager fragmentManager;
+	FragmentTransaction fragmentTransaction;
+	
+	
+	CredentialManagerLogin fragmentLogin = new CredentialManagerLogin();
+    CredentialManagerKeys fragmentKeys = new CredentialManagerKeys();
+    CredentialManagerPerson fragmentPerson = new CredentialManagerPerson();
+    
+    int TRANSIT_FRAGMENT_OPEN = 4097;
+    int TRANSIT_FRAGMENT_CLOSE = 8194;
+    int TRANSIT_FRAGMENT_FADE = 4099;
 	
 	 /** Called when the activity is first created. */
-    @Override
+	@Override
     public void onCreate(Bundle savedInstanceState)
     {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.credential_manager);
-
-            // create the TabHost that will contain the Tabs
-            TabHost tabHost = (TabHost)findViewById(android.R.id.tabhost);
-
-
-            TabSpec tab1 = tabHost.newTabSpec("First Tab");
-            TabSpec tab2 = tabHost.newTabSpec("Second Tab");
-
-           // Set the Tab name and Activity
-           // that will be opened when particular Tab will be selected
-            tab1.setIndicator("Login");
-            tab1.setContent(new Intent(this,CredentialManagerLogin.class));
             
-            tab2.setIndicator("Contributor Keys");
-            tab2.setContent(new Intent(this,CredentialManagerKeys.class));
-
-            /** Add the tabs  to the TabHost to display. */
-            tabHost.addTab(tab1);
-            tabHost.addTab(tab2);
-
+            LoggedOutView();
     }
-} 
+	
+	
+	/*this is the standard view when user is logged out*/
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	void LoggedOutView() {
+		fragmentManager = getFragmentManager();
+	    fragmentTransaction = fragmentManager.beginTransaction();
+
+	    fragmentTransaction.add(R.id.fragment_first, fragmentLogin);
+	    fragmentTransaction.add(R.id.fragment_second, fragmentKeys);
+	    fragmentTransaction.commit();
+
+	}
+	
+	/*call this when user logs in*/
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	void LoggedInView() {
+		fragmentManager = getFragmentManager();
+	    fragmentTransaction = fragmentManager.beginTransaction();
+	    
+	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
+	    fragmentTransaction.remove(fragmentLogin);
+	    fragmentTransaction.remove(fragmentKeys);
+	    
+	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_OPEN);
+	    fragmentTransaction.add(R.id.fragment_first, fragmentPerson);
+	    
+	    fragmentTransaction.addToBackStack(null);
+	    
+	    fragmentTransaction.commit();
+
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	/*call this when user is logged out to make the keys fragment take up the whole screen */
+	void KeysOnlyView() {
+		fragmentManager = getFragmentManager();
+	    fragmentTransaction = fragmentManager.beginTransaction();
+	    
+	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
+	    fragmentTransaction.remove(fragmentLogin);
+	    fragmentTransaction.addToBackStack(null);
+
+	    fragmentTransaction.commit();
+
+	}
+
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+			
+		}
+	
+   
+	
+	
+	
+}
+
