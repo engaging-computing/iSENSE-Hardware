@@ -128,6 +128,19 @@ public class API {
 	public RPerson getCurrentUser() {
 		return currentUser;
 	}
+	
+	/**
+	 * Verifies whether a given contributor key will work for a project
+	 * 
+	 * @param projectId
+	 * @param conKey
+	 * @return True is the key is valid for that project, false if it is not
+	 */
+	public boolean validateKey(int projectId, String conKey) {
+		//TODO implement this when we get the API functionality to actually do it
+		
+		return true;
+	}
 
 	/**
 	 * Retrieves multiple projects off of iSENSE.
