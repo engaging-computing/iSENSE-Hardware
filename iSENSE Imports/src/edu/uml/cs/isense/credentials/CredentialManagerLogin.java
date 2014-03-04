@@ -2,10 +2,10 @@ package edu.uml.cs.isense.credentials;
 
 import edu.uml.cs.isense.R;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,17 +30,17 @@ public class CredentialManagerLogin extends Fragment {
 		final Button ok = (Button) view.findViewById(R.id.button_ok);
 		final Button cancel = (Button) view.findViewById(R.id.button_cancel);
 
+		/* Calls a method of the parent activity Credential Manager */
 		ok.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				Log.e("CredentialManager", "Login Button");
-				//CredentialManager.attemptLogin();
+				((CredentialManager) getActivity()).LoginWithNewInfo();
 			}
 		});
 		
 		cancel.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				//setResult(RESULT_CANCELED);
-				//TODO EXIT CREDENTIAL ACTIVITY
+				getActivity().setResult(Activity.RESULT_CANCELED);
+				getActivity().finish();
 			}
 		});
         // Inflate the layout for this fragment
@@ -48,13 +48,11 @@ public class CredentialManagerLogin extends Fragment {
 	}
 	
 	public static String getUsername() {
-		return username.toString();
-		
+		return username.getText().toString();
 	}
 	
 	public static String getPassword() {
-		return password.toString();
-		
+		return password.getText().toString();
 	}
 	
 	@Override
@@ -62,6 +60,8 @@ public class CredentialManagerLogin extends Fragment {
 		// TODO Auto-generated method stub
 		super.onPause();
 	}
+	
+	
 
 	
 }

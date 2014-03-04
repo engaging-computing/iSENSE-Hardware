@@ -15,9 +15,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 
 /**
  *
@@ -64,6 +61,10 @@ public class CredentialManager extends Activity {
     int TRANSIT_FRAGMENT_CLOSE = 8194;
     int TRANSIT_FRAGMENT_FADE = 4099;
 	
+    /* person object we get back after we login*/
+	public static RPerson person;
+
+    
 	 /** Called when the activity is first created. */
 	@Override
     public void onCreate(Bundle savedInstanceState)
@@ -93,7 +94,7 @@ public class CredentialManager extends Activity {
 	 * This is the standard view when user is logged out
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	void LoggedOutView() {
+	private void LoggedOutView() {
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -106,7 +107,7 @@ public class CredentialManager extends Activity {
 	
 	/*call this when user logs in*/
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	void LoggedInView() {
+	private void LoggedInView() {
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
 	    
@@ -125,7 +126,7 @@ public class CredentialManager extends Activity {
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	/*call this when user is logged out to make the keys fragment take up the whole screen */
-	void KeysOnlyView() {
+	private void KeysOnlyView() {
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
 	    
@@ -150,8 +151,10 @@ public class CredentialManager extends Activity {
 	    fragmentTransaction.commit();
 	    	
 		Log.e("in credential manager", "back pressed");
-		super.onBackPressed();
-	}
+		finish();
+		}
+	
+	
 	/* If usercalls this function with null arguments, open the login dialog 
 	 * (ret true on success, false on failure)
 	 */
@@ -202,40 +205,24 @@ public class CredentialManager extends Activity {
 	
 	
 	
-	public void attemptLogin() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				this, getSharedPreferences(
-						PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
-
-		if (mPrefs.getString(
-				PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-				.equals("")
-				&& mPrefs.getString(
-						PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						"").equals("")) {
-			return;
-		}
-
+	
+	public void LoginWithNewInfo() {
 		if (Connection.hasConnectivity(this)) {
-			new LoginTask().execute();
-
+			new LoginWithNewInfoTask().execute();
 		}
 	}
-
-	
 	
 	/**
 	 * This class attempts to login to iSENSE and writes user info to
 	 * preferences if it is successful. Otherwise, it calls LoginError.
 	 * 
 	 */
-	private class LoginTask extends AsyncTask<Void, Void, Void> {
+	private class LoginWithNewInfoTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... voids) {
 			// Login call (passes success to onPostExecute)
-			api.createSession(CredentialManagerLogin.getUsername(),
+			person = api.createSession(CredentialManagerLogin.getUsername(),
 					CredentialManagerLogin.getPassword());
 			return null;
 		}
@@ -258,10 +245,63 @@ public class CredentialManager extends Activity {
 
 			// return success
 			setResult(RESULT_OK);
-			finish();
+			//finish();
+			LoggedInView();
 		}
 
 	}
+	
+	
+//	/**
+//	 * This class attempts to login to iSENSE and writes user info to
+//	 * preferences if it is successful. Otherwise, it calls LoginError.
+//	 * 
+//	 */
+//	/* attempt to login with stored username and password */
+//	public void attemptLoginWithSavedInfo() {
+//		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+//				this, getSharedPreferences(
+//						PREFERENCES_KEY_OBSCURRED_USER_INFO,
+//						Context.MODE_PRIVATE));
+//
+//		if (mPrefs.getString(
+//				PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+//				.equals("")
+//				&& mPrefs.getString(
+//						PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+//						"").equals("")) {
+//			return;
+//		}
+//
+//		if (Connection.hasConnectivity(this)) {
+//			new LoginWithSavedInfoTask().execute();
+//
+//		}
+//	}
+//	
+//	// Attempts to login with current user information
+//	private class LoginWithSavedInfoTask extends AsyncTask<Void, Void, Boolean> {
+//
+//			@Override
+//			protected Boolean doInBackground(Void... params) {
+//				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+//						baseContext, getSharedPreferences(
+//								PREFERENCES_KEY_OBSCURRED_USER_INFO,
+//								Context.MODE_PRIVATE));
+//	
+//				person = api
+//						.createSession(
+//								mPrefs.getString(
+//										PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+//										""),
+//								mPrefs.getString(
+//										PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+//										""));
+//				
+//				return null;
+//			}
+//
+//		}
 	
 	
 }
