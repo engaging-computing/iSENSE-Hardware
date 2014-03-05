@@ -33,7 +33,7 @@ public class CredentialManagerLogin extends Fragment {
 		/* Calls a method of the parent activity Credential Manager */
 		ok.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				((CredentialManager) getActivity()).LoginWithNewInfo();
+				((CredentialManager) getActivity()).Login(username.getText().toString(), password.getText().toString());
 			}
 		});
 		
@@ -60,14 +60,10 @@ public class CredentialManagerLogin extends Fragment {
 		// TODO Auto-generated method stub
 		super.onPause();
 	}
-	
-	
-
-	
 }
 	
     
-	
+//TODO virtual class for login
 
 
 

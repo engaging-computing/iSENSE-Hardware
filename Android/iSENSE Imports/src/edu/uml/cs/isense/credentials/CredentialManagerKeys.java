@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class CredentialManagerKeys extends Fragment {
@@ -26,12 +24,8 @@ public class CredentialManagerKeys extends Fragment {
 		// TODO Auto-generated method stub
 		super.onPause();
 	}
-
-
-	 
-	
 }
 
-
+//TODO Virtual class for keys
 
 

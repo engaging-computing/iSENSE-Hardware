@@ -159,5 +159,6 @@
 	<string name="credentials"><u>Credentials</u></string>
 	<string name="logged_in">Logged in as:</string>
 	<string name="user_img_desc">iSense Gravatar</string>
+	<string name="logout">Log out</string>
     
 </resources>
