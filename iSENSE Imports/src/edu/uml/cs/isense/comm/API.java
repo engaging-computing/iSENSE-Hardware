@@ -30,6 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
@@ -253,7 +255,9 @@ public class API {
 				mField.put("unit", rpf.unit);
 				JSONObject postData2 = new JSONObject();
 				postData2.put("field", mField);
+				
 				postData2.put("project_id", pid);
+				Log.e("test", postData2.toString());
 				makeRequest(baseURL, "fields", "authenticity_token="
 						+ URLEncoder.encode(authToken, "UTF-8"), "POST",
 						postData2);
@@ -671,7 +675,7 @@ public class API {
 	public int jsonDataUpload(int projectId, JSONObject data, String datasetName) {
 		// append timestamp to the data set name to ensure uniqueness
 		datasetName += appendedTimeStamp();
-
+		Log.e("data", data.toString());
 		JSONObject requestData = new JSONObject();
 
 		try {
@@ -1027,10 +1031,12 @@ public class API {
 
 			HttpURLConnection urlConnection = (HttpURLConnection) url
 					.openConnection();
+
 			if (!reqType.equals("GET"))
 			{
 				urlConnection.setDoOutput(true);
 			}
+
 			urlConnection.setRequestMethod(reqType);
 			urlConnection.setRequestProperty("Accept", "application/json");
 			// urlConnection.setDoOutput(true);

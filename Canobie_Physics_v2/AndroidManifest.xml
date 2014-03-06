@@ -39,7 +39,7 @@
         <activity
             android:name=".Configuration"
             android:label="Configuration"
-            android:theme="@style/AppThemeDialog" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".MediaManager"
             android:label="Media Manager"
@@ -67,10 +67,11 @@
         <activity
             android:name="edu.uml.cs.isense.queue.QueueEditRename"
             android:label="Rename Data Set"
-            android:theme="@style/AppThemeDialog" />      
+            android:theme="@style/AppThemeDialog" />
         <activity
             android:name="edu.uml.cs.isense.proj.BrowseProjects"
             android:label="Browse Projects"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme" />
         <activity
             android:name="edu.uml.cs.isense.queue.QueueSummary"
@@ -96,10 +97,6 @@
             android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
             android:label="@string/project_name_dialog"
             android:theme="@style/AppThemeDialog" />
-         <activity
-            android:name="edu.uml.cs.isense.sync.SyncTime"
-            android:label="Sync Time"
-            android:theme="@style/AppTheme" />
           <activity
             android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
             android:label="Delete Selected"
@@ -107,7 +104,24 @@
           <activity
             android:name="edu.uml.cs.isense.queue.NoInitialProject"
             android:label="Select a Project"
-            android:theme="@style/AppThemeDialog" />     
+            android:theme="@style/AppThemeDialog" />
+          <activity
+            android:name="edu.uml.cs.isense.sync.SyncTime"
+            android:label="Sync Time"
+            android:theme="@style/AppTheme" />             
+          <activity
+            android:name="edu.uml.cs.isense.sync.TimeFailed"
+            android:label="Sync Time"
+            android:theme="@style/AppThemeDialog" />
+          <activity
+            android:name="edu.uml.cs.isense.sync.TimeReceived"
+            android:label="Sync Time"
+            android:theme="@style/AppThemeDialog" />
+          <activity
+            android:name="edu.uml.cs.isense.sync.TimeReset"
+            android:label="Sync Time"
+            android:theme="@style/AppThemeDialog" />
+          
          
     </application>
 

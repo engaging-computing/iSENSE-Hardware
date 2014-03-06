@@ -13,6 +13,15 @@
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
         android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/menuPrompt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:text="@string/menuDirections"
+            android:textSize="15sp" />
         
         <TextView
             android:id="@+id/time"
@@ -31,16 +40,6 @@
             android:gravity="center_horizontal"
             android:text="@string/rideAndSeat"
             android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/menuPrompt"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:paddingTop="15dp"
-            android:text="@string/menuDirections"
-            android:textSize="15sp" />
     </LinearLayout>
     
     
