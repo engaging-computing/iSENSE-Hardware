@@ -257,6 +257,26 @@ public class CredentialManager extends Activity {
 
 		@Override
 		protected void onPostExecute(Void v) {
+<<<<<<< HEAD
+			/* Saved the user's credentials. */
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					baseContext, baseContext.getSharedPreferences(
+							PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							MODE_PRIVATE));
+			mPrefs.edit()
+			.putString(
+					PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+					CredentialManagerLogin.getUsername()).commit();
+			mPrefs.edit()
+			.putString(
+					PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+					CredentialManagerLogin.getPassword()).commit();
+
+			// return success
+			//setResult(RESULT_OK);
+			//finish();
+			//LoggedInView();
+=======
 			/*if successfully logged in save credentials to preferences else display waffle*/
 			if (person == null) {
 				
@@ -297,6 +317,7 @@ public class CredentialManager extends Activity {
 				loggedin = true;
 				LoggedInView();
 			}
+>>>>>>> origin/bdlogin
 		}
 
 	}

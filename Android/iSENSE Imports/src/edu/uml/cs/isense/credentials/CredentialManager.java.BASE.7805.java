@@ -1,22 +1,16 @@
 package edu.uml.cs.isense.credentials;
 
-import java.io.IOException;
-import java.net.URL;
-
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
-import edu.uml.cs.isense.waffle.Waffle;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,8 +27,6 @@ public class CredentialManager extends Activity {
 	FragmentTransaction fragmentTransaction;
 	
 	private API api;
-	
-	private boolean loggedin = false;
 	
 	/* These are the keys for obtain the user credential preferences. */
 	public static final String PREFERENCES_KEY_OBSCURRED_USER_INFO = "OBSCURRED_USER_INFO";
@@ -72,7 +64,6 @@ public class CredentialManager extends Activity {
     /* person object we get back after we login*/
 	public static RPerson person;
 
-	private Waffle w;
     
 	 /** Called when the activity is first created. */
 	@Override
@@ -83,9 +74,6 @@ public class CredentialManager extends Activity {
     		api = API.getInstance();
     		baseContext = getBaseContext();
     		
-    		w = new Waffle(baseContext);
-
-    		
     		/*
     		 * This fetches the last successful username and password from
     		 * preferences.
@@ -94,6 +82,7 @@ public class CredentialManager extends Activity {
     				baseContext, baseContext.getSharedPreferences(
     						PREFERENCES_KEY_OBSCURRED_USER_INFO, MODE_PRIVATE));
     		
+
 
             LoggedOutView();
             
@@ -108,31 +97,28 @@ public class CredentialManager extends Activity {
 	private void LoggedOutView() {
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
-	    
-	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
-	    fragmentTransaction.remove(fragmentPerson);
-	    
-	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_OPEN);
-	    Log.e("Credential Manager ", "loggedOutView();");
-	    fragmentTransaction.add(R.id.fragmentcontainer, fragmentLogin);
-	    fragmentTransaction.add(R.id.fragmentcontainer2, fragmentKeys);
+
+	    fragmentTransaction.add(R.id.fragment_first, fragmentLogin);
+	    fragmentTransaction.add(R.id.fragment_second, fragmentKeys);
 	    
 	    fragmentTransaction.commit();
 
 	}
 	
 	/*call this when user logs in*/
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void LoggedInView() {
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
 	    
+	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
 	    fragmentTransaction.remove(fragmentLogin);
 	    fragmentTransaction.remove(fragmentKeys);
-	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
-
+	    
 	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_OPEN);
-	    fragmentTransaction.add(R.id.fragmentcontainer, fragmentPerson);
+	    fragmentTransaction.add(R.id.fragment_first, fragmentPerson);
+	    
+	    fragmentTransaction.addToBackStack(null);
 	    
 	    fragmentTransaction.commit();
 
@@ -150,38 +136,50 @@ public class CredentialManager extends Activity {
 	    fragmentTransaction.commit();
 
 	}
+
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public void onBackPressed() {
+		
+		fragmentManager = getFragmentManager();
+	    fragmentTransaction = fragmentManager.beginTransaction();
+	    
+	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
+	    fragmentTransaction.remove(fragmentLogin);
+	    fragmentTransaction.remove(fragmentKeys);
+	    fragmentTransaction.commit();
+	    	
+		Log.e("in credential manager", "back pressed");
+		finish();
+		}
 	
-	public RPerson getUserInformation() {
-		return person;
+	
+	/* If usercalls this function with null arguments, open the login dialog 
+	 * (ret true on success, false on failure)
+	 */
+	public boolean login(String username, String password) {
+		return false;
+		
 	}
 	
+	
+
+	
+	public RPerson getUserInformation() {
+		return null;
+		
+	}
 	public boolean isLoggedIn() {
-		return loggedin;
+		return false;
 		
 	}
 	public void logout() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				baseContext, baseContext.getSharedPreferences(
-						PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						MODE_PRIVATE));
-		mPrefs.edit()
-		.putString(
-				PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-				"").commit();
-		mPrefs.edit()
-		.putString(
-				PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-				"").commit();
 		
-		loggedin = false;
-		LoggedOutView();
 	}
 	
+	/*if user passes null,call key creation dialog */
 	public boolean addContributorKey(String key) {
-		if (key == null) {
-			//TODO call key creation dialog
-		}
-		
 		return false;
 		
 	}
@@ -189,35 +187,28 @@ public class CredentialManager extends Activity {
 	public void removeContributorKey(String key){
 		
 	}
-	
-	public String getUsername() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				baseContext, getSharedPreferences(
-						PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
+
+	private boolean saveCredentials(String username, String password) {
+		return false;
 		
-		return mPrefs.getString(PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "");	
 	}
 	
-	public String getPassword() {
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				baseContext, getSharedPreferences(
-						PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
+	private String getUsername() {
+		return "";
 		
-		return mPrefs.getString( PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, "");
+	}
+	
+	private String getPassword() {
+		return "";
 		
 	}
 	
 	
 	
-	/* Calls LoginTask and passes in a user name and password
-	 * if the user name and password are both null then it will try and login with
-	 * the saved credentials from preferences. CredentialManager.Login(null,null) should
-	 * be called in every apps oncreate method to login to the API with saved credentials.*/
-	public void Login(String username, String password) {
+	
+	public void LoginWithNewInfo() {
 		if (Connection.hasConnectivity(this)) {
-			new LoginTask().execute(username, password);
+			new LoginWithNewInfoTask().execute();
 		}
 	}
 	
@@ -226,80 +217,91 @@ public class CredentialManager extends Activity {
 	 * preferences if it is successful. Otherwise, it calls LoginError.
 	 * 
 	 */
-	private class LoginTask extends AsyncTask<String, Void, Void> {
+	private class LoginWithNewInfoTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
-		protected Void doInBackground(String... userInfo) {
-			String username = userInfo[0];
-			String password = userInfo[1];
-			
-			/* if null username and password get info from preferences instead */
-			if (username == null && password == null) {
-				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						baseContext, getSharedPreferences(
-								PREFERENCES_KEY_OBSCURRED_USER_INFO,
-								Context.MODE_PRIVATE));
-				
-				username = mPrefs.getString(PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "");
-				password = mPrefs.getString( PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, "");
-				
-				/* if no username or password was stored return and do not try to login*/
-				if (username.equals("") && password.equals("")) {
-					loggedin = false;
-					return null;
-				}
-				
-			}
-			
-			person = api.createSession(username, password);
+		protected Void doInBackground(Void... voids) {
+			// Login call (passes success to onPostExecute)
+			person = api.createSession(CredentialManagerLogin.getUsername(),
+					CredentialManagerLogin.getPassword());
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void v) {
-			/*if successfully logged in save credentials to preferences else display waffle*/
-			if (person == null) {
-				
-				w.make("Invalid Email or Password",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-				
-				/*username or password failed, make sure credentials are empty*/
-				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						baseContext, baseContext.getSharedPreferences(
-								PREFERENCES_KEY_OBSCURRED_USER_INFO,
-								MODE_PRIVATE));
-				mPrefs.edit()
-				.putString(
-						PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-						"").commit();
-				mPrefs.edit()
-				.putString(
-						PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						"").commit();
-				loggedin = false;
-				
-				} else {
-					
-				/* Saved the user's credentials. */
-				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						baseContext, baseContext.getSharedPreferences(
-								PREFERENCES_KEY_OBSCURRED_USER_INFO,
-								MODE_PRIVATE));
-				mPrefs.edit()
-				.putString(
-						PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-						CredentialManagerLogin.getUsername()).commit();
-				mPrefs.edit()
-				.putString(
-						PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						CredentialManagerLogin.getPassword()).commit();
-				
-				loggedin = true;
-				LoggedInView();
-			}
+			/* Saved the user's credentials. */
+			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+					baseContext, baseContext.getSharedPreferences(
+							PREFERENCES_KEY_OBSCURRED_USER_INFO,
+							MODE_PRIVATE));
+			mPrefs.edit()
+			.putString(
+					PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+					CredentialManagerLogin.getUsername()).commit();
+			mPrefs.edit()
+			.putString(
+					PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+					CredentialManagerLogin.getPassword()).commit();
+
+			// return success
+			setResult(RESULT_OK);
+			//finish();
+			LoggedInView();
 		}
 
 	}
+	
+	
+//	/**
+//	 * This class attempts to login to iSENSE and writes user info to
+//	 * preferences if it is successful. Otherwise, it calls LoginError.
+//	 * 
+//	 */
+//	/* attempt to login with stored username and password */
+//	public void attemptLoginWithSavedInfo() {
+//		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+//				this, getSharedPreferences(
+//						PREFERENCES_KEY_OBSCURRED_USER_INFO,
+//						Context.MODE_PRIVATE));
+//
+//		if (mPrefs.getString(
+//				PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
+//				.equals("")
+//				&& mPrefs.getString(
+//						PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+//						"").equals("")) {
+//			return;
+//		}
+//
+//		if (Connection.hasConnectivity(this)) {
+//			new LoginWithSavedInfoTask().execute();
+//
+//		}
+//	}
+//	
+//	// Attempts to login with current user information
+//	private class LoginWithSavedInfoTask extends AsyncTask<Void, Void, Boolean> {
+//
+//			@Override
+//			protected Boolean doInBackground(Void... params) {
+//				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+//						baseContext, getSharedPreferences(
+//								PREFERENCES_KEY_OBSCURRED_USER_INFO,
+//								Context.MODE_PRIVATE));
+//	
+//				person = api
+//						.createSession(
+//								mPrefs.getString(
+//										PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
+//										""),
+//								mPrefs.getString(
+//										PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
+//										""));
+//				
+//				return null;
+//			}
+//
+//		}
 	
 	
 }
