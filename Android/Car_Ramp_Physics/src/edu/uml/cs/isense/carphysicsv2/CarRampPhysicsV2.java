@@ -1504,7 +1504,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			dia = new ProgressDialog(mContext);
 			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Please wait while your data are uploaded to iSENSE...");
 			dia.setCancelable(false);
 			dia.show();
 
