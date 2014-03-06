@@ -20,7 +20,7 @@
 
 @end
 
-@interface ProjectBrowserViewController : UIViewController <UITableViewDelegate, UITableViewDataSource> {
+@interface ProjectBrowserViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UITextFieldDelegate> {
     
     API *isenseAPI;
     __weak id <ProjectBrowserDelegate> delegate;
@@ -34,9 +34,13 @@
 @property int cell_count;
 @property BOOL isUpdating;
 @property NSMutableArray *projects;
+@property NSMutableArray *projectsFiltered;
 @property (nonatomic, assign) int currentPage;
 @property (nonatomic, retain) NSString *currentQuery;
 @property (nonatomic, weak) id <ProjectBrowserDelegate> delegate;
+@property UIAlertView *spinnerDialog;
+
+- (id)initWithDelegate: (__weak id<ProjectBrowserDelegate>) delegateObject;
 
 
 @end

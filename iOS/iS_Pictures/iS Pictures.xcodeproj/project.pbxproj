@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7622775318AA66430015888A /* ProjectBrowserViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7622775218AA66430015888A /* ProjectBrowserViewController~landscape_iPhone.xib */; };
+		7622775518AA6A050015888A /* ProjectBrowserViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7622775418AA6A050015888A /* ProjectBrowserViewController_iPad.xib */; };
 		76318B2518833128008D3A1F /* StringGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = 76318B2418833128008D3A1F /* StringGrabber.m */; };
 		76318B29188332C4008D3A1F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76318B28188332C4008D3A1F /* MobileCoreServices.framework */; };
 		76318B2C18833314008D3A1F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76318B2B18833314008D3A1F /* SystemConfiguration.framework */; };
@@ -54,9 +56,12 @@
 		7680C91318872F2B00BC1E98 /* PWViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7680C91218872F2B00BC1E98 /* PWViewController~landscape_iPad.xib */; };
 		7680C9151888700700BC1E98 /* navBar~landscape_iPhone.png in Resources */ = {isa = PBXBuildFile; fileRef = 7680C9141888700700BC1E98 /* navBar~landscape_iPhone.png */; };
 		7698EB5B189C4D9400C6E80F /* ProjectBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7698EB59189C4D9400C6E80F /* ProjectBrowserViewController.m */; };
-		7698EB5C189C4D9400C6E80F /* ProjectBrowserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7698EB5A189C4D9400C6E80F /* ProjectBrowserViewController.xib */; };
+		7698EB5C189C4D9400C6E80F /* ProjectBrowserViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7698EB5A189C4D9400C6E80F /* ProjectBrowserViewController_iPhone.xib */; };
 		76A5C0FE18A189E80092C428 /* spacer.png in Resources */ = {isa = PBXBuildFile; fileRef = 76A5C0FD18A189E80092C428 /* spacer.png */; };
 		76A5C10618A194600092C428 /* ProjectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 76A5C10518A194600092C428 /* ProjectCell.m */; };
+		76CFAA7C18C106350033D1D6 /* CredentialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 76CFAA7A18C106350033D1D6 /* CredentialManager.m */; };
+		76CFAA7D18C106350033D1D6 /* CredentialManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76CFAA7B18C106350033D1D6 /* CredentialManager.xib */; };
+		76CFAA8818C11EDF0033D1D6 /* ImageManipulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 76CFAA8718C11EDF0033D1D6 /* ImageManipulator.m */; };
 		76E57E9F1885C82600C9107C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76E57E9E1885C82600C9107C /* AssetsLibrary.framework */; };
 		76E57EA11885E51400C9107C /* river_walk_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA01885E51400C9107C /* river_walk_57x57.png */; };
 		76E57EA31885E51B00C9107C /* river_walk_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 76E57EA21885E51B00C9107C /* river_walk_114x114.png */; };
@@ -96,6 +101,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7622775218AA66430015888A /* ProjectBrowserViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "ProjectBrowserViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
+		7622775418AA6A050015888A /* ProjectBrowserViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProjectBrowserViewController_iPad.xib; sourceTree = "<group>"; };
 		76318B2318833128008D3A1F /* StringGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringGrabber.h; sourceTree = "<group>"; };
 		76318B2418833128008D3A1F /* StringGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringGrabber.m; sourceTree = "<group>"; };
 		76318B28188332C4008D3A1F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -151,10 +158,15 @@
 		7680C9141888700700BC1E98 /* navBar~landscape_iPhone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navBar~landscape_iPhone.png"; sourceTree = "<group>"; };
 		7698EB58189C4D9400C6E80F /* ProjectBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectBrowserViewController.h; sourceTree = "<group>"; };
 		7698EB59189C4D9400C6E80F /* ProjectBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectBrowserViewController.m; sourceTree = "<group>"; };
-		7698EB5A189C4D9400C6E80F /* ProjectBrowserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProjectBrowserViewController.xib; sourceTree = "<group>"; };
+		7698EB5A189C4D9400C6E80F /* ProjectBrowserViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProjectBrowserViewController_iPhone.xib; sourceTree = "<group>"; };
 		76A5C0FD18A189E80092C428 /* spacer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spacer.png; sourceTree = "<group>"; };
 		76A5C10418A194600092C428 /* ProjectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectCell.h; sourceTree = "<group>"; };
 		76A5C10518A194600092C428 /* ProjectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectCell.m; sourceTree = "<group>"; };
+		76CFAA7918C106350033D1D6 /* CredentialManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CredentialManager.h; sourceTree = "<group>"; };
+		76CFAA7A18C106350033D1D6 /* CredentialManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CredentialManager.m; sourceTree = "<group>"; };
+		76CFAA7B18C106350033D1D6 /* CredentialManager.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CredentialManager.xib; sourceTree = "<group>"; };
+		76CFAA8618C11EDF0033D1D6 /* ImageManipulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageManipulator.h; sourceTree = "<group>"; };
+		76CFAA8718C11EDF0033D1D6 /* ImageManipulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageManipulator.m; sourceTree = "<group>"; };
 		76E57E9C1885AC9D00C9107C /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		76E57E9E1885C82600C9107C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		76E57EA01885E51400C9107C /* river_walk_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = river_walk_57x57.png; path = ../river_walk_57x57.png; sourceTree = "<group>"; };
@@ -201,11 +213,16 @@
 		7676218C187F0DC600A473B7 = {
 			isa = PBXGroup;
 			children = (
+				76CFAA7918C106350033D1D6 /* CredentialManager.h */,
+				76CFAA7A18C106350033D1D6 /* CredentialManager.m */,
+				76CFAA7B18C106350033D1D6 /* CredentialManager.xib */,
 				7698EB58189C4D9400C6E80F /* ProjectBrowserViewController.h */,
 				7698EB59189C4D9400C6E80F /* ProjectBrowserViewController.m */,
 				76A5C10418A194600092C428 /* ProjectCell.h */,
 				76A5C10518A194600092C428 /* ProjectCell.m */,
-				7698EB5A189C4D9400C6E80F /* ProjectBrowserViewController.xib */,
+				7698EB5A189C4D9400C6E80F /* ProjectBrowserViewController_iPhone.xib */,
+				7622775418AA6A050015888A /* ProjectBrowserViewController_iPad.xib */,
+				7622775218AA66430015888A /* ProjectBrowserViewController~landscape_iPhone.xib */,
 				7661733C1880BF0C0094680C /* iSENSE_API.xcodeproj */,
 				7676219E187F0DC600A473B7 /* iS Pictures */,
 				76762197187F0DC600A473B7 /* Frameworks */,
@@ -293,6 +310,7 @@
 				766173521880D0AB0094680C /* RNGridMenu.m */,
 				767621A8187F0DC600A473B7 /* PWAppDelegate.m */,
 				767621B1187F0DC600A473B7 /* PWViewController.m */,
+				76CFAA8718C11EDF0033D1D6 /* ImageManipulator.m */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -305,6 +323,7 @@
 				766173511880D0AB0094680C /* RNGridMenu.h */,
 				767621A7187F0DC600A473B7 /* PWAppDelegate.h */,
 				767621B0187F0DC600A473B7 /* PWViewController.h */,
+				76CFAA8618C11EDF0033D1D6 /* ImageManipulator.h */,
 				76E57E9C1885AC9D00C9107C /* Constants.h */,
 			);
 			name = header;
@@ -428,7 +447,7 @@
 				76318B3118833395008D3A1F /* upload2.png in Resources */,
 				76318B3218833395008D3A1F /* users.png in Resources */,
 				76318B35188333B1008D3A1F /* barcode.png in Resources */,
-				7698EB5C189C4D9400C6E80F /* ProjectBrowserViewController.xib in Resources */,
+				7698EB5C189C4D9400C6E80F /* ProjectBrowserViewController_iPhone.xib in Resources */,
 				767059531889B38800FB98C8 /* Default-568h@2x.png in Resources */,
 				767059541889B38800FB98C8 /* Default.png in Resources */,
 				767059551889B38800FB98C8 /* Default~iphone.png in Resources */,
@@ -446,7 +465,10 @@
 				76E57EA51885E52600C9107C /* river_walk_72x72.png in Resources */,
 				76E57EA71885E52C00C9107C /* river_walk_144x144.png in Resources */,
 				76A5C0FE18A189E80092C428 /* spacer.png in Resources */,
+				7622775318AA66430015888A /* ProjectBrowserViewController~landscape_iPhone.xib in Resources */,
+				7622775518AA6A050015888A /* ProjectBrowserViewController_iPad.xib in Resources */,
 				7680C9071886E4F300BC1E98 /* ZBarSDK in Resources */,
+				76CFAA7D18C106350033D1D6 /* CredentialManager.xib in Resources */,
 				7680C911188718D000BC1E98 /* PWViewController~landscape_iPhone.xib in Resources */,
 				7680C91318872F2B00BC1E98 /* PWViewController~landscape_iPad.xib in Resources */,
 				7680C9151888700700BC1E98 /* navBar~landscape_iPhone.png in Resources */,
@@ -462,9 +484,11 @@
 			files = (
 				767621A5187F0DC600A473B7 /* main.m in Sources */,
 				767621A9187F0DC600A473B7 /* PWAppDelegate.m in Sources */,
+				76CFAA7C18C106350033D1D6 /* CredentialManager.m in Sources */,
 				767621B2187F0DC600A473B7 /* PWViewController.m in Sources */,
 				766173531880D0AB0094680C /* RNGridMenu.m in Sources */,
 				76318B2518833128008D3A1F /* StringGrabber.m in Sources */,
+				76CFAA8818C11EDF0033D1D6 /* ImageManipulator.m in Sources */,
 				7698EB5B189C4D9400C6E80F /* ProjectBrowserViewController.m in Sources */,
 				76318B3F18837B93008D3A1F /* AboutViewController.m in Sources */,
 				76A5C10618A194600092C428 /* ProjectCell.m in Sources */,

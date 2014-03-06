@@ -74,9 +74,7 @@
 {
     [super viewDidLoad];
     
-    [text setText:[StringGrabber grabString:@"about_app_text"]];
     
-    self.navigationItem.title = @"About";
     
 }
 
@@ -84,6 +82,10 @@
     [super viewDidAppear:animated];
     
     [self willRotateToInterfaceOrientation:self.interfaceOrientation duration:0];
+    
+    [text setText:[StringGrabber grabString:@"about_app_text"]];
+    
+    self.navigationItem.title = @"About";
 }
 
 - (void)didReceiveMemoryWarning

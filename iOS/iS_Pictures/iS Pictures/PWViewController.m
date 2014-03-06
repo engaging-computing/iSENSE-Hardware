@@ -72,6 +72,15 @@
     
     self.navigationItem.titleView = titleView;
     
+    NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+    projID = [prefs integerForKey:KEY_PROJECT_ID];
+    
+    if (projID == 0) {
+        projID = -1;
+    }
+    
+    projectIDLbl.text = [@"Project: " stringByAppendingString:[NSString stringWithFormat:@"%d", projID]];
+    
     
     
 }
@@ -116,6 +125,8 @@
     self.navigationItem.rightBarButtonItem = menuButton;
     [[UIBarButtonItem appearance] setTintColor:UIColorFromHex(0x111155)];
     [[UIButton appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)] forState:UIControlStateHighlighted];
+    [[UISearchBar appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
+    [[UISearchBar appearance] setScopeBarBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
     
     
     groupNameField.delegate = self;
@@ -180,9 +191,11 @@
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setInteger:projID forKey:KEY_PROJECT_ID];
         
+        projectIDLbl.text = [@"Project: " stringByAppendingString:[NSString stringWithFormat:@"%d",projID]];
+        
     }
     
-    projectIDLbl.text = [@"Project: " stringByAppendingString:[NSString stringWithFormat:@"%d",projID]];
+    
 }
 
 
@@ -269,9 +282,10 @@
     };
     
     void (^testBlock)() = ^() {
-        ProjectBrowserViewController *test = [[ProjectBrowserViewController alloc] init];
-        test.delegate = self;
-        [self.navigationController pushViewController:test animated:YES];
+       // test credential manager here
+        CredentialManager *mngr = [[CredentialManager alloc] init];
+        
+        [self.navigationController pushViewController:mngr animated:YES];
     };
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
@@ -376,11 +390,8 @@
 
 - (void) browseproj {
     [project dismissWithClickedButtonIndex:1 animated:YES];
-    ProjectBrowseViewController *browse;
-    browse = [[ProjectBrowseViewController alloc] init];
-    browse.title = @"Browse for Projects";
-    browse.delegate = self;
-    [self.navigationController pushViewController:browse animated:YES];
+    ProjectBrowserViewController *test = [[ProjectBrowserViewController alloc] initWithDelegate:self];
+    [self.navigationController pushViewController:test animated:YES];
     
 }
 

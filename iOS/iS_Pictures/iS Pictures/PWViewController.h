@@ -19,6 +19,8 @@
 #import "Constants.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "ProjectBrowserViewController.h"
+#import "CredentialManager.h"
+#import "ImageManipulator.h"
 
 @interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProjectBrowseViewControllerDelegate, ZBarReaderDelegate, ProjectBrowserDelegate>
 
