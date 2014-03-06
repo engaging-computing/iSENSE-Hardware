@@ -244,9 +244,9 @@ public class CredentialManager extends Activity {
 					CredentialManagerLogin.getPassword()).commit();
 
 			// return success
-			setResult(RESULT_OK);
+			//setResult(RESULT_OK);
 			//finish();
-			LoggedInView();
+			//LoggedInView();
 		}
 
 	}
