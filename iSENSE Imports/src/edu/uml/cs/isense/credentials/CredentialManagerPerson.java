@@ -55,7 +55,7 @@ public class CredentialManagerPerson extends Fragment {
 		/* Calls a method of the parent activity Credential Manager */
 		logout.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				((CredentialManager) getActivity()).logout();
+				((PersonWrapper) getActivity()).WrapperLogout();
 			}
 		});
         
@@ -97,4 +97,7 @@ public class CredentialManagerPerson extends Fragment {
 	
 }
 
-//TODO virtual class for person
+/*any activity that uses this fragment must implement PersonWrapper */
+interface PersonWrapper {
+    void WrapperLogout();
+}

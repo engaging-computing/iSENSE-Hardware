@@ -26,6 +26,5 @@ public class CredentialManagerKeys extends Fragment {
 	}
 }
 
-//TODO Virtual class for keys
 
 
