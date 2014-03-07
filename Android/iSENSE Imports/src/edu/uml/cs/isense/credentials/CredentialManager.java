@@ -28,13 +28,13 @@ import android.util.Log;
  * @author iSENSE Android Development Team
  */
 
-public class CredentialManager extends Activity {
+public class CredentialManager extends Activity implements LoginWrapper, PersonWrapper {
 	FragmentManager fragmentManager;
 	FragmentTransaction fragmentTransaction;
 	
-	private API api;
+	private static API api;
 	
-	private boolean loggedin = false;
+	private static boolean loggedin = false;
 	
 	/* These are the keys for obtain the user credential preferences. */
 	public static final String PREFERENCES_KEY_OBSCURRED_USER_INFO = "OBSCURRED_USER_INFO";
@@ -57,7 +57,7 @@ public class CredentialManager extends Activity {
 	private static final int ACTIVITY_LOGIN_ERROR = 1;
 	
 	private String message = "";
-	private Context baseContext;
+	private static Context baseContext;
 
 	/* Fragments on screen */
 	CredentialManagerLogin fragmentLogin = new CredentialManagerLogin();
@@ -72,7 +72,7 @@ public class CredentialManager extends Activity {
     /* person object we get back after we login*/
 	public static RPerson person;
 
-	private Waffle w;
+	private static Waffle w;
     
 	 /** Called when the activity is first created. */
 	@Override
@@ -94,8 +94,13 @@ public class CredentialManager extends Activity {
     				baseContext, baseContext.getSharedPreferences(
     						PREFERENCES_KEY_OBSCURRED_USER_INFO, MODE_PRIVATE));
     		
+    	
+    		if (loggedin == true) {
+    			LoggedInView();
+    		} else {
+                LoggedOutView();
 
-            LoggedOutView();
+    		}
             
     		
     }
@@ -113,7 +118,7 @@ public class CredentialManager extends Activity {
 	    fragmentTransaction.remove(fragmentPerson);
 	    
 	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_OPEN);
-	    Log.e("Credential Manager ", "loggedOutView();");
+
 	    fragmentTransaction.add(R.id.fragmentcontainer, fragmentLogin);
 	    fragmentTransaction.add(R.id.fragmentcontainer2, fragmentKeys);
 	    
@@ -159,7 +164,12 @@ public class CredentialManager extends Activity {
 		return loggedin;
 		
 	}
-	public void logout() {
+	
+    public void WrapperLogout() {
+    	Logout();
+    }
+	
+	public void Logout() {
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				baseContext, baseContext.getSharedPreferences(
 						PREFERENCES_KEY_OBSCURRED_USER_INFO,
@@ -177,9 +187,8 @@ public class CredentialManager extends Activity {
 		LoggedOutView();
 	}
 	
-	public boolean addContributorKey(String key) {
+	public static boolean addContributorKey(String key) {
 		if (key == null) {
-			//TODO call key creation dialog
 		}
 		
 		return false;
@@ -190,18 +199,18 @@ public class CredentialManager extends Activity {
 		
 	}
 	
-	public String getUsername() {
+	public static String getUsername() {
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				baseContext, getSharedPreferences(
+				baseContext, baseContext.getSharedPreferences(
 						PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
 		
 		return mPrefs.getString(PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "");	
 	}
 	
-	public String getPassword() {
+	public static String getPassword() {
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				baseContext, getSharedPreferences(
+				baseContext, baseContext.getSharedPreferences(
 						PREFERENCES_KEY_OBSCURRED_USER_INFO,
 						Context.MODE_PRIVATE));
 		
@@ -209,24 +218,33 @@ public class CredentialManager extends Activity {
 		
 	}
 	
+	 public void WrapperLogin(String username, String password) {
+		 Login(username, password);
+		 // update UI
+	 }
 	
 	
-	/* Calls LoginTask and passes in a user name and password
+	/**
+	 * Calls LoginTask and passes in a user name and password
 	 * if the user name and password are both null then it will try and login with
 	 * the saved credentials from preferences. CredentialManager.Login(null,null) should
-	 * be called in every apps oncreate method to login to the API with saved credentials.*/
-	public void Login(String username, String password) {
-		if (Connection.hasConnectivity(this)) {
+	 * be called in every apps oncreate method to login to the API with saved credentials.
+	 * 
+	 */
+	public static void Login(String username, String password) {
+		if (Connection.hasConnectivity(baseContext)) {
 			new LoginTask().execute(username, password);
 		}
 	}
+	
+	
 	
 	/**
 	 * This class attempts to login to iSENSE and writes user info to
 	 * preferences if it is successful. Otherwise, it calls LoginError.
 	 * 
 	 */
-	private class LoginTask extends AsyncTask<String, Void, Void> {
+	private static class LoginTask extends AsyncTask<String, Void, Void> {
 
 		@Override
 		protected Void doInBackground(String... userInfo) {
@@ -236,7 +254,7 @@ public class CredentialManager extends Activity {
 			/* if null username and password get info from preferences instead */
 			if (username == null && password == null) {
 				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						baseContext, getSharedPreferences(
+						baseContext, baseContext.getSharedPreferences(
 								PREFERENCES_KEY_OBSCURRED_USER_INFO,
 								Context.MODE_PRIVATE));
 				
@@ -246,7 +264,7 @@ public class CredentialManager extends Activity {
 				/* if no username or password was stored return and do not try to login*/
 				if (username.equals("") && password.equals("")) {
 					loggedin = false;
-					return null;
+					cancel(true);
 				}
 				
 			}
@@ -255,11 +273,18 @@ public class CredentialManager extends Activity {
 			return null;
 		}
 
+		@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+		@Override
+		protected void onCancelled(Void result) {
+			super.onCancelled(result);
+			return;
+		}
+
+
 		@Override
 		protected void onPostExecute(Void v) {
 			/*if successfully logged in save credentials to preferences else display waffle*/
 			if (person == null) {
-				
 				w.make("Invalid Email or Password",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				
@@ -295,7 +320,7 @@ public class CredentialManager extends Activity {
 						CredentialManagerLogin.getPassword()).commit();
 				
 				loggedin = true;
-				LoggedInView();
+				//LoggedInView();
 			}
 		}
 

@@ -157,6 +157,8 @@ public class Main extends Activity implements LocationListener {
 
 		api = API.getInstance();
 		api.useDev(useDev);
+		CredentialManager.Login(null, null);
+
 		 
 		
 		//attemptLoginOnAppStart();
