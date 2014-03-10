@@ -157,7 +157,7 @@ public class Main extends Activity implements LocationListener {
 
 		api = API.getInstance();
 		api.useDev(useDev);
-		CredentialManager.Login(null, null);
+		CredentialManager.Login(mContext, api);
 
 		 
 		
@@ -950,17 +950,7 @@ public class Main extends Activity implements LocationListener {
 				dfm.getOrder();
 			}
 		} else if (requestCode == LOGIN_REQUESTED) { // shows dialog to login
-			if (resultCode == Activity.RESULT_OK) {
-
-				w.make("Login successful", Waffle.LENGTH_SHORT,
-						Waffle.IMAGE_CHECK);
-
-			} else {
-
-				startActivityForResult(new Intent(mContext, CredentialManager.class),
-						LOGIN_REQUESTED);
-
-			}
+			
 		} else if (requestCode == NO_GPS_REQUESTED) { // asks the user if they
 														// would like to enable
 														// gps

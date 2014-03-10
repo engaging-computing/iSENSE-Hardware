@@ -7,7 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class CredentialManagerKeys extends Fragment {
@@ -15,8 +17,19 @@ public class CredentialManagerKeys extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.credential_manager_keys, container, false);
+		View view = inflater.inflate(R.layout.credential_manager_keys, container, false);
+
+		final Button addKey = (Button) view.findViewById(R.id.button_add);
+		addKey.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				//Open newKeydialog
+			}
+			
+		});
+		
+		
+        return view;
 	}
 
 	@Override
