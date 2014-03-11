@@ -116,10 +116,11 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 	
 	/*call this when user logs in*/
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-	private void LoggedInView() {
+	private void LoggedInView() {	
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
 	    
+	    fragmentLogin.ClearUsernamePassword();
 	    fragmentTransaction.remove(fragmentLogin);
 	    fragmentTransaction.remove(fragmentKeys);
 	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
@@ -373,7 +374,10 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 			}
 			
 		}
-	
+
+
+
+		
 	
 }
 
