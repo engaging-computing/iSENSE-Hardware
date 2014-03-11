@@ -33,7 +33,7 @@ public class CredentialManagerLogin extends Fragment {
 		/* Calls a method of the parent activity Credential Manager */
 		ok.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				((CredentialManager) getActivity()).Login(username.getText().toString(), password.getText().toString());
+				((LoginWrapper) getActivity()).WrapperLogin(username.getText().toString(), password.getText().toString());
 			}
 		});
 		
@@ -62,8 +62,11 @@ public class CredentialManagerLogin extends Fragment {
 	}
 }
 	
-    
-//TODO virtual class for login
 
+/*any activity that uses this fragment must implement PersonWrapper */
+interface LoginWrapper {
+	abstract void WrapperLogin(String username, String password);
+}
+    
 
 
