@@ -5,12 +5,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import edu.uml.cs.isense.R;
-import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class CredentialManagerPerson extends Fragment {
 	ImageView gravatar;
 	TextView email;
