@@ -193,7 +193,7 @@ public class Setup extends Activity implements OnClickListener {
 		} else if (id == R.id.project_browse) {
 			Intent iProject = new Intent(getApplicationContext(),
 					BrowseProjects.class);
-			;
+			
 			startActivityForResult(iProject, PROJECT_CODE);
 		} else if (id == R.id.createProjectBtn) {
 			if (!Connection.hasConnectivity(mContext))
