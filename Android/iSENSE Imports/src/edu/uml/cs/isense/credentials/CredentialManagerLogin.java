@@ -47,6 +47,11 @@ public class CredentialManagerLogin extends Fragment {
         return view;
 	}
 	
+	public void ClearUsernamePassword() {
+	    username.setText("");
+	    password.setText("");
+	}
+	
 	public static String getUsername() {
 		return username.getText().toString();
 	}
@@ -60,8 +65,13 @@ public class CredentialManagerLogin extends Fragment {
 		// TODO Auto-generated method stub
 		super.onPause();
 	}
-}
+
 	
+	@Override
+	public void onDestroyView() {
+	    super.onDestroyView();
+	}
+}
 
 /*any activity that uses this fragment must implement PersonWrapper */
 interface LoginWrapper {
