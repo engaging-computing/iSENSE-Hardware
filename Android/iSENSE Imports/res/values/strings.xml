@@ -161,5 +161,7 @@
 	<string name="user_img_desc">iSense Gravatar</string>
 	<string name="logout">Log out</string>
 	<string name="browse_proj">Browse Projects</string>
+	<string name="proj">Project:</string>
+	
     
 </resources>

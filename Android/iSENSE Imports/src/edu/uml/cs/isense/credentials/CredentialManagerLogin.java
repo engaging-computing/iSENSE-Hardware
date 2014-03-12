@@ -44,11 +44,6 @@ public class CredentialManagerLogin extends Fragment {
         return view;
 	}
 	
-	public void ClearUsernamePassword() {
-	    username.setText("");
-	    password.setText("");
-	}
-	
 	public static String getUsername() {
 		return username.getText().toString();
 	}
