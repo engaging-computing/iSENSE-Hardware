@@ -140,9 +140,9 @@
             android:label="Credential Manager"
             android:configChanges="screenSize|orientation"
             android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppThemeDialog" />
         <activity
-            android:name="edu.uml.cs.isense.credentials.CredentialManagerAddKey"
+            android:name="edu.uml.cs.isense.credentials.CredentialManagerEnterKey"
             android:label="Add Contributor Key"
             android:theme="@style/AppThemeDialog" />
         

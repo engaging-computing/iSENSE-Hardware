@@ -10,9 +10,12 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 
 
 public class CredentialManager extends Activity implements LoginWrapper, PersonWrapper {
@@ -42,7 +45,6 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 
 	/* Fragments on screen */
 	CredentialManagerLogin fragmentLogin = new CredentialManagerLogin();
-    CredentialManagerKeys fragmentKeys = new CredentialManagerKeys();
     CredentialManagerPerson fragmentPerson = new CredentialManagerPerson();
     
     /* Transition codes for fragments*/
@@ -66,6 +68,8 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
     		
     		w = new Waffle(baseContext);
     		
+    		
+    		
     		if (loggedin == true) {
     			LoggedInView();
     		} else {
@@ -76,44 +80,46 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
     }
 	
 	
-	/*
+	/**
+	 * 
 	 * This is the standard view when user is logged out
 	 */
 	private void LoggedOutView() {
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
 	    
-	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
-	    fragmentTransaction.remove(fragmentPerson);
-	    
-	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_OPEN);
-
-	    fragmentTransaction.add(R.id.fragmentcontainer, fragmentLogin);
-	    fragmentTransaction.add(R.id.fragmentcontainer2, fragmentKeys);
-	    
+	    fragmentLogin = new CredentialManagerLogin();
+	    fragmentTransaction.replace(R.id.fragmentcontainer, fragmentLogin);
+	   
 	    fragmentTransaction.commit();
+
 
 	}
 	
-	/*call this when user logs in*/
+	/**
+	 * call this when user logs in
+	 * 
+	 */
 
-	private void LoggedInView() {	
-		fragmentManager = getFragmentManager();
+	private void LoggedInView() {
+		InputMethodManager imm = (InputMethodManager)getSystemService(
+			      Context.INPUT_METHOD_SERVICE);
+	    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+	    
+	    fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
 	    
-	    fragmentLogin.ClearUsernamePassword();
-	    fragmentTransaction.remove(fragmentLogin);
-	    fragmentTransaction.remove(fragmentKeys);
-	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
-
-	    fragmentTransaction.setTransition(TRANSIT_FRAGMENT_OPEN);
-	    fragmentTransaction.add(R.id.fragmentcontainer, fragmentPerson);
-	    
+	    fragmentPerson = new CredentialManagerPerson();
+	    fragmentTransaction.replace(R.id.fragmentcontainer, fragmentPerson);
+	   
 	    fragmentTransaction.commit();
+
 
 	}
 	
-	/*call this when user is logged out to make the keys fragment take up the whole screen */
+	/**
+	 * call this when user is logged out to make the keys fragment take up the whole screen 
+	 */
 	@SuppressWarnings("unused")
 	private void KeysOnlyView() {
 		fragmentManager = getFragmentManager();

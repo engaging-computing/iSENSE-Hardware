@@ -10,11 +10,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class CredentialManagerAddKey extends Activity  {
+public class CredentialManagerEnterKey extends Activity  {
 
 	final int PROJECT_REQUESTED = 101;
-	public static String PROJECT_ID = "project_id";
+	private final String PROJECT_ID = "project_id";
 	private int projID = -1;
+	private String key = "";
 	EditText newKey;
 
 	@Override
@@ -34,7 +35,7 @@ public class CredentialManagerAddKey extends Activity  {
 
 			public void onClick(View v) {
 				if (newKey.getText().length() != 0 && projID != -1) {
-					//TODO create new keyobject
+					key = newKey.getText().toString();
 				}
 			}
 			
