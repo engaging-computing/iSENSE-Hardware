@@ -1,26 +1,18 @@
 package edu.uml.cs.isense.credentials;
 
-import java.io.IOException;
-import java.net.URL;
-
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 
 public class CredentialManager extends Activity implements LoginWrapper, PersonWrapper {
@@ -73,17 +65,7 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
     		baseContext = getBaseContext();
     		
     		w = new Waffle(baseContext);
-
     		
-    		/*
-    		 * This fetches the last successful username and password from
-    		 * preferences.
-    		 */
-    		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-    				baseContext, baseContext.getSharedPreferences(
-    						PREFERENCES_KEY_OBSCURRED_USER_INFO, MODE_PRIVATE));
-    		
-    	
     		if (loggedin == true) {
     			LoggedInView();
     		} else {
@@ -97,7 +79,6 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 	/*
 	 * This is the standard view when user is logged out
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void LoggedOutView() {
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
@@ -115,7 +96,7 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 	}
 	
 	/*call this when user logs in*/
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+
 	private void LoggedInView() {	
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
@@ -132,8 +113,8 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 
 	}
 	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	/*call this when user is logged out to make the keys fragment take up the whole screen */
+	@SuppressWarnings("unused")
 	private void KeysOnlyView() {
 		fragmentManager = getFragmentManager();
 	    fragmentTransaction = fragmentManager.beginTransaction();
@@ -366,7 +347,6 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 				return null;
 			}
 
-			@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 			@Override
 			protected void onCancelled(Void result) {
 				super.onCancelled(result);

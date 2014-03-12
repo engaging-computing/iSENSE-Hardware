@@ -1,19 +1,10 @@
 package edu.uml.cs.isense.credentials;
 
-import java.io.File;
-
 import edu.uml.cs.isense.R;
-import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.proj.BrowseProjects;
-import edu.uml.cs.isense.proj.Setup;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
