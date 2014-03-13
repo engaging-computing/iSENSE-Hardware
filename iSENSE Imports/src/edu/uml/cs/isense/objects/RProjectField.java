@@ -10,6 +10,7 @@ public class RProjectField {
     public String name="";
     public int type;
     public String unit="";  
+    public String restrictions="";
     
     public static final int TYPE_TIMESTAMP = 1;
     public static final int TYPE_NUMBER = 2;
