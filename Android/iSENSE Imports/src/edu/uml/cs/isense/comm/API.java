@@ -8,14 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,14 +26,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import edu.uml.cs.isense.objects.RDataSet;
-import edu.uml.cs.isense.objects.RNews;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.objects.RProjectField;
-import edu.uml.cs.isense.objects.RTutorial;
 
 /**
  * A class which allows Android applications to interface with the iSENSE
@@ -59,8 +51,8 @@ public class API {
 	private static API instance = null;
 
 	private String baseURL = "";
-	private final String publicURL = "http://isenseproject.org";
-	private final String devURL = "http://rsense-dev.cs.uml.edu";
+	private final String publicURL = "http://isenseproject.org/api/v1";
+	private final String devURL = "http://rsense-dev.cs.uml.edu/api/v1";
 
 	String authToken = "";
 	RPerson currentUser;
@@ -69,14 +61,16 @@ public class API {
 
 	public static final int CREATED_AT = 0;
 	public static final int UPDATED_AT = 1;
+	
+	private String email, password;
+	
+	public enum TargetType {PROJECT, DATA_SET};
 
 	/**
 	 * Constructor not to be called by a user of the API Users should call
 	 * getInstance instead, which will call this constructor if necessary
 	 */
 	private API() {
-		CookieHandler.setDefault(new CookieManager(null,
-				CookiePolicy.ACCEPT_ALL));
 		baseURL = publicURL;
 	}
 
@@ -94,50 +88,60 @@ public class API {
 	}
 
 	/**
-	 * Log in to iSENSE. After calling this function, authenticated API
-	 * functions will work properly.
+	 * Log in to iSENSE. Stores email and password variables so authenticated
+	 * functions later will work
 	 * 
-	 * @param email
+	 * @param p_email
 	 *            The email address of the user to log in as
-	 * @param password
+	 * @param p_password
 	 *            The password of the user to log in as
-	 * @return True if login succeeds, false if it doesn't
 	 */
-	public boolean createSession(String email, String password) {
+	public RPerson createSession(String p_email, String p_password) {
 		try {
-			JSONObject jodata = new JSONObject();
-			jodata.put("email", email);
-			jodata.put("password", password);
-			String result = makeRequest(baseURL, "login", "", "POST", jodata);
-			System.out.println(result);
-			JSONObject j = new JSONObject(result);
-
-			authToken = j.getString("authenticity_token");
-			currentUser = getUser(j.getJSONObject("user").getInt("id"));
-			return true;
+			String reqResult = makeRequest(baseURL, "users/myInfo", "email=" + URLEncoder.encode(p_email, "UTF-8")
+				+ "&password=" + URLEncoder.encode(p_password, "UTF-8"),
+				"GET", null);
+			JSONObject j = new JSONObject(reqResult);
+			if(j.getString("username") != null) {
+				email = p_email;
+				password = p_password;
+				RPerson you = new RPerson();
+				you.name = j.getString("username");
+				you.gravatar = j.getString("gravatar");
+				currentUser = you;
+				return you;
+			} else {
+				return null;
+			}
 		} catch (Exception e) {
-			// Didn't get an authenticity token.
-			e.printStackTrace();
+			return null;
 		}
-		return false;
 	}
 
 	/**
 	 * Log out of iSENSE
 	 */
 	public void deleteSession() {
-		try {
-			makeRequest(
-					baseURL,
-					"login",
-					"authenticity_token="
-							+ URLEncoder.encode(authToken, "UTF-8"), "DELETE",
-					null);
-			currentUser = null;
-			authToken = "";
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		email = "";
+		password = "";
+		currentUser = null;
+	}
+	
+	public RPerson getCurrentUser() {
+		return currentUser;
+	}
+	
+	/**
+	 * Verifies whether a given contributor key will work for a project
+	 * 
+	 * @param projectId
+	 * @param conKey
+	 * @return True is the key is valid for that project, false if it is not
+	 */
+	public boolean validateKey(int projectId, String conKey) {
+		//TODO implement this when we get the API functionality to actually do it
+		
+		return true;
 	}
 
 	/**
@@ -237,6 +241,8 @@ public class API {
 	public int createProject(String projectName, ArrayList<RProjectField> fields) {
 		try {
 			JSONObject postData = new JSONObject();
+			postData.put("email", email);
+			postData.put("password", password);
 			postData.put("project_name", projectName);
 			String reqResult = makeRequest(
 					baseURL,
@@ -251,13 +257,12 @@ public class API {
 				JSONObject mField = new JSONObject();
 				mField.put("project_id", pid);
 				mField.put("field_type", rpf.type);
-				mField.put("name", rpf.name);
-				mField.put("unit", rpf.unit);
+				mField.put("field_name", rpf.name);
+				mField.put("units", rpf.unit);
 				JSONObject postData2 = new JSONObject();
+				postData2.put("email", email);
+				postData2.put("password", password);
 				postData2.put("field", mField);
-				
-				postData2.put("project_id", pid);
-				Log.e("test", postData2.toString());
 				makeRequest(baseURL, "fields", "authenticity_token="
 						+ URLEncoder.encode(authToken, "UTF-8"), "POST",
 						postData2);
@@ -301,7 +306,7 @@ public class API {
 
 		try {
 			String reqResult = makeRequest(baseURL, "projects/" + projectId,
-					"", "GET", null);
+					"?recur=true", "GET", null);
 			JSONObject j = new JSONObject(reqResult);
 			JSONArray j2 = j.getJSONArray("fields");
 			for (int i = 0; i < j2.length(); i++) {
@@ -311,6 +316,7 @@ public class API {
 				rpf.name = inner.getString("name");
 				rpf.type = inner.getInt("type");
 				rpf.unit = inner.getString("unit");
+				rpf.restrictions = inner.getString("restrictions");
 				rpfs.add(rpf);
 			}
 		} catch (Exception e) {
@@ -318,231 +324,6 @@ public class API {
 		}
 
 		return rpfs;
-	}
-
-	/**
-	 * Retrieves multiple tutorials off of iSENSE
-	 * 
-	 * @param page
-	 *            Which page of results to start from. 1-indexed
-	 * @param perPage
-	 *            How many results to display per page
-	 * @param descending
-	 *            Whether to display the results in descending order (true) or
-	 *            ascending order (false)
-	 * @param search
-	 *            A string to search all tutorials for
-	 * @return An ArrayList of Tutorial objects
-	 */
-	public ArrayList<RTutorial> getTutorials(int page, int perPage,
-			boolean descending, String search) {
-		ArrayList<RTutorial> result = new ArrayList<RTutorial>();
-		try {
-			String order = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(
-					baseURL,
-					"tutorials",
-					"authenticity_token="
-							+ URLEncoder.encode(authToken, "UTF-8") + "&page="
-							+ page + "&per_page=" + perPage
-							+ "&sort=created_at" + "&order=" + order
-							+ "&search=" + URLEncoder.encode(search, "UTF-8"),
-					"GET", null);
-			JSONArray j = new JSONArray(reqResult);
-			for (int i = 0; i < j.length(); i++) {
-				JSONObject inner = j.getJSONObject(i);
-				RTutorial tut = new RTutorial();
-
-				tut.tutorial_id = inner.getInt("id");
-				tut.name = inner.getString("name");
-				tut.url = inner.getString("url");
-				tut.hidden = inner.getBoolean("hidden");
-				tut.timecreated = inner.getString("createdAt");
-				tut.owner_name = inner.getString("ownerName");
-				tut.owner_url = inner.getString("ownerUrl");
-
-				result.add(tut);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	/**
-	 * Get a tutorial from iSENSE
-	 * 
-	 * @param tutorialId
-	 *            The ID of the tutorial to retrieve
-	 * @return A Tutorial object
-	 */
-	public RTutorial getTutorial(int tutorialId) {
-		RTutorial tut = new RTutorial();
-		try {
-			String reqResult = makeRequest(baseURL, "tutorials/" + tutorialId,
-					"", "GET", null);
-			JSONObject j = new JSONObject(reqResult);
-
-			tut.tutorial_id = j.getInt("id");
-			tut.name = j.getString("name");
-			tut.url = j.getString("url");
-			tut.hidden = j.getBoolean("hidden");
-			tut.timecreated = j.getString("createdAt");
-			tut.owner_name = j.getString("ownerName");
-			tut.owner_url = j.getString("ownerUrl");
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return tut;
-	}
-
-	/**
-	 * Retrieves a list of users on iSENSE This is an admin only function and
-	 * requires that the current user be an admin
-	 * 
-	 * @param page
-	 *            Which page of users to start the request from
-	 * @param perPage
-	 *            How many users per page to perform the search with
-	 * @param descending
-	 *            Whether the list of users should be in descending order or not
-	 * @param search
-	 *            A string to search all users for
-	 * @return A list of Person objects
-	 */
-	public ArrayList<RPerson> getUsers(int page, int perPage,
-			boolean descending, String search) {
-		ArrayList<RPerson> people = new ArrayList<RPerson>();
-		try {
-			String sortMode = descending ? "DESC" : "ASC";
-			String reqResult = makeRequest(
-					baseURL,
-					"users",
-					"authenticity_token="
-							+ URLEncoder.encode(authToken, "UTF-8") + "&page="
-							+ page + "&per_page=" + perPage + "&sort="
-							+ URLEncoder.encode(sortMode, "UTF-8") + "&search="
-							+ URLEncoder.encode(search, "UTF-8"), "GET", null);
-			System.out.println(reqResult);
-			JSONArray j = new JSONArray(reqResult);
-			for (int i = 0; i < j.length(); i++) {
-				JSONObject inner = j.getJSONObject(i);
-				RPerson person = new RPerson();
-
-				person.person_id = inner.getInt("id");
-				person.name = inner.getString("name");
-				person.url = inner.getString("url");
-				person.gravatar = inner.getString("gravatar");
-				person.timecreated = inner.getString("createdAt");
-				person.hidden = inner.getBoolean("hidden");
-
-				people.add(person);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return people;
-	}
-
-	/**
-	 * Gets a user off of iSENSE
-	 * 
-	 * @param id
-	 *            The id of the user to retrieve
-	 * @return A Person object
-	 */
-	public RPerson getUser(int id) {
-		RPerson person = new RPerson();
-		try {
-			String reqResult = makeRequest(baseURL, "users/" + id, "", "GET",
-					null);
-			JSONObject j = new JSONObject(reqResult);
-
-			person.person_id = j.getInt("id");
-			person.name = j.getString("name");
-			person.url = j.getString("url");
-			person.gravatar = j.getString("gravatar");
-			person.timecreated = j.getString("createdAt");
-			person.hidden = j.getBoolean("hidden");
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return person;
-	}
-
-	/**
-	 * Retrieves a list of news articles on iSENSE
-	 * 
-	 * @param page
-	 *            Which page of news to start the request from
-	 * @param perPage
-	 *            How many entries per page to perform the search with
-	 * @param descending
-	 *            Whether the list of articles should be in descending order or
-	 *            not
-	 * @param search
-	 *            A string to search all articles for
-	 * @return A list of News objects
-	 */
-	public ArrayList<RNews> getNewsEntries(int page, int perPage,
-			boolean descending, String search) {
-		ArrayList<RNews> blogs = new ArrayList<RNews>();
-		try {
-			String sortMode = descending ? "DESC" : "ASC";
-			// TODO use the auth token in the request! Otherwise the comment is
-			// a lie and the function won't work.
-			String reqResult = makeRequest(baseURL, "news",
-					"page=" + page + "&per_page=" + perPage + "&sort="
-							+ URLEncoder.encode(sortMode, "UTF-8") + "&search="
-							+ URLEncoder.encode(search, "UTF-8"), "GET", null);
-			JSONArray j = new JSONArray(reqResult);
-			for (int i = 0; i < j.length(); i++) {
-				JSONObject inner = j.getJSONObject(i);
-				RNews blog = new RNews();
-
-				blog.news_id = inner.getInt("id");
-				// blog.featured_media_id = inner.getInt("featuredMediaId");
-				blog.name = inner.getString("name");
-				blog.url = inner.getString("url");
-				blog.timecreated = inner.getString("createdAt");
-				blog.hidden = inner.getBoolean("hidden");
-
-				blogs.add(blog);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return blogs;
-	}
-
-	/**
-	 * Gets a news article off iSENSE
-	 * 
-	 * @param newsId
-	 *            The id of the news entry to retrieve
-	 * @return A News object
-	 */
-	public RNews getNewsEntry(int newsId) {
-		RNews blog = new RNews();
-		try {
-			String reqResult = makeRequest(baseURL, "news/" + newsId,
-					"recur=true", "GET", null);
-			JSONObject j = new JSONObject(reqResult);
-
-			blog.news_id = j.getInt("id");
-			// blog.featured_media_id = j.getInt("featuredMediaId");
-			blog.name = j.getString("name");
-			blog.url = j.getString("url");
-			blog.timecreated = j.getString("createdAt");
-			blog.hidden = j.getBoolean("hidden");
-			blog.content = j.getString("content");
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return blog;
 	}
 
 	/**
@@ -613,9 +394,7 @@ public class API {
 	}
 
 	/**
-	 * @deprecated - Will go away, to be replaced by jsonDataUpload
-	 * 
-	 *             Uploads a new data set to a project on iSENSE
+	 * Upload a dataset to iSENSE while logged in
 	 * 
 	 * @param projectId
 	 *            The ID of the project to upload data to
@@ -628,68 +407,54 @@ public class API {
 	 *         fails
 	 */
 	public int uploadDataSet(int projectId, JSONObject data, String datasetName) {
-		// append timestamp to the data set name to ensure uniqueness
 		datasetName += appendedTimeStamp();
 
-		ArrayList<RProjectField> fields = getProjectFields(projectId);
 		JSONObject requestData = new JSONObject();
-		ArrayList<String> headers = new ArrayList<String>();
-		for (RProjectField rpf : fields) {
-			headers.add("" + rpf.field_id);
-		}
+		
 		try {
-			requestData.put("headers", new JSONArray(headers));
+			requestData.put("email", email);
+			requestData.put("password", password);
+			requestData.put("title", datasetName);
 			requestData.put("data", data);
-			requestData.put("id", "" + projectId);
-			if (!datasetName.equals(""))
-				requestData.put("name", datasetName);
 			String reqResult = makeRequest(
 					baseURL,
-					"projects/" + projectId + "/manualUpload",
-					"authenticity_token="
-							+ URLEncoder.encode(authToken, "UTF-8"), "POST",
+					"projects/" + projectId + "/jsonDataUpload", "", "POST",
 					requestData);
-			System.out.println("Are I blank? = " + reqResult);
 			JSONObject jobj = new JSONObject(reqResult);
-			System.out.println("Returning: " + jobj.toString());
 			return jobj.getInt("id");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return -1;
 	}
-
+	
 	/**
-	 * Uploads a new data set to a project on iSENSE
+	 * Upload a dataset to iSENSE with a contributor key
 	 * 
 	 * @param projectId
 	 *            The ID of the project to upload data to
 	 * @param data
 	 *            The data to be uploaded. Must be in column-major format to
 	 *            upload correctly
-	 * @param datasetName
-	 *            The name of the dataset
+	 * @param conKey
+	 *            The Contributor Key
+	 * @param conName
+	 *            The Contributor name
 	 * @return The integer ID of the newly uploaded dataset, or -1 if upload
 	 *         fails
 	 */
-	public int jsonDataUpload(int projectId, JSONObject data, String datasetName) {
-		// append timestamp to the data set name to ensure uniqueness
-		datasetName += appendedTimeStamp();
-		Log.e("data", data.toString());
+	public int uploadDataSet(int projectId, JSONObject data, String conKey, String conName) {
 		JSONObject requestData = new JSONObject();
-
+		
 		try {
+			requestData.put("contributor_key", conKey);
+			requestData.put("contributor_name", conName);
 			requestData.put("data", data);
-			requestData.put("id", "" + projectId);
-			requestData.put("authenticity_token", authToken);
-			if (!datasetName.equals(""))
-				requestData.put("title", datasetName);
-			String reqResult = makeRequest(baseURL, "projects/" + projectId
-					+ "/jsonDataUpload", "", "POST", requestData);
-
+			String reqResult = makeRequest(
+					baseURL,
+					"projects/" + projectId + "/jsonDataUpload", "", "POST",
+					requestData);
 			JSONObject jobj = new JSONObject(reqResult);
-			System.out.println("Returning: " + jobj.toString());
-
 			return jobj.getInt("id");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -759,82 +524,19 @@ public class API {
 	}
 
 	/**
-	 * Uploads a CSV file to iSENSE as a new data set
+	 * Uploads a file to the media section of a project while logged in
 	 * 
-	 * @param projectId
-	 *            The ID of the project to upload data to
-	 * @param csvToUpload
-	 *            The CSV as a File object
-	 * @param datasetName
-	 *            The name of the dataset
-	 * @return The ID of the data set created on iSENSE
-	 */
-	public int uploadCSV(int projectId, File csvToUpload, String datasetName) {
-		// append timestamp to the data set name to ensure uniqueness
-		datasetName += appendedTimeStamp();
-
-		try {
-			URL url = new URL(baseURL + "/projects/" + projectId
-					+ "/CSVUpload?authenticity_token="
-					+ URLEncoder.encode(authToken, "UTF-8"));
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
-			connection.setDoOutput(true);
-			connection.setRequestMethod("POST");
-
-			MultipartEntity entity = new MultipartEntity();
-			entity.addPart("utf8", new StringBody("\u2713", "text/plain",
-					Charset.forName("UTF-8")));
-			entity.addPart("dataset_name", new StringBody(datasetName));
-			entity.addPart("csv", new FileBody(csvToUpload, "text/csv"));
-
-			connection.setRequestProperty("Content-Type", entity
-					.getContentType().getValue());
-			connection.setRequestProperty("Accept", "application/json");
-			OutputStream out = connection.getOutputStream();
-			try {
-				entity.writeTo(out);
-			} finally {
-				out.close();
-			}
-			connection.getResponseCode();
-			InputStream in = new BufferedInputStream(
-					connection.getInputStream());
-			try {
-				ByteArrayOutputStream bo = new ByteArrayOutputStream();
-				int i = in.read();
-				while (i != -1) {
-					bo.write(i);
-					i = in.read();
-				}
-				JSONObject j = new JSONObject(bo.toString());
-				return j.getInt("id");
-			} catch (IOException e) {
-				return -1;
-			} finally {
-				in.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-
-	/**
-	 * Uploads a file to the media section of a project
-	 * 
-	 * @param projectId
-	 *            The project ID to upload to
+	 * @param targetId
+	 *            The ID of the thing you're uploading to
 	 * @param mediaToUpload
 	 *            The file to upload
+	 * @param ttype
+	 * 			The type of the target (project or dataset)
 	 * @return The media object ID for the media uploaded or -1 if upload fails
 	 */
-	public int uploadProjectMedia(int projectId, File mediaToUpload) {
+	public int uploadMedia(int projectId, File mediaToUpload, TargetType ttype) {
 		try {
-			URL url = new URL(baseURL + "/media_objects/saveMedia/project/"
-					+ projectId + "?authenticity_token="
-					+ URLEncoder.encode(authToken, "UTF-8") + "&non_wys=true");
-			System.out.println("Connect to: " + url);
+			URL url = new URL(baseURL + "/media_objects/");
 
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
@@ -846,6 +548,10 @@ public class API {
 					"upload",
 					new FileBody(mediaToUpload, URLConnection
 							.guessContentTypeFromName(mediaToUpload.getName())));
+			entity.addPart("email", new StringBody(email));
+			entity.addPart("password", new StringBody(password));
+			entity.addPart("type", new StringBody((ttype == TargetType.PROJECT) ? "project" : "data_set"));
+			entity.addPart("id", new StringBody(""+projectId));
 
 			connection.setRequestProperty("Content-Type", entity
 					.getContentType().getValue());
@@ -906,22 +612,25 @@ public class API {
 		}
 		return -1;
 	}
-
+	
 	/**
-	 * Uploads a file to the media section of a data set
+	 * Uploads a file to the media section of a project with a contributor key
 	 * 
-	 * @param dataSetId
-	 *            The data set ID to upload to
+	 * @param targetId
+	 *            The ID of the thing you're uploading to
 	 * @param mediaToUpload
 	 *            The file to upload
+	 * @param ttype
+	 * 			The type of the target (project or dataset)
+	 * @param conKey
+	 * 			The contributor key
+	 * @param conName
+	 * 			The contributor name
 	 * @return The media object ID for the media uploaded or -1 if upload fails
 	 */
-	public int uploadDataSetMedia(int dataSetId, File mediaToUpload) {
+	public int uploadMedia(int projectId, File mediaToUpload, TargetType ttype, String conKey, String conName) {
 		try {
-			URL url = new URL(baseURL + "/media_objects/saveMedia/data_set/"
-					+ dataSetId + "?authenticity_token="
-					+ URLEncoder.encode(authToken, "UTF-8") + "&non_wys=true");
-			System.out.println("Connect to: " + url);
+			URL url = new URL(baseURL + "/media_objects/");
 
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
@@ -933,6 +642,10 @@ public class API {
 					"upload",
 					new FileBody(mediaToUpload, URLConnection
 							.guessContentTypeFromName(mediaToUpload.getName())));
+			entity.addPart("contributor_key", new StringBody(conKey));
+			entity.addPart("contributor_name", new StringBody(conName));
+			entity.addPart("type", new StringBody((ttype == TargetType.PROJECT) ? "project" : "data_set"));
+			entity.addPart("id", new StringBody(""+projectId));
 
 			connection.setRequestProperty("Content-Type", entity
 					.getContentType().getValue());
@@ -943,7 +656,6 @@ public class API {
 			} finally {
 				out.close();
 			}
-
 			InputStream in = null;
 			try {
 				int response = connection.getResponseCode();
@@ -964,7 +676,7 @@ public class API {
 					i = in.read();
 				}
 				String output = bo.toString();
-				System.out.println("Returning from uploadDataSetMedia: "
+				System.out.println("Returning from uploadProjectMedia: "
 						+ output);
 				try {
 					JSONObject jobj = new JSONObject(output);
@@ -972,36 +684,27 @@ public class API {
 					return mediaObjID;
 				} catch (JSONException e) {
 					System.err
-							.println("UploadDataSetMedia: exception formatting JSON:");
+							.println("UploadProjectMedia: exception formatting JSON:");
 					e.printStackTrace();
 					return -1;
 				} catch (Exception e) {
 					System.err
-							.println("UploadDataSetMedia: generic exception:");
+							.println("UploadProjectMedia: generic exception:");
 					e.printStackTrace();
 					return -1;
 				}
 			} catch (IOException e) {
-				System.out
-						.println("Returning -1 from IOException in uploadDataSetMedia");
 				return -1;
 			} catch (NumberFormatException e) {
-				System.out
-						.println("Returning -1 from NumberFormatException in uploadDataSetMedia");
 				return -1;
 			} finally {
 				in.close();
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out
-				.println("Returning -1 from who knows why in uploadDataSetMedia");
 		return -1;
-	}
-
-	public RPerson getCurrentUser() {
-		return currentUser;
 	}
 
 	/**

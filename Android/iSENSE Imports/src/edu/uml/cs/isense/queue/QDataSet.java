@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.API.TargetType;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 
 /**
@@ -228,11 +229,16 @@ public class QDataSet implements Serializable {
 
 
 			case PIC:
-				dataSetID = UploadQueue.getAPI().uploadProjectMedia(
-						Integer.parseInt(projID), picture);
+				dataSetID = UploadQueue.getAPI().uploadMedia(
+						Integer.parseInt(projID), picture, TargetType.DATA_SET);
 				break;
 
-			
+			case BOTH:
+				dataSetID = uploadData();
+				dataSetID = UploadQueue.getAPI().uploadMedia(
+						Integer.parseInt(projID), picture, TargetType.DATA_SET);
+				break;
+
 			}
 		}
 
@@ -256,7 +262,7 @@ public class QDataSet implements Serializable {
 
 			System.out.println("JOBJ: " + jobj.toString());
 
-			dataSetID = UploadQueue.getAPI().jsonDataUpload(
+			dataSetID = UploadQueue.getAPI().uploadDataSet(
 					Integer.parseInt(projID), jobj, name);
 			System.out.println("Data set ID from Upload is: " + dataSetID);
 		}

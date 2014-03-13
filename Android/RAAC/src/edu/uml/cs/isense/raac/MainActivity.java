@@ -1214,7 +1214,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			boolean success = api.createSession(username, password);
+			boolean success = (api.createSession(username, password) != null);
 			if (success)
 				loggedIn = true;
 			else
