@@ -61,9 +61,9 @@ public class API {
 
 	public static final int CREATED_AT = 0;
 	public static final int UPDATED_AT = 1;
-	
+
 	private String email, password;
-	
+
 	public enum TargetType {PROJECT, DATA_SET};
 
 	/**
@@ -99,8 +99,8 @@ public class API {
 	public RPerson createSession(String p_email, String p_password) {
 		try {
 			String reqResult = makeRequest(baseURL, "users/myInfo", "email=" + URLEncoder.encode(p_email, "UTF-8")
-				+ "&password=" + URLEncoder.encode(p_password, "UTF-8"),
-				"GET", null);
+					+ "&password=" + URLEncoder.encode(p_password, "UTF-8"),
+					"GET", null);
 			JSONObject j = new JSONObject(reqResult);
 			if(j.getString("username") != null) {
 				email = p_email;
@@ -126,11 +126,11 @@ public class API {
 		password = "";
 		currentUser = null;
 	}
-	
+
 	public RPerson getCurrentUser() {
 		return currentUser;
 	}
-	
+
 	/**
 	 * Verifies whether a given contributor key will work for a project
 	 * 
@@ -140,7 +140,7 @@ public class API {
 	 */
 	public boolean validateKey(int projectId, String conKey) {
 		//TODO implement this when we get the API functionality to actually do it
-		
+
 		return true;
 	}
 
@@ -247,8 +247,7 @@ public class API {
 			String reqResult = makeRequest(
 					baseURL,
 					"projects",
-					"authenticity_token="
-							+ URLEncoder.encode(authToken, "UTF-8"), "POST",
+					"", "POST",
 					postData);
 			JSONObject jobj = new JSONObject(reqResult);
 			int pid = jobj.getInt("id");
@@ -263,8 +262,7 @@ public class API {
 				postData2.put("email", email);
 				postData2.put("password", password);
 				postData2.put("field", mField);
-				makeRequest(baseURL, "fields", "authenticity_token="
-						+ URLEncoder.encode(authToken, "UTF-8"), "POST",
+				makeRequest(baseURL, "fields", "", "POST",
 						postData2);
 			}
 
@@ -410,7 +408,7 @@ public class API {
 		datasetName += appendedTimeStamp();
 
 		JSONObject requestData = new JSONObject();
-		
+
 		try {
 			requestData.put("email", email);
 			requestData.put("password", password);
@@ -427,7 +425,7 @@ public class API {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Upload a dataset to iSENSE with a contributor key
 	 * 
@@ -445,7 +443,7 @@ public class API {
 	 */
 	public int uploadDataSet(int projectId, JSONObject data, String conKey, String conName) {
 		JSONObject requestData = new JSONObject();
-		
+
 		try {
 			requestData.put("contributor_key", conKey);
 			requestData.put("contributor_name", conName);
@@ -511,9 +509,9 @@ public class API {
 					"data_sets/" + dataSetId + "/edit",
 					"authenticity_token="
 							+ URLEncoder.encode(authToken, "UTF-8"), "POST",
-					requestData);
+							requestData);
 			new JSONObject(result); // this line will throw an exception if it
-									// fails, thus returning false
+			// fails, thus returning false
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -590,12 +588,12 @@ public class API {
 					return mediaObjID;
 				} catch (JSONException e) {
 					System.err
-							.println("UploadProjectMedia: exception formatting JSON:");
+					.println("UploadProjectMedia: exception formatting JSON:");
 					e.printStackTrace();
 					return -1;
 				} catch (Exception e) {
 					System.err
-							.println("UploadProjectMedia: generic exception:");
+					.println("UploadProjectMedia: generic exception:");
 					e.printStackTrace();
 					return -1;
 				}
@@ -612,7 +610,7 @@ public class API {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Uploads a file to the media section of a project with a contributor key
 	 * 
@@ -684,12 +682,12 @@ public class API {
 					return mediaObjID;
 				} catch (JSONException e) {
 					System.err
-							.println("UploadProjectMedia: exception formatting JSON:");
+					.println("UploadProjectMedia: exception formatting JSON:");
 					e.printStackTrace();
 					return -1;
 				} catch (Exception e) {
 					System.err
-							.println("UploadProjectMedia: generic exception:");
+					.println("UploadProjectMedia: generic exception:");
 					e.printStackTrace();
 					return -1;
 				}
@@ -778,7 +776,7 @@ public class API {
 			}
 		} catch (ConnectException ce) {
 			System.err
-					.println("Connection failed: ENETUNREACH (network not reachable)");
+			.println("Connection failed: ENETUNREACH (network not reachable)");
 			ce.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
