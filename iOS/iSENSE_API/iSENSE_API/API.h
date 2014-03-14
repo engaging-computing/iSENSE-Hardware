@@ -16,6 +16,7 @@
 #import "Reachability.h"
 #import <MobileCoreServices/UTType.h>
 #import <sys/time.h>
+#import <AFHTTPRequestOperationManager.h>
 
 // Version number of the API tested and passed on this version
 // number of the production iSENSE website.
@@ -28,6 +29,11 @@ typedef enum {
     UPDATED_AT_DESC,
     UPDATED_AT_ASC
 } SortType;
+
+typedef enum {
+    PROJECT,
+    DATA_SET
+} TargetType;
 
 @interface API : NSObject {
 }
@@ -43,7 +49,7 @@ typedef enum {
 -(void)setBaseUrl:(NSURL *)newUrl;
 
 /* Manage Authentication Key */
--(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password;
+-(RPerson *)createSessionWithEmail:(NSString *)p_email andPassword:(NSString *)p_password;
 -(void)deleteSession;
 
 /* Doesn't Require Authentication Key */
@@ -62,14 +68,14 @@ typedef enum {
 -(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 
 -(RPerson *)    getCurrentUser;
--(RPerson *)    getUserWithID:(int) id;
 -(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields;
 -(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data;
 
--(int)      jsonDataUploadWithId:    (int)projectId withData:(NSDictionary *)dataToUpload    andName: (NSString *)name;
+-(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name;
+-(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName;
 -(int)      uploadCSVWithId:         (int)projectId withFile:(NSData *)csvToUpload     andName:(NSString *)name;
--(int)      uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
--(int)      uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload   andName:(NSString *)name;
+-(int) uploadMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *) name withTarget: (TargetType) ttype;
+-(int) uploadMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *) name withTarget: (TargetType) ttype withContributorKey:(NSString *) conKey as:(NSString *) conName;
 
 /* Other methods */
 -(NSDictionary *)rowsToCols:(NSDictionary *)original;
