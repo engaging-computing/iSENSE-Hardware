@@ -220,12 +220,6 @@ public class QDataSet implements Serializable {
 			case DATA:
 				dataSetID = uploadData();
 				break;
-				
-			case BOTH:
-				dataSetID = uploadData();
-				dataSetID = UploadQueue.getAPI().uploadDataSetMedia(dataSetID,
-						picture);
-				break;
 
 
 			case PIC:
