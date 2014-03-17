@@ -10,11 +10,9 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 
@@ -51,6 +49,9 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
     int TRANSIT_FRAGMENT_OPEN = 4097;
     int TRANSIT_FRAGMENT_CLOSE = 8194;
     int TRANSIT_FRAGMENT_FADE = 4099;
+    
+    /* onActivityResult codes */
+    final int NEW_KEY_REQUESTED = 101;
 	
     /* person object we get back after we login*/
 	public static RPerson person;
@@ -136,7 +137,7 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 		return person;
 	}
 	
-	public boolean isLoggedIn() {
+	public static boolean isLoggedIn() {
 		return loggedin;
 		
 	}
@@ -162,18 +163,9 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 		loggedin = false;
 		LoggedOutView();
 	}
+
 	
-	public static boolean addContributorKey(String key) {
-		if (key == null) {
-		}
-		
-		return false;
-		
-	}
 	
-	public void removeContributorKey(String key){
-		
-	}
 	
 	public static String getUsername(Context appContext) {
 		baseContext = appContext;
@@ -360,8 +352,6 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 			}
 			
 		}
-
-
 
 		
 	

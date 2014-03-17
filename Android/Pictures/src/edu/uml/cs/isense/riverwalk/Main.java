@@ -51,6 +51,7 @@ import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.CredentialManager;
+import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.credentials.CredentialManagerLogin;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -76,6 +77,7 @@ public class Main extends Activity implements LocationListener {
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 	private static final int SELECT_PICTURE_REQUESTED = 107;
+	private static final int CREDENTIAL_KEY_REQUESTED = 108;
 	
 	private MediaPlayer mMediaPlayer;
 
@@ -94,6 +96,9 @@ public class Main extends Activity implements LocationListener {
 	public static API api;
 	public static UploadQueue uq;
 	public static final String activityName = "genpicsmain";
+	
+	private static String key = "";
+	private static int key_proj = -1;
 
 	private static boolean uploadError = false;
 	private static boolean status400 = false;
@@ -157,11 +162,8 @@ public class Main extends Activity implements LocationListener {
 
 		api = API.getInstance();
 		api.useDev(useDev);
-		CredentialManager.Login(mContext, api);
-
-		 
 		
-		//attemptLoginOnAppStart();
+		CredentialManager.Login(mContext, api);
 		
 		uq = new UploadQueue("generalpictures", mContext, api);
 
@@ -691,7 +693,7 @@ public class Main extends Activity implements LocationListener {
 					api.useDev(useDev);
 					setDefaultProject();
 				}
-				attemptLogin();
+				CredentialManager.Login(this, api);
 				actionBarTapCount = 0;
 				
 				
@@ -720,8 +722,7 @@ public class Main extends Activity implements LocationListener {
 
 		}
 
-		if (api.getCurrentUser() == null)
-			attemptLogin();
+		CredentialManager.Login(this, api);
 
 		// Rebuilds uploadQueue from saved info
 		uq.buildQueueFromFile();
@@ -731,15 +732,15 @@ public class Main extends Activity implements LocationListener {
 
 	// uploads the data if logged in and queue is not empty
 	private void manageUploadQueue() {
-
-		if (api.getCurrentUser() == null) {
-			w.make("Must be logged in to upload.", Waffle.IMAGE_X);
-			return;
-		}
-
+				
 		if (uq.emptyQueue()) {
 			w.make("No data to upload.", Waffle.IMAGE_X);
 			return;
+		}
+		//TODO This needs to be called in upload queue
+		if (CredentialManager.isLoggedIn() == false) {
+			Intent key_intent = new Intent().setClass(mContext, CredentialManagerKey.class);
+			startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);		
 		}
 
 		Intent i = new Intent().setClass(mContext, QueueLayout.class);
@@ -986,6 +987,11 @@ public class Main extends Activity implements LocationListener {
 				Intent iDesc = new Intent(Main.this, Description.class);
 				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
 			}
+		} else if (requestCode == CREDENTIAL_KEY_REQUESTED) {
+			if (resultCode == Activity.RESULT_OK) {
+				key = data.getStringExtra("key");
+				key_proj = data.getIntExtra("proj", -1);
+			}
 		}
 	}
 
@@ -1054,60 +1060,6 @@ public class Main extends Activity implements LocationListener {
 			uq.buildQueueFromFile();
 
 			uploadError = false;
-		}
-	}
-	
-	// gets the user's name if not already provided + login to web site
-		private void attemptLoginOnAppStart() {
-			//TODO
-
-//			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-//					mContext, getSharedPreferences(
-//							CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-//							Context.MODE_PRIVATE));
-//
-//			if (mPrefs.getString(
-//					CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-//					.equals("")
-//					&& mPrefs.getString(
-//							CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-//							"").equals("")) {
-//				mPrefs.edit()
-//				.putString(
-//						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-//						CredentialManagerLogin.DEFAULT_USERNAME).commit();
-//				mPrefs.edit()
-//				.putString(
-//						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-//						CredentialManagerLogin.DEFAULT_PASSWORD).commit();
-//			}
-
-			if (Connection.hasConnectivity(mContext)) {
-				new LoginTask().execute();
-
-			}
-		}
-
-	// gets the user's name if not already provided + login to web site
-	private void attemptLogin() {
-//TODO 
-//		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-//				mContext, getSharedPreferences(
-//						CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-//						Context.MODE_PRIVATE));
-//
-//		if (mPrefs.getString(
-//				CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-//				.equals("")
-//				&& mPrefs.getString(
-//						CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-//						"").equals("")) {
-//			return;
-//		}
-
-		if (Connection.hasConnectivity(mContext)) {
-			new LoginTask().execute();
-
 		}
 	}
 
@@ -1208,29 +1160,5 @@ public class Main extends Activity implements LocationListener {
 		return sdf.format(time);
 	}
 
-	// Attempts to login with current user information
-	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
-
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			//TODO
-//			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-//					mContext, mContext.getSharedPreferences(
-//							CredentialManagerLogin.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-//							Context.MODE_PRIVATE));
-//
-//			boolean success = api
-//					.createSession(
-//							mPrefs.getString(
-//									CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-//									""),
-//							mPrefs.getString(
-//									CredentialManagerLogin.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-//									""));
-//			return success;
-			return true;
-		}
-
-	}
 
 }
