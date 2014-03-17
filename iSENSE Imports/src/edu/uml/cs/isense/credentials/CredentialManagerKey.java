@@ -5,18 +5,23 @@ import edu.uml.cs.isense.proj.BrowseProjects;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class CredentialManagerEnterKey extends Activity  {
+public class CredentialManagerKey extends Activity  {
 
 	final int PROJECT_REQUESTED = 101;
 	private final String PROJECT_ID = "project_id";
 	private int projID = -1;
 	private String key = "";
 	EditText newKey;
+	Button bProject;
+	Button bCancel;
+	Button bOK;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,17 +30,39 @@ public class CredentialManagerEnterKey extends Activity  {
         
         newKey = (EditText) findViewById(R.id.edittext_key);
 
-		Button bOK = (Button) findViewById(R.id.button_ok);
-		Button bCancel = (Button) findViewById(R.id.button_cancel);
-		Button bProject = (Button) findViewById(R.id.button_project);
+		bOK = (Button) findViewById(R.id.button_ok);
+		bCancel = (Button) findViewById(R.id.button_cancel);
+	    bProject = (Button) findViewById(R.id.button_project);
 		
+	    newKey.setOnTouchListener(new OnTouchListener() {
+
+	    	
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				newKey.setError(null);
+				return false;
+			}
+	    	
+	    });
 	
 
 		bOK.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				if (newKey.getText().length() != 0 && projID != -1) {
-					key = newKey.getText().toString();
+					Intent results = new Intent();
+					results.putExtra("key", newKey.getText().toString());
+					results.putExtra("proj", projID);
+					setResult(Activity.RESULT_OK, results);
+				} else if (newKey.getText().length() == 0 && projID == -1 ) {
+					newKey.setError("Key can not be empty.");
+					bProject.setError("Project not selected.");
+
+				} else if (newKey.getText().length() == 0){
+					newKey.setError("Key can not be empty.");
+
+				} else if (projID != -1){
+					bProject.setError("Project not selected.");
+
 				}
 			}
 			
@@ -44,6 +71,7 @@ public class CredentialManagerEnterKey extends Activity  {
 		bCancel.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
+				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
 			
@@ -59,8 +87,9 @@ public class CredentialManagerEnterKey extends Activity  {
 			}
 			
 		});
-		
 	}
+	
+
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) { 
@@ -71,6 +100,7 @@ public class CredentialManagerEnterKey extends Activity  {
 			if (resultCode == Activity.RESULT_OK) {
 				if (resultCode == Activity.RESULT_OK) {
 					projID = data.getExtras().getInt(PROJECT_ID);
+					bProject.setError(null);
 				}
 			}
 		
