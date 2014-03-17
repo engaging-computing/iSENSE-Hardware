@@ -266,7 +266,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 				w.make("No internet connection found", Waffle.IMAGE_X);
 				return;
 			}
-
+			
+			// TODO remove login task and replace with credential managers
 			if (api.getCurrentUser() != null) {
 				new LoginTask().execute();
 				return;

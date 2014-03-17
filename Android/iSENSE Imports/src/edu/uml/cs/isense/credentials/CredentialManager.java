@@ -98,7 +98,7 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 	}
 	
 	/**
-	 * call this when user logs in
+	 * changes the view to logged in view
 	 * 
 	 */
 

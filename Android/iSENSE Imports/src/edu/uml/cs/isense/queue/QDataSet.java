@@ -262,9 +262,11 @@ public class QDataSet implements Serializable {
 			jobj = UploadQueue.getAPI().rowsToCols(jobj);
 
 			System.out.println("JOBJ: " + jobj.toString());
-
+			
+			//TODO if logged in call this if not open key dialog and onActivityResult call with credential keys
 			dataSetID = UploadQueue.getAPI().uploadDataSet(
 					Integer.parseInt(projID), jobj, name);
+			
 			System.out.println("Data set ID from Upload is: " + dataSetID);
 		}
 
