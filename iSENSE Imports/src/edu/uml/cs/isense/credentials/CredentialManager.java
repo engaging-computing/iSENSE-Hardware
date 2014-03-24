@@ -147,6 +147,7 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
     }
 	
 	public void Logout() {
+		loggedin = false;
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
 				baseContext, baseContext.getSharedPreferences(
 						PREFERENCES_KEY_OBSCURRED_USER_INFO,
@@ -160,7 +161,6 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 				PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
 				"").commit();
 		
-		loggedin = false;
 		LoggedOutView();
 	}
 

@@ -10,9 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.API.TargetType;
@@ -227,21 +225,36 @@ public class QDataSet implements Serializable {
 	private int uploadDataAndMedia() {
 		//TODO each of these functions need to support keys
 		int dataSetID = -1;
-		if (this.rdyForUpload) {
+		if (this.rdyForUpload) {			
 			switch (type) {
 			case DATA:
 				dataSetID = uploadData();
 				break;
 
 			case PIC:
-				dataSetID = UploadQueue.getAPI().uploadMedia(
-						Integer.parseInt(projID), picture, TargetType.DATA_SET);
+				if (UploadQueue.getAPI().getCurrentUser() != null) {
+					dataSetID = UploadQueue.getAPI().uploadMedia(
+							Integer.parseInt(projID), picture, TargetType.PROJECT);
+				} else {
+					String key = CredentialManagerKey.getKey();
+					dataSetID = UploadQueue.getAPI().uploadMedia(
+							Integer.parseInt(projID), picture, TargetType.PROJECT, key, name);
+				}
 				break;
 
 			case BOTH:
+				Log.e("Key", CredentialManagerKey.getKey());
+
 				dataSetID = uploadData();
-				dataSetID = UploadQueue.getAPI().uploadMedia(
-						Integer.parseInt(projID), picture, TargetType.DATA_SET);
+
+				if (UploadQueue.getAPI().getCurrentUser() != null) {
+					dataSetID = UploadQueue.getAPI().uploadMedia(
+							Integer.parseInt(projID), picture, TargetType.PROJECT);
+				} else {
+					String key = CredentialManagerKey.getKey();
+					dataSetID = UploadQueue.getAPI().uploadMedia(
+							Integer.parseInt(projID), picture, TargetType.PROJECT, key, name);
+				}
 				break;
 
 			}
@@ -268,13 +281,14 @@ public class QDataSet implements Serializable {
 			System.out.println("JOBJ: " + jobj.toString());
 			
 			//TODO if logged in call this if not open key dialog and onActivityResult call with credential keys
-			if (CredentialManager.isLoggedIn() == true) {
+			if (UploadQueue.getAPI().getCurrentUser() != null) {
 				dataSetID = UploadQueue.getAPI().uploadDataSet(
 						Integer.parseInt(projID), jobj, name);
 			
 			}else{
+				String key = CredentialManagerKey.getKey();
 				dataSetID = UploadQueue.getAPI().uploadDataSet(
-						Integer.parseInt(projID), jobj, "conKey", name);
+						Integer.parseInt(projID), jobj, key, name);
 						
 			}
 			

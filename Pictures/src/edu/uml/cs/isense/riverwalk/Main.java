@@ -737,12 +737,7 @@ public class Main extends Activity implements LocationListener {
 			w.make("No data to upload.", Waffle.IMAGE_X);
 			return;
 		}
-		//TODO This needs to be called in upload queue
-		if (CredentialManager.isLoggedIn() == false) {
-			Intent key_intent = new Intent().setClass(mContext, CredentialManagerKey.class);
-			startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);		
-		}
-
+		//TODO
 		Intent i = new Intent().setClass(mContext, QueueLayout.class);
 		i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
 		startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
