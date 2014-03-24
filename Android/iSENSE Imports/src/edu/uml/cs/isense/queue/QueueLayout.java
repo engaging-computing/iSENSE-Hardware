@@ -22,7 +22,6 @@ import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
-import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
@@ -84,7 +83,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private API api;
 	private DataFieldManager dfm;
 	
-	private boolean loggedIn = true;
 	
 	private LinkedList<String> dataSetUploadStatus;
 
@@ -274,16 +272,18 @@ public class QueueLayout extends Activity implements OnClickListener {
 			}
 			
 			// TODO remove login task and replace with credential managers
-			if (api.getCurrentUser() != null) {
-				loggedIn = false;
+			if (api.getCurrentUser() == null) {
+				Log.e("queueLayout runUploadSanityChecks()", "api current user is null");
+				
+				//Call intent to get a key
 				Intent key_intent = new Intent().setClass(mContext, CredentialManagerKey.class);
 				startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);		
 				
 //				new LoginTask().execute();
 //				return;
+			} else {
+				prepareForUpload();
 			}
-
-			prepareForUpload();
 			
 		} else {
 			Intent iNoInitialProject = new Intent(QueueLayout.this,
@@ -333,7 +333,6 @@ public class QueueLayout extends Activity implements OnClickListener {
 	}
 
 	// Control task for uploading data from SD card
-	//TODO
 	private class UploadSDTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean dialogShow = true;
@@ -629,6 +628,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 				Intent iProj = new Intent(mContext, Setup.class);
 				iProj.putExtra("from_where", "queue");
 				startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+			}
+		} else if (requestCode == CREDENTIAL_KEY_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				prepareForUpload();
+			} else if (resultCode == RESULT_CANCELED) {
+				//TODO cancel upload 
 			}
 		}
 
