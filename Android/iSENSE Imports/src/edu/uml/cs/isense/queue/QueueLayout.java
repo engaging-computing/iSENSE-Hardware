@@ -22,6 +22,8 @@ import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.CredentialManager;
+import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.FieldMatching;
@@ -57,6 +59,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static final int ALTER_DATA_PROJ_REQUESTED = 9004;
 	private static final int QUEUE_DELETE_SELECTED_REQUESTED = 9005;
 	private static final int FIELD_MATCHING_REQUESTED = 9006;
+	private static final int CREDENTIAL_KEY_REQUESTED = 9007;
+
 
 	private static final int QUEUE_BOX_DESELECTED = 0;
 	private static final int QUEUE_BOX_SELECTED = 1;
@@ -79,6 +83,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private Waffle w;
 	private API api;
 	private DataFieldManager dfm;
+	
+	private boolean loggedIn = true;
 	
 	private LinkedList<String> dataSetUploadStatus;
 
@@ -269,8 +275,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 			
 			// TODO remove login task and replace with credential managers
 			if (api.getCurrentUser() != null) {
-				new LoginTask().execute();
-				return;
+				loggedIn = false;
+				Intent key_intent = new Intent().setClass(mContext, CredentialManagerKey.class);
+				startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);		
+				
+//				new LoginTask().execute();
+//				return;
 			}
 
 			prepareForUpload();
@@ -323,6 +333,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	}
 
 	// Control task for uploading data from SD card
+	//TODO
 	private class UploadSDTask extends AsyncTask<Void, Integer, Void> {
 
 		boolean dialogShow = true;

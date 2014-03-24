@@ -10,11 +10,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.API.TargetType;
+import edu.uml.cs.isense.credentials.CredentialManager;
+import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.dfm.DataFieldManager;
+
 
 /**
  * Class that contains all elements of an iSENSE data set and the functions
@@ -116,7 +121,6 @@ public class QDataSet implements Serializable {
 			this.data = data;
 		else {
 			this.data = null;
-			System.out.println("Nullfrog");
 		}
 		this.picture = picture;
 
@@ -148,7 +152,7 @@ public class QDataSet implements Serializable {
 	 * @return The ID of the data set created on iSENSE, or -1 if the upload
 	 *         failed
 	 */
-	public int upload(API api, Context c) {
+	public int upload(API api, Context c) {		
 		// if no project is associated with this data set yet, we can't upload
 		// it
 		if (this.projID.equals("-1"))
@@ -221,7 +225,7 @@ public class QDataSet implements Serializable {
 	 *         failed
 	 */
 	private int uploadDataAndMedia() {
-
+		//TODO each of these functions need to support keys
 		int dataSetID = -1;
 		if (this.rdyForUpload) {
 			switch (type) {
@@ -264,15 +268,41 @@ public class QDataSet implements Serializable {
 			System.out.println("JOBJ: " + jobj.toString());
 			
 			//TODO if logged in call this if not open key dialog and onActivityResult call with credential keys
-			dataSetID = UploadQueue.getAPI().uploadDataSet(
-					Integer.parseInt(projID), jobj, name);
+			if (CredentialManager.isLoggedIn() == true) {
+				dataSetID = UploadQueue.getAPI().uploadDataSet(
+						Integer.parseInt(projID), jobj, name);
+			
+			}else{
+				dataSetID = UploadQueue.getAPI().uploadDataSet(
+						Integer.parseInt(projID), jobj, "conKey", name);
+						
+			}
 			
 			System.out.println("Data set ID from Upload is: " + dataSetID);
 		}
 
 		return dataSetID;
 	}
+	
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) { // passes
+//																					// in
+//																					// a
+//																					// request
+//																					// code
+//		super.onActivityResult(requestCode, resultCode, data);
+//
+//		if (requestCode == CREDENTIAL_KEY_REQUESTED) { // request to takes picture
+//
+//			if (resultCode == Activity.RESULT_OK) {
+//
+//			} else {
+//				
+//			}
+//		}
+//	}
 
+	
 	// Creates a JSON array out of the parsed string
 	private JSONArray prepDataForUpload() {
 		JSONArray dataJSON = null;
@@ -422,5 +452,6 @@ public class QDataSet implements Serializable {
 	public void setRequestDataLabelInOrder(boolean rdlio) {
 		this.requestDataLabelInOrder = rdlio;
 	}
-
+	
+	
 }

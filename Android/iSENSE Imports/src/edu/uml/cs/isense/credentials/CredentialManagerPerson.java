@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import edu.uml.cs.isense.R;
+import edu.uml.cs.isense.comm.API;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -52,6 +53,7 @@ public class CredentialManagerPerson extends Fragment {
 		/* Calls a method of the parent activity Credential Manager */
 		logout.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				API.getInstance().deleteSession();
 				((PersonWrapper) getActivity()).WrapperLogout();
 			}
 		});
