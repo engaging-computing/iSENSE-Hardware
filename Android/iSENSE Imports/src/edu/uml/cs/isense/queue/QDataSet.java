@@ -243,17 +243,15 @@ public class QDataSet implements Serializable {
 				break;
 
 			case BOTH:
-				Log.e("Key", CredentialManagerKey.getKey());
-
 				dataSetID = uploadData();
 
 				if (UploadQueue.getAPI().getCurrentUser() != null) {
 					dataSetID = UploadQueue.getAPI().uploadMedia(
-							Integer.parseInt(projID), picture, TargetType.PROJECT);
+							Integer.parseInt(projID), picture, TargetType.DATA_SET);
 				} else {
 					String key = CredentialManagerKey.getKey();
 					dataSetID = UploadQueue.getAPI().uploadMedia(
-							Integer.parseInt(projID), picture, TargetType.PROJECT, key, name);
+							Integer.parseInt(projID), picture, TargetType.DATA_SET, key, name);
 				}
 				break;
 

@@ -432,9 +432,10 @@ public class API {
 		JSONObject requestData = new JSONObject();
 		
 		try {
-			requestData.put("contributor_key", conKey);
+			requestData.put("contribution_key", conKey);
 			requestData.put("contributor_name", conName);
 			requestData.put("data", data);
+			requestData.put("title", "title");
 			String reqResult = makeRequest(
 					baseURL,
 					"projects/" + projectId + "/jsonDataUpload", "", "POST",
