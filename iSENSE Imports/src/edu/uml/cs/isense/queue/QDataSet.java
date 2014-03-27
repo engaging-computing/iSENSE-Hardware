@@ -223,7 +223,7 @@ public class QDataSet implements Serializable {
 	 *         failed
 	 */
 	private int uploadDataAndMedia() {
-		//TODO each of these functions need to support keys
+		//TODO Pictures do not work for upload to dataset 3/27/14
 		int dataSetID = -1;
 		if (this.rdyForUpload) {			
 			switch (type) {
@@ -278,7 +278,7 @@ public class QDataSet implements Serializable {
 
 			System.out.println("JOBJ: " + jobj.toString());
 			
-			//TODO if logged in call this if not open key dialog and onActivityResult call with credential keys
+			//If not logged in open key dialog and onActivityResult call with credential keys
 			if (UploadQueue.getAPI().getCurrentUser() != null) {
 				dataSetID = UploadQueue.getAPI().uploadDataSet(
 						Integer.parseInt(projID), jobj, name);
