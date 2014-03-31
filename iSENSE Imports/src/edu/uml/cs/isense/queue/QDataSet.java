@@ -285,8 +285,9 @@ public class QDataSet implements Serializable {
 			
 			}else{
 				String key = CredentialManagerKey.getKey();
+				String conName = CredentialManagerKey.getName();
 				dataSetID = UploadQueue.getAPI().uploadDataSet(
-						Integer.parseInt(projID), jobj, key, name);
+						Integer.parseInt(projID), jobj, name, key, conName);
 						
 			}
 			

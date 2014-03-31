@@ -26,6 +26,7 @@ import edu.uml.cs.isense.collector.ManualEntry;
 import edu.uml.cs.isense.collector.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.supplements.FileBrowser;
 import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
@@ -172,86 +173,17 @@ public class SelectMode extends Activity {
 					return;
 				}
 
-				new LoginTask().execute(filepath);
+				CredentialManager.Login(mContext, api);
+				new UploadCSVTask().execute(filepath);	
 			}
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-
-				w.make(getResources().getString(R.string.login_success), Waffle.LENGTH_LONG,
-						Waffle.IMAGE_CHECK);
-
 				new UploadCSVTask().execute(tempFilepath);
-				
-			} else if (resultCode == Login.RESULT_ERROR) {
-				
-				Intent i = new Intent(mContext, Login.class);
-				startActivityForResult(i, LOGIN_REQUESTED);
-				
-			}
+			} 
 		}
 	}
 
-	private class LoginTask extends AsyncTask<String, Integer, Void> {
-
-		private ProgressDialog dia;
-		private String filepath;
-
-		@Override
-		protected void onPreExecute() {
-
-			OrientationManager.disableRotation(SelectMode.this);
-
-			dia = new ProgressDialog(SelectMode.this);
-			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Logging in...");
-			dia.setCancelable(false);
-			dia.show();
-		}
-
-		@Override
-		protected Void doInBackground(String... args) {
-
-			filepath = args[0];
-
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					SelectMode.mContext,
-					SelectMode.mContext.getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			api.createSession(
-					mPrefs.getString(
-							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-							Login.DEFAULT_USERNAME),
-					mPrefs.getString(
-							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							Login.DEFAULT_PASSWORD));
-
-			publishProgress(100);
-			return null;
-
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-			dia.setMessage("Done");
-			dia.cancel();
-			OrientationManager.enableRotation(SelectMode.this);
-
-			if (api.getCurrentUser() == null) {
-				tempFilepath = filepath;
-				w.make(getResources().getString(R.string.please_log_in), 
-						Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
-
-				Intent i = new Intent(mContext, Login.class);
-				startActivityForResult(i, LOGIN_REQUESTED);
-			} else {
-				new UploadCSVTask().execute(filepath);
-			}
-
-		}
-
-	}
+	
 
 	private class UploadCSVTask extends AsyncTask<String, Integer, Void> {
 
