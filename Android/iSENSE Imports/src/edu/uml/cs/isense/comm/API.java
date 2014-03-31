@@ -421,6 +421,8 @@ public class API {
 	 * @param data
 	 *            The data to be uploaded. Must be in column-major format to
 	 *            upload correctly
+	 * @param dataName
+	 *            The Dataset name 
 	 * @param conKey
 	 *            The Contributor Key
 	 * @param conName
@@ -428,14 +430,14 @@ public class API {
 	 * @return The integer ID of the newly uploaded dataset, or -1 if upload
 	 *         fails
 	 */
-	public int uploadDataSet(int projectId, JSONObject data, String conKey, String conName) {
+	public int uploadDataSet(int projectId, JSONObject data, String dataName, String conKey,  String conName) {
 		JSONObject requestData = new JSONObject();
 		
 		try {
 			requestData.put("contribution_key", conKey);
 			requestData.put("contributor_name", conName);
 			requestData.put("data", data);
-			requestData.put("title", conName + appendedTimeStamp()); //dataset name is conName + timestamp
+			requestData.put("title", dataName + appendedTimeStamp()); //dataset name is conName + timestamp
 			String reqResult = makeRequest(
 					baseURL,
 					"projects/" + projectId + "/jsonDataUpload", "", "POST",

@@ -945,7 +945,7 @@ public class Main extends Activity implements LocationListener {
 						mContext, f);
 				dfm.getOrder();
 			}
-		} else if (requestCode == LOGIN_REQUESTED) { // shows dialog to login
+		} else if (requestCode == LOGIN_REQUESTED) { 
 			
 		} else if (requestCode == NO_GPS_REQUESTED) { // asks the user if they
 														// would like to enable

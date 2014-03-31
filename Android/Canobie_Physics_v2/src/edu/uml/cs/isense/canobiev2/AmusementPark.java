@@ -16,10 +16,8 @@
 
 package edu.uml.cs.isense.canobiev2;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,15 +60,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.comm.Connection;
-import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 import android.app.ActionBar;
@@ -81,8 +77,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
 	/* Default Constants */
-	private final String DEFAULT_USERNAME = "mobile.fake@example.com";
-	private final String DEFAULT_PASSWORD = "mobile";
 	private final String ACTIVITY_NAME = "canobielake";
 	private final String TIME_OFFSET_PREFS_ID = "time_offset";
 	private final String TIME_OFFSET_KEY = "timeOffset";
@@ -383,7 +377,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		super.onResume();
 
 		// Silently logs in the user to iSENSE
-		login(false);
+		CredentialManager.Login(mContext, api);
 
 		// Rebuilds the upload queue
 		if (uq != null)
@@ -439,8 +433,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			return true;
 		case R.id.MENU_ITEM_LOGIN:
 			startActivityForResult(new Intent(getApplicationContext(),
-					Login.class), LOGIN_REQUESTED);
-			login(true);
+					CredentialManager.class), LOGIN_REQUESTED);
 			return true;
 		case R.id.MENU_ITEM_UPLOAD:
 			manageUploadQueue();
@@ -492,18 +485,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				if (cdt != null)
 					cdt.cancel();
 
-				if (api.getCurrentUser() != null) {
-					Runnable r = new Runnable() {
-						public void run() {
-							api.deleteSession();
-							api.useDev(useDev);
-						}
-					};
-					new Thread(r).start();
-				} else {
-					api.useDev(useDev);
-				}
-				attemptLogin();
+				CredentialManager.Login(this, api);
 				actionBarTapCount = 0;
 				
 				
@@ -518,29 +500,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 	
-	// gets the user's name if not already provided + login to web site
-		private void attemptLogin() {
-
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			if (mPrefs.getString(
-					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-					.equals("")
-					&& mPrefs.getString(
-							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							"").equals("")) {
-				return;
-			}
-
-			if (Connection.hasConnectivity(mContext)) {
-				new LoginTask().execute();
-
-			}
-		}
-
+	
 	
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
@@ -670,15 +630,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				
 				
 		} else if (requestCode == LOGIN_REQUESTED) {
-			if (resultCode == Activity.RESULT_OK) {
-				
-				w.make("Login successful", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-				
-			} else if (resultCode == Login.RESULT_ERROR) {
-				
-				startActivityForResult(new Intent(mContext, Login.class), LOGIN_REQUESTED);
-
-			}
+			
 			
 		}
 
@@ -826,25 +778,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					bar.setDisplayHomeAsUpEnabled(true);
 				}
 
-		// Get the last stored username and password from Encrypted Shared
-		// Preferences
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
-
-		// If the is no previously store username/password, write in the default
-		// credentials
-		if (mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME).equals(DEFAULT_USERNAME)
-				|| mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD).equals("")) {
-			final SharedPreferences.Editor mEdit = mPrefs.edit();
-			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME);
-			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD);
-			mEdit.commit();
-		}
-
 		// Login to iSENSE
-		login(false);
+		CredentialManager.Login(this, api);
 
 		// Create a new upload queue
 		uq = new UploadQueue(ACTIVITY_NAME, mContext, api);
@@ -883,47 +818,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 	}
 
-	/**
-	 * Logs the user into iSENSE with stored credentials.
-	 * 
-	 * @param enterNewCredentials
-	 *            True if you want to enter new user credentials.
-	 */
-	void login(boolean enterNewCredentials) {
-
-		if (enterNewCredentials) {
-			
-		} else {
-
-			new LoginTask().execute();
-
-			// login to iSENSE
-		}
-	}
 	
-	private class LoginTask extends AsyncTask<Void, Integer, Void> {
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-			// Get user info from encrypted preferences
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					AmusementPark.mContext,
-					AmusementPark.mContext.getSharedPreferences("USER_INFO",
-							Context.MODE_PRIVATE));
-			
-			api.createSession(mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME),
-					mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD));
-			
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-		}
-	}
 
 	/**
 	 * Set all dfm's fields to enabled. 
