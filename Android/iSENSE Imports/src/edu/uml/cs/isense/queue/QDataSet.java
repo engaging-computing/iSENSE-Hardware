@@ -11,8 +11,13 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.API.TargetType;
+import edu.uml.cs.isense.credentials.CredentialManager;
+import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.dfm.DataFieldManager;
+
 
 /**
  * Class that contains all elements of an iSENSE data set and the functions
@@ -114,7 +119,6 @@ public class QDataSet implements Serializable {
 			this.data = data;
 		else {
 			this.data = null;
-			System.out.println("Nullfrog");
 		}
 		this.picture = picture;
 
@@ -146,7 +150,7 @@ public class QDataSet implements Serializable {
 	 * @return The ID of the data set created on iSENSE, or -1 if the upload
 	 *         failed
 	 */
-	public int upload(API api, Context c) {
+	public int upload(API api, Context c) {		
 		// if no project is associated with this data set yet, we can't upload
 		// it
 		if (this.projID.equals("-1"))
@@ -177,13 +181,20 @@ public class QDataSet implements Serializable {
 			// if there was no initial project, we must reOrder the data with
 			// the fields from FieldMatching
 			if (!this.hasInitialProject) {
+				Log.e("QDataSet -- fields", this.fields.toString());
+				Log.e("QDataSet -- upPrepData", this.data);
+				Log.e("QDataSet -- prepData", prepDataForUpload().toString());
 				this.data = DataFieldManager.reOrderData(prepDataForUpload(),
 						this.projID, c, this.fields, null);
+				Log.e("QDataSet -- postData", this.data);
+				
 			}
 
 			// otherwise, if we have a JSONArray for data, we must reOrder it as
 			// well using fields
 			try {
+				Log.e("Upload Time", data.toString());
+				
 				// see if the elements of the JSONArray are JSONArrays
 				if (data != null) {
 					JSONArray ja = new JSONArray(data);
@@ -212,23 +223,36 @@ public class QDataSet implements Serializable {
 	 *         failed
 	 */
 	private int uploadDataAndMedia() {
-
+		//TODO Pictures do not work for upload to dataset 3/27/14
 		int dataSetID = -1;
-		if (this.rdyForUpload) {
+		if (this.rdyForUpload) {			
 			switch (type) {
 			case DATA:
 				dataSetID = uploadData();
 				break;
 
 			case PIC:
-				dataSetID = UploadQueue.getAPI().uploadProjectMedia(
-						Integer.parseInt(projID), picture);
+				if (UploadQueue.getAPI().getCurrentUser() != null) {
+					dataSetID = UploadQueue.getAPI().uploadMedia(
+							Integer.parseInt(projID), picture, TargetType.PROJECT);
+				} else {
+					String key = CredentialManagerKey.getKey();
+					dataSetID = UploadQueue.getAPI().uploadMedia(
+							Integer.parseInt(projID), picture, TargetType.PROJECT, key, name);
+				}
 				break;
 
 			case BOTH:
 				dataSetID = uploadData();
-				dataSetID = UploadQueue.getAPI().uploadDataSetMedia(dataSetID,
-						picture);
+
+				if (UploadQueue.getAPI().getCurrentUser() != null) {
+					dataSetID = UploadQueue.getAPI().uploadMedia(
+							Integer.parseInt(projID), picture, TargetType.DATA_SET);
+				} else {
+					String key = CredentialManagerKey.getKey();
+					dataSetID = UploadQueue.getAPI().uploadMedia(
+							Integer.parseInt(projID), picture, TargetType.DATA_SET, key, name);
+				}
 				break;
 
 			}
@@ -253,15 +277,45 @@ public class QDataSet implements Serializable {
 			jobj = UploadQueue.getAPI().rowsToCols(jobj);
 
 			System.out.println("JOBJ: " + jobj.toString());
-
-			dataSetID = UploadQueue.getAPI().jsonDataUpload(
-					Integer.parseInt(projID), jobj, name);
+			
+			//If not logged in open key dialog and onActivityResult call with credential keys
+			if (UploadQueue.getAPI().getCurrentUser() != null) {
+				dataSetID = UploadQueue.getAPI().uploadDataSet(
+						Integer.parseInt(projID), jobj, name);
+			
+			}else{
+				String key = CredentialManagerKey.getKey();
+				String conName = CredentialManagerKey.getName();
+				dataSetID = UploadQueue.getAPI().uploadDataSet(
+						Integer.parseInt(projID), jobj, name, key, conName);
+						
+			}
+			
 			System.out.println("Data set ID from Upload is: " + dataSetID);
 		}
 
 		return dataSetID;
 	}
+	
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) { // passes
+//																					// in
+//																					// a
+//																					// request
+//																					// code
+//		super.onActivityResult(requestCode, resultCode, data);
+//
+//		if (requestCode == CREDENTIAL_KEY_REQUESTED) { // request to takes picture
+//
+//			if (resultCode == Activity.RESULT_OK) {
+//
+//			} else {
+//				
+//			}
+//		}
+//	}
 
+	
 	// Creates a JSON array out of the parsed string
 	private JSONArray prepDataForUpload() {
 		JSONArray dataJSON = null;
@@ -411,5 +465,6 @@ public class QDataSet implements Serializable {
 	public void setRequestDataLabelInOrder(boolean rdlio) {
 		this.requestDataLabelInOrder = rdlio;
 	}
-
+	
+	
 }

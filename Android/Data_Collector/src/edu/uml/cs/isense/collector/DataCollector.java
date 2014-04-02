@@ -82,6 +82,7 @@ import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
@@ -395,19 +396,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onResume() {
 		super.onResume();
 
-		// Will call the login dialogue if necessary
-		// and update UI
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences(
-						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
-
-		if (!(mPrefs.getString(
-				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-				.equals(""))
-				&& !inPausedState)
-			login();
+		CredentialManager.Login(mContext, api);
 
 		inPausedState = false;
 
@@ -861,35 +850,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 				+ "\nData Point Count: " + dataPointCount);
 	}
 
-	// Deals with login and UI display
-	void login() {
-		new LoginTask().execute();
-	}
-
-	// Attempts to login with current user information
-	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
-
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					DataCollector.mContext,
-					DataCollector.mContext.getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			boolean success = api
-					.createSession(
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-									""),
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-									""));
-			return success;
-		}
-
-	}
-
 	// Gets the milliseconds since Epoch
 	private long getUploadTime() {
 		Calendar c = Calendar.getInstance();
@@ -1250,17 +1210,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Everything that needs to be assigned in onCreate()
 	private void assignVars() {
 		// Set all the login info
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				DataCollector.mContext,
-				DataCollector.mContext.getSharedPreferences(
-						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
-
-		if (!(mPrefs.getString(
-				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-				.equals("")))
-			login();
-
+		CredentialManager.Login(mContext, api);
 		// Add listener
 		setStepButtonListeners();
 	}

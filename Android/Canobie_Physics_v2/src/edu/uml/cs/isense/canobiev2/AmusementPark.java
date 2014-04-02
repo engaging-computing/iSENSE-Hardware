@@ -16,10 +16,8 @@
 
 package edu.uml.cs.isense.canobiev2;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,15 +60,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.comm.Connection;
-import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 import android.app.ActionBar;
@@ -81,8 +77,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
 	/* Default Constants */
-	private final String DEFAULT_USERNAME = "mobile.fake@example.com";
-	private final String DEFAULT_PASSWORD = "mobile";
 	private final String ACTIVITY_NAME = "canobielake";
 	private final String TIME_OFFSET_PREFS_ID = "time_offset";
 	private final String TIME_OFFSET_KEY = "timeOffset";
@@ -108,6 +102,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static String stNumber = "1";
 	public static Boolean projectLaterChecked = false;
 	public static Boolean canobieChecked = true;
+	public static int spinnerid = 0;
+
 	
 	/* Managers and Their Variables */
 	public static DataFieldManager dfm;
@@ -381,7 +377,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		super.onResume();
 
 		// Silently logs in the user to iSENSE
-		login(false);
+		CredentialManager.Login(mContext, api);
 
 		// Rebuilds the upload queue
 		if (uq != null)
@@ -415,31 +411,29 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
-//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
 			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
-//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
+			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
 		}
 		return true;
 	}
 
 	
-	
+	//TODO
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.MENU_ITEM_SETUP:
-			//startStop.setEnabled(false);
 			Intent iSetup = new Intent(AmusementPark.this, Configuration.class);
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
 		case R.id.MENU_ITEM_LOGIN:
 			startActivityForResult(new Intent(getApplicationContext(),
-					Login.class), LOGIN_REQUESTED);
-			login(true);
+					CredentialManager.class), LOGIN_REQUESTED);
 			return true;
 		case R.id.MENU_ITEM_UPLOAD:
 			manageUploadQueue();
@@ -449,8 +443,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					SyncTime.class), SYNC_TIME_REQUESTED);
 			return true;
 		case R.id.MENU_ITEM_MEDIA:
-			Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
-			startActivity(iMedia);
+			if ((!setupDone)) {
+				w.make("You must setup before using Media Manager.",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+			} else {
+				Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
+				startActivity(iMedia);
+			}
 			return true;
 		case android.R.id.home:
 			CountDownTimer cdt = null;
@@ -486,18 +485,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				if (cdt != null)
 					cdt.cancel();
 
-				if (api.getCurrentUser() != null) {
-					Runnable r = new Runnable() {
-						public void run() {
-							api.deleteSession();
-							api.useDev(useDev);
-						}
-					};
-					new Thread(r).start();
-				} else {
-					api.useDev(useDev);
-				}
-				attemptLogin();
+				CredentialManager.Login(this, api);
 				actionBarTapCount = 0;
 				
 				
@@ -512,29 +500,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		}
 	}
 	
-	// gets the user's name if not already provided + login to web site
-		private void attemptLogin() {
-
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			if (mPrefs.getString(
-					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-					.equals("")
-					&& mPrefs.getString(
-							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							"").equals("")) {
-				return;
-			}
-
-			if (Connection.hasConnectivity(mContext)) {
-				new LoginTask().execute();
-
-			}
-		}
-
+	
 	
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
@@ -652,7 +618,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			dfm.setEnabledFields(acceptedFields);
 			
 		} else if (requestCode == SETUP_REQUESTED) {
-				rideName.setText("Ride/St#: " + rideNameString +"/" + stNumber);
+				//TODO
+				
+				rideName.setText("Ride/Student#: " + rideNameString +"/" + stNumber);
 				
 				SharedPreferences mPrefs = getSharedPreferences(
 						Setup.PROJ_PREFS_ID, 0);
@@ -662,15 +630,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				
 				
 		} else if (requestCode == LOGIN_REQUESTED) {
-			if (resultCode == Activity.RESULT_OK) {
-				
-				w.make("Login successful", Waffle.LENGTH_SHORT, Waffle.IMAGE_CHECK);
-				
-			} else if (resultCode == Login.RESULT_ERROR) {
-				
-				startActivityForResult(new Intent(mContext, Login.class), LOGIN_REQUESTED);
-
-			}
+			
 			
 		}
 
@@ -693,8 +653,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			// Retrieve project id
 			SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
 			String projId = mPrefs.getString(Setup.PROJECT_ID, "");
-
-			//TODO FIX ALL DATA NOT BEING UPLOADED
 			
 			Log.e("DATASET", dataSet.toString());
 			
@@ -820,25 +778,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					bar.setDisplayHomeAsUpEnabled(true);
 				}
 
-		// Get the last stored username and password from Encrypted Shared
-		// Preferences
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				AmusementPark.mContext,
-				AmusementPark.mContext.getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
-
-		// If the is no previously store username/password, write in the default
-		// credentials
-		if (mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME).equals(DEFAULT_USERNAME)
-				|| mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD).equals("")) {
-			final SharedPreferences.Editor mEdit = mPrefs.edit();
-			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME);
-			mEdit.putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD);
-			mEdit.commit();
-		}
-
 		// Login to iSENSE
-		login(false);
+		CredentialManager.Login(this, api);
 
 		// Create a new upload queue
 		uq = new UploadQueue(ACTIVITY_NAME, mContext, api);
@@ -850,7 +791,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		values = (TextView) findViewById(R.id.values);
 		time = (TextView) findViewById(R.id.time);
 		rideName = (TextView) findViewById(R.id.ridename);
-		rideName.setText("Ride/St#: " + rideNameString);
+		rideName.setText("Ride/Student#: " + rideNameString);
 
 		// Start some managers
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -877,47 +818,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
 	}
 
-	/**
-	 * Logs the user into iSENSE with stored credentials.
-	 * 
-	 * @param enterNewCredentials
-	 *            True if you want to enter new user credentials.
-	 */
-	void login(boolean enterNewCredentials) {
-
-		if (enterNewCredentials) {
-			
-		} else {
-
-			new LoginTask().execute();
-
-			// login to iSENSE
-		}
-	}
 	
-	private class LoginTask extends AsyncTask<Void, Integer, Void> {
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected Void doInBackground(Void... voids) {
-			// Get user info from encrypted preferences
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					AmusementPark.mContext,
-					AmusementPark.mContext.getSharedPreferences("USER_INFO",
-							Context.MODE_PRIVATE));
-			
-			api.createSession(mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, DEFAULT_USERNAME),
-					mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, DEFAULT_PASSWORD));
-			
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-		}
-	}
 
 	/**
 	 * Set all dfm's fields to enabled. 
@@ -949,6 +850,27 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// This is the location we will get back from GPS
 		loc = new Location(mLocationManager.getBestProvider(c, true));
 		
+	}
+	
+	
+
+	private void initDfm() {
+
+		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
+		String projectInput = mPrefs.getString(Setup.PROJECT_ID, "");
+
+		if (projectInput.equals("-1")) {
+			setUpDFMWithAllFields();
+		} else {
+			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
+					mContext, f);
+			dfm.getOrder();
+
+			String fields = mPrefs.getString("accepted_fields", "");
+			getFieldsFromPrefsString(fields);
+			getEnabledFields();
+
+		}
 	}
 	
 	private void setUpDFMWithAllFields() {
@@ -983,25 +905,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				+ getResources().getString(R.string.temperature_k);
 
 		mEdit.putString("accepted_fields", acceptedFields).commit();
-	}
-
-	private void initDfm() {
-
-		SharedPreferences mPrefs = getSharedPreferences(Setup.PROJ_PREFS_ID, 0);
-		String projectInput = mPrefs.getString(Setup.PROJECT_ID, "");
-
-		if (projectInput.equals("-1")) {
-			setUpDFMWithAllFields();
-		} else {
-			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
-					mContext, f);
-			dfm.getOrder();
-
-			String fields = mPrefs.getString("accepted_fields", "");
-			getFieldsFromPrefsString(fields);
-			getEnabledFields();
-
-		}
 	}
 
 	// (currently 2 of these methods exist - one also in step1setup)
