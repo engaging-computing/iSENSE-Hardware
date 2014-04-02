@@ -145,7 +145,10 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
     public void WrapperLogout() {
     	Logout();
     }
-	
+    
+	/**
+	 * 
+	 */
 	public void Logout() {
 		loggedin = false;
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -165,8 +168,11 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 	}
 
 	
-	
-	
+	/**
+	 * 
+	 * @param appContext
+	 * @return
+	 */
 	public static String getUsername(Context appContext) {
 		baseContext = appContext;
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -177,6 +183,11 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 		return mPrefs.getString(PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "");	
 	}
 	
+	/**
+	 * 
+	 * @param appContext
+	 * @return
+	 */
 	public static String getPassword(Context appContext) {
 		baseContext = appContext;
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
@@ -265,8 +276,8 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 	
 	
 		/**
-		 * This public static method is called from apps to log in to the
-		 * api with saved credentials
+		 * This method logs the app into iSense with saved credentials. 
+		 *
 		 * 
 		 * @param appContext
 		 */
