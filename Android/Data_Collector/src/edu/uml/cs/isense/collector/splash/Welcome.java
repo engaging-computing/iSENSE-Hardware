@@ -256,11 +256,10 @@ public class Welcome extends Activity {
 		mEdit.putString("project_id", projID).commit();
 		mEdit.putString("project_id_dc", projID);
 		mEdit.putString("project_id_manual", projID);
-		mEdit.putString("project_id_csv", projID);
 		mEdit.commit();
 
 		Intent iSelectMode = new Intent(mContext, SelectMode.class);
-		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL_AND_CSV, enable);
+		iSelectMode.putExtra(SelectMode.ENABLE_MANUAL, enable);
 		startActivity(iSelectMode);
 	}
 

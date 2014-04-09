@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 
@@ -344,13 +345,16 @@ public class CredentialManager extends Activity implements LoginWrapper, PersonW
 				String password = mPrefs.getString( PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, "");
 				
 				
-				
-				person = api.createSession(username, password);
-				
-				if (person == null) {
-					loggedin = false;
+				if (api != null) {
+					person = api.createSession(username, password);
+					
+					if (person == null) {
+						loggedin = false;
 					} else {
-					loggedin = true;
+						loggedin = true;
+					}
+				} else {
+					Log.e("CredentialManager.java", "api passed in to CredentialManager.Login() was null");
 				}
 				
 				return null;
