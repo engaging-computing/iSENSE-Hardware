@@ -51,8 +51,6 @@ import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.CredentialManager;
-import edu.uml.cs.isense.credentials.CredentialManagerKey;
-import edu.uml.cs.isense.credentials.CredentialManagerLogin;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
@@ -63,7 +61,6 @@ import edu.uml.cs.isense.riverwalk.dialogs.CameraPreview;
 import edu.uml.cs.isense.riverwalk.dialogs.Continuous;
 import edu.uml.cs.isense.riverwalk.dialogs.Description;
 import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -77,7 +74,6 @@ public class Main extends Activity implements LocationListener {
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 	private static final int SELECT_PICTURE_REQUESTED = 107;
-	private static final int CREDENTIAL_KEY_REQUESTED = 108;
 	
 	private MediaPlayer mMediaPlayer;
 
@@ -96,9 +92,6 @@ public class Main extends Activity implements LocationListener {
 	public static API api;
 	public static UploadQueue uq;
 	public static final String activityName = "genpicsmain";
-	
-	private static String key = "";
-	private static int key_proj = -1;
 
 	private static boolean uploadError = false;
 	private static boolean status400 = false;
@@ -982,12 +975,7 @@ public class Main extends Activity implements LocationListener {
 				Intent iDesc = new Intent(Main.this, Description.class);
 				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
 			}
-		} else if (requestCode == CREDENTIAL_KEY_REQUESTED) {
-			if (resultCode == Activity.RESULT_OK) {
-				key = data.getStringExtra("key");
-				key_proj = data.getIntExtra("proj", -1);
-			}
-		}
+		} 
 	}
 
 	@Override

@@ -71,25 +71,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import edu.uml.cs.isense.collector.dialogs.CanLogin;
 import edu.uml.cs.isense.collector.dialogs.Description;
 import edu.uml.cs.isense.collector.dialogs.ForceStop;
 import edu.uml.cs.isense.collector.dialogs.MediaManager;
-import edu.uml.cs.isense.collector.dialogs.NeedConnectivity;
 import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.dialogs.Step1Setup;
 import edu.uml.cs.isense.collector.dialogs.Summary;
 import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.CredentialManager;
-import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -124,7 +119,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public static final int FORCE_STOP_REQUESTED = 8;
 	public static final int RECORDING_STOPPED_REQUESTED = 9;
 	public static final int DESCRIPTION_REQUESTED = 10;
-	public static final int CAN_LOGIN_REQUESTED = 11;
 	public static final int STEP_1_SETUP_REQUESTED = 12;
 
 	/* UI Objects */
@@ -261,6 +255,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
+		
+		api = API.getInstance();
 
 		OrientationManager.disableRotation(DataCollector.this);
 
@@ -480,8 +476,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 		switch (item.getItemId()) {
 		
 		case R.id.menu_item_login:
-			Intent iLogin = new Intent(mContext, Login.class);
-			startActivityForResult(iLogin, LOGIN_REQUESTED);
+			startActivityForResult(new Intent(getApplicationContext(),
+					CredentialManager.class), LOGIN_REQUESTED);
 		
 			return true;
 		
@@ -640,10 +636,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				w.make(getResources().getString(R.string.login_success), 
-						Waffle.LENGTH_LONG,
-						Waffle.IMAGE_CHECK);
-
 				if (manageUploadQueueAfterLogin) {
 					manageUploadQueueAfterLogin = false;
 					manageUploadQueue();
@@ -654,13 +646,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 					manageUploadQueueAfterLogin = false;
 					manageUploadQueue();
 				}
-			} else if (resultCode == Login.RESULT_ERROR) {
-
-				Intent i = new Intent(mContext, Login.class);
-				startActivityForResult(i, LOGIN_REQUESTED);
-
-			}
-
+			} 
 		} else if (requestCode == GPS_REQUESTED) {
 			showGpsDialog = true;
 			if (resultCode == RESULT_OK) {
@@ -710,16 +696,6 @@ public class DataCollector extends Activity implements SensorEventListener,
 					enableStep2();
 					new GetDfmOrderTask().execute();
 					// initDfm();
-				}
-			}
-		} else if (requestCode == CAN_LOGIN_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				Intent iLogin = new Intent(mContext, Login.class);
-				startActivityForResult(iLogin, LOGIN_REQUESTED);
-			} else if (resultCode == RESULT_CANCELED) {
-				if (manageUploadQueueAfterLogin) {
-					manageUploadQueueAfterLogin = false;
-					manageUploadQueue();
 				}
 			}
 		}
@@ -1515,30 +1491,8 @@ public class DataCollector extends Activity implements SensorEventListener,
 
 		step3.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {
-
-				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						DataCollector.mContext,
-						DataCollector.mContext.getSharedPreferences(
-								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-								Context.MODE_PRIVATE));
-
-				if ((mPrefs.getString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-						"").equals(""))) {
-					if (Connection.hasConnectivity(mContext)) {
-						manageUploadQueueAfterLogin = true;
-						Intent iCanLogin = new Intent(mContext, CanLogin.class);
-						startActivityForResult(iCanLogin, CAN_LOGIN_REQUESTED);
-					} else {
-						manageUploadQueue();
-						Intent iNeedConnectivity = new Intent(mContext,
-								NeedConnectivity.class);
-						startActivity(iNeedConnectivity);
-					}
-				} else {
-					manageUploadQueue();
-				}
+			public void onClick(View v) {	
+				manageUploadQueue();
 			}
 		});
 	}
