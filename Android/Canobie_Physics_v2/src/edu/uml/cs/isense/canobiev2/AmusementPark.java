@@ -1141,9 +1141,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
          if (dfm.enabledFields[Fields.LONGITUDE])
                  f.longitude = loc.getLongitude();
          if (dfm.enabledFields[Fields.HEADING_DEG])
+ 				 f.angle_deg = toThou.format(orientation[0]);
          if (dfm.enabledFields[Fields.HEADING_RAD])
-                 f.angle_deg = toThou.format(orientation[0]);
-                 f.angle_rad = "" + (Double.parseDouble(f.angle_deg) * (Math.PI / 180));
+        	 if (!f.angle_deg.equals(""))
+ 				f.angle_rad = toThou
+ 						.format((Double.parseDouble(f.angle_deg) * (Math.PI / 180)));
+ 			else
+ 				f.angle_rad = "";
          if (dfm.enabledFields[Fields.MAG_X])
                  f.mag_x = "" + mag[0];
          if (dfm.enabledFields[Fields.MAG_Y])
