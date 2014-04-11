@@ -13,14 +13,16 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RProjectField;
 
 /**
- * The DataFieldManager class is designed to, as its name implies, manage how data is associated
- * with project fields on the iSENSE website.  It provides field matching, organizing and formatting
- * data sets, applying sensor compatibility checks, and writing data sets to a .csv file.
+ * The DataFieldManager class is designed to, as its name implies, manage how
+ * data is associated with project fields on the iSENSE website. It provides
+ * field matching, organizing and formatting data sets, applying sensor
+ * compatibility checks, and writing data sets to a .csv file.
  * 
  * @author iSENSE Android Development Team
  */
@@ -31,21 +33,23 @@ public class DataFieldManager extends Application {
 	private Context mContext;
 
 	private ArrayList<RProjectField> projFields;
-	private LinkedList<String>  order;
-	private LinkedList<String>  realOrder; // the actual fields in the project, used for .csv file header writing
-	private LinkedList<Long> fieldIDs;  // IDs for the fields in order, in order
+	private LinkedList<String> order;
+	private LinkedList<String> realOrder; // the actual fields in the project,
+											// used for .csv file header writing
+	private LinkedList<Long> fieldIDs; // IDs for the fields in order, in order
 	private Fields f;
-	
+
 	private String CSV_DELIMITER = "-:;_--:-;-;_::-;";
-	
+
 	/**
-	 * Boolean array of size 19 containing a list of fields enabled for recording data.
-	 * See the {@link edu.uml.cs.isense.dfm.Fields Fields} class for a list of the constants
-	 * associated with this boolean array's respective indices.  By default, each field
-	 * is disabled.
+	 * Boolean array of size 19 containing a list of fields enabled for
+	 * recording data. See the {@link edu.uml.cs.isense.dfm.Fields Fields} class
+	 * for a list of the constants associated with this boolean array's
+	 * respective indices. By default, each field is disabled.
 	 * 
-	 * To enable a particular field for recording from your class, perform an operation
-	 * such as:
+	 * To enable a particular field for recording from your class, perform an
+	 * operation such as:
+	 * 
 	 * <pre>
 	 * {@code
 	 *  myDFMInstance.enabledFields[Fields.ACCEL_X] = true;
@@ -60,13 +64,16 @@ public class DataFieldManager extends Application {
 	 * Constructor for the DataFieldManager class.
 	 * 
 	 * @param projID
-	 * 		- The ID of the project to be associated with this DataFieldManager, or -1 for no associated project.
+	 *            - The ID of the project to be associated with this
+	 *            DataFieldManager, or -1 for no associated project.
 	 * @param api
-	 * 		- An instance of the {@link edu.uml.cs.isense.comm.API} class.
+	 *            - An instance of the {@link edu.uml.cs.isense.comm.API} class.
 	 * @param mContext
-	 * 		- The context of the class containing the DataFieldManager object instance.
+	 *            - The context of the class containing the DataFieldManager
+	 *            object instance.
 	 * @param f
-	 * 		- An instance of the {@link edu.uml.cs.isense.dfm.Fields} class.
+	 *            - An instance of the {@link edu.uml.cs.isense.dfm.Fields}
+	 *            class.
 	 * @return An instance of DataFieldManager.
 	 */
 	public DataFieldManager(int projID, API api, Context mContext, Fields f) {
@@ -80,27 +87,33 @@ public class DataFieldManager extends Application {
 	}
 
 	/**
-	 * Creates a list, stored in this DataFieldManager instance's "order" object,
-	 * of matched fields from the iSENSE project with the instance's "projID".
+	 * Creates a list, stored in this DataFieldManager instance's "order"
+	 * object, of matched fields from the iSENSE project with the instance's
+	 * "projID".
 	 * 
 	 * If no associated project is passed in (-1), the order array contains all
-	 * possible fields to be recorded.  Otherwise, the order array contains all
-	 * fields that could be matched string-wise with the associated project's fields.
+	 * possible fields to be recorded. Otherwise, the order array contains all
+	 * fields that could be matched string-wise with the associated project's
+	 * fields.
 	 * 
-	 * NOTE: Ensure you call this method before recording data, or otherwise you will
-	 * be given blank data back from the {@link edu.uml.cs.isense.dfm.DataFieldManager#putData() putData()}
-	 * method.  Error checking may be added such as:
+	 * NOTE: Ensure you call this method before recording data, or otherwise you
+	 * will be given blank data back from the
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#putData() putData()}
+	 * method. Error checking may be added such as:
+	 * 
 	 * <pre>
 	 * {@code
 	 *  if (myDFMInstance.getOrderList().size() == 0) 
 	 *     myDFMInstance.getOrder();
 	 * }
 	 * </pre>
+	 * 
 	 * to prevent such a bug from occurring.
 	 * 
-	 * Additionally, if you intend on calling this function from within an AsyncTask,
-	 * call {@link edu.uml.cs.isense.dfm.DataFieldManager#getOrderWithExternalAsyncTask() getOrderWithExternalAsyncTask()}
-	 * instead.
+	 * Additionally, if you intend on calling this function from within an
+	 * AsyncTask, call
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#getOrderWithExternalAsyncTask()
+	 * getOrderWithExternalAsyncTask()} instead.
 	 */
 	public void getOrder() {
 		if (!order.isEmpty())
@@ -134,11 +147,11 @@ public class DataFieldManager extends Application {
 	}
 
 	/**
-	 * Use this function instead of getOrder() if and only if you are calling this
-	 * function in an AsyncTask.
+	 * Use this function instead of getOrder() if and only if you are calling
+	 * this function in an AsyncTask.
 	 * 
-	 * See the {@link edu.uml.cs.isense.dfm.DataFieldManager#getOrder() getOrder()} function
-	 * for more details.
+	 * See the {@link edu.uml.cs.isense.dfm.DataFieldManager#getOrder()
+	 * getOrder()} function for more details.
 	 */
 	public void getOrderWithExternalAsyncTask() {
 		if (!order.isEmpty())
@@ -173,31 +186,31 @@ public class DataFieldManager extends Application {
 
 		}
 	}
-	
+
 	/**
-	 * Sets the DataFieldManager's order array based not on project field matching
-	 * but rather the field's returned from from user field matching.
+	 * Sets the DataFieldManager's order array based not on project field
+	 * matching but rather the field's returned from from user field matching.
 	 * 
 	 * @param input
-	 * 		A field list built from the FieldMatching dialog.
+	 *            A field list built from the FieldMatching dialog.
 	 */
 	public void setOrder(String input) {
 		this.order = new LinkedList<String>();
-		
+
 		String[] fields = input.split(",");
-		
+
 		for (String s : fields) {
 			order.add(s);
 		}
 	}
 
 	/**
-	 * Creates a row of data from the Fields object this class instance contains.
-	 * This function performs no field matching and assumes you are only calling it
-	 * with the intention of saving it in the data saver.
+	 * Creates a row of data from the Fields object this class instance
+	 * contains. This function performs no field matching and assumes you are
+	 * only calling it with the intention of saving it in the data saver.
 	 * 
-	 * @return The row of data in the form of a JSONArray that is to be re-organized
-	 * at upload time.
+	 * @return The row of data in the form of a JSONArray that is to be
+	 *         re-organized at upload time.
 	 */
 	public JSONArray putData() {
 
@@ -209,9 +222,9 @@ public class DataFieldManager extends Application {
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.ACCEL_X] && f.accel_x != null)
+			if (enabledFields[Fields.ACCEL_X] && f.accel_x != null) 
 				dataJSON.put(f.accel_x);
-			else
+				else
 				dataJSON.put("");
 
 			if (enabledFields[Fields.ACCEL_Y] && f.accel_y != null)
@@ -224,11 +237,11 @@ public class DataFieldManager extends Application {
 			else
 				dataJSON.put("");
 
-			if (enabledFields[Fields.ACCEL_TOTAL] && f.accel_total!= null)
+			if (enabledFields[Fields.ACCEL_TOTAL] && f.accel_total != null)
 				dataJSON.put(f.accel_total);
 			else
 				dataJSON.put("");
-			
+
 			if (enabledFields[Fields.LATITUDE])
 				dataJSON.put(f.latitude);
 			else
@@ -238,7 +251,7 @@ public class DataFieldManager extends Application {
 				dataJSON.put(f.longitude);
 			else
 				dataJSON.put("");
-			
+
 			if (enabledFields[Fields.MAG_X] && f.mag_x != null)
 				dataJSON.put(f.mag_x);
 			else
@@ -258,7 +271,7 @@ public class DataFieldManager extends Application {
 				dataJSON.put(f.mag_total);
 			else
 				dataJSON.put("");
-			
+
 			if (enabledFields[Fields.HEADING_DEG] && f.angle_deg != null)
 				dataJSON.put(f.angle_deg);
 			else
@@ -273,8 +286,8 @@ public class DataFieldManager extends Application {
 				dataJSON.put(f.temperature_c);
 			else
 				dataJSON.put("");
-			
-			if (enabledFields[Fields.PRESSURE] && f.pressure!= null)
+
+			if (enabledFields[Fields.PRESSURE] && f.pressure != null)
 				dataJSON.put(f.pressure);
 			else
 				dataJSON.put("");
@@ -284,7 +297,7 @@ public class DataFieldManager extends Application {
 				dataJSON.put(f.altitude);
 			else
 				dataJSON.put("");
-			
+
 			if (enabledFields[Fields.LIGHT] && f.lux != null)
 				dataJSON.put(f.lux);
 			else
@@ -311,24 +324,25 @@ public class DataFieldManager extends Application {
 	}
 
 	/**
-	 * Writes a single line of data in .csv format.  Data is pulled from this class
-	 * instance's Fields object.
+	 * Writes a single line of data in .csv format. Data is pulled from this
+	 * class instance's Fields object.
 	 * 
 	 * NOTE: Only call this method if you are recording with an associated
-	 * project.  You will be returned a blank string otherwise.
+	 * project. You will be returned a blank string otherwise.
 	 * 
 	 * Also ensure that your .csv file begins with the String returned by
-	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeHeaderLine() writeHeaderLine()}.
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeHeaderLine()
+	 * writeHeaderLine()}.
 	 * 
 	 * @return A single line of data in .csv format in the form of a String, or
-	 * a blank string if there is no associated project.
+	 *         a blank string if there is no associated project.
 	 */
 	public String writeSdCardLine() {
 
 		StringBuilder b = new StringBuilder();
 		boolean start = true;
 		boolean firstLineWritten = false;
-		
+
 		if (projID == -1)
 			return "";
 
@@ -486,25 +500,26 @@ public class DataFieldManager extends Application {
 	}
 
 	/**
-	 * Writes the first line in a .csv file for the project you
-	 * are recording data for.  Data can then by appended to this by calling
-	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeSdCardLine() writeSdCardLine()}.
+	 * Writes the first line in a .csv file for the project you are recording
+	 * data for. Data can then by appended to this by calling
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeSdCardLine()
+	 * writeSdCardLine()}.
 	 * 
 	 * NOTE: Only call this method if you are recording with an associated
-	 * project.  You will be returned a blank string otherwise.
-	 *
-	 * @return A single header line in .csv format in the form of a String, or
-	 * a blank string if there is no associated project.
+	 * project. You will be returned a blank string otherwise.
+	 * 
+	 * @return A single header line in .csv format in the form of a String, or a
+	 *         blank string if there is no associated project.
 	 */
 	public String writeHeaderLine() {
 		StringBuilder b = new StringBuilder();
 		boolean start = true;
-		
+
 		if (projID == -1)
 			return "";
 
 		for (String unitName : this.realOrder) {
-			
+
 			if (start)
 				b.append(unitName);
 			else
@@ -519,53 +534,57 @@ public class DataFieldManager extends Application {
 	}
 
 	/**
-	 * Use this method only if data was recorded with no associated project
-	 * AND you intend to create a
-	 * {@link edu.uml.cs.isense.queue.QDataSet QDataSet} object with an
-	 * associated project before adding the QDataSet to an
+	 * Use this method only if data was recorded with no associated project AND
+	 * you intend to create a {@link edu.uml.cs.isense.queue.QDataSet QDataSet}
+	 * object with an associated project before adding the QDataSet to an
 	 * {@link edu.uml.cs.isense.queue.UploadQueue UploadQueue} object.
 	 * 
-	 * This method will be called internally if you pass -1 as your project
-	 * ID to the QDataSet object, and thus you do not need to call it.
+	 * This method will be called internally if you pass -1 as your project ID
+	 * to the QDataSet object, and thus you do not need to call it.
 	 * 
 	 * 
 	 * @param data
-	 * 		- A JSONArray of JSONArray objects returned from the
-	 * 		{@link edu.uml.cs.isense.dfm.DataFieldManager#putData() putData()} method.
+	 *            - A JSONArray of JSONArray objects returned from the
+	 *            {@link edu.uml.cs.isense.dfm.DataFieldManager#putData()
+	 *            putData()} method.
 	 * @param projID
-	 * 		- The project ID which the data will be re-ordered to match.
+	 *            - The project ID which the data will be re-ordered to match.
 	 * @param api
-	 * 		- An {@link edu.uml.cs.isense.comm.API API} class instance.
+	 *            - An {@link edu.uml.cs.isense.comm.API API} class instance.
 	 * @param c
-	 * 		- The context of the Activity calling this function 
+	 *            - The context of the Activity calling this function
 	 * @param fieldOrder
-	 * 		- The list of fields matched using the FieldMatching class, or null if FieldMatching wasn't used.
+	 *            - The list of fields matched using the FieldMatching class, or
+	 *            null if FieldMatching wasn't used.
 	 * @param fieldIDs
-	 * 		- The list of field IDs, in order, of the project to reorder the data for (or null if you do not have them).
-	 * @return
-	 * 		A JSONObject.toString() formatted properly for upload to iSENSE.
-	 * 		
+	 *            - The list of field IDs, in order, of the project to reorder
+	 *            the data for (or null if you do not have them).
+	 * @return A JSONObject.toString() formatted properly for upload to iSENSE.
+	 * 
 	 */
-	public static String reOrderData(JSONArray data, String projID, Context c, 
+	public static String reOrderData(JSONArray data, String projID, Context c,
 			LinkedList<String> fieldOrder, LinkedList<Long> fieldIDs) {
 		API api = API.getInstance();
-		
+
 		JSONArray row, outData = new JSONArray();
 		JSONObject outRow;
 		int len = data.length();
-		
-		// if the field order is null, set up the fieldOrder/fieldIDs.  otherwise, just get fieldIDs
+
+		// if the field order is null, set up the fieldOrder/fieldIDs.
+		// otherwise, just get fieldIDs
 		if (fieldOrder == null || fieldOrder.size() == 0) {
-			DataFieldManager d = new DataFieldManager(Integer.parseInt(projID), api, c, null);
+			DataFieldManager d = new DataFieldManager(Integer.parseInt(projID),
+					api, c, null);
 			d.getOrderWithExternalAsyncTask();
 			fieldOrder = d.getOrderList();
 			fieldIDs = d.getFieldIDs();
 		} else if (fieldIDs == null || fieldIDs.size() == 0) {
-			DataFieldManager d = new DataFieldManager(Integer.parseInt(projID), api, c, null);
+			DataFieldManager d = new DataFieldManager(Integer.parseInt(projID),
+					api, c, null);
 			d.getOrderWithExternalAsyncTask();
 			fieldIDs = d.getFieldIDs();
 		}
-			
+
 		Activity a = (Activity) c;
 
 		for (int i = 0; i < len; i++) {
@@ -576,110 +595,98 @@ public class DataFieldManager extends Application {
 				for (int j = 0; j < fieldOrder.size(); j++) {
 					String s = fieldOrder.get(j);
 					Long id = fieldIDs.get(j);
-					
+
 					try {
 						// Compare against hard-coded strings
 						if (s.equals(a.getResources().getString(
 								R.string.accel_x))) {
 							outRow.put(id + "", row.getString(Fields.ACCEL_X));
+							Log.e("DFM",s + " " + a.getResources().getString(
+									R.string.accel_x)); 
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.accel_y))) {
 							outRow.put(id + "", row.getString(Fields.ACCEL_Y));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.accel_z))) {
 							outRow.put(id + "", row.getString(Fields.ACCEL_Z));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.accel_total))) {
 							outRow.put(id + "",
 									row.getString(Fields.ACCEL_TOTAL));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.temperature_c))) {
 							outRow.put(id + "",
 									row.getString(Fields.TEMPERATURE_C));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.temperature_f))) {
 							outRow.put(id + "",
 									row.getString(Fields.TEMPERATURE_F));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.temperature_k))) {
 							outRow.put(id + "",
 									row.getString(Fields.TEMPERATURE_K));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(R.string.time))) {
+						} else if (s.equals(a.getResources().getString(
+								R.string.time))) {
 							outRow.put(id + "", row.getString(Fields.TIME));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.luminous_flux))) {
 							outRow.put(id + "", row.getString(Fields.LIGHT));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.heading_deg))) {
 							outRow.put(id + "",
 									row.getString(Fields.HEADING_DEG));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.heading_rad))) {
 							outRow.put(id + "",
 									row.getString(Fields.HEADING_RAD));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.latitude))) {
 							outRow.put(id + "", row.getDouble(Fields.LATITUDE));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.longitude))) {
 							outRow.put(id + "", row.getDouble(Fields.LONGITUDE));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.magnetic_x))) {
 							outRow.put(id + "", row.getString(Fields.MAG_X));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.magnetic_y))) {
 							outRow.put(id + "", row.getString(Fields.MAG_Y));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.magnetic_z))) {
 							outRow.put(id + "", row.getString(Fields.MAG_Z));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.magnetic_total))) {
 							outRow.put(id + "", row.getString(Fields.MAG_TOTAL));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.altitude))) {
 							outRow.put(id + "", row.getString(Fields.ALTITUDE));
 							continue;
-						}
-						if (s.equals(a.getResources().getString(
+						} else if (s.equals(a.getResources().getString(
 								R.string.pressure))) {
 							outRow.put(id + "", row.getString(Fields.PRESSURE));
 							continue;
+						} else {
+							Log.e("DFM", s + " " + a.getResources().getString(
+									R.string.time));
+							outRow.put(id + "", "");
 						}
-						outRow.put(id + "", "");
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -699,7 +706,7 @@ public class DataFieldManager extends Application {
 	 * Set the context for this instance of DataFieldManager.
 	 * 
 	 * @param c
-	 * 		- The new context of this DataFieldManager instance.
+	 *            - The new context of this DataFieldManager instance.
 	 */
 	public void setContext(Context c) {
 		this.mContext = c;
@@ -719,68 +726,72 @@ public class DataFieldManager extends Application {
 			getProjectFieldOrder();
 		}
 	}
-	
+
 	/**
-	 * Writes the fields for the project out to SharedPreferences, designed to aid
-	 * the writing of .csv files using
-	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#getProjectFieldsAndSetCSVOrder() getProjectFieldsAndSetCSVOrder}
-	 * when prepared to write a .csv file.
+	 * Writes the fields for the project out to SharedPreferences, designed to
+	 * aid the writing of .csv files using
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#getProjectFieldsAndSetCSVOrder()
+	 * getProjectFieldsAndSetCSVOrder} when prepared to write a .csv file.
 	 * 
 	 */
 	public void writeProjectFields() {
-		
-		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
+
+		SharedPreferences mPrefs = this.mContext.getSharedPreferences(
+				"CSV_ORDER", 0);
 		SharedPreferences.Editor mEdit = mPrefs.edit();
-		
+
 		StringBuilder sb = new StringBuilder();
 		boolean start = true;
-		
+
 		for (String s : this.realOrder) {
 			if (start)
 				sb.append(s);
 			else
 				sb.append(CSV_DELIMITER).append(s);
-			
+
 			start = false;
 		}
-		
+
 		String out = sb.toString();
 		mEdit.putString("csv_order", out).commit();
-		
+
 	}
-	
+
 	/**
 	 * Retrieve the fields written to SharedPreferences from
-	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeProjectFields() writeProjectFields()},
-	 * primarily designed for writing the header line in a .csv file.
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#writeProjectFields()
+	 * writeProjectFields()}, primarily designed for writing the header line in
+	 * a .csv file.
 	 * 
 	 */
 	public void getProjectFieldsAndSetCSVOrder() {
-		
-		SharedPreferences mPrefs = this.mContext.getSharedPreferences("CSV_ORDER", 0);
-		
+
+		SharedPreferences mPrefs = this.mContext.getSharedPreferences(
+				"CSV_ORDER", 0);
+
 		String in = mPrefs.getString("csv_order", "");
-		if (in.equals("")) return;
-		
+		if (in.equals(""))
+			return;
+
 		String[] parts = in.split(CSV_DELIMITER);
 		this.realOrder.clear();
-		
+
 		for (String s : parts) {
 			this.realOrder.add(s);
 		}
-		
+
 	}
-	
+
 	private void getProjectFieldOrder() {
 		this.order = new LinkedList<String>();
 		this.realOrder = new LinkedList<String>();
 		this.fieldIDs = new LinkedList<Long>();
-		
+
 		for (RProjectField field : projFields) {
 
 			realOrder.add(field.name);
 			fieldIDs.add(field.field_id);
-			
+
 			switch (field.type) {
 
 			// Number
@@ -836,9 +847,11 @@ public class DataFieldManager extends Application {
 				}
 
 				// Acceleration
-				else if (field.name.toLowerCase(Locale.US)
-						.matches("(^(((x|y|z){1}[^x|y|z]*acc[^x|y|z]*)|[^x|y|z]*(accel))$)" + 
-								"|(^((acc[^x|y|z]*(x|y|z){1})|(accel[^x|y|z]*))$)")) {
+				else if (field.name
+						.toLowerCase(Locale.US)
+						.matches(
+								"(^(((x|y|z){1}[^x|y|z]*acc[^x|y|z]*)|[^x|y|z]*(accel))$)"
+										+ "|(^((acc[^x|y|z]*(x|y|z){1})|(accel[^x|y|z]*))$)")) {
 					if (field.name.toLowerCase(Locale.US).contains("x")) {
 						order.add(mContext.getString(R.string.accel_x));
 					} else if (field.name.toLowerCase(Locale.US).contains("y")) {
@@ -858,7 +871,8 @@ public class DataFieldManager extends Application {
 				}
 
 				else {
-					order.add(mContext.getString(R.string.null_string) + field.name);
+					order.add(mContext.getString(R.string.null_string)
+							+ field.name);
 					break;
 				}
 
@@ -885,175 +899,174 @@ public class DataFieldManager extends Application {
 			}
 
 		}
-		
+
 	}
-	
+
 	/**
 	 * Getter for the project ID this DataFieldManager instance operates on.
 	 * 
-	 * @return
-	 * 		The current project ID.
+	 * @return The current project ID.
 	 */
 	public int getProjID() {
 		return this.projID;
 	}
-	
+
 	/**
 	 * Setter for the project ID this DataFieldManager instance operates on.
 	 * 
 	 * NOTE: If you call this function, be sure you call
-	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#getOrder()} to update
-	 * which fields this DataFieldManager instance records for.
+	 * {@link edu.uml.cs.isense.dfm.DataFieldManager#getOrder()} to update which
+	 * fields this DataFieldManager instance records for.
 	 * 
 	 * @param projectID
-	 * 		- The new project ID for DataFieldManager to operate with.
+	 *            - The new project ID for DataFieldManager to operate with.
 	 */
 	public void setProjID(int projectID) {
 		this.projID = projectID;
 	}
-	
+
 	/**
-	 * Getter for the project fields associated with the project ID passed in
-	 * to this instance of DataFieldManager.
+	 * Getter for the project fields associated with the project ID passed in to
+	 * this instance of DataFieldManager.
 	 * 
-	 * @return
-	 * 		An ArrayList of {@link edu.uml.cs.isense.objects.RProjectField RProjectField}
-	 * 		containing the fields from the associated iSENSE project.
+	 * @return An ArrayList of {@link edu.uml.cs.isense.objects.RProjectField
+	 *         RProjectField} containing the fields from the associated iSENSE
+	 *         project.
 	 */
 	public ArrayList<RProjectField> getProjectFields() {
 		return this.projFields;
 	}
-	
+
 	/**
 	 * Getter for the list of matched fields that this instance of
 	 * DataFieldManager will record data for.
 	 * 
-	 * @return
-	 * 		The list of matched project fields from the associated project ID
+	 * @return The list of matched project fields from the associated project ID
 	 */
 	public LinkedList<String> getOrderList() {
 		return this.order;
 	}
-	
+
 	/**
 	 * Getter for the list of actual project fields.
 	 * 
-	 * @return
-	 * 		The list of project fields from the associated project ID
+	 * @return The list of project fields from the associated project ID
 	 */
 	public LinkedList<String> getRealOrderList() {
 		return this.realOrder;
 	}
-	
+
 	/**
 	 * Converts order into a String[]
 	 * 
-	 * @return
-	 * 		order in the form of a String[]
+	 * @return order in the form of a String[]
 	 */
 	public String[] convertLinkedListToStringArray(LinkedList<String> ll) {
-		
+
 		String[] sa = new String[ll.size()];
 		int i = 0;
-		
+
 		for (String s : ll)
 			sa[i++] = s;
-		
+
 		return sa;
 	}
-	
+
 	/**
 	 * Converts a String[] back into a LinkedList of Strings
 	 * 
-	 * @param
-	 * 		sa - the String[] to convert
-	 * @return
-	 * 		sa in the form of a LinkedList of Strings
+	 * @param sa
+	 *            - the String[] to convert
+	 * @return sa in the form of a LinkedList of Strings
 	 */
 	public static LinkedList<String> convertStringArrayToLinkedList(String[] sa) {
-	
+
 		LinkedList<String> lls = new LinkedList<String>();
-		
+
 		for (String s : sa)
 			lls.add(s);
-		
+
 		return lls;
 	}
-	
+
 	/**
-	 * Getter for the Fields object associated with this instance of DataFieldManager
+	 * Getter for the Fields object associated with this instance of
+	 * DataFieldManager
 	 * 
-	 * @return
-	 * 		The Fields object associated with this instance of DataFieldManager
+	 * @return The Fields object associated with this instance of
+	 *         DataFieldManager
 	 */
 	public Fields getFields() {
 		return this.f;
 	}
-	
+
 	/**
-	 * Setter for the Fields object associated with this instance of DataFieldManager
+	 * Setter for the Fields object associated with this instance of
+	 * DataFieldManager
 	 * 
 	 * @param fields
-	 * 		- The Fields object associated with this instance of DataFieldManager
+	 *            - The Fields object associated with this instance of
+	 *            DataFieldManager
 	 */
 	public void setFields(Fields fields) {
 		this.f = fields;
 	}
-	
+
 	/**
 	 * Getter for the list of field IDs in the order list.
 	 * 
-	 * @return
-	 * 		The IDs for the fields, in order, of the project associated with this
-	 * 		DataFieldManager instance.
+	 * @return The IDs for the fields, in order, of the project associated with
+	 *         this DataFieldManager instance.
 	 */
 	public LinkedList<Long> getFieldIDs() {
 		return this.fieldIDs;
 	}
-	
+
 	private ArrayList<Integer> getFieldTypes() {
-		
+
 		ArrayList<Integer> fieldTypes = new ArrayList<Integer>();
-		
-		for (RProjectField field:this.projFields) {
+
+		for (RProjectField field : this.projFields) {
 			fieldTypes.add(field.type);
 		}
-		
+
 		return fieldTypes;
-		
-		
+
 	}
-	
-	/* Checks if project contains a timestamp
+
+	/*
+	 * Checks if project contains a timestamp
 	 */
-	
+
 	public boolean projectContainsTimeStamp() {
 		ArrayList<Integer> fields = this.getFieldTypes();
-		
-		for (Integer i:fields) {
+
+		for (Integer i : fields) {
 			if (i.intValue() == RProjectField.TYPE_TIMESTAMP) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
-	/* Checks if project contains a location (latitude and longitude)
+
+	/*
+	 * Checks if project contains a location (latitude and longitude)
 	 */
-	
+
 	public boolean projectContainsLocation() {
 		ArrayList<Integer> fields = this.getFieldTypes();
-		
-		for (Integer i:fields) {
-			if (i.intValue() == RProjectField.TYPE_LAT || i.intValue() == RProjectField.TYPE_LON) {
+
+		for (Integer i : fields) {
+			if (i.intValue() == RProjectField.TYPE_LAT
+					|| i.intValue() == RProjectField.TYPE_LON) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Enables all fields for recording data
 	 */
@@ -1078,14 +1091,15 @@ public class DataFieldManager extends Application {
 		enabledFields[Fields.ALTITUDE] = true;
 		enabledFields[Fields.LIGHT] = true;
 	}
-	
+
 	/**
-	 * Set the enabled fields from the acceptedFields parameter. 
+	 * Set the enabled fields from the acceptedFields parameter.
 	 * 
-	 * @param acceptedFields LinkedList of field strings
+	 * @param acceptedFields
+	 *            LinkedList of field strings
 	 */
 	public void setEnabledFields(LinkedList<String> acceptedFields) {
-		
+
 		for (String s : acceptedFields) {
 			if (s.equals(getString(R.string.time)))
 				enabledFields[Fields.TIME] = true;
@@ -1127,22 +1141,22 @@ public class DataFieldManager extends Application {
 				enabledFields[Fields.LIGHT] = true;
 		}
 	}
-	
+
 	/**
 	 * Converts a JSONArray of JSONArray data into a JSONArray of JSONObject
 	 * data where each JSONObject is the internal JSONArray element of the old
 	 * data, keyed with the project's field IDs.
 	 * 
 	 * @param oldData
-	 * 		- JSONArray of JSONArray data to be converted
-	 * @return
-	 * 		A JSONArray of JSONObjects, ready for upload to the associated project.
+	 *            - JSONArray of JSONArray data to be converted
+	 * @return A JSONArray of JSONObjects, ready for upload to the associated
+	 *         project.
 	 */
 	public JSONArray convertInternalDataToJSONObject(JSONArray oldData) {
-		
+
 		getOrderWithExternalAsyncTask();
 		JSONArray newData = new JSONArray();
-		
+
 		for (int i = 0; i < oldData.length(); i++) {
 			try {
 				JSONArray oldRow = oldData.getJSONArray(i);

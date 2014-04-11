@@ -48,10 +48,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.CredentialManager;
+import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.credentials.EnterName;
-import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.objects.RProjectField;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
+import edu.uml.cs.isense.queue.UploadQueue;
 
 public class PendulumTrackerActivity extends Activity implements
 // OnTouchListener, CvCameraViewListener2 {
@@ -75,6 +76,10 @@ public class PendulumTrackerActivity extends Activity implements
 	static String firstName = "";
 	static String lastInitial = "";
 	public static final int ENTERNAME_REQUEST = 1098;
+	public static final int CREDENTIAL_KEY_REQUESTED  = 1099;
+	public static final int LOGIN_REQUESTED  = 2000;
+
+	
 	Boolean sessionNameEntered = false;
 
 	private static String experimentNumber = "29"; // production = 29, dev = 39
@@ -197,8 +202,8 @@ public class PendulumTrackerActivity extends Activity implements
 		// TODO: add remembe-me login stuff here!
 		// Jeremy Note: Actually the remembering happens automagically
 		// in the API calls
-		new OnCreateLoginTask().execute();
-
+		CredentialManager.Login(mContext, api);
+		
 		// Event handler
 		mHandler = new Handler();
 	}
@@ -518,10 +523,7 @@ public class PendulumTrackerActivity extends Activity implements
 			if (PendulumTrackerActivity.mSessionCreated == false) {
 				if (firstName.length() == 0 || lastInitial.length() == 0) {
 					// Boolean dontPromptMeTwice = true;
-					startActivityForResult(
-							new Intent(mContext, EnterName.class), // used to be
-																	// login
-																	// activity
+					startActivityForResult(new Intent(mContext, EnterName.class), // used to be login activity
 							ENTERNAME_REQUEST);
 				}
 
@@ -545,8 +547,10 @@ public class PendulumTrackerActivity extends Activity implements
 				// set START button and text
 				item.setIcon(startIcon);
 				item.setTitle(R.string.startCollection);
-
-				new LoginThenUploadTask().execute();
+				
+				
+				
+				LoginThenUpload(); //TODO was login then upload task
 
 			}
 			
@@ -582,6 +586,11 @@ public class PendulumTrackerActivity extends Activity implements
 			}
 			return true;
 */			
+		case R.id.menu_login:
+			startActivityForResult(new Intent(getApplicationContext(),
+					CredentialManager.class), LOGIN_REQUESTED);
+			return true;	
+			
 		case R.id.menu_exit:
 
 			// Exit app neatly
@@ -646,6 +655,14 @@ public class PendulumTrackerActivity extends Activity implements
 				// startStopButton = (MenuItem)menu.findItem(R.id.menu_start);
 
 			}
+		} else if (reqCode == CREDENTIAL_KEY_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				new uploadTask().execute();
+			}
+		} else if(reqCode == LOGIN_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				
+			}
 		}
 	}
 
@@ -688,9 +705,17 @@ public class PendulumTrackerActivity extends Activity implements
 
 			int projectID = Integer.parseInt(experimentNumber);
 
-			Log.i(TAG, "Uploading new dataset");
-			sessionId = api.jsonDataUpload(projectID, jobj, nameOfSession);
-					//+ " (location not found)");
+			
+			
+			if (UploadQueue.getAPI().getCurrentUser() != null) {
+				Log.i(TAG, "Uploading new dataset");
+				sessionId = UploadQueue.getAPI().uploadDataSet(projectID, jobj, nameOfSession);
+			}else{
+				String key = CredentialManagerKey.getKey();
+				String conName = CredentialManagerKey.getName();
+				sessionId = UploadQueue.getAPI().uploadDataSet(projectID, jobj, nameOfSession, key, conName);
+			}
+			
 
 			if (sessionId == -1)
 				Log.i(TAG, "Dataset failed to upload!");
@@ -802,91 +827,13 @@ public class PendulumTrackerActivity extends Activity implements
 
 	}
 
-	//
 
-	public class OnCreateLoginTask extends AsyncTask<Void, Integer, Void> {
 
-		boolean status;
-		boolean loginStatus = false;
-		boolean connect = false;
-		boolean upload = false;
-
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			if (Connection.hasConnectivity(mContext)) {
-				final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-						PendulumTrackerActivity.mContext,
-						PendulumTrackerActivity.mContext.getSharedPreferences(
-								Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-								Context.MODE_PRIVATE));
-				loginStatus = api.createSession(mPrefs.getString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-						Login.DEFAULT_USERNAME), mPrefs.getString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						Login.DEFAULT_PASSWORD));
-
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void voids) {
-
-			String msg = "Logged into iSENSE successfully.";
-
-			if (!loginStatus)
-				msg = "Could not log into iSENSE.";
-
-			Toast.makeText(PendulumTrackerActivity.this, msg, Toast.LENGTH_LONG)
-					.show();
-
-		}
-	}
-
-	// Control task for logging in and then calling the upload task
-	private class LoginThenUploadTask extends AsyncTask<Void, Integer, Void> {
-
-		boolean loginStatus = false;
-		boolean connect = false;
-
-		// network thread!
-		@Override
-		protected Void doInBackground(Void... voids) {
-
-			// login to iSENSE if not already
-			// start by check if you're connected
-			if (connect = Connection.hasConnectivity(mContext))
-				// now check if you are already logged in
-				if (api.getCurrentUser() == null) {
-					// retrieve the user credentials from the last successful login
-					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-							mContext, mContext.getSharedPreferences(
-									Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-									Context.MODE_PRIVATE));
-					// try to login
-					loginStatus = api.createSession(
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-									Login.DEFAULT_USERNAME),
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-									Login.DEFAULT_PASSWORD));
-				} else {
-					// you are already logged in
-					loginStatus = true;
-				}
-
-			return null;
-
-		}
-
-		// UI needs to run in main thread - ALL UI ELEMENTS MUST BE IN THIS
-		// THREAD!!
-		@Override
-		protected void onPostExecute(Void voids) {
+	void LoginThenUpload() { //TODO
 
 			// am i connected to the internet?
-			connect = Connection.hasConnectivity(mContext);
+			boolean connect = Connection.hasConnectivity(mContext);
+			boolean loginStatus = CredentialManager.isLoggedIn();
 
 			if (connect) {
 
@@ -900,29 +847,35 @@ public class PendulumTrackerActivity extends Activity implements
 							Toast.LENGTH_LONG).show();
 					return;
 				}
+				
+				/*try to login if successful upload if not prompt for key*/
+				CredentialManager.Login(mContext, api);
+				
 
 				// am I logged in/session created to iSENSE?
-				if (loginStatus) {
 					// yes! yes! yes! so upload my data
 					if (!mDataCollectionEnabled && mDataSet.length() > 0) {
-						new uploadTask().execute();
+
+						if (CredentialManager.isLoggedIn() == true) {
+							/*logged in so upload*/
+							new uploadTask().execute();
+						}else{
+							/*start dialog activity to ask for key and upload using key in onActivityResult*/
+							Intent key_intent = new Intent().setClass(mContext, CredentialManagerKey.class);
+							startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);
+						}					
+						
 					} else {
 						Toast.makeText(
 								PendulumTrackerActivity.this,
 								"You must first START data collection to upload data.",
 								Toast.LENGTH_LONG).show();
 					}
-				} else {
-					// no! no! no! try again.
-					Toast.makeText(PendulumTrackerActivity.this,
-							"Not logged into iSENSE. Try again.",
-							Toast.LENGTH_LONG).show();
-					return;
-				}
+				
 
-			}
+			
 			// I am not connected to the internet - oops.
-			else {
+			} else {
 				Toast.makeText(
 						PendulumTrackerActivity.this,
 						"You are not connected to the Intertubes. Check connectivity and try again (previously recorded data will be saved).",
@@ -930,7 +883,7 @@ public class PendulumTrackerActivity extends Activity implements
 				return;
 			}
 
-		}
+	
 
 	}
 

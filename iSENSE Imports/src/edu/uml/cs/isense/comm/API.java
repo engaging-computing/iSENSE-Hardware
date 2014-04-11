@@ -434,20 +434,23 @@ public class API {
 	 * @param data
 	 *            The data to be uploaded. Must be in column-major format to
 	 *            upload correctly
+	 * @param dataName
+	 *            The Dataset name 
 	 * @param conKey
 	 *            The Contributor Key
 	 * @param conName
-	 *            The Contributor name
+	 *            The Contributor name          
 	 * @return The integer ID of the newly uploaded dataset, or -1 if upload
 	 *         fails
 	 */
-	public int uploadDataSet(int projectId, JSONObject data, String conKey, String conName) {
+	public int uploadDataSet(int projectId, JSONObject data, String dataName, String conKey,  String conName) {
 		JSONObject requestData = new JSONObject();
 
 		try {
-			requestData.put("contributor_key", conKey);
+			requestData.put("contribution_key", conKey);
 			requestData.put("contributor_name", conName);
 			requestData.put("data", data);
+			requestData.put("title", dataName + appendedTimeStamp()); //dataset name is conName + timestamp
 			String reqResult = makeRequest(
 					baseURL,
 					"projects/" + projectId + "/jsonDataUpload", "", "POST",
@@ -640,7 +643,7 @@ public class API {
 					"upload",
 					new FileBody(mediaToUpload, URLConnection
 							.guessContentTypeFromName(mediaToUpload.getName())));
-			entity.addPart("contributor_key", new StringBody(conKey));
+			entity.addPart("contribution_key", new StringBody(conKey));
 			entity.addPart("contributor_name", new StringBody(conName));
 			entity.addPart("type", new StringBody((ttype == TargetType.PROJECT) ? "project" : "data_set"));
 			entity.addPart("id", new StringBody(""+projectId));

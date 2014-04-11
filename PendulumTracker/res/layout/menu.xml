@@ -9,6 +9,11 @@
          android:title="@string/startHere" 
          android:icon="@drawable/smile_start_icon"
          android:showAsAction="ifRoom|withText"/>
+     <item 
+         android:id="@+id/menu_login"
+         android:title="@string/login" 
+         android:showAsAction="ifRoom|withText"/>
+     
      <!-- item 
          android:id="@+id/menu_upload"
          android:title="Stop and upload to iSENSE"
