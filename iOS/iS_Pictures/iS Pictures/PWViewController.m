@@ -14,11 +14,20 @@
 
 @end
 
+@interface DLAVAlertViewController ()
 
++ (instancetype)sharedController;
+
+- (void)setBackdropColor:(UIColor *)color;
+
+- (void)addAlertView:(DLAVAlertView *)alertView;
+- (void)removeAlertView:(DLAVAlertView *)alertView;
+
+@end
 
 @implementation PWViewController
 
-@synthesize menuButton, project, loginalert, login_status, userName, passWord, api, groupNameField, dataSaver, selectButton, popOver, managedObjectContext, projID, projectIDLbl, picCntLbl, proj_num, saveMode, useDev;
+@synthesize menuButton, project, loginalert, userName, passWord, api, groupNameField, dataSaver, selectButton, popOver, managedObjectContext, projID, projectIDLbl, picCntLbl, proj_num, saveMode, useDev, alert, mngr;
 
 // pre-iOS6 rotating options
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -66,10 +75,6 @@
         }
     }
     
-    NSString *loginstat = [@"Logged in as: " stringByAppendingString:userName];
-    
-    [login_status setText:loginstat];
-    
     self.navigationItem.titleView = titleView;
     
     NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
@@ -80,6 +85,8 @@
     }
     
     projectIDLbl.text = [@"Project: " stringByAppendingString:[NSString stringWithFormat:@"%d", projID]];
+    
+    
     
     
     
@@ -198,6 +205,16 @@
     
 }
 
+- (void) didPressLogin:(CredentialManager *)mngr {
+    [alert dismissWithClickedButtonIndex:0 animated:YES];
+    loginalert = [[UIAlertView alloc] initWithTitle:@"Login to iSENSE" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [loginalert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+    [loginalert textFieldAtIndex:0].delegate = self;
+    [loginalert textFieldAtIndex:1].delegate = self;
+    [loginalert textFieldAtIndex:0].placeholder = @"Email";
+    [loginalert show];
+}
+
 
 - (void)navigationController:(UINavigationController *)navigationController
       willShowViewController:(UIViewController *)viewController
@@ -252,12 +269,13 @@
     void (^loginBlock)() = ^() {
         NSLog(@"Login button pressed");
         
-        loginalert = [[UIAlertView alloc] initWithTitle:@"Login to iSENSE" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-        [loginalert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-        [loginalert textFieldAtIndex:0].delegate = self;
-        [loginalert textFieldAtIndex:1].delegate = self;
-        [loginalert textFieldAtIndex:0].placeholder = @"Email";
-        [loginalert show];
+        mngr = [[CredentialManager alloc] initWithDelegate:self];
+        DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
+        [parent addChildViewController:mngr];
+        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        [alert setContentView:mngr.view];
+        [alert setDismissesOnBackdropTap:YES];
+        [alert show];
     };
     void (^aboutBlock)() = ^() {
         NSLog(@"About button pressed");
@@ -278,19 +296,17 @@
         userName = @"mobile.fake@example.com";
         passWord = @"mobile";
         [self login:userName withPassword:passWord];
-        login_status.text = [@"Logged in as: " stringByAppendingString: userName];
     };
     
     void (^testBlock)() = ^() {
-       // test credential manager here
-        CredentialManager *mngr = [[CredentialManager alloc] init];
+       
         
-        [self.navigationController pushViewController:mngr animated:YES];
+        
     };
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
     RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
-    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Login" action:loginBlock];
+    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Credential Manager" action:loginBlock];
     RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
     RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
     RNGridMenuItem *testItem = [[RNGridMenuItem alloc] initWithImage:test title:@"Test" action:testBlock];
@@ -498,6 +514,19 @@
                 
                 NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(chosenImage, 1)];
                 
+                __block BOOL successUpload = NO;
+                
+                dispatch_queue_t queue = dispatch_queue_create("dispatch_queue_t_dialog", NULL);
+                dispatch_async(queue, ^{
+                    if ([api uploadMediaWithId:projID withFile:imageData andName:imageName withTarget:PROJECT] != -1) {
+                        successUpload = YES;
+                    }
+                });
+                
+                if (successUpload) {
+                    NSLog(@"Upload success");
+                }
+                
                 dataSet.picturePaths = [[NSArray alloc] initWithObjects:imageData, nil];
                 
                 [dataSet setName:imageName];
@@ -582,8 +611,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
-            if (success) {
+            if ([api createSessionWithEmail:usernameInput andPassword:passwordInput] != nil) {
                 [self.view makeWaffle:[NSString stringWithFormat:@"Login as %@ successful", usernameInput]
                              duration:WAFFLE_LENGTH_SHORT
                             position:WAFFLE_BOTTOM
@@ -597,12 +625,6 @@
                 [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
                 [prefs synchronize];
                 
-                
-                RPerson *curUser = [api getCurrentUser];
-                
-                NSString *loginstat = [@"Logged in as: " stringByAppendingString:usernameInput];
-                
-                [login_status setText:loginstat];
                 userName = usernameInput;
                 passWord = passwordInput;
             } else {

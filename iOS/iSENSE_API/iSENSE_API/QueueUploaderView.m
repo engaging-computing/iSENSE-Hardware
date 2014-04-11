@@ -405,8 +405,7 @@
     dispatch_queue_t queue = dispatch_queue_create("dispatch_queue_in_queue_uploader_view", NULL);
     dispatch_async(queue, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
-            if (success) {
+            if ([api createSessionWithEmail:usernameInput andPassword:passwordInput] != nil) {
                 
                 // save the username and password in prefs
                 NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];

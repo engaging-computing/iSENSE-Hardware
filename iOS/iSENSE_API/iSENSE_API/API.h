@@ -48,32 +48,24 @@ typedef enum {
 -(void)useDev:(BOOL)useDev;
 -(void)setBaseUrl:(NSURL *)newUrl;
 
-/* Manage Authentication Key */
 -(RPerson *)createSessionWithEmail:(NSString *)p_email andPassword:(NSString *)p_password;
 -(void)deleteSession;
 
-/* Doesn't Require Authentication Key */
 -(RProject *)   getProjectWithId:       (int)projectId;
--(RTutorial *)  getTutorialWithId:      (int)tutorialId;
 -(RDataSet *)   getDataSetWithId:       (int)dataSetId;
--(RNews *)      getNewsWithId:          (int)newsId;
 -(NSArray *)    getProjectFieldsWithId: (int)projectId;
 -(NSArray *)    getDataSetsWithId:      (int)projectId;
 
--(NSArray *)    getNewsAtPage:      (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 -(NSArray *)    getProjectsAtPage:  (int)page withPageLimit:(int)perPage withFilter:(SortType)descending andQuery:(NSString *)search;
--(NSArray *)    getTutorialsAtPage: (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
-
-/* Requires an Authentication Key */
--(NSArray *)    getUsersAtPage:     (int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search;
 
 -(RPerson *)    getCurrentUser;
 -(int)          createProjectWithName:(NSString *)name  andFields:(NSArray *)fields;
 -(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data;
+-(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data withContributorKey:(NSString *)conKey;
 
 -(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name;
 -(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName;
--(int)      uploadCSVWithId:         (int)projectId withFile:(NSData *)csvToUpload     andName:(NSString *)name;
+-(int) uploadCSVWithId: (int)projectId withFile:(NSData *)csvToUpload    andName:(NSString *)name;
 -(int) uploadMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *) name withTarget: (TargetType) ttype;
 -(int) uploadMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *) name withTarget: (TargetType) ttype withContributorKey:(NSString *) conKey as:(NSString *) conName;
 

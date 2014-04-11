@@ -26,6 +26,8 @@
 		76318B54188434EB008D3A1F /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76318B52188434EB008D3A1F /* Fields.strings */; };
 		76318B55188434EB008D3A1F /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76318B53188434EB008D3A1F /* Strings.strings */; };
 		76318B5818858541008D3A1F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76318B5718858541008D3A1F /* CoreData.framework */; };
+		765992C718D380540062CC09 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765992C618D380540062CC09 /* Security.framework */; };
+		765992CC18EF1EF30062CC09 /* default_user.png in Resources */ = {isa = PBXBuildFile; fileRef = 765992CB18EF1EF30062CC09 /* default_user.png */; };
 		766173451880BF1D0094680C /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 766173421880BF0D0094680C /* libiSENSE_API.a */; };
 		766173461880BF230094680C /* iSENSE_API_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 766173441880BF0D0094680C /* iSENSE_API_Bundle.bundle */; };
 		766173531880D0AB0094680C /* RNGridMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 766173521880D0AB0094680C /* RNGridMenu.m */; };
@@ -122,6 +124,8 @@
 		76318B52188434EB008D3A1F /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
 		76318B53188434EB008D3A1F /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		76318B5718858541008D3A1F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		765992C618D380540062CC09 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		765992CB18EF1EF30062CC09 /* default_user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default_user.png; sourceTree = "<group>"; };
 		7661733C1880BF0C0094680C /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 		766173511880D0AB0094680C /* RNGridMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNGridMenu.h; sourceTree = "<group>"; };
 		766173521880D0AB0094680C /* RNGridMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNGridMenu.m; sourceTree = "<group>"; };
@@ -180,6 +184,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				765992C718D380540062CC09 /* Security.framework in Frameworks */,
 				7680C9021886E4B100BC1E98 /* AVFoundation.framework in Frameworks */,
 				7680C9031886E4B100BC1E98 /* CoreMedia.framework in Frameworks */,
 				7680C9041886E4B100BC1E98 /* CoreVideo.framework in Frameworks */,
@@ -241,6 +246,7 @@
 		76762197187F0DC600A473B7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				765992C618D380540062CC09 /* Security.framework */,
 				7680C90D1886E9EA00BC1E98 /* libzbar.a */,
 				7680C8FE1886E4B100BC1E98 /* AVFoundation.framework */,
 				7680C8FF1886E4B100BC1E98 /* CoreMedia.framework */,
@@ -274,6 +280,7 @@
 		7676219F187F0DC600A473B7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				765992CB18EF1EF30062CC09 /* default_user.png */,
 				76A5C0FD18A189E80092C428 /* spacer.png */,
 				7670594E1889B38800FB98C8 /* Default-568h@2x.png */,
 				7670594F1889B38800FB98C8 /* Default.png */,
@@ -439,6 +446,7 @@
 			files = (
 				767621A3187F0DC600A473B7 /* InfoPlist.strings in Resources */,
 				766173461880BF230094680C /* iSENSE_API_Bundle.bundle in Resources */,
+				765992CC18EF1EF30062CC09 /* default_user.png in Resources */,
 				767059571889B38800FB98C8 /* launchImage-iPad~retina.png in Resources */,
 				767621B5187F0DC600A473B7 /* PWViewController_iPhone.xib in Resources */,
 				767621B8187F0DC600A473B7 /* PWViewController_iPad.xib in Resources */,
