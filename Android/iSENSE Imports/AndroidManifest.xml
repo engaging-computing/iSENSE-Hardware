@@ -4,7 +4,7 @@
     android:versionName="4.1" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="11"
         android:targetSdkVersion="19" />
 
     <activity
@@ -70,6 +70,10 @@
     <activity
         android:name=".credentials.LoginError"
         android:label="@string/login_error_prompt"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name=".credentials.CredentialManager"
+        android:label="@string/credential_manager"
         android:theme="@style/AppThemeDialog" />
     <activity
         android:name=".proj.ProjectCreate"

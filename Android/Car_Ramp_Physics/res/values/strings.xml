@@ -56,7 +56,6 @@
     <string name="firstName"> First Name: </string>
     <string name="lastInitial"> Last Initial: </string>
     <string name="userName">Username</string>
-    <string name="password">Password</string>
     <string name="saveMode">Save Mode</string>
     <string name="tryAgain">Try Again</string>
     <string name="publish">Publish</string>

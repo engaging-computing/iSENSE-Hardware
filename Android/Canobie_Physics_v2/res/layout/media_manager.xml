@@ -36,14 +36,15 @@
                 android:text="@string/takePic" />
 
             <Button
-                android:id="@+id/mediaVideo"
+                android:id="@+id/mediaUpload"
                 android:layout_width="fill_parent"
                 android:layout_height="60dp"
                 android:layout_marginBottom="2dp"
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="4dp"
                 android:layout_weight="1"
-                android:text="@string/takeVid" />
+                android:text="@string/uploadPicture" />
+
         </LinearLayout>
 
         <Button

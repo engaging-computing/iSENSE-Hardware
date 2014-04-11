@@ -50,7 +50,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
-import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
@@ -61,7 +61,6 @@ import edu.uml.cs.isense.riverwalk.dialogs.CameraPreview;
 import edu.uml.cs.isense.riverwalk.dialogs.Continuous;
 import edu.uml.cs.isense.riverwalk.dialogs.Description;
 import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -156,9 +155,8 @@ public class Main extends Activity implements LocationListener {
 
 		api = API.getInstance();
 		api.useDev(useDev);
-		 
 		
-		attemptLoginOnAppStart();
+		CredentialManager.Login(mContext, api);
 		
 		uq = new UploadQueue("generalpictures", mContext, api);
 
@@ -230,7 +228,7 @@ public class Main extends Activity implements LocationListener {
 						Intent intent = new Intent(
 								MediaStore.ACTION_IMAGE_CAPTURE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);	
 						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 						//OrientationManager.enableRotation(Main.this);
 
@@ -628,7 +626,7 @@ public class Main extends Activity implements LocationListener {
 
 		case R.id.MENU_ITEM_LOGIN:
 			startActivityForResult(new Intent(getApplicationContext(),
-					Login.class), LOGIN_REQUESTED);
+					CredentialManager.class), LOGIN_REQUESTED);
 			return true;
 
 		case R.id.MENU_ITEM_CONTINUOUS:
@@ -688,7 +686,7 @@ public class Main extends Activity implements LocationListener {
 					api.useDev(useDev);
 					setDefaultProject();
 				}
-				attemptLogin();
+				CredentialManager.Login(this, api);
 				actionBarTapCount = 0;
 				
 				
@@ -717,8 +715,7 @@ public class Main extends Activity implements LocationListener {
 
 		}
 
-		if (api.getCurrentUser() == null)
-			attemptLogin();
+		CredentialManager.Login(this, api);
 
 		// Rebuilds uploadQueue from saved info
 		uq.buildQueueFromFile();
@@ -728,17 +725,12 @@ public class Main extends Activity implements LocationListener {
 
 	// uploads the data if logged in and queue is not empty
 	private void manageUploadQueue() {
-
-		if (api.getCurrentUser() == null) {
-			w.make("Must be logged in to upload.", Waffle.IMAGE_X);
-			return;
-		}
-
+				
 		if (uq.emptyQueue()) {
 			w.make("No data to upload.", Waffle.IMAGE_X);
 			return;
 		}
-
+		//TODO
 		Intent i = new Intent().setClass(mContext, QueueLayout.class);
 		i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
 		startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
@@ -881,7 +873,6 @@ public class Main extends Activity implements LocationListener {
 			}
 			
 			QDataSet ds;
-			//TODO using as refrence for canobie app
 			ds = new QDataSet(name.getText().toString()
 					+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
 					makeThisDatePretty(curTime), QDataSet.Type.BOTH,
@@ -947,18 +938,8 @@ public class Main extends Activity implements LocationListener {
 						mContext, f);
 				dfm.getOrder();
 			}
-		} else if (requestCode == LOGIN_REQUESTED) { // shows dialog to login
-			if (resultCode == Activity.RESULT_OK) {
-
-				w.make("Login successful", Waffle.LENGTH_SHORT,
-						Waffle.IMAGE_CHECK);
-
-			} else if (resultCode == Login.RESULT_ERROR) {
-
-				startActivityForResult(new Intent(mContext, Login.class),
-						LOGIN_REQUESTED);
-
-			}
+		} else if (requestCode == LOGIN_REQUESTED) { 
+			
 		} else if (requestCode == NO_GPS_REQUESTED) { // asks the user if they
 														// would like to enable
 														// gps
@@ -994,7 +975,7 @@ public class Main extends Activity implements LocationListener {
 				Intent iDesc = new Intent(Main.this, Description.class);
 				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
 			}
-		}
+		} 
 	}
 
 	@Override
@@ -1062,59 +1043,6 @@ public class Main extends Activity implements LocationListener {
 			uq.buildQueueFromFile();
 
 			uploadError = false;
-		}
-	}
-	
-	// gets the user's name if not already provided + login to web site
-		private void attemptLoginOnAppStart() {
-
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			if (mPrefs.getString(
-					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-					.equals("")
-					&& mPrefs.getString(
-							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							"").equals("")) {
-				mPrefs.edit()
-				.putString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-						Login.DEFAULT_USERNAME).commit();
-				mPrefs.edit()
-				.putString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						Login.DEFAULT_PASSWORD).commit();
-			}
-
-			if (Connection.hasConnectivity(mContext)) {
-				new LoginTask().execute();
-
-			}
-		}
-
-	// gets the user's name if not already provided + login to web site
-	private void attemptLogin() {
-
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				mContext, getSharedPreferences(
-						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
-
-		if (mPrefs.getString(
-				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-				.equals("")
-				&& mPrefs.getString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						"").equals("")) {
-			return;
-		}
-
-		if (Connection.hasConnectivity(mContext)) {
-			new LoginTask().execute();
-
 		}
 	}
 
@@ -1215,27 +1143,5 @@ public class Main extends Activity implements LocationListener {
 		return sdf.format(time);
 	}
 
-	// Attempts to login with current user information
-	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
-
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, mContext.getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			boolean success = api
-					.createSession(
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-									""),
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-									""));
-			return success;
-		}
-
-	}
 
 }

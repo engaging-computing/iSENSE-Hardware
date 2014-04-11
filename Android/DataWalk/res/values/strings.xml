@@ -7,7 +7,6 @@
     <string name="HelpText">\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Click on Create Project.\n\n5. Enter a name for your project, then click finish. \n\n6. Enter a Description.\n\n7. When formatting the project, the fields should be as follows: Time (ms), Accel-Magnitude (m/s^2), Velocity (m/s), Total Distance (m), Latitude (deg) and Longitude (deg) in that order.\n\n8. Your project\'s QR code is shown near the top left corner of the page and the project number will be listed two lines under the project\'s title.\n\n9. Remember to change the project number in the app to match your project number!\n\nYou may also use the "Create a Project" button in this app to create a new project with the proper fields set up for you.\n</string>
     <string name="recordingInterval">Recording Interval</string>
     <string name="user_name">Username:</string>
-    <string name="password">Password:</string>
     <string name="login">Login</string>
     <string name="enableGPS">Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?</string>
     <string name="recording_interval">Recording Interval:</string>

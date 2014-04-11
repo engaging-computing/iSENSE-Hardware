@@ -145,6 +145,16 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Create New Project"
             android:theme="@style/AppThemeDialog" />
+	 <activity
+            android:name="edu.uml.cs.isense.credentials.CredentialManager"
+            android:label="Credential Manager"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.credentials.CredentialManagerKey"
+        android:label="Add Contributor Key"
+        android:theme="@style/AppThemeDialog" />
         <service
             android:enabled="true"
             android:name=".Datawalk_Service"

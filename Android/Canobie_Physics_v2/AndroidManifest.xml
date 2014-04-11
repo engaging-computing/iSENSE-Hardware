@@ -121,6 +121,16 @@
             android:name="edu.uml.cs.isense.sync.TimeReset"
             android:label="Sync Time"
             android:theme="@style/AppThemeDialog" />
+          <activity
+            android:name="edu.uml.cs.isense.credentials.CredentialManager"
+            android:label="Credential Manager"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.CredentialManagerKey"
+            android:label="Add Contributor Key"
+            android:theme="@style/AppThemeDialog" />
           
          
     </application>

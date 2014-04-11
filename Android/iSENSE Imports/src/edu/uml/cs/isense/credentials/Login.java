@@ -100,6 +100,7 @@ public class Login extends Activity {
 	 * If you failed in LoginTask set the most appropriate error message and
 	 * call LoginError.
 	 */
+	@SuppressWarnings("unused")
 	private void showFailure() {
 
 		if (Connection.hasConnectivity(baseContext)) {
