@@ -231,6 +231,7 @@ public class QDataSet implements Serializable {
 				dataSetID = uploadData();
 				break;
 
+
 			case PIC:
 				if (UploadQueue.getAPI().getCurrentUser() != null) {
 					dataSetID = UploadQueue.getAPI().uploadMedia(

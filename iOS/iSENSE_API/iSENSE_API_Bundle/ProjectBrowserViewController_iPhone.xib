@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" variant="6xAndEarlier" propertyAccessControl="none">
+    <dependencies>
+        <deployment defaultVersion="1296" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProjectBrowserViewController">
+            <connections>
+                <outlet property="bar" destination="GkU-je-Z8p" id="hzQ-8A-fhw"/>
+                <outlet property="table" destination="5kV-f4-JkC" id="EZu-nC-5ZS"/>
+                <outlet property="view" destination="5kV-f4-JkC" id="U0O-eO-UJw"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <searchBar contentMode="redraw" barStyle="black" showsCancelButton="YES" translucent="NO" id="GkU-je-Z8p">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+            <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+            <scopeButtonTitles>
+                <string>Project Name</string>
+                <string>Owner</string>
+            </scopeButtonTitles>
+            <connections>
+                <outlet property="delegate" destination="-1" id="LtC-kk-HtB"/>
+            </connections>
+        </searchBar>
+        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="5kV-f4-JkC">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+        </tableView>
+    </objects>
+</document>

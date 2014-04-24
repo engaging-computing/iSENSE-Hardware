@@ -32,25 +32,6 @@
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-{
-    NSLog(@"got barcode: %@", url);
-    
-    NSRange range = [[url absoluteString] rangeOfString:@"projects"];
-    
-    NSMutableCharacterSet *_slashes = [NSMutableCharacterSet characterSetWithCharactersInString:@"/"];
-    
-    NSString *proj = [[[url absoluteString] substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:_slashes];
-    
-    int projNum = [proj intValue];
-    
-    NSLog(@"ExpNum: %d", projNum);
-    
-    self.viewController.projNum = projNum;
-    
-    return YES;
-}
-
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -83,11 +64,11 @@
     NSError *error = nil;
     if (managedObjectContext != nil) {
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-            /*
-             Replace this implementation with code to handle the error appropriately.
-             
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
-             */
+// 
+//             Replace this implementation with code to handle the error appropriately.
+//             
+//             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. If it is not possible to recover from the error, display an alert panel that instructs the user to quit the application by pressing the Home button.
+ 
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
@@ -161,7 +142,7 @@
         return persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Data_Walk.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Car_Ramp_Physics.sqlite"];
     
     NSError *error = nil;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];

@@ -1,5 +1,6 @@
 package edu.uml.cs.isense.proj;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -15,10 +16,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.objects.RProjectField;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
 /**
@@ -66,6 +71,7 @@ public class Setup extends Activity implements OnClickListener {
 	private static final int NO_QR_REQUESTED = 102;
 	private static final int NAME_FOR_NEW_PROJECT_REQUESTED = 103;
 	private static final int NEW_PROJ_REQUESTED = 104;
+	private static final int LOGIN_STATUS_REQUESTED = 105;
 
 	/**
 	 * The constant for the "name" parameter in a SharedPreference's
@@ -199,6 +205,12 @@ public class Setup extends Activity implements OnClickListener {
 			if (!Connection.hasConnectivity(mContext))
 				w.make("Internet connection required to create project",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+			else if (api.getCurrentUser() == null) {
+				w.make("Login required to create project",
+						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+				startActivityForResult(new Intent(this, Login.class),
+						LOGIN_STATUS_REQUESTED);
+			}
 			else {
 				if (!constrictFields) {
 					Intent iProjCreate = new Intent(getApplicationContext(),
@@ -275,6 +287,18 @@ public class Setup extends Activity implements OnClickListener {
 			} else {
 				setResult(RESULT_CANCELED);
 				finish();
+			}
+		} else if (requestCode == LOGIN_STATUS_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				
+				w.make("Login successful", Waffle.LENGTH_SHORT,
+						Waffle.IMAGE_CHECK);
+
+			} else if (resultCode == Login.RESULT_ERROR) {
+
+				startActivityForResult(new Intent(mContext, Login.class),
+						LOGIN_STATUS_REQUESTED);
+
 			}
 		}
 	}
