@@ -123,6 +123,7 @@ typedef NS_ENUM(NSInteger, RNGridMenuStyle) {
 // This is called when the window is tapped. If tapped inside the view an item will be selected.
 // If tapped outside the view, the menu is simply dismissed.
 - (void)dismissAnimated:(BOOL)animated;
+- (BOOL) isVisible;
 
 @end
 
