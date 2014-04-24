@@ -116,5 +116,6 @@ typedef void (^DLAVAlertViewCompletionHandler)(DLAVAlertView *alertView, NSInteg
 
 - (void)setCustomTextFieldTheme:(DLAVAlertViewTextFieldTheme *)textFieldTheme forTextFieldAtIndex:(NSUInteger)index;
 - (void)setCustomTextFieldTheme:(DLAVAlertViewTextFieldTheme *)textFieldTheme forTextFieldAtIndex:(NSUInteger)index animated:(BOOL)animated;
++ (void)applyTheme:(DLAVAlertViewButtonTheme *)theme toButton:(UIButton *)button animated:(BOOL)animated;
 
 @end

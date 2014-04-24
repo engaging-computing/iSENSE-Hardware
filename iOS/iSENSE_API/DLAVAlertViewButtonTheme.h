@@ -15,4 +15,6 @@
 @property (readwrite, assign, nonatomic) CGFloat textShadowRadius;
 @property (readwrite, assign, nonatomic) CGSize textShadowOffset;
 
+- (id) initWithTextShadowColor: (UIColor *) color andTextShadowOpacity:(CGFloat) opacity andTextShadowRadius:(CGFloat) radius andTextShadowOffset:(CGSize) offset;
+
 @end

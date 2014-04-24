@@ -1,6 +1,6 @@
 //
 //  ProjectBrowserViewController.m
-//  iS Pictures
+//  iSENSE_API
 //
 //  Created by Virinchi Balabhadrapatruni on 1/31/14.
 //  Copyright (c) 2014 ECG. All rights reserved.
@@ -34,23 +34,25 @@
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
+    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
+    
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            [[NSBundle mainBundle] loadNibNamed:@"ProjectBrowserViewController~landscape_iPad"
+            [isenseBundle loadNibNamed:@"ProjectBrowserViewController~landscape_iPad"
                                           owner:self
                                         options:nil];
         } else {
-            [[NSBundle mainBundle] loadNibNamed:@"ProjectBrowserViewController_iPad"
+            [isenseBundle loadNibNamed:@"ProjectBrowserViewController_iPad"
                                           owner:self
                                         options:nil];
         }
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-            [[NSBundle mainBundle] loadNibNamed:@"ProjectBrowserViewController~landscape_iPhone"
+            [isenseBundle loadNibNamed:@"ProjectBrowserViewController~landscape_iPhone"
                                           owner:self
                                         options:nil];
         } else {
-            [[NSBundle mainBundle] loadNibNamed:@"ProjectBrowserViewController_iPhone"
+            [isenseBundle loadNibNamed:@"ProjectBrowserViewController_iPhone"
                                           owner:self
                                         options:nil];
             

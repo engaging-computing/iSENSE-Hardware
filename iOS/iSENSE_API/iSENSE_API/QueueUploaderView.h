@@ -11,7 +11,7 @@
 
 #import "DataSaver.h"
 #import "API.h"
-#import "ProjectBrowseViewController.h"
+#import <ProjectBrowserViewController.h>
 #import "Waffle.h"
 #import "ISKeys.h"
 
@@ -33,7 +33,7 @@
 #define PARENT_CAR_RAMP     @"CarRampPhysics"
 #define PARENT_CANOBIE      @"CanobiePhysics"
 
-@interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UITextFieldDelegate, ProjectBrowseViewControllerDelegate> {
+@interface QueueUploaderView : UIViewController <UIGestureRecognizerDelegate, UIActionSheetDelegate, UITextFieldDelegate, ProjectBrowserDelegate> {
     int projID;
     
     // bundle for resource files in the iSENSE_API_Bundle
@@ -42,7 +42,6 @@
 
 - (IBAction) upload:(id)sender;
 
-- (void) handleLongPressOnTableCell:(UILongPressGestureRecognizer *)gestureRecognizer;
 - (id)   initWithParentName:(NSString *)parentName;
 
 @property (nonatomic, assign) API *api;

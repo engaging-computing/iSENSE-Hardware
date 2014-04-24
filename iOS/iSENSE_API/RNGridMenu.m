@@ -202,6 +202,8 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
         [self addSubview:_imageView];
         
         _titleLabel = [[UILabel alloc] init];
+        [_titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
+        [_titleLabel setNumberOfLines:0];
         _titleLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:_titleLabel];
     }
@@ -222,7 +224,7 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
         CGFloat height = CGRectGetHeight(frame);
         if (hasText) {
             y = inset / 2;
-            height = floorf(CGRectGetHeight(frame) * 2/3.f);
+            height = floorf(CGRectGetHeight(frame) * 3/5.f);
         }
         self.imageView.frame = CGRectInset(CGRectMake(0, y, CGRectGetWidth(frame), height), inset, inset);
     }
@@ -236,7 +238,7 @@ CGPoint RNCentroidOfTouchesInView(NSSet *touches, UIView *view) {
         CGFloat left = 0;
         if (hasImage) {
             y = floorf(CGRectGetHeight(frame) * 2/3.f) - inset / 2;
-            height = floorf(CGRectGetHeight(frame) / 3.f);
+            height = floorf(CGRectGetHeight(frame) *2/5.f);
         }
         if (self.titleLabel.textAlignment == NSTextAlignmentLeft) {
             left = 10;
@@ -332,7 +334,7 @@ static RNGridMenu *rn_visibleGridMenu;
 
 - (instancetype)initWithItems:(NSArray *)items {
     if ((self = [super init])) {
-        _itemSize = CGSizeMake(100.f, 100.f);
+        _itemSize = CGSizeMake(100.f, 140.f);
         _cornerRadius = 8.f;
         _blurLevel = kRNGridMenuDefaultBlur;
         _animationDuration = kRNGridMenuDefaultDuration;

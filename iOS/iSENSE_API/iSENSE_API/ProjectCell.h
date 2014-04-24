@@ -1,6 +1,6 @@
 //
 //  ProjectCell.h
-//  iS Pictures
+//  iSENSE_API
 //
 //  Created by Virinchi Balabhadrapatruni on 2/4/14.
 //  Copyright (c) 2014 ECG. All rights reserved.

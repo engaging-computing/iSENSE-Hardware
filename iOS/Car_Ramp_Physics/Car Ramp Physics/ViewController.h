@@ -6,19 +6,16 @@
 //  Copyright 2013 iSENSE Development Team. All rights reserved.
 //  Engaging Computing Lab, Advisor: Fred Martin
 
-#import "RNGridMenu.h"
+#import <RNGridMenu.h>
 #import "AboutViewController.h"
-#import "iSENSE.h"
 #import "StringGrabber.h"
 #import "FieldGrabber.h"
-#import "ProjectBrowseViewController.h"
+#import <ProjectBrowserViewController.h>
 #import "Constants.h"
-#import "HexColor.h"
-#import "VariablesViewController.h"
-#import "DataSaver.h"
+#import <DataSaver.h>
 #import <iSENSE_API/headers/QDataSet.h>
 #import "AppDelegate.h"
-#import "QueueUploaderView.h"
+#import <QueueUploaderView.h>
 #import <CoreMotion/CMMotionManager.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLGeocoder.h>
@@ -27,20 +24,20 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import <iSENSE_API/API.h>
 #import <FieldMatchingViewController.h>
+#import <CredentialManager.h>
+#import <DLAVAlertViewController.h>
+#import <ISKeys.h>
 
 typedef struct _RotationDataSaver{
-    __unsafe_unretained NSString *first;
-    __unsafe_unretained NSString *last;
     __unsafe_unretained NSString *user;
     __unsafe_unretained NSString *pass;
-    bool hasName;
     bool hasLogin;
     bool saveMode;
     bool isLoggedIn;
     
 } RotationDataSaver;
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, ProjectBrowseViewControllerDelegate, ZBarReaderDelegate>
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, ProjectBrowserDelegate, ZBarReaderDelegate, CredentialManagerDelegate>
 {
     
     RotationDataSaver *saver;
@@ -48,15 +45,14 @@ typedef struct _RotationDataSaver{
 }
 
 @property(nonatomic) IBOutlet UILabel *vector_status;
-@property(nonatomic) IBOutlet UILabel *login_status;
-@property(nonatomic) IBOutlet UIButton *start;
+@property(nonatomic) UIView *start;
 @property(nonatomic) IBOutlet UIBarButtonItem *menuButton;
-@property(nonatomic) IBOutlet UIImageView *image;
+@property(nonatomic) UILabel *buttonText;
+@property(nonatomic) IBOutlet UILabel *countdownLbl;
 
 
 @property(nonatomic) int recordLength;
 @property(nonatomic) int countdown;
-@property(nonatomic, retain) UIAlertView *change_name;
 @property(nonatomic, retain) UIAlertView *project;
 @property(nonatomic, retain) UIAlertView *proj_num;
 @property(nonatomic, retain) UIAlertView *loginalert;
@@ -83,8 +79,6 @@ typedef struct _RotationDataSaver{
 @property (nonatomic) int  elapsedTime;
 @property (nonatomic) int  recordingRate;
 
-@property (nonatomic) NSString *firstName;
-@property (nonatomic) NSString *lastInitial;
 @property (nonatomic) NSNumber *session_num;
 
 @property (nonatomic) NSString *userName;
@@ -98,6 +92,8 @@ typedef struct _RotationDataSaver{
 @property (nonatomic) UITextField *lengthField;
 
 @property(nonatomic, retain) NSArray *items;
+@property(nonatomic, strong) CredentialManager *mngr;
+@property (strong, nonatomic) DLAVAlertView *alert;
 
 //Boolean variables
 @property (nonatomic) BOOL running;
@@ -113,9 +109,7 @@ typedef struct _RotationDataSaver{
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture;
 - (void)showMenu;
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
-- (void)changeName;
 - (void)login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 - (void) updateElapsedTime;

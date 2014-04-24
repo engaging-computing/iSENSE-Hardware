@@ -23,7 +23,7 @@
 #import "ImageManipulator.h"
 #import <DLAVAlertViewController.h>
 
-@interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProjectBrowseViewControllerDelegate, ZBarReaderDelegate, ProjectBrowserDelegate, CredentialManagerDelegate>
+@interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ZBarReaderDelegate, ProjectBrowserDelegate, CredentialManagerDelegate>
 
 @property(nonatomic) IBOutlet UITextField *groupNameField;
 @property(nonatomic) IBOutlet UILabel *projectIDLbl, *picCntLbl;
@@ -44,6 +44,7 @@
 @property (strong, nonatomic) CredentialManager *mngr;
 
 @property (nonatomic) BOOL useDev;
+@property (nonatomic) BOOL setupDone;
 
 - (void) callMenu;
 - (IBAction)takePicture:(id)sender;

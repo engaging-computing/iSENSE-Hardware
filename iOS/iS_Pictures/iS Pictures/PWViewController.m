@@ -27,7 +27,7 @@
 
 @implementation PWViewController
 
-@synthesize menuButton, project, loginalert, userName, passWord, api, groupNameField, dataSaver, selectButton, popOver, managedObjectContext, projID, projectIDLbl, picCntLbl, proj_num, saveMode, useDev, alert, mngr;
+@synthesize menuButton, project, loginalert, userName, passWord, api, groupNameField, dataSaver, selectButton, popOver, managedObjectContext, projID, projectIDLbl, picCntLbl, proj_num, saveMode, useDev, alert, mngr, setupDone;
 
 // pre-iOS6 rotating options
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -86,6 +86,18 @@
     
     projectIDLbl.text = [@"Project: " stringByAppendingString:[NSString stringWithFormat:@"%d", projID]];
     
+    if (alert != nil && ![alert isHidden] && setupDone) {
+        [alert dismissWithClickedButtonIndex:0 animated:YES];
+        mngr = [[CredentialManager alloc] initWithDelegate:self];
+        DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
+        [parent addChildViewController:mngr];
+        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        [alert setContentView:mngr.view];
+        [alert setDismissesOnBackdropTap:YES];
+        [alert show];
+
+    }
+    
     
     
     
@@ -98,6 +110,8 @@
     [self willRotateToInterfaceOrientation:self.interfaceOrientation duration:0];
     
     [picCntLbl setText:[NSString stringWithFormat:@"Picture Count: %d", dataSaver.dataQueue.count]];
+    
+    setupDone = YES;
 }
 
 
@@ -120,6 +134,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    setupDone = NO;
 	
     [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setBackgroundColor:UIColorFromHex(0x111155)];
@@ -178,13 +194,6 @@
 
 }
 
--(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)proj {
-    
-    projID = proj.intValue;
-    [self finishedChoosingProject];
-    
-}
-
 - (void) didFinishChoosingProject:(ProjectBrowserViewController *) browser withID: (int) project_id {
     projID = project_id;
     NSLog(@"Project: %d",projID);
@@ -207,6 +216,7 @@
 
 - (void) didPressLogin:(CredentialManager *)mngr {
     [alert dismissWithClickedButtonIndex:0 animated:YES];
+    alert = nil;
     loginalert = [[UIAlertView alloc] initWithTitle:@"Login to iSENSE" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
     [loginalert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
     [loginalert textFieldAtIndex:0].delegate = self;
@@ -306,7 +316,7 @@
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
     RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
-    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Credential Manager" action:loginBlock];
+    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Credential\nManager" action:loginBlock];
     RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
     RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
     RNGridMenuItem *testItem = [[RNGridMenuItem alloc] initWithImage:test title:@"Test" action:testBlock];

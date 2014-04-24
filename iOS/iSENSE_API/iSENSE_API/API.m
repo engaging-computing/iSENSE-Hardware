@@ -110,6 +110,13 @@ static NSString *email, *password;
         RPerson *you = [[RPerson alloc] init];
         you.name = [result objectForKey:@"username"];
         you.gravatar = [result objectForKey:@"gravatar"];
+        
+        NSURL *imageURL = [NSURL URLWithString:[you gravatar]];
+        
+        NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+        
+        you.gravatarImage = [UIImage imageWithData:imageData];
+
         currentUser = you;
         return you;
     } else {
@@ -346,10 +353,11 @@ static NSString *email, *password;
             
             NSMutableDictionary *fullFieldMeta = [[NSMutableDictionary alloc] init];
             [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
-            [fullFieldMeta setObject:projectId forKey:@"project_id"];
+            [fullFieldMeta setObject:[NSString stringWithFormat:@"%@",email] forKey:@"email"];
+            [fullFieldMeta setObject:[NSString stringWithFormat:@"%@",password] forKey:@"password"];
             
             NSError *error;
-            NSData *fieldPostReqData = [NSJSONSerialization dataWithJSONObject:fieldMetaData
+            NSData *fieldPostReqData = [NSJSONSerialization dataWithJSONObject:fullFieldMeta
                                                                   options:0
                                                                     error:&error];
             if (error) {

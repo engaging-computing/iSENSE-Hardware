@@ -32,6 +32,15 @@
 	return self;
 }
 
+- (id) initWithTextShadowColor: (UIColor *) color andTextShadowOpacity:(CGFloat) opacity andTextShadowRadius:(CGFloat) radius andTextShadowOffset:(CGSize) offset {
+    self = [self init];
+    _textShadowColor = color;
+    _textShadowOpacity = opacity;
+    _textShadowRadius = radius;
+    _textShadowOffset = offset;
+    return self;
+}
+
 #pragma mark - NSCopying Protocol
 
 - (instancetype)copyWithZone:(NSZone *)zone {
