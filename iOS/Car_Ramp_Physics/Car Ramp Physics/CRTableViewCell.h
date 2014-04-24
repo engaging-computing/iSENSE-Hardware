@@ -6,7 +6,6 @@
 //  Copyright (c) 2012 chroman. All rights reserved.
 //
 
-#import "MarqueeLabel.h"
 #import <UIKit/UIKit.h>
 
 @interface CRTableViewCell : UITableViewCell

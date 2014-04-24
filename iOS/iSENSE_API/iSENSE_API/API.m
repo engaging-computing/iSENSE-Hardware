@@ -10,19 +10,20 @@
 
 @implementation API
 
-#define LIVE_URL @"http://129.63.16.128"
-#define DEV_URL  @"http://129.63.16.30"
+#define LIVE_URL @"http://isenseproject.org/api/v1"
+#define DEV_URL  @"http://rsense-dev.cs.uml.edu/api/v1"
 
-#define GET     @"GET"
-#define POST    @"POST"
-#define PUT     @"PUT"
-#define DELETE  @"DELETE"
+#define GET_REQUEST     @"GET"
+#define POST_REQUEST    @"POST"
+#define PUT_REQUEST     @"PUT"
+#define DELETE_REQUEST  @"DELETE"
 #define NONE    @""
 
 #define BOUNDARY @"*****"
 
 static NSString *baseUrl, *authenticityToken;
 static RPerson *currentUser;
+static NSString *email, *password;
 
 /**
  * Access the current instance of an API object.
@@ -92,21 +93,35 @@ static RPerson *currentUser;
  * @param password The password of the user to log in as
  * @return TRUE if login succeeds, FALSE if it does not
  */
--(BOOL)createSessionWithUsername:(NSString *)username andPassword:(NSString *)password {
+-(RPerson *)createSessionWithEmail:(NSString *)p_email andPassword:(NSString *)p_password {
     
-    NSString *parameters = [NSString stringWithFormat:@"%@%s%@%s", @"email=", [username UTF8String], @"&password=", [password UTF8String]];
-    NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withRequestType:POST andPostData:nil];
+    NSString *parameters = [@"email=" stringByAppendingString:[p_email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    parameters = [parameters stringByAppendingString:[@"&password=" stringByAppendingString:[p_password stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+    
+    NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:@"users/myInfo" withParameters:parameters withRequestType:GET_REQUEST andPostData:nil];
 
-    authenticityToken = [result objectForKey:@"authenticity_token"];
-    NSLog(@"API: Auth token from login: %@", authenticityToken);
-    int id = [[[result objectForKey:@"user"] objectForKey:@"id"] intValue];
+    email = p_email;
+    password = p_password;
     
-    if (authenticityToken) {
-        currentUser = [self getUserWithID:id];
-        return TRUE;
+    if ([result objectForKey:@"username"] != nil) {
+        NSLog(@"Loglog");
+        email = p_email;
+        password = p_password;
+        RPerson *you = [[RPerson alloc] init];
+        you.name = [result objectForKey:@"username"];
+        you.gravatar = [result objectForKey:@"gravatar"];
+        
+        NSURL *imageURL = [NSURL URLWithString:[you gravatar]];
+        
+        NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+        
+        you.gravatarImage = [UIImage imageWithData:imageData];
+
+        currentUser = you;
+        return you;
+    } else {
+        return nil;
     }
-    
-    return FALSE;
 }
 
 /**
@@ -114,8 +129,8 @@ static RPerson *currentUser;
  */
 -(void)deleteSession {
     
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
-    [self makeRequestWithBaseUrl:baseUrl withPath:@"login" withParameters:parameters withRequestType:DELETE andPostData:nil];
+    email = @"";
+    password = @"";
     currentUser = nil;
     
 }
@@ -131,7 +146,7 @@ static RPerson *currentUser;
     RProject *proj = [[RProject alloc] init];
     
     NSString *path = [NSString stringWithFormat:@"projects/%d", projectId];
-    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET andPostData:nil];
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET_REQUEST andPostData:nil];
     
     proj.project_id = [results objectForKey:@"id"];
     proj.name = [results objectForKey:@"name"];
@@ -148,27 +163,6 @@ static RPerson *currentUser;
 }
 
 /**
- * Get a tutorial from iSENSE.
- *
- * @param tutorialId The ID of the tutorial to retrieve
- * @return A RTutorial object
- */
--(RTutorial *)getTutorialWithId:(int)tutorialId {
-    RTutorial *tutorial = [[RTutorial alloc] init];
-    
-    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"tutorials/%d", tutorialId] withParameters:NONE withRequestType:GET andPostData:nil];
-    tutorial.tutorial_id = [results objectForKey:@"id"];
-    tutorial.name = [results objectForKey:@"name"];
-    tutorial.url = [results objectForKey:@"url"];
-    tutorial.hidden = [results objectForKey:@"hidden"];
-    tutorial.timecreated = [results objectForKey:@"createdAt"];
-    tutorial.owner_name = [results objectForKey:@"ownerName"];
-    tutorial.owner_url = [results objectForKey:@"ownerUrl"];
-    
-    return tutorial;
-}
-
-/**
  * Retrieve a data set from iSENSE, with it's data field filled in.
  * The internal data set will be converted to column-major format, to make it compatible with
  * the uploadDataSet function
@@ -179,7 +173,7 @@ static RPerson *currentUser;
 -(RDataSet *)getDataSetWithId:(int)dataSetId {
     RDataSet *dataSet = [[RDataSet alloc] init];
     
-    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_sets/%d", dataSetId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_sets/%d", dataSetId] withParameters:@"recur=true" withRequestType:GET_REQUEST andPostData:nil];
     
     dataSet.ds_id = [results objectForKey:@"id"];
     dataSet.name = [results objectForKey:@"name"];
@@ -207,7 +201,7 @@ static RPerson *currentUser;
 -(NSArray *)getProjectFieldsWithId:(int)projectId {
     NSMutableArray *fields = [[NSMutableArray alloc] init];
     
-    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d", projectId] withParameters:NONE withRequestType:GET andPostData:nil];
+    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d", projectId] withParameters:@"recur=true" withRequestType:GET_REQUEST andPostData:nil];
     NSArray *innerFields = [requestResult objectForKey:@"fields"];
     
     for (int i = 0; i < innerFields.count; i++) {
@@ -235,7 +229,7 @@ static RPerson *currentUser;
 -(NSArray *)getDataSetsWithId:(int)projectId {
     NSMutableArray *dataSets = [[NSMutableArray alloc] init];
     
-    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d", projectId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
+    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"projects/%d", projectId] withParameters:@"recur=true" withRequestType:GET_REQUEST andPostData:nil];
     NSArray *resultsArray = [results objectForKey:@"dataSets"];
     for (int i = 0; i < results.count; i++) {
         RDataSet *dataSet = [[RDataSet alloc] init];
@@ -290,7 +284,7 @@ static RPerson *currentUser;
     
     NSString *parameters = [NSString stringWithFormat:@"page=%d&per_page=%d&sort=%s&order=%s&search=%s",
                             page, perPage, sortMode.UTF8String, order.UTF8String, search.UTF8String];
-    NSArray *reqResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET andPostData:nil];
+    NSArray *reqResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:GET_REQUEST andPostData:nil];
     
     for (NSDictionary *innerProjJSON in reqResult) {
         RProject *proj = [[RProject alloc] init];
@@ -313,78 +307,6 @@ static RPerson *currentUser;
     
 }
 
-/**
- * Retrieves multiple tutorials off of iSENSE.
- *
- * @param page Which page of results to start from. 1-indexed
- * @param perPage How many results to display per page
- * @param descending Whether to display the results in descending order (true) or ascending order (false)
- * @param search A string to search all tutorials for
- * @return An ArrayList of RTutorial objects
- */
--(NSArray *)getTutorialsAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
-    
-    NSMutableArray *tutorials = [[NSMutableArray alloc] init];
-    
-    NSString *sortMode = @"created_at";
-    NSString *order = descending ? @"DESC" : @"ASC";
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&order=%s&search=%s",
-                            [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, order.UTF8String, search.UTF8String];
-
-    NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"tutorials" withParameters:parameters withRequestType:GET andPostData:nil];
-    for (int i = 0; i < results.count; i++) {
-        NSDictionary *inner = [results objectAtIndex:i];
-        RTutorial *tutorial = [[RTutorial alloc] init];
-        
-        tutorial.tutorial_id = [inner objectForKey:@"id"];
-        tutorial.name = [inner objectForKey:@"name"];
-        tutorial.url = [inner objectForKey:@"url"];
-        tutorial.hidden = [inner objectForKey:@"hidden"];
-        tutorial.timecreated = [inner objectForKey:@"createdAt"];
-        tutorial.owner_name = [inner objectForKey:@"ownerName"];
-        tutorial.owner_url = [inner objectForKey:@"ownerUrl"];
-        
-        [tutorials addObject:tutorial];
-    }
-    
-    return tutorials;
-}
-
-/**
- * Retrieves a list of users on iSENSE.
- * This is an authenticated function and requires that the createSession function was called earlier.
- *
- * @param page Which page of users to start the request from
- * @param perPage How many users per page to perform the search with
- * @param descending Whether the list of users should be in descending order or not
- * @param search A string to search all users for
- * @return A list of RPerson objects
- */
--(NSArray *)getUsersAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
-    
-    NSMutableArray *persons = [[NSMutableArray alloc] init];
-    
-    NSString *sortMode = descending ? @"DESC" : @"ASC";
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
-
-    NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"users" withParameters:parameters withRequestType:GET andPostData:nil];
-    for (int i = 0; i < results.count; i++) {
-        NSDictionary *inner = [results objectAtIndex:i];
-        RPerson *person = [[RPerson alloc] init];
-        
-        person.person_id = [inner objectForKey:@"id"];
-        person.name = [inner objectForKey:@"name"];
-        person.url = [inner objectForKey:@"url"];
-        person.gravatar = [inner objectForKey:@"gravatar"];
-        person.timecreated = [inner objectForKey:@"createdAt"];
-        person.hidden = [inner objectForKey:@"hidden"];
-        
-        [persons addObject:person];
-    }
-    
-    return persons;
-}
-
 /*
  * Returns the current saved user object.
  *
@@ -392,28 +314,6 @@ static RPerson *currentUser;
  */
 -(RPerson *)getCurrentUser {
     return currentUser;
-}
-
-/**
- * Gets the user profile specified with the username from iSENSE.
- *
- * @param username The username of the user to retrieve
- * @return An RPerson object
- */
--(RPerson *)getUserWithID:(int)id {
-    
-    NSLog(@"ID: %d", id);
-    RPerson *person = [[RPerson alloc] init];
-    NSString *path = [NSString stringWithFormat:@"users/%d", id];
-    NSDictionary *result = [self makeRequestWithBaseUrl:baseUrl withPath:path withParameters:NONE withRequestType:GET andPostData:nil];
-    person.person_id = [result objectForKey:@"id"];
-    person.name = [result objectForKey:@"name"];
-    person.url = [result objectForKey:@"url"];
-    person.gravatar = [result objectForKey:@"gravatar"];
-    person.timecreated = [result objectForKey:@"createdAt"];
-    person.hidden = [result objectForKey:@"hidden"];
-    
-    return person;
 }
 
 /**
@@ -428,9 +328,9 @@ static RPerson *currentUser;
     
     @try {
         NSMutableDictionary *postData = [[NSMutableDictionary alloc] init];
+        [postData setObject:[NSString stringWithFormat:@"%@",email] forKey:@"email"];
+        [postData setObject:[NSString stringWithFormat:@"%@",password] forKey:@"password"];
         [postData setObject:[NSString stringWithFormat:@"%@",name] forKey:@"project_name"];
-        
-        NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
         
         NSError *error;
         NSData *postReqData = [NSJSONSerialization dataWithJSONObject:postData
@@ -440,7 +340,7 @@ static RPerson *currentUser;
             NSLog(@"Error parsing object to JSON: %@", error);
         }
         
-        NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:parameters withRequestType:POST andPostData:postReqData];
+        NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl withPath:@"projects" withParameters:NONE withRequestType:POST_REQUEST andPostData:postReqData];
         
         NSNumber *projectId = [requestResult objectForKey:@"id"];
         
@@ -453,16 +353,17 @@ static RPerson *currentUser;
             
             NSMutableDictionary *fullFieldMeta = [[NSMutableDictionary alloc] init];
             [fullFieldMeta setObject:fieldMetaData forKey:@"field"];
-            [fullFieldMeta setObject:projectId forKey:@"project_id"];
+            [fullFieldMeta setObject:[NSString stringWithFormat:@"%@",email] forKey:@"email"];
+            [fullFieldMeta setObject:[NSString stringWithFormat:@"%@",password] forKey:@"password"];
             
             NSError *error;
-            NSData *fieldPostReqData = [NSJSONSerialization dataWithJSONObject:fieldMetaData
+            NSData *fieldPostReqData = [NSJSONSerialization dataWithJSONObject:fullFieldMeta
                                                                   options:0
                                                                     error:&error];
             if (error) {
                 NSLog(@"Error parsing object to JSON: %@", error);
             }
-            [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:parameters withRequestType:POST andPostData:fieldPostReqData];
+            [self makeRequestWithBaseUrl:baseUrl withPath:@"fields" withParameters:NONE withRequestType:POST_REQUEST andPostData:fieldPostReqData];
         }
         
         return projectId.intValue;
@@ -482,50 +383,51 @@ static RPerson *currentUser;
 -(void)appendDataSetDataWithId:(int)dataSetId andData:(NSDictionary *)data {
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
-    RDataSet *currentDS = [self getDataSetWithId:dataSetId];
-    NSMutableDictionary *finalData = [[NSMutableDictionary alloc] init];
-
-    NSArray *fields = [self getProjectFieldsWithId:currentDS.project_id.intValue];
-    NSMutableArray *headers = [[NSMutableArray alloc] init];
-    for (RProjectField *projField in fields) {
-        [headers addObject:projField.field_id];
-    }
-        
-    int currentIndex;
-    for (NSNumber *key in currentDS.data.allKeys) {
-        for(currentIndex = 0; currentIndex < headers.count; currentIndex++) {
-            if (key.intValue == ((NSNumber *)headers[currentIndex]).intValue) break;
-        }
-                
-        NSMutableArray *newDataArray = [[NSMutableArray alloc] initWithArray:[currentDS.data objectForKey:key]];
-        [newDataArray addObjectsFromArray:[data objectForKey:[NSString stringWithFormat:@"%d", currentIndex]]];
-        [finalData setObject:newDataArray forKey:[NSString stringWithFormat:@"%d", currentIndex]];
-    }
-    
-    [requestData setObject:headers forKey:@"headers"];
-    [requestData setObject:finalData forKey:@"data"];
-    [requestData setObject:[NSNumber numberWithInt:dataSetId] forKey:@"id"];
-    
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
+    [requestData setObject:data forKey:@"data"];
+    [requestData setObject:[NSString stringWithFormat:@"%d", dataSetId] forKey:@"id"];
+    [requestData setObject:email forKey:@"email"];
+    [requestData setObject:password forKey:@"password"];
     
     NSError *error;
     NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
                                                           options:0
                                                             error:&error];
     
-    [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"data_sets/%d/edit", dataSetId] withParameters:parameters withRequestType:POST andPostData:postReqData];
+    [self makeRequestWithBaseUrl:baseUrl withPath:@"data_sets/append" withParameters:NONE withRequestType:POST_REQUEST andPostData:postReqData];
     
 }
 
 /**
- * Uploads a new data set to a project on iSENSE.
+ * Append new rows of data to the end of an existing data set with a contributor key.
+ *
+ * @param dataSetId The ID of the data set to append to
+ * @param newData The new data to append
+ */
+-(void)appendDataSetDataWithId:(int)dataSetId andData:(NSDictionary *)data withContributorKey:(NSString *)conKey{
+    
+    NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
+    [requestData setObject:data forKey:@"data"];
+    [requestData setObject:[NSString stringWithFormat:@"%d", dataSetId] forKey:@"id"];
+    [requestData setObject:conKey forKey:@"contribution_key"];
+    
+    NSError *error;
+    NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
+                                                          options:0
+                                                            error:&error];
+    
+    [self makeRequestWithBaseUrl:baseUrl withPath:@"data_sets/append" withParameters:NONE withRequestType:POST_REQUEST andPostData:postReqData];
+    
+}
+
+/**
+ * Uploads a new data set to a project on iSENSE with a user logged in.
  *
  * @param projectId - The ID of the project to upload data to
  * @param dataToUpload - The data to be uploaded. Must be in column-major format to upload correctly
  * @param name - The name of the dataset
  * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
  */
--(int) jsonDataUploadWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
+-(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name {
     
     // append a timestamp to the name of the data set
     name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
@@ -533,11 +435,10 @@ static RPerson *currentUser;
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
     
-    [requestData setObject:[NSString stringWithFormat:@"%d", projectId] forKey:@"id"];
     [requestData setObject:dataToUpload forKey:@"data"];
     if (![name isEqualToString:NONE]) [requestData setObject:name forKey:@"title"];
-    
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@", [self getEncodedAuthtoken]];
+    [requestData setObject:email forKey:@"email"];
+    [requestData setObject:password forKey:@"password"];
     
     NSError *error;
     NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
@@ -549,13 +450,49 @@ static RPerson *currentUser;
     
     NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl
                                                       withPath:[NSString stringWithFormat:@"projects/%d/jsonDataUpload", projectId]
-                                                withParameters:parameters
-                                               withRequestType:POST
+                                                withParameters:NONE
+                                               withRequestType:POST_REQUEST
                                                    andPostData:postReqData];
     
     NSNumber *dataSetId = [requestResult objectForKey:@"id"];
     return dataSetId.intValue;
 }
+
+/**
+ * Uploads a new data set to a project on iSENSE with a contributor key.
+ *
+ * @param projectId - The ID of the project to upload data to
+ * @param dataToUpload - The data to be uploaded. Must be in column-major format to upload correctly
+ * @param conKey - contributor key
+ * @param conName - Name of contributor
+ * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
+ */
+-(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName {
+    
+    NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
+    
+    [requestData setObject:conKey forKey:@"contributor_key"];
+    [requestData setObject:conName forKey:@"contributor_name"];
+    [requestData setObject:dataToUpload forKey:@"data"];
+    
+    NSError *error;
+    NSData *postReqData = [NSJSONSerialization dataWithJSONObject:requestData
+                                                          options:0
+                                                            error:&error];
+    if (error) {
+        NSLog(@"Error parsing object to JSON: %@", error);
+    }
+    
+    NSDictionary *requestResult = [self makeRequestWithBaseUrl:baseUrl
+                                                      withPath:[NSString stringWithFormat:@"projects/%d/jsonDataUpload", projectId]
+                                                withParameters:NONE
+                                               withRequestType:POST_REQUEST
+                                                   andPostData:postReqData];
+    
+    NSNumber *dataSetId = [requestResult objectForKey:@"id"];
+    return dataSetId.intValue;
+}
+
 
 /*
  * Gets the MIME time from a file path.
@@ -578,7 +515,7 @@ static RPerson *currentUser;
  * @param csvToUpload The CSV as an NSData object
  * @param datasetName The name of the dataset
  * @return The ID of the data set created on iSENSE
- */-(int)uploadCSVWithId:(int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name {
+ -(int)uploadCSVWithId:(int)projectId withFile:(NSData *)csvToUpload andName:(NSString *)name {
     
     // append a timestamp to the name of the data set
     name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
@@ -594,7 +531,7 @@ static RPerson *currentUser;
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [request setHTTPShouldHandleCookies:YES];
     [request setTimeoutInterval:30];
-    [request setHTTPMethod:POST];
+    [request setHTTPMethod:POST_REQUEST];
     
     // set Content-Type in HTTP header
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BOUNDARY];
@@ -620,7 +557,7 @@ static RPerson *currentUser;
     [request setHTTPBody:body];
     
     // set the content-length
-    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
+    NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[body length]];
     [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
     
     // set URL
@@ -637,8 +574,60 @@ static RPerson *currentUser;
         return -1;
     }
     
-    return [urlResponse statusCode];
+    return (int) [urlResponse statusCode];
 
+}*/
+
+/**
+ * Uploads a file to the media section of a project.
+ *
+ * @param projectId The project ID to upload to
+ * @param mediaToUpload The file to upload
+ * @param name The name of the file to upload
+ * @param ttype The upload target, PROJECT or DATASET
+ * @return The media object ID for the media uploaded or -1 if upload fails
+ */
+-(int)uploadMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name withTarget:(TargetType)ttype{
+    
+    NSLog(@"Inside API.m");
+    
+    AFHTTPRequestSerializer *ser = [AFHTTPRequestSerializer serializer];
+    NSMutableURLRequest *request = [ser multipartFormRequestWithMethod:POST_REQUEST URLString:[baseUrl stringByAppendingString:@"/media_objects"] parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:mediaToUpload name:@"upload" fileName:name mimeType:[self getMimeType:name]];
+        [formData appendPartWithFormData:[[email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding] name:@"email"];
+        [formData appendPartWithFormData:[[password stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding] name:@"password"];
+        [formData appendPartWithFormData:[((ttype == PROJECT) ? @"project" : @"data_set") dataUsingEncoding:NSUTF8StringEncoding] name:@"type"];
+        [formData appendPartWithFormData:[[NSString stringWithFormat:@"%d", projectId] dataUsingEncoding:NSUTF8StringEncoding] name:@"id"];
+    } error:nil];
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+    [request setHTTPShouldHandleCookies:YES];
+    [request setTimeoutInterval:30];
+    NSLog(@"%@", request);
+    
+    // send the request
+    NSError *requestError;
+    NSHTTPURLResponse *urlResponse;
+    
+    NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    if (requestError) NSLog(@"Error received from server: %@", requestError);
+    
+    if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
+        id parsedJSONResponse = [NSJSONSerialization JSONObjectWithData:dataResponse options:NSJSONReadingMutableContainers error:&requestError];
+        int mediaObjectID = [parsedJSONResponse objectForKey:@"id"];
+        return mediaObjectID;
+    } else if (urlResponse.statusCode == 401) {
+        NSLog(@"Unauthorized. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    } else if (urlResponse.statusCode == 422) {
+        NSLog(@"Unprocessable entity. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    } else if (urlResponse.statusCode == 500) {
+        NSLog(@"Internal server error. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    } else {
+        NSLog(@"Unrecognized status code = %ld. %@", (long)urlResponse.statusCode, [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    }
+    
+    return -1;
 }
 
 /**
@@ -646,142 +635,55 @@ static RPerson *currentUser;
  *
  * @param projectId The project ID to upload to
  * @param mediaToUpload The file to upload
+ * @param name The name of the file to upload
+ * @param ttype The upload target, PROJECT or DATASET
+ * @param conKey the contributor key used for upload
+ * @param conName the name of the contributor
  * @return The media object ID for the media uploaded or -1 if upload fails
  */
--(int)uploadProjectMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
+-(int)uploadMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *)name withTarget:(TargetType)ttype withContributorKey:(NSString *)conKey as:(NSString *)conName{
     
     NSLog(@"Inside API.m");
-
-    // Tries to get the mime type of the specified file
-    NSString *mimeType = [self getMimeType:name];
-   
-    // create request
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    AFHTTPRequestSerializer *ser = [AFHTTPRequestSerializer serializer];
+    NSMutableURLRequest *request = [ser multipartFormRequestWithMethod:POST_REQUEST URLString:[baseUrl stringByAppendingString:@"/media_objects"] parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:mediaToUpload name:@"upload" fileName:name mimeType:[self getMimeType:name]];
+        [formData appendPartWithFormData:[[conKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding] name:@"contribution_key"];
+        [formData appendPartWithFormData:[[conName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] dataUsingEncoding:NSUTF8StringEncoding] name:@"contributor_name"];
+        [formData appendPartWithFormData:[((ttype == PROJECT) ? @"project" : @"data_set") dataUsingEncoding:NSUTF8StringEncoding] name:@"type"];
+        [formData appendPartWithFormData:[[NSString stringWithFormat:@"%d", projectId] dataUsingEncoding:NSUTF8StringEncoding] name:@"id"];
+    } error:nil];
+    
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
     [request setHTTPShouldHandleCookies:YES];
     [request setTimeoutInterval:30];
-    [request setHTTPMethod:POST];
-    
-    // set Content-Type in HTTP header
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BOUNDARY];
-    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    
-    // post body
-    NSMutableData *body = [NSMutableData data];
-    
-    // add image data   
-    if (mediaToUpload) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"upload\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:mediaToUpload];
-        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    }
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    // setting the body of the post to the reqeust
-    [request setHTTPBody:body];
-    
-    // set the content-length
-    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    
-    // set URL
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/media_objects/saveMedia/project/%d?authenticity_token=%@", baseUrl, projectId, [self getEncodedAuthtoken]]]];
     NSLog(@"%@", request);
     
     // send the request
     NSError *requestError;
     NSHTTPURLResponse *urlResponse;
     
-    [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
-    if (requestError) {
-        NSLog(@"Error received from server: %@", requestError);
-        return -1;
+    NSData *dataResponse = [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
+    if (requestError) NSLog(@"Error received from server: %@", requestError);
+    
+    if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
+        id parsedJSONResponse = [NSJSONSerialization JSONObjectWithData:dataResponse options:NSJSONReadingMutableContainers error:&requestError];
+        int mediaObjectID = [parsedJSONResponse objectForKey:@"id"];
+        return mediaObjectID;
+    } else if (urlResponse.statusCode == 401) {
+        NSLog(@"Unauthorized. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    } else if (urlResponse.statusCode == 422) {
+        NSLog(@"Unprocessable entity. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    } else if (urlResponse.statusCode == 500) {
+        NSLog(@"Internal server error. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    } else {
+        NSLog(@"Unrecognized status code = %ld. %@", (long)urlResponse.statusCode, [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     }
-
     
-    NSString *urlString = [NSString stringWithContentsOfURL:[urlResponse URL] encoding:NSUTF8StringEncoding error:&requestError];
-    
-    NSLog(@"Error:%@", urlString);
-    
-    NSNumber *mediaObjectId = (NSNumber *)urlResponse;
-       
-    return 1;
+    return -1;
 }
 
-/**
- * Uploads a file to the media section of a data set.
- *
- * @param dataSetId The data set ID to upload to
- * @param mediaToUpload The file to upload
- * @return The media object ID for the media uploaded or -1 if upload fails
- */
--(int)uploadDataSetMediaWithId:(int)dataSetId withFile:(NSData *)mediaToUpload andName:(NSString *)name {
-    
-    // append a timestamp to the name of the data set
-    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
-    
-    // Make sure there aren't any illegal characters in the name
-    name = [name stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-    
-    // Tries to get the mime type of the specified file
-    NSString *mimeType = [self getMimeType:name];
-    
-    // create request
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [request setHTTPShouldHandleCookies:YES];
-    [request setTimeoutInterval:30];
-    [request setHTTPMethod:POST];
-    
-    // set Content-Type in HTTP header
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BOUNDARY];
-    [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    
-    // post body
-    NSMutableData *body = [NSMutableData data];
-    
-    // add image data
-    if (mediaToUpload) {
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"upload\"; filename=\"%@\"\r\n", name] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\nContent-Transfer-Encoding: binary\r\n\r\n", mimeType] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:mediaToUpload];
-        [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    }
-    
-    [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BOUNDARY] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    // setting the body of the post to the reqeust
-    [request setHTTPBody:body];
-    
-    // set the content-length
-    NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    
-    // set URL
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/media_objects/saveMedia/data_set/%d?authenticity_token=%@", baseUrl, dataSetId, [self getEncodedAuthtoken]]]];
-    NSLog(@"%@", request);
-    
-    // send request
-    NSError *requestError;
-    NSHTTPURLResponse *urlResponse;
-    
-    [NSURLConnection sendSynchronousRequest:request returningResponse:&urlResponse error:&requestError];
-    if (requestError) {
-        NSLog(@"Error received from server: %@", requestError);
-        return -1;
-    }
-    
-    NSNumber *mediaObjectID = (NSNumber *)urlResponse;
-    
-    return mediaObjectID.intValue;
-
-}
 
 /**
  * Reformats a row-major NSDictionary to column-major.
@@ -804,16 +706,6 @@ static RPerson *currentUser;
         }
     }
     return reformatted;
-}
-
-/**
-  * Converts the user's authentication token to a percent-escaped, HTTP-friendly string
-  *
-  * @return A percent escaped version of the current user authentication token
-  */
--(NSString *)getEncodedAuthtoken {
-    CFStringRef encodedToken = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, CFBridgingRetain(authenticityToken), NULL, CFSTR("!*'();:@&=+@,/?#[]"), kCFStringEncodingUTF8);
-    return CFBridgingRelease(encodedToken);
 }
 
 /**
@@ -840,7 +732,7 @@ static RPerson *currentUser;
     
     if (postData) {
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [request setValue:[NSString stringWithFormat:@"%d", postData.length] forHTTPHeaderField:@"Content-Length"];
+        [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)postData.length] forHTTPHeaderField:@"Content-Length"];
         [request setHTTPBody:postData];
         
         NSString *LOG_STR = [[NSString alloc] initWithData:postData encoding:NSUTF8StringEncoding];
@@ -856,71 +748,21 @@ static RPerson *currentUser;
     if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
         id parsedJSONResponse = [NSJSONSerialization JSONObjectWithData:dataResponse options:NSJSONReadingMutableContainers error:&requestError];
         return parsedJSONResponse;
-    } else if (urlResponse.statusCode == 403) {
-        NSLog(@"Authenticity token not accepted. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    } else if (urlResponse.statusCode == 401) {
+        NSLog(@"Unauthorized. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     } else if (urlResponse.statusCode == 422) {
         NSLog(@"Unprocessable entity. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     } else if (urlResponse.statusCode == 500) {
         NSLog(@"Internal server error. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+    } else if (urlResponse.statusCode == 404) {
+        NSLog(@"Not found. %@", [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     } else {
-        NSLog(@"Unrecognized status code = %d. %@", urlResponse.statusCode, [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
+        NSLog(@"Unrecognized status code = %ld. %@", (long)urlResponse.statusCode, [[NSString alloc] initWithData:dataResponse encoding:NSUTF8StringEncoding]);
     }
     
     return nil;
 }
 
-/**
- * Retrieves a list of news articles on iSENSE.
- *
- * @param page Which page of news to start the request from
- * @param perPage How many entries per page to perform the search with
- * @param descending Whether the list of articles should be in descending order or not
- * @param search A string to search all articles for
- * @return A list of RNews objects
- */
--(NSArray *)getNewsAtPage:(int)page withPageLimit:(int)perPage withFilter:(BOOL)descending andQuery:(NSString *)search {
-    NSMutableArray *newsArray = [[NSMutableArray alloc] init];
-
-    NSString *sortMode = descending ? @"DESC" : @"ASC";
-    NSString *parameters = [NSString stringWithFormat:@"authenticity_token=%@&page=%d&per_page%d&sort=%s&search=%s", [self getEncodedAuthtoken], page, perPage, sortMode.UTF8String, search.UTF8String];
-
-    NSArray *results = [self makeRequestWithBaseUrl:baseUrl withPath:@"news" withParameters:parameters withRequestType:GET andPostData:nil];
-    for (int i = 0; i < results.count; i++) {
-        NSDictionary *inner = [results objectAtIndex:i];
-        RNews *news = [[RNews alloc] init];
-    
-        news.news_id = [inner objectForKey:@"id"];
-        news.name = [inner objectForKey:@"name"];
-        news.url = [inner objectForKey:@"url"];
-        news.hidden = [inner objectForKey:@"hidden"];
-        news.timecreated = [inner objectForKey:@"createdAt"];
-        news.content = [inner objectForKey:@""];
-    
-        [newsArray addObject:news];
-    }
-    
-    return newsArray;
-}
-
-/**
- * Gets a news article off iSENSE.
- *
- * @param newsId The id of the news entry to retrieve
- * @return An RNews object
- */
--(RNews *)getNewsWithId:(int)newsId {
-    RNews *news = [[RNews alloc] init];
-    
-    NSDictionary *results = [self makeRequestWithBaseUrl:baseUrl withPath:[NSString stringWithFormat:@"news/%d", newsId] withParameters:@"recur=true" withRequestType:GET andPostData:nil];
-    news.news_id = [results objectForKey:@"id"];
-    news.name = [results objectForKey:@"name"];
-    news.hidden = [results objectForKey:@"hidden"];
-    news.url = [results objectForKey:@"url"];
-    news.timecreated = [results objectForKey:@"createdAt"];
-    news.content = [results objectForKey:@"content"];
-    
-    return news;
-}
 
 /**
  * Creates a unique date and timestamp used to append to data sets uploaded to the iSENSE

@@ -10,19 +10,26 @@
 
 @interface ViewController ()
 
-- (IBAction)showMenu:(id)sender;
+@end
+
+@interface DLAVAlertViewController ()
+
++ (instancetype)sharedController;
+
+- (void)setBackdropColor:(UIColor *)color;
+
+- (void)addAlertView:(DLAVAlertView *)alertView;
+- (void)removeAlertView:(DLAVAlertView *)alertView;
 
 @end
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, login_status, items, recordLength, countdown, change_name, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,firstName,lastInitial,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,image,proj_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter;
+@synthesize start, menuButton, vector_status, items, recordLength, countdown, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,proj_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, mngr,alert, buttonText, countdownLbl;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     
-    saver->first = firstName;
-    saver->last = lastInitial;
     saver->user = userName;
     saver->pass = passWord;
     
@@ -32,56 +39,67 @@
         return;
     }
     
+    [start removeFromSuperview];
+    [buttonText removeFromSuperview];
+    
+    UIImageView *titleView;
+    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
     if([UIDevice currentDevice].userInterfaceIdiom==UIUserInterfaceIdiomPad) {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [[NSBundle mainBundle] loadNibNamed:@"ViewController~landscape_iPad"
                                           owner:self
                                         options:nil];
-            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
-            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
-            login_status.text = [login_status.text stringByAppendingString:firstName];
-            login_status.text = [login_status.text stringByAppendingString:@" "];
-            login_status.text = [login_status.text stringByAppendingString:lastInitial];
-            login_status.text = [login_status.text stringByAppendingString:@". "];
             //[self viewDidLoad];
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"ViewController_iPad"
                                           owner:self
                                         options:nil];
-            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
-            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
-            login_status.text = [login_status.text stringByAppendingString:firstName];
-            login_status.text = [login_status.text stringByAppendingString:@" "];
-            login_status.text = [login_status.text stringByAppendingString:lastInitial];
-            login_status.text = [login_status.text stringByAppendingString:@". "];
             //[self viewDidLoad];
         }
+        titleView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"navBar_iPhone" ofType:@"png"]]];
     } else {
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
             [[NSBundle mainBundle] loadNibNamed:@"ViewController~landscape_iPhone"
                                           owner:self
                                         options:nil];
-            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
-            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
-            login_status.text = [login_status.text stringByAppendingString:firstName];
-            login_status.text = [login_status.text stringByAppendingString:@" "];
-            login_status.text = [login_status.text stringByAppendingString:lastInitial];
-            login_status.text = [login_status.text stringByAppendingString:@". "];
             //[self viewDidLoad];
+            titleView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"navBar~landscape_iPhone" ofType:@"png"]]];
+            start = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 460, 155)];
+            buttonText = [[UILabel alloc] initWithFrame:CGRectMake(181, 47, 98, 21)];
+            start.layer.borderColor = [UIColor grayColor].CGColor;
+            start.layer.borderWidth = 2;
+            start.layer.cornerRadius = 10;
+            start.layer.masksToBounds = YES;
+            [buttonText setText:@"Hold to Start"];
+            [buttonText setTextColor:[UIColor blueColor]];
+            [start addSubview:buttonText];
+            [self.view addSubview:start];
         } else {
             [[NSBundle mainBundle] loadNibNamed:@"ViewController_iPhone"
                                           owner:self
                                         options:nil];
-            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
-            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
-            login_status.text = [login_status.text stringByAppendingString:firstName];
-            login_status.text = [login_status.text stringByAppendingString:@" "];
-            login_status.text = [login_status.text stringByAppendingString:lastInitial];
-            login_status.text = [login_status.text stringByAppendingString:@". "];
             //[self viewDidLoad];
+            titleView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"navBar_iPhone" ofType:@"png"]]];
+            start = [[UIView alloc] initWithFrame:CGRectMake(11, 20, 298, 255)];
+            buttonText = [[UILabel alloc] initWithFrame:CGRectMake(99, 110, 98, 21)];
+            start.layer.borderColor = [UIColor grayColor].CGColor;
+            start.layer.borderWidth = 2;
+            start.layer.cornerRadius = 10;
+            start.layer.masksToBounds = YES;
+            [buttonText setText:@"Hold to Start"];
+            [buttonText setTextColor:[UIColor blueColor]];
+            [start addSubview:buttonText];
+            [self.view addSubview:start];
         }
         
     }
+    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    [start setUserInteractionEnabled:YES];
+    [start addGestureRecognizer:longPress];
+    
+    
+    self.navigationItem.titleView = titleView;
     
     
 }
@@ -141,8 +159,7 @@
     
     [super viewDidLoad];
     
-	UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-    [start addGestureRecognizer:longPress];
+    sessionName = @"";
     
     formatter = [[NSNumberFormatter alloc] init];
     
@@ -159,11 +176,8 @@
     
     if (saver == nil) {
         saver = new RotationDataSaver;
-        saver->hasName = false;
         saver->hasLogin = false;
         saver->isLoggedIn = false;
-        saver->first =  [[NSString alloc] init];
-        saver->last = [[NSString alloc] init];
         saver->user = [[NSString alloc] init];
         saver->pass = [[NSString alloc] init];
         saver->saveMode = NO;
@@ -188,26 +202,38 @@
         
     }
     
-    if (saver->hasName){
-        firstName = saver->first;
-        lastInitial = saver->last;
-    } else {
-        firstName = @"Mobile";
-        lastInitial = @"U.";
-    }
-    
-    
-    
     
     if (saveModeEnabled) {
         projNum = -1;
     } else {
-        if (useDev) {
-            projNum = DEV_DEFAULT_PROJ;
-        } else {
-            projNum = PROD_DEFAULT_PROJ;
+        NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+        projNum= [prefs integerForKey:KEY_PROJECT_ID];
+        
+        if (projNum == 0) {
+            if (useDev) {
+                projNum = DEV_DEFAULT_PROJ;
+            } else {
+                projNum = PROD_DEFAULT_PROJ;
+            }
         }
+
+        
     }
+    
+    if (alert != nil && ![alert isHidden] && setupDone) {
+        [alert dismissWithClickedButtonIndex:0 animated:YES];
+        mngr = [[CredentialManager alloc] initWithDelegate:self];
+        DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
+        [parent addChildViewController:mngr];
+        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        [alert setContentView:mngr.view];
+        [alert setDismissesOnBackdropTap:YES];
+        [alert show];
+        
+    }
+    
+    [countdownLbl setTextAlignment:NSTextAlignmentCenter];
+    [vector_status setTextAlignment:NSTextAlignmentCenter];
     
     
     
@@ -228,14 +254,6 @@
         NSLog(@"Current count = %d", dataSaver.dataQueue.count);
     }
     
-    UIButton* btton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btton setFrame:CGRectMake(0, 0, 30, 30)];
-    [btton addTarget:self action:@selector(showMenu) forControlEvents:UIControlEventTouchUpInside];
-    [btton setImage:[UIImage imageNamed:@"menuIcon"] forState:UIControlStateNormal];
-    menuButton = [[UIBarButtonItem alloc] initWithCustomView:btton];
-    self.navigationItem.rightBarButtonItem = menuButton;
-    
-    [image setAutoresizesSubviews:YES];
     
     lengths = [[NSMutableArray alloc] initWithObjects:@"1 sec", @"2 sec", @"5 sec", @"10 sec", @"30 sec", @"60 sec", nil];
     
@@ -252,6 +270,49 @@
     
     dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:nil];
     
+    [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundColor:UIColorFromHex(0x111155)];
+    UIButton* btton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btton setFrame:CGRectMake(0, 0, 30, 30)];
+    [btton addTarget:self action:@selector(showMenu) forControlEvents:UIControlEventTouchUpInside];
+    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
+    [btton setImage:[UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"menuIcon" ofType:@"png"]] forState:UIControlStateNormal];
+    menuButton = [[UIBarButtonItem alloc] initWithCustomView:btton];
+    [menuButton setTintColor:UIColorFromHex(0x111155)];
+    self.navigationItem.rightBarButtonItem = menuButton;
+    [[UIBarButtonItem appearance] setTintColor:UIColorFromHex(0x111155)];
+    [[UIButton appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)] forState:UIControlStateHighlighted];
+    [[UISearchBar appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
+    [[UISearchBar appearance] setScopeBarBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
+
+    
+}
+
+- (UIImage *)imageWithColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+- (void) didPressLogin:(CredentialManager *)mngr {
+    [alert dismissWithClickedButtonIndex:0 animated:YES];
+    alert = nil;
+    loginalert = [[UIAlertView alloc] initWithTitle:@"Login to iSENSE" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    [loginalert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
+    [loginalert textFieldAtIndex:0].delegate = self;
+    [loginalert textFieldAtIndex:0].tag = LOGIN_USER;
+    [loginalert textFieldAtIndex:1].delegate = self;
+    [loginalert textFieldAtIndex:1].tag = LOGIN_PASS;
+    [loginalert textFieldAtIndex:0].placeholder = @"Email";
+    [loginalert show];
 }
 
 - (void) setPickerDefault {
@@ -305,19 +366,6 @@
     
     if (self.isMovingToParentViewController == YES) {
         
-        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-        [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-        UITextField *last = [change_name textFieldAtIndex:1];
-        [last setSecureTextEntry:NO];
-        [last setPlaceholder:@"Last Initial"];
-        UITextField *first = [change_name textFieldAtIndex:0];
-        first.tag = FIRST_NAME_FIELD;
-        first.delegate = self;
-        last.delegate = self;
-        [first setPlaceholder:@"First Name"];
-        change_name.tag = FIRST_TIME_NAME;
-        [change_name show];
-        
         
         if (![API hasConnectivity]){
             [dfm setEnabledField:x atIndex:fACCEL_X];
@@ -334,6 +382,7 @@
     }
     
     [self willRotateToInterfaceOrientation:(self.interfaceOrientation) duration:0];
+    setupDone = YES;
     
 }
 
@@ -351,8 +400,15 @@
 }
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture {
-    if ( gesture.state == UIGestureRecognizerStateEnded ) {
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        [start setBackgroundColor:UIColorFromHex(0x111155)];
+        [buttonText setBackgroundColor:UIColorFromHex(0x111155)];
+        [buttonText setTextColor:[UIColor whiteColor]];
+    } else if ( gesture.state == UIGestureRecognizerStateEnded ) {
         NSLog(@"Long Press");
+        [start setBackgroundColor:[UIColor clearColor]];
+        [buttonText setBackgroundColor:[UIColor clearColor]];
+        [buttonText setTextColor:[UIColor blackColor]];
         if (!running) {
             // Get Field Order
             if (![API hasConnectivity]){
@@ -365,7 +421,9 @@
             }
             // Record Data
             running = YES;
-            [start setEnabled:NO];
+            [start setUserInteractionEnabled:NO];
+            [buttonText setText:@"Recording..."];
+            [buttonText setTextColor:[UIColor greenColor]];
             [self recordData];
         }
         
@@ -382,7 +440,7 @@
 // Record the data and return the NSMutable array to be JSONed
 - (void) recordData {
     
-    [start setTitle:[NSString stringWithFormat:@"%d", countdown] forState:UIControlStateNormal];
+    //[start setTitle:[NSString stringWithFormat:@"%d", countdown] forState:UIControlStateNormal];
     // Get the recording rate
     float rate = .125;
     /*NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -441,11 +499,13 @@
         
         if (countdown >=  1) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [start setTitle:[NSString stringWithFormat:@"%d", --countdown] forState:UIControlStateNormal];
+                NSString *countdownStr = [NSString stringWithFormat:@"%d", countdown--];
+                [countdownLbl setText:[NSString stringWithFormat:@"Time Elapsed: %@", countdownStr]];
+                
             });
         }
         
-        if (countdown < 1) {
+        if (countdown <= 0) {
             
             [self stopRecording:motionmanager];
         }
@@ -491,7 +551,7 @@
                 if ([vector length] == 0) {
                     vector = [vector stringByAppendingString:@"Y: "];
                 } else {
-                    vector = [vector stringByAppendingString:@", Y: "];
+                    vector = [vector stringByAppendingString:@"\nY: "];
                 }
                 vector = [vector stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_y]];
             } if ([dfm enabledFieldAtIndex:fACCEL_Z]) {
@@ -499,7 +559,7 @@
                 if ([vector length] == 0) {
                     vector = [vector stringByAppendingString:@"Z: "];
                 } else {
-                    vector = [vector stringByAppendingString:@", Z: "];
+                    vector = [vector stringByAppendingString:@"\nZ: "];
                 }
                 vector = [vector stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_z]];
             } if ([dfm enabledFieldAtIndex:fACCEL_TOTAL]) {
@@ -511,7 +571,7 @@
                 if ([vector length] == 0) {
                     vector = [vector stringByAppendingString:@"Total: "];
                 } else {
-                    vector = [vector stringByAppendingString:@", Total: "];
+                    vector = [vector stringByAppendingString:@"\nTotal: "];
                 }
                 vector = [vector stringByAppendingString:[formatter stringFromNumber:fieldsRow.accel_total]];
                 
@@ -570,17 +630,19 @@
     [vector_status setText:@""];
     countdown = recordLength;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [start setTitle:@"Hold to Start" forState:UIControlStateNormal];
-        [start setEnabled:YES];
+        [buttonText setText:@"Hold to Start"];
+        [buttonText setTextColor:[UIColor blueColor]];
+        [start setUserInteractionEnabled:YES];
+        [countdownLbl setText:@""];
         
     });
     
-    NSString *name = firstName;
-    name = [name stringByAppendingString:@" "];
-    name = [name stringByAppendingString:lastInitial];
-    name = [name stringByAppendingString:@". "];
-    
-    sessionName = name;
+    NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/button-37.wav"];
+    SystemSoundID soundID;
+    NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
+    CFURLRef url = (__bridge CFURLRef)filePath;
+    AudioServicesCreateSystemSoundID(url, &soundID);
+    AudioServicesPlaySystemSound(soundID);
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -613,17 +675,16 @@
     [vector_status setText:@""];
     countdown = recordLength;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [start setTitle:@"Hold to Start" forState:UIControlStateNormal];
-        [start setEnabled:YES];
+        [buttonText setText:@"Hold to Start"];
+        [buttonText setTextColor:[UIColor blueColor]];
+        [start setUserInteractionEnabled:YES];
+        [countdownLbl setText:@""];
         
     });
     
-    NSString *name = firstName;
-    name = [name stringByAppendingString:@" "];
-    name = [name stringByAppendingString:lastInitial];
+    NSString *name = [api getCurrentUser].name;
     name = [name stringByAppendingString:@". "];
     
-    sessionName = name;
 }
 
 
@@ -666,36 +727,83 @@
 
 - (void) browseproj {
     [project dismissWithClickedButtonIndex:1 animated:YES];
-    ProjectBrowseViewController *browse;
-    browse = [[ProjectBrowseViewController alloc] init];
-    browse.title = @"Browse for Projects";
-    [self.navigationController pushViewController:browse animated:YES];
+    ProjectBrowserViewController *browser = [[ProjectBrowserViewController alloc] initWithDelegate:self];
+    [self.navigationController pushViewController:browser animated:YES];
     
 }
 
+- (void) didFinishChoosingProject:(ProjectBrowserViewController *) browser withID: (int) project_id {
+    projNum = project_id;
+    [self launchFieldMatchingViewControllerFromBrowse:TRUE];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    
+    // ADD: get the decode results
+    id<NSFastEnumeration> results =
+    [info objectForKey: ZBarReaderControllerResults];
+    ZBarSymbol *symbol = nil;
+    for(symbol in results)
+        // EXAMPLE: just grab the first barcode
+        break;
+    
+    // EXAMPLE: do something useful with the barcode data
+    NSLog(@"QR Data: %@", symbol.data);
+    
+    NSRange range = [symbol.data rangeOfString:@"projects"];
+    
+    NSMutableCharacterSet *_slashes = [NSMutableCharacterSet characterSetWithCharactersInString:@"/"];
+    
+    NSString *proj = [[symbol.data substringFromIndex:NSMaxRange(range)] stringByTrimmingCharactersInSet:_slashes];
+    
+    projNum= [proj intValue];
+    
+    NSLog(@"ExpNum: %d", projNum);
+    
+    // ADD: dismiss the controller (NB dismiss from the *reader*!)
+    [picker dismissModalViewControllerAnimated: YES];
+    if (projNum != 0) {
+        
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setInteger:projNum forKey:KEY_PROJECT_ID];
+        
+    }
+    
+    
+    
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+}
+
+
 - (void) QRCode {
     [project dismissWithClickedButtonIndex:2 animated:YES];
-    if ([[UIApplication sharedApplication]
-         canOpenURL:[NSURL URLWithString:@"pic2shop:"]]) {
-        NSURL *urlp2s = [NSURL URLWithString:@"pic2shop://scan?callback=carPhysics%3A//EAN"];
-        [[UIApplication sharedApplication] openURL:urlp2s];
-    } else {
-        NSURL *urlapp = [NSURL URLWithString:
-                         @"http://itunes.com/app/pic2shop"];
-        [[UIApplication sharedApplication] openURL:urlapp];
-    }
-}
+    ZBarReaderViewController *reader = [ZBarReaderViewController new];
+    reader.readerDelegate = self;
+    reader.supportedOrientationsMask = ZBarOrientationMaskAll;
+    
+    ZBarImageScanner *scanner = reader.scanner;
+    // TODO: (optional) additional reader configuration here
+    
+    // EXAMPLE: disable rarely used I2/5 to improve performance
+    [scanner setSymbology: ZBAR_I25
+                   config: ZBAR_CFG_ENABLE
+                       to: 0];
+    
+    // present and release the controller
+    [self presentModalViewController: reader
+                            animated: YES];}
 
 - (void) projCode {
     [project dismissWithClickedButtonIndex:0 animated:YES];
     proj_num = [[UIAlertView alloc] initWithTitle:@"Enter Project ID" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [proj_num setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    if (useDev) {
-        [proj_num textFieldAtIndex:0].text = [NSString stringWithFormat:@"%d",DEV_DEFAULT_PROJ];
-    } else {
-        [proj_num textFieldAtIndex:0].text = [NSString stringWithFormat:@"%d",PROD_DEFAULT_PROJ];
-    }
-    
+    [proj_num textFieldAtIndex:0].text = [NSString stringWithFormat:@"%d",projNum];
     [proj_num show];
 }
 
@@ -738,21 +846,32 @@
             
         }
         
-        dataToBeJSONed = [DataFieldManager reOrderData:dataToBeOrdered forProjectID:projNum withFieldOrder:[dfm getOrderList] andFieldIDs:[dfm getFieldIDs]];
-        NSLog(@"REORDER SUCCESSFUL: %@", dataToBeJSONed);
-        NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
-        [data setObject:dataToBeJSONed forKey:@"data"];
-        data = [[api rowsToCols:data] mutableCopy];
+        UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
+        [message show];
         
-        bool success = [api jsonDataUploadWithId:projNum withData:data andName:sessionName];
-        if (!success) {
-            [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
-        } else {
-            [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
+        dispatch_queue_t queue = dispatch_queue_create("uploading_data", NULL);
+        dispatch_async(queue, ^{
+            dataToBeJSONed = [DataFieldManager reOrderData:dataToBeOrdered forProjectID:projNum withFieldOrder:[dfm getOrderList] andFieldIDs:[dfm getFieldIDs]];
+            NSLog(@"REORDER SUCCESSFUL: %@", dataToBeJSONed);
+            NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
+            [data setObject:dataToBeJSONed forKey:@"data"];
+            data = [[api rowsToCols:data] mutableCopy];
             
-        }
-        
-        
+            int ds_id = [api uploadDataWithId:projNum withData:data andName:sessionName];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [message dismissWithClickedButtonIndex:nil animated:YES];
+                if (ds_id == -1) {
+                    [self.view makeWaffle:@"Unable to upload" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
+                } else {
+                    [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
+                    session_num = [[NSNumber alloc] initWithInt:ds_id];
+                    
+                }
+                
+                
+            });
+        });
         
     } else {
         [self saveDataSetWithDescription:sessionName];
@@ -766,12 +885,14 @@
     
     RNGridMenu *menu;
     
-    UIImage *upload = [UIImage imageNamed:@"upload2"];
-    UIImage *settings = [UIImage imageNamed:@"settings"];
-    UIImage *code = [UIImage imageNamed:@"barcode"];
-    UIImage *login = [UIImage imageNamed:@"users"];
-    UIImage *about = [UIImage imageNamed:@"info"];
-    UIImage *reset = [UIImage imageNamed:@"reset"];
+    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
+    
+    UIImage *upload = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"upload2" ofType:@"png"]];
+    UIImage *settings = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"settings" ofType:@"png"]];;
+    UIImage *code = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"barcode" ofType:@"png"]];
+    UIImage *login = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"users" ofType:@"png"]];
+    UIImage *about = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"info" ofType:@"png"]];
+    UIImage *reset = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"reset" ofType:@"png"]];
     
     void (^uploadBlock)() = ^() {
         NSLog(@"Upload button pressed");
@@ -785,9 +906,12 @@
         
     };
     void (^settingsBlock)() = ^() {
-        NSLog(@"Record Settings button pressed");
-        UIActionSheet *settings_menu = [[UIActionSheet alloc] initWithTitle:@"Settings" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Length", @"Name", nil];
-        [settings_menu showInView:self.view];
+        UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+        [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+        lengthField = [talert textFieldAtIndex:0];
+        lengthField.inputView = picker;
+        [self setPickerDefault];
+        [talert show];
         
     };
     void (^codeBlock)() = ^() {
@@ -804,14 +928,14 @@
     void (^loginBlock)() = ^() {
         NSLog(@"Login button pressed");
         
-        loginalert = [[UIAlertView alloc] initWithTitle:@"Login to iSENSE" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-        [loginalert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-        [loginalert textFieldAtIndex:0].delegate = self;
-        [loginalert textFieldAtIndex:1].delegate = self;
-        [loginalert textFieldAtIndex:0].placeholder = @"Email";
-        [loginalert textFieldAtIndex:0].tag = LOGIN_USER;
-        [loginalert textFieldAtIndex:1].tag = LOGIN_PASS;
-        [loginalert show];
+        mngr = [[CredentialManager alloc] initWithDelegate:self];
+        DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
+        [parent addChildViewController:mngr];
+        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        [alert setContentView:mngr.view];
+        [alert setDismissesOnBackdropTap:YES];
+        [alert show];
+
     };
     void (^aboutBlock)() = ^() {
         NSLog(@"About button pressed");
@@ -833,21 +957,14 @@
         userName = @"mobile.fake@example.com";
         passWord = @"mobile";
         [self login:userName withPassword:passWord];
-        login_status.text = [@"Logged in as: " stringByAppendingString: userName];
-        login_status.text = [login_status.text stringByAppendingString:@" Name: "];
-        login_status.text = [login_status.text stringByAppendingString:firstName];
-        login_status.text = [login_status.text stringByAppendingString:@" "];
-        login_status.text = [login_status.text stringByAppendingString:lastInitial];
-        login_status.text = [login_status.text stringByAppendingString:@". "];
         saver->hasLogin = true;
-        saver->hasName = true;
         saver->isLoggedIn = true;
     };
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
-    RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Settings" action:settingsBlock];
+    RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Set\nRecording\nLength" action:settingsBlock];
     RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
-    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Login" action:loginBlock];
+    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Credential\nManager" action:loginBlock];
     RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
     RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
     
@@ -858,36 +975,6 @@
     menu.delegate = self;
     
     [menu showInViewController:self center:CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height/2.f)];
-    
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    
-    
-    if (buttonIndex == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-        [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-        lengthField = [alert textFieldAtIndex:0];
-        lengthField.inputView = picker;
-        [self setPickerDefault];
-        [alert show];
-    } else if (buttonIndex == 1){
-        change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
-        
-        [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-        UITextField *last = [change_name textFieldAtIndex:1];
-        [last setSecureTextEntry:NO];
-        [last setPlaceholder:@"Last Initial"];
-        UITextField *first = [change_name textFieldAtIndex:0];
-        first.tag = FIRST_NAME_FIELD;
-        first.delegate = self;
-        last.delegate = self;
-        [first setPlaceholder:@"First Name"];
-        change_name.tag = ENTER_NAME;
-        [change_name show];
-    }
-    
-    
     
 }
 
@@ -929,95 +1016,13 @@
         }
     } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
         [self login:[alertView textFieldAtIndex:0].text withPassword:[alertView textFieldAtIndex:1].text];
-        [login_status setText:[@"Logged in as: " stringByAppendingString: [alertView textFieldAtIndex:0].text]];
         userName = [alertView textFieldAtIndex:0].text;
         passWord = [alertView textFieldAtIndex:1].text;
     } else if ([alertView.title isEqualToString:@"Publish to iSENSE?"]) {
         if ([title isEqualToString:@"Discard"]) {
             [self.view makeWaffle:@"Data discarded!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
         } else {
-            UIAlertView *dis = [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
-            [dis show];
             [self uploadData: @""];
-            [dis dismissWithClickedButtonIndex:nil animated:YES];
-            
-            if (!saveModeEnabled){
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"View data on iSENSE?" message:nil delegate:self cancelButtonTitle:@"Don't View" otherButtonTitles:@"View", nil];
-                dispatch_async(dispatch_get_main_queue(), ^{ [alert show]; });
-                
-            }
-            
-        }
-    } else if ([alertView.title isEqualToString:@"View data on iSENSE?"]) {
-        
-        if ([title isEqualToString:@"View"]) {
-            NSString *url;
-            NSLog(@"%@",session_num);
-            NSLog(@"\n%@", [NSString stringWithFormat:@"%d", [session_num intValue]]);
-            if (useDev) {
-                url = [DEV_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", projNum]];
-            } else {
-                url = [PROD_VIS_URL stringByAppendingString:[NSString stringWithFormat:@"%d", projNum]];
-            }
-            
-            [url stringByAppendingString:@"/data_sets/"];
-            [url stringByAppendingString:[NSString stringWithFormat:@"%d", [session_num intValue]]];
-            
-            NSLog(@"%@",url);
-            UIApplication *mySafari = [UIApplication sharedApplication];
-            NSURL *myURL = [[NSURL alloc]initWithString:[url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            [mySafari openURL:myURL];
-        }
-        
-    } else if ([alertView.title isEqualToString:@"Enter Name"]) {
-        
-        if ([title isEqualToString:@"Cancel"]) {
-            [change_name dismissWithClickedButtonIndex:0 animated:YES];
-            login_status.text = [@"Logged in as: " stringByAppendingString: userName];
-            login_status.text = [login_status.text stringByAppendingString:@" Name: "];
-            login_status.text = [login_status.text stringByAppendingString:firstName];
-            login_status.text = [login_status.text stringByAppendingString:@" "];
-            login_status.text = [login_status.text stringByAppendingString:lastInitial];
-            login_status.text = [login_status.text stringByAppendingString:@". "];
-            saver->hasName = true;
-        } else {
-            
-            int a1 = [[alertView textFieldAtIndex:0].text isEqualToString:@""] || [alertView textFieldAtIndex:0].text== nil;
-            int a2 = [[alertView textFieldAtIndex:1].text isEqualToString:@""] || [alertView textFieldAtIndex:1].text == nil;
-            int final = FALSE;
-            
-            if ( a1 ){
-                final = TRUE;
-            }
-            
-            if ( a2 ) {
-                final = TRUE;
-            }
-            
-            if ( final ) {
-                if (alertView.tag == FIRST_TIME_NAME) {
-                    change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-                    change_name.tag = FIRST_TIME_NAME;
-                } else {
-                    change_name = [[UIAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Done", nil];
-                    change_name.tag = ENTER_NAME;
-                }
-                
-                
-                [change_name setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-                UITextField *last = [change_name textFieldAtIndex:1];
-                [last setSecureTextEntry:NO];
-                [last setPlaceholder:@"Last Initial"];
-                UITextField *first = [change_name textFieldAtIndex:0];
-                first.tag = FIRST_NAME_FIELD;
-                first.delegate = self;
-                last.delegate = self;
-                [first setPlaceholder:@"First Name"];
-                [change_name show];
-                [self.view makeWaffle:@"Please Enter Your Name" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
-            } else {
-                [self changeName];
-            }
         }
     } else if ([alertView.title isEqualToString:@"Project ID"]){
         if ([title isEqualToString:@"Enter Project ID"]) {
@@ -1033,15 +1038,6 @@
         }
     } else if ([alertView.title isEqualToString:@"Enter Project ID"]) {
         projNum = [[alertView textFieldAtIndex:0].text intValue];
-        if (saveModeEnabled) {
-            projNum = -1;
-        } else {
-            if (useDev) {
-                projNum = DEV_DEFAULT_PROJ;
-            } else {
-                projNum = PROD_DEFAULT_PROJ;
-            }
-        }
         [self launchFieldMatchingViewControllerFromBrowse:FALSE];
     } else if ([alertView.title isEqualToString:@"No Connectivity"]) {
         if ([title isEqualToString:@"Try Again"]){
@@ -1066,27 +1062,58 @@
                 [[[[UIApplication sharedApplication] windows] objectAtIndex:1] makeWaffle:@"Project Name Cannot Be Empty" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_RED_X];
             } else {
                 
-                RProjectField *time = [[RProjectField alloc] init];
-                RProjectField *aX = [[RProjectField alloc] init];
-                RProjectField *aY = [[RProjectField alloc] init];
-                RProjectField *aZ = [[RProjectField alloc] init];
-                RProjectField *aT = [[RProjectField alloc] init];
+                UIAlertView *spinnerDialog = [self getDispatchDialogWithMessage:@"Creating Project..."];
+                [spinnerDialog show];
                 
-                time.name = @"Time";
-                time.type = [NSNumber numberWithInt:TYPE_TIMESTAMP];
-                NSString *b = @"Accel-";
-                aX.type = aY.type = aZ.type = aT.type=  [NSNumber numberWithInt:TYPE_NUMBER];
-                aX.name = [b stringByAppendingString:@"X"];
-                aY.name = [b stringByAppendingString:@"Y"];
-                aZ.name = [b stringByAppendingString:@"Z"];
-                aT.name = [b stringByAppendingString:@"Total"];
-                aX.unit = aY.unit = aZ.unit = aT.unit = @"m/s^2";
+                dispatch_queue_t queue = dispatch_queue_create("dispatch_queue_t_dialog", NULL);
+                dispatch_async(queue, ^{
+                    
+                    RProjectField *time = [[RProjectField alloc] init];
+                    RProjectField *aX = [[RProjectField alloc] init];
+                    RProjectField *aY = [[RProjectField alloc] init];
+                    RProjectField *aZ = [[RProjectField alloc] init];
+                    RProjectField *aT = [[RProjectField alloc] init];
+                    
+                    time.name = @"Time";
+                    time.type = [NSNumber numberWithInt:TYPE_TIMESTAMP];
+                    NSString *b = @"Accel-";
+                    aX.type = aY.type = aZ.type = aT.type=  [NSNumber numberWithInt:TYPE_NUMBER];
+                    aX.name = [b stringByAppendingString:@"X"];
+                    aY.name = [b stringByAppendingString:@"Y"];
+                    aZ.name = [b stringByAppendingString:@"Z"];
+                    aT.name = [b stringByAppendingString:@"Total"];
+                    aX.unit = aY.unit = aZ.unit = aT.unit = @"m/s^2";
+                    
+                    NSMutableArray *fields = [[NSMutableArray alloc] initWithObjects:time,aX,aY,aZ,aT, nil];
+                    
+                    projNum = [api createProjectWithName:projName andFields:fields];
+                    
+                    NSLog(@"projNum:%d", projNum);
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                        
+                        if (projNum != -1) {
+                            NSLog(@"Damn");
+                            [self.view makeWaffle:[NSString stringWithFormat:@"Project #%d successfully created!", projNum]
+                                         duration:WAFFLE_LENGTH_SHORT
+                                         position:WAFFLE_BOTTOM
+                                            image:WAFFLE_CHECKMARK];
+                            
+                            NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+                            [prefs setInteger:projNum forKey:KEY_PROJECT_ID];
+                        } else {
+                            [self.view makeWaffle:@"Project creation was unsuccessful."
+                                         duration:WAFFLE_LENGTH_SHORT
+                                         position:WAFFLE_BOTTOM
+                                            image:WAFFLE_RED_X];
+                        }
+                        [spinnerDialog dismissWithClickedButtonIndex:0 animated:YES];
+                        
+                    });
+                });
                 
-                NSMutableArray *fields = [[NSMutableArray alloc] initWithObjects:time,aX,aY,aZ,aT, nil];
                 
-                projNum = [api createProjectWithName:projName andFields:fields];
-                
-                NSLog(@"projNum:%d", projNum);
             }
             
         } else if (![API hasConnectivity]){
@@ -1094,21 +1121,6 @@
             [message show];
         }
     }
-}
-
-- (void) changeName {
-    
-    [change_name dismissWithClickedButtonIndex:0 animated:YES];
-    firstName = [change_name textFieldAtIndex:0].text;
-    lastInitial = [change_name textFieldAtIndex:1].text;
-    login_status.text = [@"Logged in as: " stringByAppendingString: userName];
-    login_status.text = [login_status.text stringByAppendingString:@" Name: "];
-    login_status.text = [login_status.text stringByAppendingString:firstName];
-    login_status.text = [login_status.text stringByAppendingString:@" "];
-    login_status.text = [login_status.text stringByAppendingString:lastInitial];
-    login_status.text = [login_status.text stringByAppendingString:@". "];
-    saver->hasName = true;
-    
 }
 
 - (void) createProject {
@@ -1135,8 +1147,8 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
-            if (success) {
+            RPerson *success = [api createSessionWithEmail:usernameInput andPassword:passwordInput];
+            if (success != nil) {
                 NSLog(@"Damn");
                 [self.view makeWaffle:[NSString stringWithFormat:@"Login as %@ successful", usernameInput]
                              duration:WAFFLE_LENGTH_SHORT
@@ -1148,23 +1160,13 @@
                 [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
                 [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
                 [prefs synchronize];
-                
-                RPerson *curUser = [api getCurrentUser];
-                
-                NSString *loginstat = [@"Logged in as: " stringByAppendingString:usernameInput];
-                loginstat = [loginstat stringByAppendingString:@", Name: "];
-                loginstat = [loginstat stringByAppendingString:firstName];
-                loginstat = [loginstat stringByAppendingString:@" "];
-                loginstat = [loginstat stringByAppendingString:lastInitial];
-                loginstat = [loginstat stringByAppendingString:@". "];
-                
-                [login_status setText:loginstat];
+            
                 userName = usernameInput;
                 passWord = passwordInput;
                 saver->hasLogin = TRUE;
                 saver->isLoggedIn = true;
             } else {
-                [self.view makeWaffle:@"Login failed"
+               [self.view makeWaffle:@"Login failed"
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_RED_X];
@@ -1194,10 +1196,7 @@
     return message;
 }
 
--(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)projectNum {
-    projNum = projectNum.intValue;
-    [self launchFieldMatchingViewControllerFromBrowse:TRUE];
-}
+
 
 - (void) launchFieldMatchingViewControllerFromBrowse:(bool)fromBrowse {
     // get the fields to field match

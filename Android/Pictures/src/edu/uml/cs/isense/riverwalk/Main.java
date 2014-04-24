@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -51,7 +50,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
-import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
@@ -62,7 +61,6 @@ import edu.uml.cs.isense.riverwalk.dialogs.CameraPreview;
 import edu.uml.cs.isense.riverwalk.dialogs.Continuous;
 import edu.uml.cs.isense.riverwalk.dialogs.Description;
 import edu.uml.cs.isense.riverwalk.dialogs.NoGps;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -131,8 +129,6 @@ public class Main extends Activity implements LocationListener {
 	private CameraPreview mPreview;
 	private FrameLayout preview;
 	
-	private boolean defaultProject = false;
-
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -159,9 +155,8 @@ public class Main extends Activity implements LocationListener {
 
 		api = API.getInstance();
 		api.useDev(useDev);
-		 
 		
-		attemptLoginOnAppStart();
+		CredentialManager.Login(mContext, api);
 		
 		uq = new UploadQueue("generalpictures", mContext, api);
 
@@ -171,7 +166,7 @@ public class Main extends Activity implements LocationListener {
 		} else {
 			projectLabel = (TextView) findViewById(R.id.projectLabel);
 			projectLabel.setText(getResources().getString(R.string.projectLabel)
-					+ mPrefs.getString("project_id", "None Set"));
+					+ mPrefs.getString("project_id", ""));
 		}
 		
 
@@ -233,9 +228,7 @@ public class Main extends Activity implements LocationListener {
 						Intent intent = new Intent(
 								MediaStore.ACTION_IMAGE_CAPTURE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-						
-
+						intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);	
 						startActivityForResult(intent, CAMERA_PIC_REQUESTED);
 						//OrientationManager.enableRotation(Main.this);
 
@@ -346,24 +339,25 @@ public class Main extends Activity implements LocationListener {
 	
 	
 	private void setDefaultProject(){ 
-		//TODO
 		/*if no project set or using a default project set the correct default project based on live or dev mode*/
 		
 		SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 
-	     if (api.isUsingDevMode() == false){
+	     if (api.isUsingDevMode() == true){
 	    	SharedPreferences.Editor editor = mPrefs.edit();
 	     	editor.putString("project_id", "248");
 	     	editor.commit();
-	     } else if (api.isUsingDevMode() == true) {
+	     } else if (api.isUsingDevMode() == false) {
 	    	 SharedPreferences.Editor editor = mPrefs.edit();
 		     editor.putString("project_id", "259");
 		     editor.commit();
 	     }
 		
 		projectLabel = (TextView) findViewById(R.id.projectLabel);
+		String project = mPrefs.getString("project_id", "");
+		Log.e("PRoject", project);
 		projectLabel.setText(getResources().getString(R.string.projectLabel)
-				+ mPrefs.getString("project_id", "None Set"));
+				+ project);
 	}
 	
 	// continuously take pictures in AsyncTask (a seperate thread)
@@ -426,7 +420,6 @@ public class Main extends Activity implements LocationListener {
 							}
 						}
 					});
-
 					curTime = System.currentTimeMillis();
 					uploader.run();
 					uq.buildQueueFromFile();
@@ -633,7 +626,7 @@ public class Main extends Activity implements LocationListener {
 
 		case R.id.MENU_ITEM_LOGIN:
 			startActivityForResult(new Intent(getApplicationContext(),
-					Login.class), LOGIN_REQUESTED);
+					CredentialManager.class), LOGIN_REQUESTED);
 			return true;
 
 		case R.id.MENU_ITEM_CONTINUOUS:
@@ -672,7 +665,7 @@ public class Main extends Activity implements LocationListener {
 				w.make(getResources().getString(R.string.now_in_mode) + other
 						+ getResources().getString(R.string.mode_type));
 				useDev = !useDev;
-
+				
 				if (cdt != null)
 					cdt.cancel();
 
@@ -681,14 +674,23 @@ public class Main extends Activity implements LocationListener {
 						public void run() {
 							api.deleteSession();
 							api.useDev(useDev);
+							runOnUiThread(new Runnable(){
+							    public void run(){
+							    	setDefaultProject();
+							    }
+							});
 						}
 					};
 					new Thread(r).start();
-				} else
+				} else {
 					api.useDev(useDev);
-				attemptLogin();
+					setDefaultProject();
+				}
+				CredentialManager.Login(this, api);
 				actionBarTapCount = 0;
-				setDefaultProject();
+				
+				
+				
 				break;
 			}
 
@@ -713,8 +715,7 @@ public class Main extends Activity implements LocationListener {
 
 		}
 
-		if (api.getCurrentUser() == null)
-			attemptLogin();
+		CredentialManager.Login(this, api);
 
 		// Rebuilds uploadQueue from saved info
 		uq.buildQueueFromFile();
@@ -724,17 +725,12 @@ public class Main extends Activity implements LocationListener {
 
 	// uploads the data if logged in and queue is not empty
 	private void manageUploadQueue() {
-
-		if (api.getCurrentUser() == null) {
-			w.make("Must be logged in to upload.", Waffle.IMAGE_X);
-			return;
-		}
-
+				
 		if (uq.emptyQueue()) {
 			w.make("No data to upload.", Waffle.IMAGE_X);
 			return;
 		}
-
+		//TODO
 		Intent i = new Intent().setClass(mContext, QueueLayout.class);
 		i.putExtra(QueueLayout.PARENT_NAME, uq.getParentName());
 		startActivityForResult(i, QUEUE_UPLOAD_REQUESTED);
@@ -849,42 +845,45 @@ public class Main extends Activity implements LocationListener {
 				projNum = "-1";
 
 			if (loc.getLatitude() != 0) {
-				f.timeMillis = curTime;
+				if (dfm.enabledFields[Fields.TIME])
+					f.timeMillis = curTime;
 				System.out.println("curTime =" + f.timeMillis);
-				f.latitude = loc.getLatitude();
+				if (dfm.enabledFields[Fields.LATITUDE])
+					f.latitude = loc.getLatitude();
 				System.out.println("Latitude =" + f.latitude);
-				f.longitude = loc.getLongitude();
+				if (dfm.enabledFields[Fields.LONGITUDE])
+					f.longitude = loc.getLongitude();
 				System.out.println("Longitude =" + f.longitude);
-
+				
 				dataJSON.put(dfm.putData());
 
 			} else { // no gps
 				loc = mLocationManager
 						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				f.timeMillis = curTime;
+				if (dfm.enabledFields[Fields.TIME])
+					f.timeMillis = curTime;
 				System.out.println("curTime (no gps) =" + f.timeMillis);
-				f.latitude = loc.getLatitude();
+				if (dfm.enabledFields[Fields.LATITUDE])
+					f.latitude = loc.getLatitude();
 				System.out.println("Latitude (no gps) =" + f.latitude);
-				f.longitude = loc.getLongitude();
+				if (dfm.enabledFields[Fields.LONGITUDE])
+					f.longitude = loc.getLongitude();
 				System.out.println("Longitude (no gps) =" + f.longitude);
-
 				dataJSON.put(dfm.putData());
 			}
 			
 			QDataSet ds;
-			
-			if (dfm.projectContainsTimeStamp() && dfm.projectContainsLocation()) {
-				ds = new QDataSet(name.getText().toString()
-						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
-						makeThisDatePretty(curTime), QDataSet.Type.BOTH,
-						dataJSON.toString(), picture, projNum, null);
-			} else {
-				Log.e("fantastag","fantastag");
-				ds = new QDataSet(name.getText().toString()
-						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
-						makeThisDatePretty(curTime), QDataSet.Type.PIC,
-						null, picture, projNum, null);
-			}
+			ds = new QDataSet(name.getText().toString()
+					+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
+					makeThisDatePretty(curTime), QDataSet.Type.BOTH,
+					dataJSON.toString(), picture, projNum, null);
+				
+				/*upload to project not a data set*/
+//				ds = new QDataSet(name.getText().toString()
+//						+ (descriptionStr.equals("") ? "" : ": " + descriptionStr),
+//						makeThisDatePretty(curTime), QDataSet.Type.PIC,
+//						null, picture, projNum, null);
+
 			
 			
 
@@ -934,25 +933,13 @@ public class Main extends Activity implements LocationListener {
 				projectLabel.setText(getResources().getString(
 						R.string.projectLabel)
 						+ eidString);
-				
-				defaultProject = false;
-				
+								
 				dfm = new DataFieldManager(Integer.parseInt(eidString), api,
 						mContext, f);
 				dfm.getOrder();
 			}
-		} else if (requestCode == LOGIN_REQUESTED) { // shows dialog to login
-			if (resultCode == Activity.RESULT_OK) {
-
-				w.make("Login successful", Waffle.LENGTH_SHORT,
-						Waffle.IMAGE_CHECK);
-
-			} else if (resultCode == Login.RESULT_ERROR) {
-
-				startActivityForResult(new Intent(mContext, Login.class),
-						LOGIN_REQUESTED);
-
-			}
+		} else if (requestCode == LOGIN_REQUESTED) { 
+			
 		} else if (requestCode == NO_GPS_REQUESTED) { // asks the user if they
 														// would like to enable
 														// gps
@@ -988,7 +975,7 @@ public class Main extends Activity implements LocationListener {
 				Intent iDesc = new Intent(Main.this, Description.class);
 				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
 			}
-		}
+		} 
 	}
 
 	@Override
@@ -1056,59 +1043,6 @@ public class Main extends Activity implements LocationListener {
 			uq.buildQueueFromFile();
 
 			uploadError = false;
-		}
-	}
-	
-	// gets the user's name if not already provided + login to web site
-		private void attemptLoginOnAppStart() {
-
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			if (mPrefs.getString(
-					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-					.equals("")
-					&& mPrefs.getString(
-							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-							"").equals("")) {
-				mPrefs.edit()
-				.putString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-						Login.DEFAULT_USERNAME).commit();
-				mPrefs.edit()
-				.putString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						Login.DEFAULT_PASSWORD).commit();
-			}
-
-			if (Connection.hasConnectivity(mContext)) {
-				new LoginTask().execute();
-
-			}
-		}
-
-	// gets the user's name if not already provided + login to web site
-	private void attemptLogin() {
-
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				mContext, getSharedPreferences(
-						Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						Context.MODE_PRIVATE));
-
-		if (mPrefs.getString(
-				Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "")
-				.equals("")
-				&& mPrefs.getString(
-						Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-						"").equals("")) {
-			return;
-		}
-
-		if (Connection.hasConnectivity(mContext)) {
-			new LoginTask().execute();
-
 		}
 	}
 
@@ -1209,27 +1143,5 @@ public class Main extends Activity implements LocationListener {
 		return sdf.format(time);
 	}
 
-	// Attempts to login with current user information
-	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
-
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					mContext, mContext.getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			boolean success = api
-					.createSession(
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-									""),
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-									""));
-			return success;
-		}
-
-	}
 
 }
