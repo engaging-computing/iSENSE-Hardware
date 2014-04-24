@@ -25,7 +25,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, items, recordLength, countdown, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,proj_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, mngr,alert, buttonText, countdownLbl;
+@synthesize start, menuButton, vector_status, items, recordLength, countdown, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,proj_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, mngr,alert, buttonText, countdownLbl, menu;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -159,8 +159,6 @@
     
     [super viewDidLoad];
     
-    sessionName = @"";
-    
     formatter = [[NSNumberFormatter alloc] init];
     
     [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
@@ -169,7 +167,7 @@
     
     [formatter setRoundingMode: NSNumberFormatterRoundUp];
     
-    useDev = TRUE;
+    useDev = FALSE;
     
     api = [API getInstance];
     [api useDev: useDev];
@@ -284,8 +282,106 @@
     [[UIButton appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)] forState:UIControlStateHighlighted];
     [[UISearchBar appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
     [[UISearchBar appearance] setScopeBarBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
+    
+    [self setUpMenu:isenseBundle];
+    
 
     
+}
+
+- (void) setUpMenu: (NSBundle*) isenseBundle {
+    UIImage *upload = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"upload2" ofType:@"png"]];
+    UIImage *settings = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"settings" ofType:@"png"]];;
+    UIImage *code = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"barcode" ofType:@"png"]];
+    UIImage *login = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"users" ofType:@"png"]];
+    UIImage *about = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"info" ofType:@"png"]];
+    UIImage *reset = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"reset" ofType:@"png"]];
+    
+    void (^uploadBlock)() = ^() {
+        NSLog(@"Upload button pressed");
+        if (dataSaver.dataQueue.count > 0) {
+            QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
+            queueUploader.title = @"Upload saved data";
+            menu = nil;
+            [self.navigationController pushViewController:queueUploader animated:YES];
+        } else {
+            [self.view makeWaffle:@"No data sets to upload!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
+            menu = nil;
+        }
+        
+    };
+    void (^settingsBlock)() = ^() {
+        UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+        [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+        lengthField = [talert textFieldAtIndex:0];
+        lengthField.inputView = picker;
+        [self setPickerDefault];
+        menu = nil;
+        [talert show];
+        
+    };
+    void (^codeBlock)() = ^() {
+        NSLog(@"project button pressed");
+        project = [[UIAlertView alloc] initWithTitle:@"Project ID" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+        [project addButtonWithTitle:@"Enter Project ID"];
+        [project addButtonWithTitle:@"Browse"];
+        [project addButtonWithTitle:@"QR Code"];
+        [project addButtonWithTitle:@"Create New Project"];
+        [project addButtonWithTitle:@"Done"];
+        menu = nil;
+        [project show];
+        
+    };
+    void (^loginBlock)() = ^() {
+        NSLog(@"Login button pressed");
+        
+        mngr = [[CredentialManager alloc] initWithDelegate:self];
+        DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
+        [parent addChildViewController:mngr];
+        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        [alert setContentView:mngr.view];
+        [alert setDismissesOnBackdropTap:YES];
+        menu = nil;
+        [alert show];
+        
+    };
+    void (^aboutBlock)() = ^() {
+        NSLog(@"About button pressed");
+        
+        AboutViewController *about;
+        // Override point for customization after application launch.
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            about = [[AboutViewController alloc] initWithNibName:@"AboutViewController_iPhone" bundle:nil];
+        } else {
+            about = [[AboutViewController alloc] initWithNibName:@"AboutViewController_iPad" bundle:nil];
+        }
+        menu = nil;
+        [self.navigationController pushViewController:about animated:YES];
+        
+    };
+    void (^resetBlock)() = ^() {
+        NSLog(@"Reset button pressed");
+        countdown = recordLength = 10;
+        userName = @"mobile.fake@example.com";
+        passWord = @"mobile";
+        [self login:userName withPassword:passWord];
+        saver->hasLogin = true;
+        saver->isLoggedIn = true;
+        menu = nil;
+    };
+    
+    RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
+    RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Set\nRecording\nLength" action:settingsBlock];
+    RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
+    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Credential\nManager" action:loginBlock];
+    RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
+    RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
+    
+    items = [[NSArray alloc] initWithObjects:uploadItem, recordSettingsItem, codeItem, loginItem, aboutItem, resetItem, nil];
+    
+    menu = [[RNGridMenu alloc] initWithItems:items];
+    
+    menu.delegate = self;
 }
 
 - (UIImage *)imageWithColor:(UIColor *)color {
@@ -846,6 +942,8 @@
             
         }
         
+        sessionName = [NSString stringWithFormat:@"%@.", [api getCurrentUser].name];
+        
         UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
         [message show];
         
@@ -882,99 +980,17 @@
 
 - (void)showMenu {
     
+    if (menu == nil) {
+        NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
+        [self setUpMenu:isenseBundle];
+    }
     
-    RNGridMenu *menu;
-    
-    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
-    
-    UIImage *upload = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"upload2" ofType:@"png"]];
-    UIImage *settings = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"settings" ofType:@"png"]];;
-    UIImage *code = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"barcode" ofType:@"png"]];
-    UIImage *login = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"users" ofType:@"png"]];
-    UIImage *about = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"info" ofType:@"png"]];
-    UIImage *reset = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"reset" ofType:@"png"]];
-    
-    void (^uploadBlock)() = ^() {
-        NSLog(@"Upload button pressed");
-        if (dataSaver.dataQueue.count > 0) {
-            QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
-            queueUploader.title = @"Upload saved data";
-            [self.navigationController pushViewController:queueUploader animated:YES];
-        } else {
-            [self.view makeWaffle:@"No data sets to upload!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-        }
-        
-    };
-    void (^settingsBlock)() = ^() {
-        UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-        [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-        lengthField = [talert textFieldAtIndex:0];
-        lengthField.inputView = picker;
-        [self setPickerDefault];
-        [talert show];
-        
-    };
-    void (^codeBlock)() = ^() {
-        NSLog(@"project button pressed");
-        project = [[UIAlertView alloc] initWithTitle:@"Project ID" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
-        [project addButtonWithTitle:@"Enter Project ID"];
-        [project addButtonWithTitle:@"Browse"];
-        [project addButtonWithTitle:@"QR Code"];
-        [project addButtonWithTitle:@"Create New Project"];
-        [project addButtonWithTitle:@"Done"];
-        [project show];
-        
-    };
-    void (^loginBlock)() = ^() {
-        NSLog(@"Login button pressed");
-        
-        mngr = [[CredentialManager alloc] initWithDelegate:self];
-        DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
-        [parent addChildViewController:mngr];
-        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-        [alert setContentView:mngr.view];
-        [alert setDismissesOnBackdropTap:YES];
-        [alert show];
-
-    };
-    void (^aboutBlock)() = ^() {
-        NSLog(@"About button pressed");
-        
-        AboutViewController *about;
-        // Override point for customization after application launch.
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            about = [[AboutViewController alloc] initWithNibName:@"AboutViewController_iPhone" bundle:nil];
-        } else {
-            about = [[AboutViewController alloc] initWithNibName:@"AboutViewController_iPad" bundle:nil];
-        }
-        
-        [self.navigationController pushViewController:about animated:YES];
-        
-    };
-    void (^resetBlock)() = ^() {
-        NSLog(@"Reset button pressed");
-        countdown = recordLength = 10;
-        userName = @"mobile.fake@example.com";
-        passWord = @"mobile";
-        [self login:userName withPassword:passWord];
-        saver->hasLogin = true;
-        saver->isLoggedIn = true;
-    };
-    
-    RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
-    RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Set\nRecording\nLength" action:settingsBlock];
-    RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
-    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Credential\nManager" action:loginBlock];
-    RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
-    RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
-    
-    items = [[NSArray alloc] initWithObjects:uploadItem, recordSettingsItem, codeItem, loginItem, aboutItem, resetItem, nil];
-    
-    menu = [[RNGridMenu alloc] initWithItems:items];
-    
-    menu.delegate = self;
-    
-    [menu showInViewController:self center:CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height/2.f)];
+    if (![menu isVisible]) {
+       [menu showInViewController:self center:CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height/2.f)];
+    } else {
+        [menu dismissAnimated:YES];
+        menu = nil;
+    }
     
 }
 

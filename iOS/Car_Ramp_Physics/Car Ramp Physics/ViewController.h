@@ -94,6 +94,7 @@ typedef struct _RotationDataSaver{
 @property(nonatomic, retain) NSArray *items;
 @property(nonatomic, strong) CredentialManager *mngr;
 @property (strong, nonatomic) DLAVAlertView *alert;
+@property(nonatomic, strong) RNGridMenu *menu;
 
 //Boolean variables
 @property (nonatomic) BOOL running;

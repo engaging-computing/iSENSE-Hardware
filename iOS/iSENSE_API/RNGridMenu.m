@@ -595,7 +595,7 @@ static RNGridMenu *rn_visibleGridMenu;
 - (void)showInViewController:(UIViewController *)parentViewController center:(CGPoint)center {
     NSParameterAssert(parentViewController != nil);
     
-    if (rn_visibleGridMenu != nil) {
+    if ([self isVisible]) {
         [rn_visibleGridMenu dismissAnimated:NO];
     }
     
@@ -656,6 +656,10 @@ static RNGridMenu *rn_visibleGridMenu;
             [self.menuView.layer addAnimation:animationGroup forKey:nil];
         }
     }];
+}
+
+- (BOOL) isVisible {
+    return (rn_visibleGridMenu != nil);
 }
 
 - (void)dismissAnimated:(BOOL)animated {
