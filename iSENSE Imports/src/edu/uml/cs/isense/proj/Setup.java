@@ -1,6 +1,5 @@
 package edu.uml.cs.isense.proj;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -16,14 +15,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.Login;
-import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.objects.RProjectField;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
 /**
