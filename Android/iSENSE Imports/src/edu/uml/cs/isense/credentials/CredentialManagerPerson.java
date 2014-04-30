@@ -25,8 +25,6 @@ public class CredentialManagerPerson extends Fragment {
 	TextView email;
 	Bitmap bmp;
     URL gravatar_url;
-
-	
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +52,7 @@ public class CredentialManagerPerson extends Fragment {
 		logout.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				API.getInstance().deleteSession();
-				((PersonWrapper) getActivity()).WrapperLogout();
+				((PersonWrapper) getActivity()).logout();
 			}
 		});
         
@@ -92,11 +90,13 @@ public class CredentialManagerPerson extends Fragment {
 	    	 }
     	 }
 	 }
-
-	
 }
 
-/*any activity that uses this fragment must implement PersonWrapper */
+/**
+ * Any activity that uses this fragment must implement PersonWrapper
+ * 
+ * @author Bobby Donald
+ */
 interface PersonWrapper {
-    void WrapperLogout();
+    abstract void logout();
 }

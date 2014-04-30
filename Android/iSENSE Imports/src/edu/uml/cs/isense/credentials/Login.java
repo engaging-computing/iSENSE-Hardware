@@ -24,9 +24,9 @@ import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 public class Login extends Activity {
 
 	/* These are the keys for obtain the user credential preferences. */
-	public static final String PREFERENCES_KEY_OBSCURRED_USER_INFO = "OBSCURRED_USER_INFO";
-	public static final String PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME = "USERNAME";
-	public static final String PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD = "PASSWORD";
+	private static final String KEY_USER_INFO = "OBSCURRED_USER_INFO";
+	private static final String SUBKEY_USERNAME = "USERNAME";
+	private static final String SUBKEY_PASSWORD = "PASSWORD";
 
 	/* This is the key used to sent an error message to LoginError. */
 	public static final String INTENT_KEY_MESSAGE = "MESSAGE";
@@ -45,7 +45,7 @@ public class Login extends Activity {
 
 	private API api;
 	private String message = "";
-	private Context baseContext;
+	private Context baseContext = null;
 	private EditText username, password;
 
 	@Override
@@ -64,14 +64,10 @@ public class Login extends Activity {
 		 * preferences.
 		 */
 		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-				baseContext, baseContext.getSharedPreferences(
-						PREFERENCES_KEY_OBSCURRED_USER_INFO, MODE_PRIVATE));
-		username.setText(mPrefs.getString(
-				PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-				DEFAULT_USERNAME));
-		password.setText(mPrefs.getString(
-				PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-				DEFAULT_PASSWORD));
+				baseContext, baseContext.getSharedPreferences(KEY_USER_INFO,
+						MODE_PRIVATE));
+		username.setText(mPrefs.getString(SUBKEY_USERNAME, DEFAULT_USERNAME));
+		password.setText(mPrefs.getString(SUBKEY_PASSWORD, DEFAULT_PASSWORD));
 
 		final Button ok = (Button) findViewById(R.id.button_ok);
 		final Button cancel = (Button) findViewById(R.id.button_cancel);
@@ -137,32 +133,96 @@ public class Login extends Activity {
 		@Override
 		protected Void doInBackground(Void... voids) {
 			// Login call (passes success to onPostExecute)
-			api.createSession(username.getText().toString(),
-					password.getText().toString());
+			api.createSession(username.getText().toString(), password.getText()
+					.toString());
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void v) {
-			/* Saved the user's credentials. */
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					baseContext, baseContext.getSharedPreferences(
-							PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							MODE_PRIVATE));
-			mPrefs.edit()
-			.putString(
-					PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-					username.getText().toString()).commit();
-			mPrefs.edit()
-			.putString(
-					PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-					password.getText().toString()).commit();
 
-			// return success
+			// Save the user credentials
+			setCredentials(baseContext, username.getText().toString(), password
+					.getText().toString());
+
+			// Return success
 			setResult(RESULT_OK);
 			finish();
 		}
 
+	}
+
+	/**
+	 * Saves the username into SharedPreferences.
+	 * 
+	 * @param appContext
+	 * @param username
+	 */
+	private static void setUsername(Context appContext, String username) {
+
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				appContext, appContext.getSharedPreferences(KEY_USER_INFO,
+						MODE_PRIVATE));
+		mPrefs.edit().putString(SUBKEY_USERNAME, username).commit();
+	}
+
+	/**
+	 * Saves the password into SharedPreferences.
+	 * 
+	 * @param appContext
+	 * @param password
+	 */
+	private static void setPassword(Context appContext, String password) {
+
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				appContext, appContext.getSharedPreferences(KEY_USER_INFO,
+						MODE_PRIVATE));
+		mPrefs.edit().putString(SUBKEY_PASSWORD, password).commit();
+	}
+
+	/**
+	 * Saves username and password into SharedPreferences.
+	 * 
+	 * @param appContext
+	 * @param username
+	 * @param password
+	 */
+	public static void setCredentials(Context appContext, String username,
+			String password) {
+		setUsername(appContext, username);
+		setPassword(appContext, password);
+	}
+
+	/**
+	 * Retrieves the username of the current logged in user.
+	 * 
+	 * @param appContext
+	 *            The context of the calling activity.
+	 * @return username
+	 */
+	public static String getUsername(Context appContext) {
+		
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				appContext, appContext.getSharedPreferences(KEY_USER_INFO,
+						Context.MODE_PRIVATE));
+
+		return mPrefs.getString(SUBKEY_USERNAME, "");
+	}
+
+	/**
+	 * Retrieves the password of the current logged in user.
+	 * 
+	 * @param appContext
+	 *            The context of the calling activity.
+	 * @return password
+	 */
+	public static String getPassword(Context appContext) {
+
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				appContext, appContext.getSharedPreferences(KEY_USER_INFO,
+						Context.MODE_PRIVATE));
+
+		return mPrefs.getString(SUBKEY_PASSWORD, "");
 	}
 
 }

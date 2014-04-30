@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -29,25 +28,24 @@ import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.objects.RProjectField;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 /**
- * This Activity is designed to allow users to create a project on the
- * iSENSE website.
+ * This Activity is designed to allow users to create a project on the iSENSE
+ * website.
  * 
  * @author iSENSE Android Development Team
  */
 public class ProjectCreate extends Activity {
 
 	/**
-	 * Constant for an intent extra that can be passed as a boolean value
-	 * as true if the implementation wants to theme the navigation bar
-	 * to look rSENSE-y.
+	 * Constant for an intent extra that can be passed as a boolean value as
+	 * true if the implementation wants to theme the navigation bar to look
+	 * rSENSE-y.
 	 */
 	public static final String THEME_NAV_BAR = "theme_nav_bar_constant";
-	
+
 	private static Context mContext;
 	private static Waffle w;
 
@@ -61,7 +59,7 @@ public class ProjectCreate extends Activity {
 	private ArrayList<RProjectField> fields;
 
 	private int newProjID;
-	
+
 	/**
 	 * Constant for the new project ID returned by this class.
 	 */
@@ -96,8 +94,8 @@ public class ProjectCreate extends Activity {
 				ActionBar bar = getActionBar();
 				bar.setBackgroundDrawable(new ColorDrawable(Color
 						.parseColor("#111133")));
-				bar.setIcon(getResources()
-						.getDrawable(R.drawable.rsense_logo_right));
+				bar.setIcon(getResources().getDrawable(
+						R.drawable.rsense_logo_right));
 				bar.setDisplayShowTitleEnabled(false);
 				int actionBarTitleId = Resources.getSystem().getIdentifier(
 						"action_bar_title", "id", "android");
@@ -108,10 +106,10 @@ public class ProjectCreate extends Activity {
 						title.setTextSize(24.0f);
 					}
 				}
-				
+
 				// make the actionbar clickable
 				bar.setDisplayHomeAsUpEnabled(true);
-			}	
+			}
 		}
 
 		projectName = (EditText) findViewById(R.id.project_create_name);
@@ -129,7 +127,8 @@ public class ProjectCreate extends Activity {
 			public void onClick(View v) {
 				// check to see if the project has a name
 				if (projectName.getText().toString().length() == 0) {
-					w.make(getResources().getString(R.string.please_enter_proj_name),
+					w.make(getResources().getString(
+							R.string.please_enter_proj_name),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					projectName.setError("Enter a new project name");
 					return;
@@ -138,7 +137,8 @@ public class ProjectCreate extends Activity {
 
 				// check to see if the project has fields
 				if (fieldScroll.getChildCount() == 0) {
-					w.make(getResources().getString(R.string.please_enter_field),
+					w.make(getResources()
+							.getString(R.string.please_enter_field),
 							Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 					return;
 				} else {
@@ -146,11 +146,13 @@ public class ProjectCreate extends Activity {
 						View cell = fieldScroll.getChildAt(i);
 						EditText fieldName = (EditText) cell
 								.findViewById(R.id.project_field_name);
-						if (fieldName != null && fieldName.getText().toString().length() == 0) {
+						if (fieldName != null
+								&& fieldName.getText().toString().length() == 0) {
 							int fieldNum = i + 1;
-							w.make(getResources().getString(R.string.please_enter_name_field)
-									+ fieldNum,
-									Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
+							w.make(getResources().getString(
+									R.string.please_enter_name_field)
+									+ fieldNum, Waffle.LENGTH_SHORT,
+									Waffle.IMAGE_WARN);
 							fieldName.setError("Enter a field name");
 							return;
 						} else if (fieldName != null)
@@ -175,7 +177,8 @@ public class ProjectCreate extends Activity {
 					if (locationCount == 0)
 						locationCount++;
 					else {
-						w.make(getResources().getString(R.string.one_location_only),
+						w.make(getResources().getString(
+								R.string.one_location_only),
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 						return;
 					}
@@ -183,11 +186,12 @@ public class ProjectCreate extends Activity {
 					if (timestampCount == 0)
 						timestampCount++;
 					else {
-						w.make(getResources().getString(R.string.one_timestamp_only),
+						w.make(getResources().getString(
+								R.string.one_timestamp_only),
 								Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 						return;
 					}
-				
+
 				addFieldType(position);
 			}
 
@@ -291,9 +295,8 @@ public class ProjectCreate extends Activity {
 	}
 
 	private void needLogin() {
-		w.make(getResources().getString(R.string.login_isense_first), 
-				Waffle.LENGTH_SHORT,
-				Waffle.IMAGE_WARN);
+		w.make(getResources().getString(R.string.login_isense_first),
+				Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 
 		Intent iLogin = new Intent(mContext, Login.class);
 		startActivityForResult(iLogin, LOGIN_REQUESTED);
@@ -375,20 +378,9 @@ public class ProjectCreate extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					ProjectCreate.mContext,
-					ProjectCreate.mContext.getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-			
-			api
-					.createSession(
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-									""),
-							mPrefs.getString(
-									Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-									""));
+			api.createSession(
+					Login.getUsername(ProjectCreate.mContext),
+					Login.getPassword(ProjectCreate.mContext));
 
 			publishProgress(100);
 			return null;
@@ -460,32 +452,31 @@ public class ProjectCreate extends Activity {
 		if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
-				w.make(getResources().getString(R.string.login_success), 
-						Waffle.LENGTH_LONG,
-						Waffle.IMAGE_CHECK);
+				w.make(getResources().getString(R.string.login_success),
+						Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 
 				createProject();
 
 			} else if (resultCode == Login.RESULT_ERROR) {
-				
+
 				Intent i = new Intent(mContext, Login.class);
 				startActivityForResult(i, LOGIN_REQUESTED);
-				
+
 			}
 		}
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	    case android.R.id.home:
-	    	onBackPressed();
-	        return true;
-	    default:
-	        return super.onOptionsItemSelected(item);
-	    }
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
