@@ -18,11 +18,15 @@
 #import "PWAppDelegate.h"
 #import "Constants.h"
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "ProjectBrowserViewController.h"
+#import "CredentialManager.h"
+#import "ImageManipulator.h"
+#import <DLAVAlertViewController.h>
 
-@interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ProjectBrowseViewControllerDelegate, ZBarReaderDelegate>
+@interface PWViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate, UIActionSheetDelegate, RNGridMenuDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ZBarReaderDelegate, ProjectBrowserDelegate, CredentialManagerDelegate>
 
 @property(nonatomic) IBOutlet UITextField *groupNameField;
-@property(nonatomic) IBOutlet UILabel *projectIDLbl, *picCntLbl, *login_status;
+@property(nonatomic) IBOutlet UILabel *projectIDLbl, *picCntLbl;
 @property(nonatomic) IBOutlet UIButton *takeButton;
 @property(nonatomic) IBOutlet UIBarButtonItem *menuButton;
 @property(nonatomic) IBOutlet UIButton *selectButton;
@@ -36,8 +40,11 @@
 @property(nonatomic) int projID;
 @property (nonatomic, strong) UIPopoverController *popOver;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) DLAVAlertView *alert;
+@property (strong, nonatomic) CredentialManager *mngr;
 
 @property (nonatomic) BOOL useDev;
+@property (nonatomic) BOOL setupDone;
 
 - (void) callMenu;
 - (IBAction)takePicture:(id)sender;

@@ -199,7 +199,7 @@
                 [jobj setObject:currentDS.data forKey:@"data"];
                 jobj = [[api rowsToCols:jobj] mutableCopy];
                 
-                returnID = [api jsonDataUploadWithId:currentDS.projID.intValue withData:jobj andName:currentDS.name];
+                returnID = [api uploadDataWithId:currentDS.projID.intValue withData:jobj andName:currentDS.name];
                 NSLog(@"Data set ID: %d", returnID);
                 
                 if (returnID == 0 || returnID == -1) {
@@ -220,7 +220,8 @@
                 for (int i = 0; i < pictures.count; i++) {
             
                     // track the images that fail to upload
-                    if (![api uploadProjectMediaWithId:currentDS.projID.intValue withFile:pictures[i] andName:currentDS.name]) {
+                    
+                    if ([api uploadMediaWithId:currentDS.projID.intValue withFile:pictures[i] andName:currentDS.name withTarget:PROJECT] == -1) {
                         dataSetsFailed++;
                         failedAtLeastOnce = true;
                         [newPicturePaths addObject:pictures[i]];

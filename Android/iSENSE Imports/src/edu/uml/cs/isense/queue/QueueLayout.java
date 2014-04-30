@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.FieldMatching;
@@ -56,6 +58,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static final int ALTER_DATA_PROJ_REQUESTED = 9004;
 	private static final int QUEUE_DELETE_SELECTED_REQUESTED = 9005;
 	private static final int FIELD_MATCHING_REQUESTED = 9006;
+	private static final int CREDENTIAL_KEY_REQUESTED = 9007;
+
 
 	private static final int QUEUE_BOX_DESELECTED = 0;
 	private static final int QUEUE_BOX_SELECTED = 1;
@@ -78,6 +82,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private Waffle w;
 	private API api;
 	private DataFieldManager dfm;
+	
 	
 	private LinkedList<String> dataSetUploadStatus;
 
@@ -265,13 +270,20 @@ public class QueueLayout extends Activity implements OnClickListener {
 				w.make("No internet connection found", Waffle.IMAGE_X);
 				return;
 			}
-
+			
+			// TODO remove login task and replace with credential managers
 			if (api.getCurrentUser() == null) {
-				new LoginTask().execute();
-				return;
+				Log.e("queueLayout runUploadSanityChecks()", "api current user is null");
+				
+				//Call intent to get a key
+				Intent key_intent = new Intent().setClass(mContext, CredentialManagerKey.class);
+				startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);		
+				
+//				new LoginTask().execute();
+//				return;
+			} else {
+				prepareForUpload();
 			}
-
-			prepareForUpload();
 			
 		} else {
 			Intent iNoInitialProject = new Intent(QueueLayout.this,
@@ -541,8 +553,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 				SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE",
 						0);
-				String projectInput = mPrefs.getString("project_id", "");
+				String projectInput = mPrefs.getString("project_id", "-1");
 
+				Log.e("DataSet -- QLayout -- Pre Change", lastDataSetLongClicked.getData().toString());
+				
 				LinkedList<String> fields = cfd
 						.getFieldsForProject(projectInput);
 				if (fields != null) {
@@ -555,8 +569,13 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 					uq.addDataSetToQueue(alter);
 					addViewToScrollQueue(alter);
-				} else
+					
+					Log.e("DataSet -- QLayout -- Post Change", alter.getData().toString());
+
+				} else {
+					Log.e("DataSet", "Starting prepForFieldMatchTask()");
 					new PrepForFieldMatchTask().execute();
+				}
 
 			}
 		} else if (requestCode == QUEUE_DELETE_SELECTED_REQUESTED) {
@@ -595,6 +614,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					QDataSet alter = lastDataSetLongClicked;
 					alter.setProj(projectInput);
 					alter.setFields(FieldMatching.acceptedFields);
+					
+					Log.e("in QueueLayout?", alter.getData().toString());
 
 					uq.removeItemWithKey(lastDataSetLongClicked.key);
 					scrollQueue.removeView(lastViewLongClicked);
@@ -607,6 +628,12 @@ public class QueueLayout extends Activity implements OnClickListener {
 				Intent iProj = new Intent(mContext, Setup.class);
 				iProj.putExtra("from_where", "queue");
 				startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+			}
+		} else if (requestCode == CREDENTIAL_KEY_REQUESTED) {
+			if (resultCode == RESULT_OK) {
+				prepareForUpload();
+			} else if (resultCode == RESULT_CANCELED) {
+				//TODO cancel upload 
 			}
 		}
 
@@ -633,7 +660,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		protected Void doInBackground(Void... voids) {
 
 			SharedPreferences mPrefs = getSharedPreferences("PROJID_QUEUE", 0);
-			String projectInput = mPrefs.getString("project_id", "");
+			String projectInput = mPrefs.getString("project_id", "-1");
 
 			Fields f = new Fields();
 			dfm = new DataFieldManager(Integer.parseInt(projectInput), api,
@@ -725,7 +752,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					boolean isFromDataCollector = (parentName
 							.equals("datacollector"))
 							|| (parentName.equals("carrampphysics"))
-							|| (parentName.equals("data_walk"));
+							|| (parentName.equals("data_walk"))
+							|| (parentName.equals("canobielake"));
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE,
@@ -787,7 +815,8 @@ public class QueueLayout extends Activity implements OnClickListener {
 					Intent iAlterDataSet = new Intent(mContext,
 							QueueAlter.class);
 					iAlterDataSet.putExtra(QueueAlter.IS_ALTERABLE, false);
-					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ, false);
+					iAlterDataSet.putExtra(QueueAlter.SELECT_PROJ,
+							lastDataSetLongClicked.getProjID().equals("-1"));
 					iAlterDataSet.putExtra("parent", QUEUE_PARENT);
 					startActivityForResult(iAlterDataSet,
 							ALTER_DATASET_REQUESTED);
@@ -886,7 +915,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
 							Context.MODE_PRIVATE));
 
-			success = api
+			api
 					.createSession(
 								mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, Login.DEFAULT_USERNAME),
 								mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, Login.DEFAULT_PASSWORD));

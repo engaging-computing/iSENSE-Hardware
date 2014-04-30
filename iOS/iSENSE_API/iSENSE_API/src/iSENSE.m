@@ -424,7 +424,7 @@ static iSENSE *_iSENSE = nil;
 		id img;
 		[i setImages:[NSMutableArray new]];
 		while (img = [e nextObject]) {
-			Image *image = [Image new];
+			OldImage *image = [OldImage new];
 			[image setTitle:[img objectForKey:@"title"]];
 			[image setExperiment_id:[img objectForKey:@"experiment_id"]];
 			[image setPicture_id:[img objectForKey:@"picture_id"]];
@@ -513,7 +513,7 @@ static iSENSE *_iSENSE = nil;
 		NSEnumerator *e = [data objectEnumerator];
 		id object;
 		while (object = [e nextObject]) {
-			Image *image = [Image new];
+			OldImage *image = [OldImage new];
 			
 			[image setTitle:[object objectForKey:@"title"]];
 			[image setExperiment_id:[object objectForKey:@"experiment_id"]];

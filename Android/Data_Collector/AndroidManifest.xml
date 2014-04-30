@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.collector"
-    android:versionCode="32"
-    android:versionName="3.6.1" >
+    android:versionCode="33"
+    android:versionName="4.0.0" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -196,6 +196,16 @@
             android:label="@string/login_error_prompt"
             android:theme="@style/theme_dialog_white"
             tools:ignore="MissingRegistered" />
+         <activity
+            android:name="edu.uml.cs.isense.credentials.CredentialManager"
+            android:label="Credential Manager"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.CredentialManagerKey"
+            android:label="Add Contributor Key"
+            android:theme="@style/AppThemeDialog" />
 
         <service android:name="edu.uml.cs.isense.collector.DataCollectorService" >
         </service>

@@ -295,9 +295,8 @@
             
         } else if (buttonIndex == OPTION_BROWSE_PROJECTS) {
             
-            ProjectBrowseViewController *browseView = [[ProjectBrowseViewController alloc] init];
+            ProjectBrowserViewController *browseView = [[ProjectBrowserViewController alloc] initWithDelegate:self];
             browseView.title = @"Browse Projects";
-            browseView.delegate = self;
             [self.navigationController pushViewController:browseView animated:YES];
             
         }
@@ -331,9 +330,9 @@
     }
 }
 
--(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)project {
+- (void) didFinishChoosingProject:(ProjectBrowserViewController *)browser withID:(int)project_id {
 
-    projID = project.intValue;
+    projID = project_id;
     
     if (projID != 0) {
 //        QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
@@ -405,8 +404,7 @@
     dispatch_queue_t queue = dispatch_queue_create("dispatch_queue_in_queue_uploader_view", NULL);
     dispatch_async(queue, ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            BOOL success = [api createSessionWithUsername:usernameInput andPassword:passwordInput];
-            if (success) {
+            if ([api createSessionWithEmail:usernameInput andPassword:passwordInput] != nil) {
                 
                 // save the username and password in prefs
                 NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];

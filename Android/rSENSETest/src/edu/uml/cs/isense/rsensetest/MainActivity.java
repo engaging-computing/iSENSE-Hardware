@@ -80,7 +80,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		if(resultCode == RESULT_OK) {
 			if(requestCode == FILEPICK) {
 				String filepath = data.getStringExtra("filepath");
-				new CSVTask().execute(filepath);
 			} else if (requestCode == MEDIAPROJPICK) {
 				String filepath = data.getStringExtra("filepath");
 				new ProjMediaTask().execute(filepath);
@@ -94,59 +93,24 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class LoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			return api.createSession("mobile", "mobile");
+			return api.createSession("mobile", "mobile") != null;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if(result) {
 				status.append(Html.fromHtml("<font color=\"#00aa00\">Login successful.</font><br>"));
-				new UsersTask().execute();
 			} else {
 				status.append(Html.fromHtml("<font color=\"#dd0000\">Login failed, aborting test.</font><br>"));
 			}
 		}
 	}
+	
 	private class LogoutTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
 			api.deleteSession();
 			return null;
-		}
-	}
-
-	private class UsersTask extends AsyncTask<Void, Void, RPerson> {
-		@Override
-		protected RPerson doInBackground(Void... params) {
-			return api.getUser(1);
-		}
-
-		@Override
-		protected void onPostExecute(RPerson p) {
-			status.append(Html.fromHtml("<font color=\"#00aa00\">Get user "+p.name+" successful.</font><br>"));
-			new ProjectsTask().execute();
-		}
-	}
-	
-	private class NewsTask extends AsyncTask<Void, Void, ArrayList<RNews>> {
-		@Override
-		protected ArrayList<RNews> doInBackground(Void... params) {
-				return api.getNewsEntries(1, 2, true, "");
-			
-		}
-
-		@Override
-		protected void onPostExecute(ArrayList<RNews> blogs) {
-			for(RNews p : blogs) {
-				status.append(p.name + "\n");
-			}
-			if(blogs.size() <= 2) {
-				status.append(Html.fromHtml("<font color=\"#00aa00\">Get (at most) 2 news items successful.</font><br>"));
-			} else {
-				status.append(Html.fromHtml("<font color=\"#dd0000\">Get (at most) 2 news items fail. Got "+blogs.size()+".</font><br>"));
-			}
-			//TODO- move next api call to the success case, once this succeeds on dev/live
-			new CreateProjectTask().execute();
 		}
 	}
 
@@ -175,7 +139,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 			if(projects.size() <= 2) {
 				status.append(Html.fromHtml("<font color=\"#00aa00\">Get (at most) 2 Projects successful.</font><br>"));
-				new NewsTask().execute();
 			} else {
 				status.append(Html.fromHtml("<font color=\"#dd0000\">Get (at most) 2 Projects fail. Got "+projects.size()+".</font><br>"));
 			}
@@ -227,23 +190,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private class CSVTask extends AsyncTask<String, Void, Void> {
-		@Override
-		protected Void doInBackground(String... params) {
-			api.uploadCSV(7, new File(params[0]), "csv from app");
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			
-		}
-	}
-	
 	private class ProjMediaTask extends AsyncTask<String, Void, Void> {
 		@Override
 		protected Void doInBackground(String... params) {
-			api.uploadProjectMedia(7, new File(params[0]));
+			api.uploadMedia(7, new File(params[0]), API.TargetType.PROJECT);
 			return null;
 		}
 
@@ -256,7 +206,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private class DSMediaTask extends AsyncTask<String, Void, Void> {
 		@Override
 		protected Void doInBackground(String... params) {
-			api.uploadDataSetMedia(42, new File(params[0]));
+			api.uploadMedia(42, new File(params[0]), API.TargetType.DATA_SET);
 			return null;
 		}
 

@@ -3,8 +3,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.carphysicsv2"
-    android:versionCode="18"
-    android:versionName="2.3.2" >
+    android:versionCode="19"
+    android:versionName="3.0.0" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -145,6 +145,17 @@
             android:label="@string/classroom_mode"
             android:theme="@style/AppThemeDialog"
             tools:ignore="MissingRegistered" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.CredentialManager"
+            android:label="Credential Manager"
+            android:configChanges="screenSize|orientation"
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.credentials.CredentialManagerKey"
+            android:label="Add Contributor Key"
+            android:theme="@style/AppThemeDialog" />
+        
     </application>
 
 </manifest>

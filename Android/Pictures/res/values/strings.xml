@@ -20,9 +20,6 @@
 	
 	<string name="loading">Loading &#8230;</string>
 	<string name="search">Search</string>
-	
-	<string name="username">Username : \0</string>
-    <string name="password">Password  : \0</string>
 	<string name="cancel">Cancel</string>
     <string name="okay">OK</string>
     <string name="yes">Yes</string>
