@@ -15,10 +15,9 @@ import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.waffle.Waffle;
 
 /**
- * The credential manager *blah blah blah* TODO
+ * The credential manager encapsulating activity.
  * 
  * @author Bobby
- * 
  */
 public class CredentialManager extends Activity implements LoginWrapper,
 		PersonWrapper {
@@ -143,9 +142,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 	 */
 	public void logout() {
 		loggedIn = false;
-
 		Login.setCredentials(baseContext, "", "");
-
 		loggedOutView();
 	}
 
@@ -156,7 +153,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 	 * @param username
 	 * @param password
 	 */
-	public void wrapperLogin(String username, String password) {
+	public void login(String username, String password) {
 		new LoginWithNewCredentialsTask().execute(username, password);
 	}
 
@@ -207,8 +204,11 @@ public class CredentialManager extends Activity implements LoginWrapper,
 	 * This method logs the app into iSENSE with presaved credentials.
 	 * 
 	 * @param appContext
+	 *            Context of the calling application.
+	 * @param appAPI
+	 *            API object that belongs to the caller.
 	 */
-	public static void Login(Context appContext, API appAPI) {
+	public static void login(Context appContext, API appAPI) {
 		api = appAPI;
 
 		if (Connection.hasConnectivity(appContext)) {
@@ -241,7 +241,6 @@ public class CredentialManager extends Activity implements LoginWrapper,
 	 * This Task attempts to login to iSENSE with saved credentials.
 	 * 
 	 * @author Bobby
-	 * 
 	 */
 	private static class LoginWithSavedCredentialsTask extends
 			AsyncTask<Context, Void, Void> {
