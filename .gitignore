@@ -16,3 +16,8 @@
 
 Android/rSENSETest/bin/
 Android/rSENSETest/gen/
+
+Android/*/bin
+Android/*/gen
+
+*/xcuserdata/
