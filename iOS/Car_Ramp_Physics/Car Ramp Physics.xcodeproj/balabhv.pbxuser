@@ -1,0 +1,88 @@
+// !$*UTF8*$!
+{
+	7669F01E178B275C00E51AD0 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 76BA478E191296E200897337 /* Car Ramp Physics */;
+		activeTarget = 7669F025178B275C00E51AD0 /* Car Ramp Physics */;
+		codeSenseManager = 76BA480B191296F800897337 /* Code sense */;
+		executables = (
+			76BA478E191296E200897337 /* Car Ramp Physics */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					1233,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 420648674;
+			PBXWorkspaceStateSaveDate = 420648674;
+		};
+		sourceControlManager = 76BA480A191296F800897337 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	7669F025178B275C00E51AD0 /* Car Ramp Physics */ = {
+		activeExec = 0;
+		executables = (
+			76BA478E191296E200897337 /* Car Ramp Physics */,
+		);
+	};
+	76BA478E191296E200897337 /* Car Ramp Physics */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = "Car Ramp Physics";
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	76BA480A191296F800897337 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	76BA480B191296F800897337 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}

@@ -11,7 +11,7 @@
 #import "iSENSE.h"
 #import "StringGrabber.h"
 #import "FieldGrabber.h"
-#import "ProjectBrowseViewController.h"
+#import "ProjectBrowserViewController.h"
 #import "Constants.h"
 #import "HexColor.h"
 #import "VariablesViewController.h"
@@ -40,7 +40,7 @@ typedef struct _RotationDataSaver{
     
 } RotationDataSaver;
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, ProjectBrowseViewControllerDelegate>
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, ProjectBrowserDelegate>
 {
     
     RotationDataSaver *saver;
