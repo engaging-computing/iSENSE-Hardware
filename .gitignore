@@ -13,6 +13,8 @@
 .classpath
 .project
 .settings
+.metadata
 
 Android/rSENSETest/bin/
 Android/rSENSETest/gen/
+Android/.metadata

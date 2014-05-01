@@ -10,7 +10,12 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class CredentialManagerKey extends Activity  {
+/**
+ * Credential manager contributor key component.
+ * 
+ * @author Bobby
+ */
+public class CredentialManagerKey extends Activity {
 
 	final int PROJECT_REQUESTED = 101;
 	private static String key = "";
@@ -23,73 +28,81 @@ public class CredentialManagerKey extends Activity  {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.credential_manager_add_key);
-        
-        key = "";
-        name = "";
-        
-        conName = (EditText) findViewById(R.id.edittext_contributor);
-        newKey = (EditText) findViewById(R.id.edittext_key);
+		setContentView(R.layout.credential_manager_add_key);
+
+		key = "";
+		name = "";
+
+		conName = (EditText) findViewById(R.id.edittext_contributor);
+		newKey = (EditText) findViewById(R.id.edittext_key);
 
 		bOK = (Button) findViewById(R.id.button_ok);
 		bCancel = (Button) findViewById(R.id.button_cancel);
-		
-	    newKey.setOnTouchListener(new OnTouchListener() {
 
-	    	
+		newKey.setOnTouchListener(new OnTouchListener() {
+
+			/**
+			 * Removes the error marker.
+			 */
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				newKey.setError(null);
 				return false;
 			}
-	    	
-	    });
-	    
-	    conName.setOnTouchListener(new OnTouchListener() {
 
+		});
+
+		conName.setOnTouchListener(new OnTouchListener() {
+
+			/**
+			 * Removes the error marker.
+			 */
 			public boolean onTouch(View arg0, MotionEvent arg1) {
 				conName.setError(null);
 				return false;
 			}
-	    	
-	    });
-	
+
+		});
 
 		bOK.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				if (newKey.getText().length() != 0 && conName.getText().length() != 0) {
+				if (newKey.getText().length() != 0
+						&& conName.getText().length() != 0) {
 					key = newKey.getText().toString();
 					name = conName.getText().toString();
 					setResult(Activity.RESULT_OK);
 					finish();
-				} else if (newKey.getText().length() == 0  && conName.getText().length() != 0){
-					newKey.setError("Key can not be empty.");
-					conName.setError("Name can not be empty.");
-				}  else if (newKey.getText().length() == 0) {
-					newKey.setError("Key can not be empty.");
-				} else if (conName.getText().length() != 0) {
-					conName.setError("Name can not be empty.");
+				} else {
+					if (newKey.getText().length() == 0)
+						newKey.setError("Key can not be empty.");
+					if (conName.getText().length() != 0)
+						conName.setError("Name can not be empty.");
 				}
 			}
 		});
-		
+
 		bCancel.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
-			
+
 		});
-			
+
 	}
-	
+
+	/**
+	 * @return Current contributor key.
+	 */
 	public static String getKey() {
 		return key;
 	}
-	
+
+	/**
+	 * @return Current contributor key name.
+	 */
 	public static String getName() {
 		return name;
 	}
-	
 }

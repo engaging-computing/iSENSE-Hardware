@@ -176,28 +176,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		}
 	}
 
-	private void attemptLoginOnAppStart() {
-
-		final SharedPreferences mPrefs = new ObscuredSharedPreferences(mContext, 
-				getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO, Context.MODE_PRIVATE));
-
-		if (mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "").equals("") && 
-				mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, "").equals("")) {
-
-			mPrefs.edit().putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, Login.DEFAULT_USERNAME).commit();
-
-			mPrefs.edit().putString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, Login.DEFAULT_PASSWORD).commit();
-
-		}
-
-		if (Connection.hasConnectivity(mContext)) {
-
-			new LoginTask().execute();
-
-		}
-
-	}
-
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -234,8 +212,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		w = new Waffle(mContext);
 
-		CredentialManager.Login(mContext, api);
-		
+		CredentialManager.login(mContext, api);
+
 		mHandler = new Handler();
 
 		startStop = (Button) findViewById(R.id.startStop);
@@ -260,7 +238,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 									EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
 									true)
 							&& Connection.hasConnectivity(mContext)) {
-						
 
 					} else {
 						firstName = namePrefs
@@ -296,7 +273,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startActivityForResult(new Intent(mContext, SaveModeDialog.class),
 					SAVE_MODE_REQUESTED);
 		}
-		
+
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
 		projectNumber = prefs2.getString("project_id", null);
 		if (projectNumber == null) {
@@ -1020,59 +997,58 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		} else if (reqCode == LOGIN_STATUS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
-				
-			} 
-			
-				dfm = new DataFieldManager(Integer.parseInt(projectNumber),
-						api, mContext, f);
-				dfm.getOrder();
-				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+
+			}
+
+			dfm = new DataFieldManager(Integer.parseInt(projectNumber), api,
+					mContext, f);
+			dfm.getOrder();
+			DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_x))) {
+				values.setText("X: " + oneDigit.format(accel[0]));
+			}
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_y))) {
 				if (dfm.getOrderList().contains(
 						mContext.getString(R.string.accel_x))) {
-					values.setText("X: " + oneDigit.format(accel[0]));
+					values.setText(values.getText() + " Y: "
+							+ oneDigit.format(accel[1]));
+				} else {
+					values.setText("Y: " + oneDigit.format(accel[1]));
 				}
+			}
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_z))) {
 				if (dfm.getOrderList().contains(
-						mContext.getString(R.string.accel_y))) {
-					if (dfm.getOrderList().contains(
-							mContext.getString(R.string.accel_x))) {
-						values.setText(values.getText() + " Y: "
-								+ oneDigit.format(accel[1]));
-					} else {
-						values.setText("Y: " + oneDigit.format(accel[1]));
-					}
+						mContext.getString(R.string.accel_x))
+						|| dfm.getOrderList().contains(
+								mContext.getString(R.string.accel_y))) {
+					values.setText(values.getText() + " Z: "
+							+ oneDigit.format(accel[2]));
+				} else {
+					values.setText("Z: " + oneDigit.format(accel[2]));
 				}
+
+			}
+			if (dfm.getOrderList().contains(
+					mContext.getString(R.string.accel_total))) {
+				accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+						+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+
 				if (dfm.getOrderList().contains(
-						mContext.getString(R.string.accel_z))) {
-					if (dfm.getOrderList().contains(
-							mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(
-									mContext.getString(R.string.accel_y))) {
-						values.setText(values.getText() + " Z: "
-								+ oneDigit.format(accel[2]));
-					} else {
-						values.setText("Z: " + oneDigit.format(accel[2]));
-					}
-
+						mContext.getString(R.string.accel_x))
+						|| dfm.getOrderList().contains(
+								mContext.getString(R.string.accel_y))
+						|| dfm.getOrderList().contains(
+								mContext.getString(R.string.accel_z))) {
+					values.setText(values.getText() + " Magnitude: "
+							+ oneDigit.format(accel[3]));
+				} else {
+					values.setText("Magnitude: " + oneDigit.format(accel[3]));
 				}
-				if (dfm.getOrderList().contains(
-						mContext.getString(R.string.accel_total))) {
-					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
-							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
 
-					if (dfm.getOrderList().contains(
-							mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(
-									mContext.getString(R.string.accel_y))
-							|| dfm.getOrderList().contains(
-									mContext.getString(R.string.accel_z))) {
-						values.setText(values.getText() + " Magnitude: "
-								+ oneDigit.format(accel[3]));
-					} else {
-						values.setText("Magnitude: "
-								+ oneDigit.format(accel[3]));
-					}
-
-				}
+			}
 
 		} else if (reqCode == RECORDING_LENGTH_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -1097,10 +1073,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				if (!inApp)
 					inApp = true;
 
-
-				} else {
-					if (!inApp)
-						finish();
+			} else {
+				if (!inApp)
+					finish();
 			}
 		} else if (reqCode == RESET_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -1108,8 +1083,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 						0);
 				countdown = length = prefs.getInt("length", 10);
 
-				CredentialManager.Login(this, api);
-				
+				CredentialManager.login(this, api);
+
 				SharedPreferences eprefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
 				if (useDev) {
@@ -1348,7 +1323,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				jobj = UploadQueue.getAPI().rowsToCols(jobj);
 
 				System.out.println("JOBJ: " + jobj.toString());
-				
+
 				dataSetID = UploadQueue.getAPI().uploadDataSet(
 						Integer.parseInt(projectNumber), jobj, nameOfDataSet);
 				System.out.println("Data set ID from Upload is: " + dataSetID);
@@ -1479,7 +1454,5 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	@Override
 	public void onAccuracyChanged(Sensor arg0, int arg1) {
 	}
-
-
 
 }
