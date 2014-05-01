@@ -100,11 +100,11 @@ public class API {
 					+ "&password=" + URLEncoder.encode(p_password, "UTF-8"),
 					"GET", null);
 			JSONObject j = new JSONObject(reqResult);
-			if(j.getString("username") != null) {
+			if(j.getString("name") != null) {
 				email = p_email;
 				password = p_password;
 				RPerson you = new RPerson();
-				you.name = j.getString("username");
+				you.name = j.getString("name");
 				you.gravatar = j.getString("gravatar");
 				currentUser = you;
 				return you;
@@ -112,6 +112,7 @@ public class API {
 				return null;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

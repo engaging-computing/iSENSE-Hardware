@@ -49,7 +49,6 @@ import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.ClassroomMode;
 import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.EnterName;
-import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoGps;
@@ -562,7 +561,7 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	protected void onStart() {
 		// Log in automatically
-		CredentialManager.Login(mContext, api);
+		CredentialManager.login(mContext, api);
 		super.onStart();
 	}
 
@@ -699,7 +698,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Attempt to login with saved credentials, otherwise try default
 		// credentials
-		CredentialManager.Login(mContext, api);
+		CredentialManager.login(mContext, api);
 		// If the queue isn't empty, launch the activity. Otherwise tell the
 		// user the queue is empty.
 		if (!uq.emptyQueue()) {
@@ -971,7 +970,7 @@ public class DataWalk extends Activity implements LocationListener,
 			if (resultCode == RESULT_OK) {
 
 		
-			} else if (resultCode == Login.RESULT_ERROR) {
+			} else if (resultCode == CredentialManager.RESULT_ERROR) {
 				
 
 			}
