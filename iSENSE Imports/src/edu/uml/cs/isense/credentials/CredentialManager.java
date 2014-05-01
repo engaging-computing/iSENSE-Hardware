@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.objects.RPerson;
+import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.waffle.Waffle;
 
 /**
@@ -34,10 +36,12 @@ public class CredentialManager extends Activity implements LoginWrapper,
 	/* This is what the code returns when login fails. */
 	public static final int RESULT_ERROR = 1;
 
-	public static final String DEFAULT_USERNAME = "mobile.fake@example.com";
-	public static final String DEFAULT_PASSWORD = "mobile";
-
 	private Context baseContext;
+	
+	/* These are the keys for obtain the user credential preferences. */
+	private static final String KEY_USER_INFO = "OBSCURRED_USER_INFO";
+	private static final String SUBKEY_USERNAME = "USERNAME";
+	private static final String SUBKEY_PASSWORD = "PASSWORD";
 
 	/* Fragments on screen */
 	CredentialManagerLogin fragmentLogin = new CredentialManagerLogin();
@@ -142,7 +146,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 	 */
 	public void logout() {
 		loggedIn = false;
-		Login.setCredentials(baseContext, "", "");
+		setCredentials(baseContext, "", "");
 		loggedOutView();
 	}
 
@@ -184,13 +188,13 @@ public class CredentialManager extends Activity implements LoginWrapper,
 				w.make("Invalid Email or Password", Waffle.LENGTH_LONG,
 						Waffle.IMAGE_X);
 
-				Login.setCredentials(baseContext, "", "");
+				setCredentials(baseContext, "", "");
 
 				loggedIn = false;
 
 			} else { // Successfully logged in
 
-				Login.setCredentials(baseContext,
+				setCredentials(baseContext,
 						CredentialManagerLogin.getUsername(),
 						CredentialManagerLogin.getPassword());
 
@@ -232,7 +236,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 
 		api = appAPI;
 
-		Login.setCredentials(appContext, username, password);
+		setCredentials(appContext, username, password);
 
 		new LoginWithSavedCredentialsTask().execute(appContext);
 	}
@@ -248,8 +252,8 @@ public class CredentialManager extends Activity implements LoginWrapper,
 		@Override
 		protected Void doInBackground(Context... appContext) {
 
-			String username = Login.getUsername(appContext[0]);
-			String password = Login.getPassword(appContext[0]);
+			String username = getUsername(appContext[0]);
+			String password = getPassword(appContext[0]);
 
 			if (api != null) {
 				person = api.createSession(username, password);
@@ -270,5 +274,78 @@ public class CredentialManager extends Activity implements LoginWrapper,
 			super.onCancelled(result);
 			return;
 		}
+	}
+	
+	/**
+	 * Saves the username into SharedPreferences.
+	 * 
+	 * @param appContext
+	 * @param username
+	 */
+	private static void setUsername(Context appContext, String username) {
+
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				appContext, appContext.getSharedPreferences(KEY_USER_INFO,
+						MODE_PRIVATE));
+		mPrefs.edit().putString(SUBKEY_USERNAME, username).commit();
+	}
+
+	/**
+	 * Saves the password into SharedPreferences.
+	 * 
+	 * @param appContext
+	 * @param password
+	 */
+	private static void setPassword(Context appContext, String password) {
+
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				appContext, appContext.getSharedPreferences(KEY_USER_INFO,
+						MODE_PRIVATE));
+		mPrefs.edit().putString(SUBKEY_PASSWORD, password).commit();
+	}
+
+	/**
+	 * Saves username and password into SharedPreferences.
+	 * 
+	 * @param appContext
+	 * @param username
+	 * @param password
+	 */
+	public static void setCredentials(Context appContext, String username,
+			String password) {
+		setUsername(appContext, username);
+		setPassword(appContext, password);
+	}
+
+	/**
+	 * Retrieves the username of the current logged in user.
+	 * 
+	 * @param appContext
+	 *            The context of the calling activity.
+	 * @return username
+	 */
+	public static String getUsername(Context appContext) {
+		
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				appContext, appContext.getSharedPreferences(KEY_USER_INFO,
+						Context.MODE_PRIVATE));
+
+		return mPrefs.getString(SUBKEY_USERNAME, "");
+	}
+
+	/**
+	 * Retrieves the password of the current logged in user.
+	 * 
+	 * @param appContext
+	 *            The context of the calling activity.
+	 * @return password
+	 */
+	public static String getPassword(Context appContext) {
+
+		final SharedPreferences mPrefs = new ObscuredSharedPreferences(
+				appContext, appContext.getSharedPreferences(KEY_USER_INFO,
+						Context.MODE_PRIVATE));
+
+		return mPrefs.getString(SUBKEY_PASSWORD, "");
 	}
 }

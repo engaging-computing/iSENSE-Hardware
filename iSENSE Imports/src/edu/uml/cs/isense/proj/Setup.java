@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
-import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -204,7 +204,7 @@ public class Setup extends Activity implements OnClickListener {
 			else if (api.getCurrentUser() == null) {
 				w.make("Login required to create project",
 						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-				startActivityForResult(new Intent(this, Login.class),
+				startActivityForResult(new Intent(this, CredentialManager.class),
 						LOGIN_STATUS_REQUESTED);
 			}
 			else {
@@ -290,9 +290,9 @@ public class Setup extends Activity implements OnClickListener {
 				w.make("Login successful", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
 
-			} else if (resultCode == Login.RESULT_ERROR) {
+			} else if (resultCode == CredentialManager.RESULT_ERROR) {
 
-				startActivityForResult(new Intent(mContext, Login.class),
+				startActivityForResult(new Intent(mContext, CredentialManager.class),
 						LOGIN_STATUS_REQUESTED);
 
 			}

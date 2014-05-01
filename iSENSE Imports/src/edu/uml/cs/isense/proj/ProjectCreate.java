@@ -26,7 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.credentials.Login;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
@@ -298,7 +298,7 @@ public class ProjectCreate extends Activity {
 		w.make(getResources().getString(R.string.login_isense_first),
 				Waffle.LENGTH_SHORT, Waffle.IMAGE_WARN);
 
-		Intent iLogin = new Intent(mContext, Login.class);
+		Intent iLogin = new Intent(mContext, CredentialManager.class);
 		startActivityForResult(iLogin, LOGIN_REQUESTED);
 	}
 
@@ -379,8 +379,8 @@ public class ProjectCreate extends Activity {
 		protected Void doInBackground(Void... params) {
 
 			api.createSession(
-					Login.getUsername(ProjectCreate.mContext),
-					Login.getPassword(ProjectCreate.mContext));
+					CredentialManager.getUsername(ProjectCreate.mContext),
+					CredentialManager.getPassword(ProjectCreate.mContext));
 
 			publishProgress(100);
 			return null;
@@ -457,9 +457,9 @@ public class ProjectCreate extends Activity {
 
 				createProject();
 
-			} else if (resultCode == Login.RESULT_ERROR) {
+			} else if (resultCode == CredentialManager.RESULT_ERROR) {
 
-				Intent i = new Intent(mContext, Login.class);
+				Intent i = new Intent(mContext, CredentialManager.class);
 				startActivityForResult(i, LOGIN_REQUESTED);
 
 			}
