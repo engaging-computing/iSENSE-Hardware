@@ -257,7 +257,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 
 			if (api != null) {
 				person = api.createSession(username, password);
-
+				
 				// Update logged in status
 				loggedIn = (person != null);
 
@@ -275,7 +275,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 			return;
 		}
 	}
-	
+
 	/**
 	 * Saves the username into SharedPreferences.
 	 * 

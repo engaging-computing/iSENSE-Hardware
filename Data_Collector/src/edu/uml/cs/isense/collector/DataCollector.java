@@ -392,7 +392,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	public void onResume() {
 		super.onResume();
 
-		CredentialManager.Login(mContext, api);
+		CredentialManager.login(mContext, api);
 
 		inPausedState = false;
 
@@ -1186,7 +1186,7 @@ public class DataCollector extends Activity implements SensorEventListener,
 	// Everything that needs to be assigned in onCreate()
 	private void assignVars() {
 		// Set all the login info
-		CredentialManager.Login(mContext, api);
+		CredentialManager.login(mContext, api);
 		// Add listener
 		setStepButtonListeners();
 	}

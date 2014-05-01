@@ -377,7 +377,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		super.onResume();
 
 		// Silently logs in the user to iSENSE
-		CredentialManager.Login(mContext, api);
+		CredentialManager.login(mContext, api);
 
 		// Rebuilds the upload queue
 		if (uq != null)
@@ -485,7 +485,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				if (cdt != null)
 					cdt.cancel();
 
-				CredentialManager.Login(this, api);
+				CredentialManager.login(this, api);
 				actionBarTapCount = 0;
 				
 				
@@ -779,7 +779,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				}
 
 		// Login to iSENSE
-		CredentialManager.Login(this, api);
+		CredentialManager.login(this, api);
 
 		// Create a new upload queue
 		uq = new UploadQueue(ACTIVITY_NAME, mContext, api);
