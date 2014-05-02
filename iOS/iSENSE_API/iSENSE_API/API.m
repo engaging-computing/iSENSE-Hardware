@@ -103,12 +103,12 @@ static NSString *email, *password;
     email = p_email;
     password = p_password;
     
-    if ([result objectForKey:@"username"] != nil) {
+    if ([result objectForKey:@"name"] != nil) {
         NSLog(@"Loglog");
         email = p_email;
         password = p_password;
         RPerson *you = [[RPerson alloc] init];
-        you.name = [result objectForKey:@"username"];
+        you.name = [result objectForKey:@"name"];
         you.gravatar = [result objectForKey:@"gravatar"];
         
         NSURL *imageURL = [NSURL URLWithString:[you gravatar]];
