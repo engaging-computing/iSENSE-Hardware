@@ -107,7 +107,7 @@
 		76785B9217937721001D6E3A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		767B9271178C526E00F1C6FA /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		767B9273178C527500F1C6FA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		767E4AF019019C5700417FEC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		767E4AF019019C5700417FEC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images.xcassets; sourceTree = "<group>"; };
 		767E4AF21901C25300417FEC /* LongPressButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongPressButtonView.h; sourceTree = "<group>"; };
 		767E4AF31901C25400417FEC /* LongPressButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LongPressButtonView.m; sourceTree = "<group>"; };
 		769B5FB3188C221700668355 /* ZBarSDK */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ZBarSDK; sourceTree = "<group>"; };
@@ -574,9 +574,10 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "iS Car Ramp";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "D93993E6-36A5-4772-8EFD-9C59C4A4986D";
 				REZ_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				SDKROOT = iphoneos;
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -607,6 +608,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				REZ_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				SDKROOT = iphoneos;
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

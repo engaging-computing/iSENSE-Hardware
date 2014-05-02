@@ -538,11 +538,11 @@
     
     //[start setTitle:[NSString stringWithFormat:@"%d", countdown] forState:UIControlStateNormal];
     // Get the recording rate
-    float rate = 0.01;
+    float rate = 0.02;
     /*NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
      NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
      sampleInterval = [sampleIntervalString floatValue];*/
-    sampleInterval = 10;
+    sampleInterval = 20;
     if (sampleInterval > 0) rate = sampleInterval / 1000;
     
     elapsedTime = 0;

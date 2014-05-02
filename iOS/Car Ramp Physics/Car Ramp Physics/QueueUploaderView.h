@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "Constants.h"
 #import "QueueCell.h"
-#import "ProjectBrowseViewController.h"
+#import "ProjectBrowserViewController.h"
 #import "Waffle.h"
 #import "StringGrabber.h"
 #import <iSENSE_API/DataFieldManager.h>
