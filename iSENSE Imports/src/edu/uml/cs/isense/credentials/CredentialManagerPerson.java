@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import android.app.Fragment;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +25,7 @@ import edu.uml.cs.isense.comm.API;
  * 
  * @author Bobby
  */
-public class CredentialManagerPerson extends Fragment {
+public class CredentialManagerPerson extends android.support.v4.app.Fragment {
 	ImageView gravatar;
 	TextView email;
 	Bitmap bmp;
@@ -39,6 +40,7 @@ public class CredentialManagerPerson extends Fragment {
 
 		gravatar = (ImageView) view.findViewById(R.id.imageViewPerson);
 		Button logout = (Button) view.findViewById(R.id.buttonLogout);
+		Button ok = (Button) view.findViewById(R.id.buttonOk);
 		email = (TextView) view.findViewById(R.id.textViewPersonName);
 
 		email.setText(CredentialManager.person.name);
@@ -58,9 +60,20 @@ public class CredentialManagerPerson extends Fragment {
 				((PersonWrapper) getActivity()).logout();
 			}
 		});
+		
+		ok.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				getActivity().setResult(Activity.RESULT_CANCELED);
+				getActivity().finish();
+			}
+		});
+
 
 		return view;
 	}
+	
+			
+	
 
 	/**
 	 * Retrieves the gravatar image for user profile.
