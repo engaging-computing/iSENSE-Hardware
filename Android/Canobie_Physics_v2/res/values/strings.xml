@@ -5,7 +5,7 @@
     <string name="display_name">iS Canobie Physics</string>
     <string name="login">Login</string>
     <string name="iSenseConfig"><u><b>iSENSE Configurations</b></u></string>
-    <string name="otherConfig"><u><b>Other Configurations</b></u></string>
+    <string name="otherConfig"><u><b>Ride Configurations</b></u></string>
     <string name="rides_prompt">Choose a ride</string>
 
     <string-array name="rides_array">
@@ -125,8 +125,6 @@
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
 	    WiFi networks.</string>
     <string name="prompt">Would you like to retry uploading any of the following?</string>
-    <string name="username">Username:   </string>
-    <string name="password">Password:    </string>
     <string name="loading">Loading&#x2026;</string>
     <string name="search">Search</string>
     <string name="select_later">I\'ll select one later</string>

@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -62,13 +63,11 @@ import edu.uml.cs.isense.collector.dialogs.NoGps;
 import edu.uml.cs.isense.collector.splash.Welcome;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
-import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.objects.RProjectField;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -102,10 +101,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 	public static Context mContext;
 
-	private TextView loginLabel;
 	private TextView projectLabel;
 
-	private SharedPreferences loginPrefs;
 	private SharedPreferences projPrefs;
 
 	private LinearLayout dataFieldEntryList;
@@ -158,16 +155,10 @@ public class ManualEntry extends Activity implements OnClickListener,
 
 		initLocations();
 
-		loginPrefs = new ObscuredSharedPreferences(getBaseContext(),
-				getBaseContext().getSharedPreferences(Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-						MODE_PRIVATE));
+
 
 		projPrefs = getSharedPreferences("PROJID_MANUAL", 0);
-
-		loginLabel = (TextView) findViewById(R.id.loginLabel);
-		loginLabel.setText(getResources().getString(R.string.loggedInAs)
-				+ loginPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, ""));
-
+		
 		projectLabel = (TextView) findViewById(R.id.projectLabel);
 
 		dataSetName = (EditText) findViewById(R.id.manual_dataset_name);
@@ -247,22 +238,8 @@ public class ManualEntry extends Activity implements OnClickListener,
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == LOGIN_REQUESTED) {
-			if (resultCode == RESULT_OK) {
+			
 
-				String loginName = loginPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, "");
-				if (loginName.length() >= 18)
-					loginName = loginName.substring(0, 18) + "...";
-				loginLabel.setText(getResources()
-						.getString(R.string.loggedInAs) + loginName);
-				w.make(getResources().getString(R.string.login_success), 
-						Waffle.LENGTH_LONG,
-						Waffle.IMAGE_CHECK);
-			} else if (resultCode == Login.RESULT_ERROR) {
-				Intent i = new Intent(mContext, Login.class);
-				startActivityForResult(i, LOGIN_REQUESTED);
-			} else {
-				// do nothing (result was canceled)
-			}
 
 		} else if (requestCode == PROJECT_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -468,7 +445,7 @@ public class ManualEntry extends Activity implements OnClickListener,
 			return true;
 
 		case R.id.menu_item_manual_login:
-			Intent iLogin = new Intent(mContext, Login.class);
+			Intent iLogin = new Intent(mContext, CredentialManager.class);
 			startActivityForResult(iLogin, LOGIN_REQUESTED);
 
 			return true;
