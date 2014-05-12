@@ -20,7 +20,6 @@ import android.widget.Spinner;
 public class Configuration extends Activity {
 	private static EditText dataset; 
 	private static EditText sampleRate;
-	private static EditText studentNumber;
 	private Button ok;
 	private Button select;
 	private static CheckBox projectLater;
@@ -42,7 +41,6 @@ public class Configuration extends Activity {
 		dataset = (EditText) findViewById(R.id.dataName);
 		projectLater = (CheckBox) findViewById(R.id.select_exp_later);
 		sampleRate = (EditText) findViewById(R.id.srate);
-		studentNumber = (EditText) findViewById(R.id.studentNumber);
 		isCanobie = (CheckBox) findViewById(R.id.isCanobie);	
 		rides = (Spinner) findViewById(R.id.rides);
 		ok = (Button) findViewById(R.id.ok);
@@ -50,7 +48,6 @@ public class Configuration extends Activity {
 		
 		dataset.setText(AmusementPark.dataName);
 		sampleRate.setText(AmusementPark.rate);
-		studentNumber.setText(AmusementPark.stNumber);
 		
 		/*Setup Addapter for rides*/
 		
@@ -103,14 +100,6 @@ public class Configuration extends Activity {
 			@Override
 			public void onClick(View v) {
 				dataset.setError(null);
-			}
-			
-		});
-		
-		studentNumber.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				studentNumber.setError(null);
 			}
 			
 		});
@@ -232,14 +221,6 @@ public class Configuration extends Activity {
 				AmusementPark.rate = sampleRate.getText().toString();		
 			}
 			
-		}
-		
-		if(studentNumber.getText().length() == 0) {
-			studentNumber.setError("Please Enter Seat/Student");
-			selected = false;
-		} else {
-			studentNumber.setError(null);
-			AmusementPark.stNumber = studentNumber.getText().toString();
 		}
 		
 		AmusementPark.rideNameString = rides.getSelectedItem().toString();

@@ -1,8 +1,9 @@
 package edu.uml.cs.isense.credentials;
 
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;  
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -21,10 +22,9 @@ import edu.uml.cs.isense.waffle.Waffle;
  * 
  * @author Bobby
  */
-public class CredentialManager extends Activity implements LoginWrapper,
+public class CredentialManager extends FragmentActivity implements LoginWrapper,
 		PersonWrapper {
-	FragmentManager fragmentManager;
-	FragmentTransaction fragmentTransaction;
+	android.support.v4.app.FragmentTransaction fragmentTransaction;
 
 	private static API api;
 
@@ -71,7 +71,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 		baseContext = getBaseContext();
 
 		w = new Waffle(baseContext);
-
+		
 		if (loggedIn) {
 			loggedInView();
 		} else {
@@ -83,8 +83,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 	 * The default view when the user is logged out.
 	 */
 	private void loggedOutView() {
-		fragmentManager = getFragmentManager();
-		fragmentTransaction = fragmentManager.beginTransaction();
+		fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
 		fragmentLogin = new CredentialManagerLogin();
 		fragmentTransaction.replace(R.id.fragmentcontainer, fragmentLogin);
@@ -99,8 +98,8 @@ public class CredentialManager extends Activity implements LoginWrapper,
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
-		fragmentManager = getFragmentManager();
-		fragmentTransaction = fragmentManager.beginTransaction();
+		fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
 
 		fragmentPerson = new CredentialManagerPerson();
 		fragmentTransaction.replace(R.id.fragmentcontainer, fragmentPerson);
@@ -114,8 +113,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 	 */
 	@SuppressWarnings("unused")
 	private void keysOnlyView() {
-		fragmentManager = getFragmentManager();
-		fragmentTransaction = fragmentManager.beginTransaction();
+		fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
 		fragmentTransaction.setTransition(TRANSIT_FRAGMENT_CLOSE);
 		fragmentTransaction.remove(fragmentLogin);
@@ -269,11 +267,7 @@ public class CredentialManager extends Activity implements LoginWrapper,
 			return null;
 		}
 
-		@Override
-		protected void onCancelled(Void result) {
-			super.onCancelled(result);
-			return;
-		}
+		
 	}
 
 	/**

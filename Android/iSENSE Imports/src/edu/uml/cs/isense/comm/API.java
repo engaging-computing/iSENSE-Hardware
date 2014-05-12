@@ -534,7 +534,7 @@ public class API {
 	 * 			The type of the target (project or dataset)
 	 * @return The media object ID for the media uploaded or -1 if upload fails
 	 */
-	public int uploadMedia(int projectId, File mediaToUpload, TargetType ttype) {
+	public int uploadMedia(int dataId, File mediaToUpload, TargetType ttype) {
 		try {
 			URL url = new URL(baseURL + "/media_objects/");
 
@@ -551,7 +551,7 @@ public class API {
 			entity.addPart("email", new StringBody(email));
 			entity.addPart("password", new StringBody(password));
 			entity.addPart("type", new StringBody((ttype == TargetType.PROJECT) ? "project" : "data_set"));
-			entity.addPart("id", new StringBody(""+projectId));
+			entity.addPart("id", new StringBody(""+dataId));
 
 			connection.setRequestProperty("Content-Type", entity
 					.getContentType().getValue());

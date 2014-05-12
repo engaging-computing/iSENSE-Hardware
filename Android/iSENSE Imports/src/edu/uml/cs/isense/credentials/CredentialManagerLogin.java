@@ -2,8 +2,8 @@ package edu.uml.cs.isense.credentials;
 
 import edu.uml.cs.isense.R;
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +16,7 @@ import android.widget.EditText;
  * 
  * @author Bobby
  */
-public class CredentialManagerLogin extends Fragment {
+public class CredentialManagerLogin extends android.support.v4.app.Fragment {
 
 	private static EditText username;
 	private static EditText password;
