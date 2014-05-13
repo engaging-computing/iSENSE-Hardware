@@ -75,15 +75,13 @@
     <string name="startString">START\n(Press and Hold)</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
     <string name="notLoggedIn"> Not Logged In</string>
-    <string name="rideAndSeat">Ride/St#: </string>
+    <string name="rideAndSeat">Ride: </string>
     <string name="picAndVidCount">Pictures and Videos taken: \0</string>
     <string name="menuDirections">Use Menu to Access Configurations</string>
     <string name="timeElapsed">Time Elapsed: 0:00</string>
     <string name="sessionName">First Name/Last Initial: </string>
     <string name="projectNum">Project #: </string>
     <string name="browse">  Browse&#8230;  </string>
-    <string name="seatNum">Seat/Student #: </string>
-    <string name="seatNumber">1</string>
     <string name="canobieRides">Canobie Lake Park Rides</string>
     <string name="ride">Ride: </string>
     <string name="takePic">Take a Picture</string>

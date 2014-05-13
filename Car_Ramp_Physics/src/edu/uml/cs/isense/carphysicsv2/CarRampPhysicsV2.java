@@ -51,6 +51,8 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -491,9 +493,32 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				// If the device isn't on Jelly Bean
 				ToggleButton button = (ToggleButton) findViewById(R.id.toggleButton1);
 				button.setChecked(isLinear);
+				button.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						changeSensors(buttonView);
+					}
+					
+				});
+				
+				
 			} else {
 				Switch button = (Switch) findViewById(R.id.switch1);
 				button.setChecked(isLinear);
+				
+				button.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						changeSensors(buttonView);						
+					}
+					
+				});
+				
+				
 			}
 			if (isLinear) {
 				mSensorManager
@@ -524,7 +549,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	}
 
 	@SuppressLint("NewApi")
-	public void onToggleClicked(View view) {
+	public void changeSensors(CompoundButton view) {
 
 		mSensorManager.unregisterListener(CarRampPhysicsV2.this, mSensorManager
 				.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
