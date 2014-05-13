@@ -420,28 +420,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		return true;
 	}
 	
-	
-//	public boolean enableDisableMenu(Boolean enable) {
-//
-//		if (!enable) {
-//			menu.getItem(0).setEnabled(false);
-//			menu.getItem(1).setEnabled(false);
-//			menu.getItem(2).setEnabled(false);
-//			menu.getItem(3).setEnabled(false);
-//
-//		}
-//
-//		else {
-//			menu.getItem(0).setEnabled(true);
-//			menu.getItem(1).setEnabled(true);
-//			menu.getItem(2).setEnabled(true);
-//			menu.getItem(3).setEnabled(true);
-//
-//		}
-//		return true;
-//	}
-	
-	
 
 	
 	@Override
@@ -450,14 +428,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
+//			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
+//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
+//			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
+//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
 		}
 		return true;
 	}
@@ -478,19 +456,19 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		case R.id.MENU_ITEM_UPLOAD:
 			manageUploadQueue();
 			return true;
-		case R.id.MENU_ITEM_TIME:
-			startActivityForResult(new Intent(getApplicationContext(),
-					SyncTime.class), SYNC_TIME_REQUESTED);
-			return true;
-		case R.id.MENU_ITEM_MEDIA:
-			if ((!setupDone)) {
-				w.make("You must setup before using Media Manager.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-			} else {
-				Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
-				startActivity(iMedia);
-			}
-			return true;
+//		case R.id.MENU_ITEM_TIME:
+//			startActivityForResult(new Intent(getApplicationContext(),
+//					SyncTime.class), SYNC_TIME_REQUESTED);
+//			return true;
+//		case R.id.MENU_ITEM_MEDIA:
+//			if ((!setupDone)) {
+//				w.make("You must setup before using Media Manager.",
+//						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+//			} else {
+//				Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
+//				startActivity(iMedia);
+//			}
+//			return true;
 		case android.R.id.home:
 			CountDownTimer cdt = null;
 
