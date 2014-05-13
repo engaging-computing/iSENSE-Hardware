@@ -72,7 +72,6 @@ import edu.uml.cs.isense.waffle.Waffle;
 import android.app.ActionBar;
 
 
-@SuppressLint("NewApi")
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
@@ -152,7 +151,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	
 	/* Action Bar */
 	private static int actionBarTapCount = 0;
-	private static boolean useDev = true;
+	private static boolean useDev = false;
 
 	/* Start Activity Codes*/
 	private final int QUEUE_UPLOAD_REQUESTED = 1;
@@ -184,6 +183,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Initialize everything you're going to need
 		initVars();
 
+		enableAllFields();
+		
 		// Main Layout Button for Recording Data
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -293,10 +294,19 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						recordingTimer = new Timer();
 						recordingTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
+								if(dataPointCount > 12000) {
+									AmusementPark.this.runOnUiThread(new Runnable(){
+									    public void run(){
+											startStop.performLongClick();
+									    }
+									});
+								}
 								recordData();
 							}
 						}, srate, srate);
 					}
+					
+					
 					
 					return isRunning;
 				}
@@ -306,6 +316,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 	}
 
+	
 	private void enableMainButton(boolean enable) {
 		if (enable) {
 
@@ -482,6 +493,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						+ getResources().getString(R.string.mode_type));
 				useDev = !useDev;
 				
+				api.useDev(useDev);
+
 				if (cdt != null)
 					cdt.cancel();
 
@@ -620,7 +633,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		} else if (requestCode == SETUP_REQUESTED) {
 				//TODO
 				
-				rideName.setText("Ride/Student#: " + rideNameString +"/" + stNumber);
+				rideName.setText("Ride: " + rideNameString);
 				
 				SharedPreferences mPrefs = getSharedPreferences(
 						Setup.PROJ_PREFS_ID, 0);
