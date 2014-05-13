@@ -21,7 +21,7 @@ public class CredentialManagerKey extends Activity {
 	private static String key = "";
 	private static String name = "";
 	EditText newKey;
-	EditText conName;
+	//EditText conName;
 	Button bCancel;
 	Button bOK;
 
@@ -33,7 +33,6 @@ public class CredentialManagerKey extends Activity {
 		key = "";
 		name = "";
 
-		conName = (EditText) findViewById(R.id.edittext_contributor);
 		newKey = (EditText) findViewById(R.id.edittext_key);
 
 		bOK = (Button) findViewById(R.id.button_ok);
@@ -51,32 +50,18 @@ public class CredentialManagerKey extends Activity {
 
 		});
 
-		conName.setOnTouchListener(new OnTouchListener() {
 
-			/**
-			 * Removes the error marker.
-			 */
-			public boolean onTouch(View arg0, MotionEvent arg1) {
-				conName.setError(null);
-				return false;
-			}
-
-		});
 
 		bOK.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				if (newKey.getText().length() != 0
-						&& conName.getText().length() != 0) {
+				if (newKey.getText().length() != 0) {
 					key = newKey.getText().toString();
-					name = conName.getText().toString();
 					setResult(Activity.RESULT_OK);
 					finish();
-				} else {
-					if (newKey.getText().length() == 0)
-						newKey.setError("Key can not be empty.");
-					if (conName.getText().length() != 0)
-						conName.setError("Name can not be empty.");
+				} else if (newKey.getText().length() == 0) {
+					newKey.setError("Key can not be empty.");
+					
 				}
 			}
 		});
