@@ -93,10 +93,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static EditText studentNumber;
 	public static CheckBox isCanobie;
 	
+	/* Recording Constants */
+	private final int SAMPLE_INTERVAL = 200;
+	private final int DATA_POINT_LIMIT = 3000;
+	
 	/*Values obtained from Configuration*/
 	public static int projectNum = -1;
 	public static String dataName = "";
-	public static String rate = "50";
+	public static String rate = "200";
 	public static String rideNameString = "NOT SET";
 	public static String stNumber = "1";
 	public static Boolean projectLaterChecked = false;
@@ -128,8 +132,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static boolean useMenu = true;
 	public static boolean setupDone = false;
 
-	/* Recording Constants */
-	private final int SAMPLE_INTERVAL = 50;
+	
 
 	/* Recording Variables */
 	private float rawAccel[];
@@ -210,7 +213,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					// Stop the recording and reset UI if running
 					if (isRunning) {
 						isRunning = false;
-						useMenu = true;						
+						useMenu = true;	
+						if (android.os.Build.VERSION.SDK_INT >= 11)
+							invalidateOptionsMenu();
 
 						// Unregister sensors to save battery
 						mSensorManager.unregisterListener(AmusementPark.this);
@@ -237,9 +242,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					} else {
 						srate = Integer.parseInt(rate);
 						
+						
 						//new SensorCheckTask().execute();
 						
 						isRunning = true;
+						useMenu = false;						
+						if (android.os.Build.VERSION.SDK_INT >= 11)
+							invalidateOptionsMenu();
 
 						// Check to see if a valid project was chosen. If not,
 						// (projectNum is -1) enable all fields for recording.
@@ -265,8 +274,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 									Waffle.LENGTH_SHORT, Waffle.IMAGE_X);
 							e.printStackTrace();
 						}
-
-						useMenu = false;
 
 						if (mSensorManager != null) {
 							mSensorManager
@@ -294,7 +301,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						recordingTimer = new Timer();
 						recordingTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
-								if(dataPointCount > 12000) {
+								if(dataPointCount > DATA_POINT_LIMIT - 2) {
 									AmusementPark.this.runOnUiThread(new Runnable(){
 									    public void run(){
 											startStop.performLongClick();
@@ -412,6 +419,28 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		inflater.inflate(R.menu.menu, menu);
 		return true;
 	}
+	
+	
+//	public boolean enableDisableMenu(Boolean enable) {
+//
+//		if (!enable) {
+//			menu.getItem(0).setEnabled(false);
+//			menu.getItem(1).setEnabled(false);
+//			menu.getItem(2).setEnabled(false);
+//			menu.getItem(3).setEnabled(false);
+//
+//		}
+//
+//		else {
+//			menu.getItem(0).setEnabled(true);
+//			menu.getItem(1).setEnabled(true);
+//			menu.getItem(2).setEnabled(true);
+//			menu.getItem(3).setEnabled(true);
+//
+//		}
+//		return true;
+//	}
+	
 	
 
 	
