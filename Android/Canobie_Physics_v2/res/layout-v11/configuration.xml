@@ -68,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/sample_rate_prompt"
                 android:digits="0123456789"
+                android:singleLine="true"
                 android:imeOptions="actionDone"
                 android:inputType="phone"
                 android:maxLength="20" />
