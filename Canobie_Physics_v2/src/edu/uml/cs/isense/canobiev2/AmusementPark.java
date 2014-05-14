@@ -549,6 +549,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				String zPrepend = accel[2] > 0 ? "+" : "";
 
 				if (isRunning) {
+					//TODO slow this down
 					values.setText("X: " + xPrepend
 							+ threeDigit.format(accel[0]) + "\nY: " + yPrepend
 							+ threeDigit.format(accel[1]) + "\nZ: " + zPrepend
@@ -676,8 +677,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			
 			Log.e("DATASET", dataSet.toString());
 			
+			Date date = new Date();
+			ElapsedTime time = new ElapsedTime(elapsedSecs);
 			// Saves data to queue for later upload
-			QDataSet ds = new QDataSet(name + " Ride: " + rideNameString, "Canobie Physics", QDataSet.Type.DATA,
+			QDataSet ds = new QDataSet(name + " Ride: " + rideNameString, "Time: " + getNiceDateString(date) 
+					+ "\n" + "Number of Data Points: " + dataPointCount, QDataSet.Type.DATA,
 					dataSet.toString(), null, projId, null);
 			
 			uq.addDataSetToQueue(ds);
