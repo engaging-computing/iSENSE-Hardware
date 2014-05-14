@@ -49,6 +49,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Vibrator;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,8 +58,11 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.dfm.DataFieldManager;
@@ -86,6 +90,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private TextView time;
 	private TextView values;
 	private Button startStop;
+	private ToggleButton gravity;
 	public static EditText dataset; 
 	public static EditText project;
 	public static CheckBox projectLater;
@@ -144,6 +149,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private String pressure = "";
 	private String light = "";
 	private long srate = SAMPLE_INTERVAL;
+	private boolean includeGravity = true;
 
 	/* Menu Items */
 	private final int MENU_ITEM_SETUP = 0;
@@ -162,7 +168,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int SYNC_TIME_REQUESTED = 4;
 	private final int SETUP_REQUESTED = 5;
 	private final int LOGIN_REQUESTED = 6;
-
+	
 	private int dataPointCount = 0;
 	private int elapsedSecs;
 
@@ -226,9 +232,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						// Reset main UI
 						time.setText(getResources().getString(
 								R.string.timeElapsed));
-						values.setText("X: " + "\nY: " + "\nZ: ");
+						values.setText(R.string.xyz);
 								
-
+						//enable gravity togglebutton
+						gravity.setEnabled(true);
+						
 						// Cancel the recording timer
 						recordingTimer.cancel();
 						
@@ -246,7 +254,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						//new SensorCheckTask().execute();
 						
 						isRunning = true;
-						useMenu = false;						
+						useMenu = false;			
+						
+						//disable gravity togglebutton
+						gravity.setEnabled(false);
+						
+						//disable menu
 						if (android.os.Build.VERSION.SDK_INT >= 11)
 							invalidateOptionsMenu();
 
@@ -261,6 +274,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						// sdCard
 						prepWriteToSDCard(new Date());
 
+						//enable sensors needed
 						registerSensors();
 
 						dataSet = new JSONArray();
@@ -276,12 +290,22 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						}
 
 						if (mSensorManager != null) {
-							mSensorManager
-									.registerListener(
-											AmusementPark.this,
-											mSensorManager
-													.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
-											SensorManager.SENSOR_DELAY_FASTEST);
+							if (gravity.isChecked() == true) {
+								mSensorManager
+								.registerListener(
+										AmusementPark.this,
+										mSensorManager
+												.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+										SensorManager.SENSOR_DELAY_FASTEST);
+							} else {
+								mSensorManager
+								.registerListener(
+										AmusementPark.this,
+										mSensorManager
+												.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+										SensorManager.SENSOR_DELAY_FASTEST);
+							}
+							
 							mSensorManager
 									.registerListener(
 											AmusementPark.this,
@@ -320,8 +344,18 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			}
 
 		});
+		
+		gravity.setOnCheckedChangeListener(new OnCheckedChangeListener () {
 
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				includeGravity = gravity.isChecked();				
+			}
+		});
+		
 	}
+	
 
 	
 	private void enableMainButton(boolean enable) {
@@ -441,7 +475,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	}
 
 	
-	//TODO
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -533,7 +566,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public void onSensorChanged(SensorEvent event) {
 		DecimalFormat toThou = new DecimalFormat("######0.000");
 		DecimalFormat threeDigit = new DecimalFormat("#,##0.000");
-		if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+		if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION ||
+				event.sensor.getType() == Sensor.TYPE_ACCELEROMETER ) {
+			
 			if (dfm.enabledFields[Fields.ACCEL_X]
 					|| dfm.enabledFields[Fields.ACCEL_Y]
 					|| dfm.enabledFields[Fields.ACCEL_Z]
@@ -549,11 +584,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				String zPrepend = accel[2] > 0 ? "+" : "";
 
 				if (isRunning) {
-					//TODO slow this down
-					values.setText("X: " + xPrepend
-							+ threeDigit.format(accel[0]) + "\nY: " + yPrepend
-							+ threeDigit.format(accel[1]) + "\nZ: " + zPrepend
-							+ threeDigit.format(accel[2]));
+					values.setText("aX: " + xPrepend
+							+ threeDigit.format(accel[0]) + " " + "ms^2" + "\naY: " + yPrepend
+							+ threeDigit.format(accel[1]) + " " + "ms^2" + "\naZ: " + zPrepend
+							+ threeDigit.format(accel[2]) + " " + "ms^2");
 				}
 
 				accel[3] = (float) Math.sqrt((float) ((Math.pow(accel[0], 2)
@@ -639,8 +673,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			dfm.setEnabledFields(acceptedFields);
 			
 		} else if (requestCode == SETUP_REQUESTED) {
-				//TODO
-				
 				rideName.setText("Ride: " + rideNameString);
 				
 				SharedPreferences mPrefs = getSharedPreferences(
@@ -680,7 +712,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			Date date = new Date();
 			ElapsedTime time = new ElapsedTime(elapsedSecs);
 			// Saves data to queue for later upload
-			QDataSet ds = new QDataSet(name + " Ride: " + rideNameString, "Time: " + getNiceDateString(date) 
+			QDataSet ds = new QDataSet(name + " Ride: " + rideNameString + " Gravity: " + ((includeGravity) ? "Included" : "Not Included"), "Time: " + getNiceDateString(date) 
 					+ "\n" + "Number of Data Points: " + dataPointCount, QDataSet.Type.DATA,
 					dataSet.toString(), null, projId, null);
 			
@@ -810,7 +842,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		
 		// OMG a button!
 		startStop = (Button) findViewById(R.id.startStop);
-
+		
+		//Toggle button for gravity
+		gravity = (ToggleButton) findViewById(R.id.tbGravity);
+		gravity.setChecked(includeGravity);
+		
 		// Have some TVs. TextViews I mean.
 		values = (TextView) findViewById(R.id.values);
 		time = (TextView) findViewById(R.id.time);
@@ -868,7 +904,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			mRoughLocManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, 0, 0, AmusementPark.this);
 		} else {
-			//TODO ASK USER TO TURN ON GPS
+			
 		}
 		
 		// This is the location we will get back from GPS
@@ -1099,7 +1135,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[Fields.ACCEL_TOTAL]) {
 				mSensorManager.registerListener(AmusementPark.this,
 						mSensorManager
-								.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 
