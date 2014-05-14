@@ -71,7 +71,7 @@
     </string-array>
 
     <string name="experiments_no_items">No experiments were found.</string>
-    <string name="xyz">aX:\naY:\naZ:</string>
+    <string name="xyz">Ax:\nAy:\nAz:</string>
     <string name="startString">START\n(Press and Hold)</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
     <string name="notLoggedIn"> Not Logged In</string>
