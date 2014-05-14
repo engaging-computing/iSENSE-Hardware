@@ -584,10 +584,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				String zPrepend = accel[2] > 0 ? "+" : "";
 
 				if (isRunning) {
-					values.setText("aX: " + xPrepend
-							+ threeDigit.format(accel[0]) + " " + "ms^2" + "\naY: " + yPrepend
-							+ threeDigit.format(accel[1]) + " " + "ms^2" + "\naZ: " + zPrepend
-							+ threeDigit.format(accel[2]) + " " + "ms^2");
+					values.setText("Ax: " + xPrepend
+							+ threeDigit.format(accel[0]) + " " + "m/s^2" + "\nAy: " + yPrepend
+							+ threeDigit.format(accel[1]) + " " + "m/s^2" + "\nAz: " + zPrepend
+							+ threeDigit.format(accel[2]) + " " + "m/s^2");
 				}
 
 				accel[3] = (float) Math.sqrt((float) ((Math.pow(accel[0], 2)
