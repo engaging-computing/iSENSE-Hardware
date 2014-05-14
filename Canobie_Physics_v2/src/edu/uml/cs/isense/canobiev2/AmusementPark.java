@@ -851,7 +851,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		values = (TextView) findViewById(R.id.values);
 		time = (TextView) findViewById(R.id.time);
 		rideName = (TextView) findViewById(R.id.ridename);
-		rideName.setText("Ride/Student#: " + rideNameString);
+		rideName.setText("Ride: " + rideNameString);
 
 		// Start some managers
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
