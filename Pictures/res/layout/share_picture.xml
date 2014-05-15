@@ -47,6 +47,7 @@
         android:id="@+id/buttonKey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/uploadKey"/>
+        android:text="@string/uploadKey"
+        android:layout_marginBottom = "20dp"/>
 
 </LinearLayout>
