@@ -80,7 +80,8 @@
             android:background="@android:color/transparent"
             android:text="@string/xyz"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold" 
+            android:typeface="monospace"/>
         
          <ToggleButton
             android:id="@+id/tbGravity"
