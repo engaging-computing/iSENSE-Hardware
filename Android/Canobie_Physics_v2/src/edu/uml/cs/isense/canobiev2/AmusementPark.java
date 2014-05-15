@@ -415,10 +415,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Stop the current sensors to save battery.
 		mLocationManager.removeUpdates(AmusementPark.this);
 		mSensorManager.unregisterListener(AmusementPark.this);
+		
+		if (isRunning) {
+			startStop.performLongClick();
+		}
 
-		// Cancel the recording timer
-		if (recordingTimer != null)
-			recordingTimer.cancel();
+//		// Cancel the recording timer
+//		if (recordingTimer != null)
+//			recordingTimer.cancel();
 	}
 
 	@Override
