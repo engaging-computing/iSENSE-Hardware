@@ -26,10 +26,6 @@ public class Configuration extends Activity {
 	private static CheckBox isCanobie;
 	private static Spinner rides;
 
-
-
-	
-	
 	private int BROWSE_PROJECTS_REQUESTED = 101;
 	
 	@Override

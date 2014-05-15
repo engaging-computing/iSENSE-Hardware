@@ -1,9 +1,6 @@
 package edu.uml.cs.isense.credentials;
 
-import android.app.Activity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;  
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;

@@ -17,7 +17,6 @@
 package edu.uml.cs.isense.canobiev2;
 
 import java.io.File;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -49,7 +48,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Vibrator;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,7 +69,6 @@ import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
-import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 import android.app.ActionBar;
 
@@ -565,7 +562,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		DecimalFormat toThou = new DecimalFormat("######0.000");
-		DecimalFormat threeDigit = new DecimalFormat("#,##0.000");
+		//DecimalFormat threeDigit = new DecimalFormat("#,##0.000");
+		DecimalFormat oneDigit = new DecimalFormat("#,#00.0");
+
 		if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION ||
 				event.sensor.getType() == Sensor.TYPE_ACCELEROMETER ) {
 			
@@ -585,9 +584,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 				if (isRunning) {
 					values.setText("Ax: " + xPrepend
-							+ threeDigit.format(accel[0]) + " " + "m/s^2" + "\nAy: " + yPrepend
-							+ threeDigit.format(accel[1]) + " " + "m/s^2" + "\nAz: " + zPrepend
-							+ threeDigit.format(accel[2]) + " " + "m/s^2");
+							+ oneDigit.format(accel[0]) + " " + "m/s^2" + "\nAy: " + yPrepend
+							+ oneDigit.format(accel[1]) + " " + "m/s^2" + "\nAz: " + zPrepend
+							+ oneDigit.format(accel[2]) + " " + "m/s^2");
 				}
 
 				accel[3] = (float) Math.sqrt((float) ((Math.pow(accel[0], 2)
@@ -710,7 +709,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			Log.e("DATASET", dataSet.toString());
 			
 			Date date = new Date();
-			ElapsedTime time = new ElapsedTime(elapsedSecs);
+			
 			// Saves data to queue for later upload
 			QDataSet ds = new QDataSet(name + " Ride: " + rideNameString + " Gravity: " + ((includeGravity) ? "Included" : "Not Included"), "Time: " + getNiceDateString(date) 
 					+ "\n" + "Number of Data Points: " + dataPointCount, QDataSet.Type.DATA,
