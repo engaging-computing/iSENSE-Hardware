@@ -17,27 +17,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
-import android.widget.TextView;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.queue.QDataSet;
-import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 public class MediaManager extends Activity {
 
 	private static Uri imageUri;
-	private static Uri videoUri;
 
 	private static final int CAMERA_PIC_REQUESTED = 1;
 	private static final int UPLOAD_PIC_REQUESTED = 2;
