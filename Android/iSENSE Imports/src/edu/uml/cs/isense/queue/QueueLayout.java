@@ -399,7 +399,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				uq.storeAndReRetrieveQueue(false);
 			
 			} else if (dataSetID == -1) {
-				
+				//upload failed
 				// try to see if the data was formatted incorrectly (i.e. was a JSONArray, not JSONObject)
 				JSONObject data = null;
 				try {
@@ -414,10 +414,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 								": <font COLOR=\"#ED0909\">project for this data set may not exist</font>");
 					} else {
 						dataSetUploadStatus.add(uploadSet.getName() + 
-								": <font COLOR=\"#ED0909\">data set formatted incorrectly</font>");
+								": <font COLOR=\"#ED0909\">upload failed</font>");
 					}	
 				}
-				
+				//TODO better errors
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
 			}

@@ -416,13 +416,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		mLocationManager.removeUpdates(AmusementPark.this);
 		mSensorManager.unregisterListener(AmusementPark.this);
 		
+		//Stop recording
 		if (isRunning) {
 			startStop.performLongClick();
 		}
 
-//		// Cancel the recording timer
-//		if (recordingTimer != null)
-//			recordingTimer.cancel();
+
 	}
 
 	@Override
