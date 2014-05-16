@@ -64,7 +64,7 @@ typedef enum {
 -(void)         appendDataSetDataWithId:(int)dataSetId  andData:(NSDictionary *)data withContributorKey:(NSString *)conKey;
 
 -(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload andName:(NSString *)name;
--(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName;
+-(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName andName:(NSString *)name;
 -(int) uploadMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *) name withTarget: (TargetType) ttype;
 -(int) uploadMediaWithId:(int)projectId withFile:(NSData *)mediaToUpload andName:(NSString *) name withTarget: (TargetType) ttype withContributorKey:(NSString *) conKey as:(NSString *) conName;
 

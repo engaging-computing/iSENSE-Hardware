@@ -467,11 +467,12 @@ static NSString *email, *password;
  * @param conName - Name of contributor
  * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
  */
--(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName {
+-(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName andName:(NSString *)name{
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
     
-    [requestData setObject:conKey forKey:@"contributor_key"];
+    [requestData setObject:name forKey:@"title"];
+    [requestData setObject:conKey forKey:@"contribution_key"];
     [requestData setObject:conName forKey:@"contributor_name"];
     [requestData setObject:dataToUpload forKey:@"data"];
     

@@ -136,12 +136,6 @@
     
     NSLog(@"Insisde DataSaver.m");
     
-    if ([api getCurrentUser] == nil) {
-        
-        NSLog(@"Not logged in.");
-        return false;
-    }
-    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     int dataSetsToUpload = 0;
     int dataSetsFailed = 0;
@@ -192,14 +186,27 @@
             }
             
             // upload to iSENSE
-            int returnID = -1;
+            __block int returnID = -1;
             if (((NSArray *)currentDS.data).count) {
                 NSLog(@"Shouldn't be here");
                 NSMutableDictionary *jobj = [[NSMutableDictionary alloc] init];
                 [jobj setObject:currentDS.data forKey:@"data"];
                 jobj = [[api rowsToCols:jobj] mutableCopy];
                 
-                returnID = [api uploadDataWithId:currentDS.projID.intValue withData:jobj andName:currentDS.name];
+                if ([api getCurrentUser] == nil) {
+                    NSLog(@"Not logged in");
+                    DLAVAlertView *contribKeyAlert = [[DLAVAlertView alloc] initWithTitle:@"Enter Contributor Key" message:[NSString stringWithFormat:@"%@%@", @"Data Set: ", currentDS.name] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Upload", nil];
+                    [contribKeyAlert setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
+                    [contribKeyAlert textFieldAtIndex:0].placeholder = @"Contributor Name";
+                    [contribKeyAlert textFieldAtIndex:1].placeholder = @"Contributor Key";
+                    [contribKeyAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+                        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Upload"]) {
+                            returnID = [api uploadDataWithId:currentDS.projID.intValue withData:jobj withContributorKey:[contribKeyAlert textFieldTextAtIndex:1] as:[contribKeyAlert textFieldTextAtIndex:0] andName:currentDS.name];
+                        }
+                    }];
+                } else {
+                   returnID = [api uploadDataWithId:currentDS.projID.intValue withData:jobj andName:currentDS.name];
+                }
                 NSLog(@"Data set ID: %d", returnID);
                 
                 if (returnID == 0 || returnID == -1) {
@@ -221,7 +228,28 @@
             
                     // track the images that fail to upload
                     
-                    if ([api uploadMediaWithId:currentDS.projID.intValue withFile:pictures[i] andName:currentDS.name withTarget:PROJECT] == -1) {
+                    if ([api getCurrentUser] == nil) {
+                        NSLog(@"Not logged in");
+                        DLAVAlertView *contribKeyAlert = [[DLAVAlertView alloc] initWithTitle:@"Enter Contributor Key" message:[NSString stringWithFormat:@"%@%@", @"Data Set: ", currentDS.name] delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Upload", nil];
+                        [contribKeyAlert setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
+                        [contribKeyAlert textFieldAtIndex:0].placeholder = @"Contributor Name";
+                        [contribKeyAlert textFieldAtIndex:1].placeholder = @"Contributor Key";
+                        [contribKeyAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+                            if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Upload"]) {
+                                returnID = [api uploadMediaWithId:currentDS.projID.intValue withFile:pictures[i] andName:currentDS.name withTarget:PROJECT withContributorKey:[contribKeyAlert textFieldTextAtIndex:1] as:[contribKeyAlert textFieldTextAtIndex:0]];
+                                
+                            }
+                        }];
+
+                    } else {
+                        
+                        returnID = [api uploadMediaWithId:currentDS.projID.intValue withFile:pictures[i] andName:currentDS.name withTarget:PROJECT];
+                    
+                        
+                        
+                    }
+                    
+                    if (returnID == -1) {
                         dataSetsFailed++;
                         failedAtLeastOnce = true;
                         [newPicturePaths addObject:pictures[i]];

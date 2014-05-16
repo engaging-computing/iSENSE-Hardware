@@ -167,7 +167,7 @@
     
     [formatter setRoundingMode: NSNumberFormatterRoundUp];
     
-    useDev = TRUE;
+    useDev = FALSE;
     
     api = [API getInstance];
     [api useDev: useDev];
@@ -830,7 +830,8 @@
 
 - (void) didFinishChoosingProject:(ProjectBrowserViewController *) browser withID: (int) project_id {
     projNum = project_id;
-    [self launchFieldMatchingViewControllerFromBrowse:TRUE];
+    NSLog(@"ID = %d", projNum);
+    //[self launchFieldMatchingViewControllerFromBrowse:TRUE];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
@@ -936,14 +937,10 @@
     if ([API hasConnectivity]) {
         
         
-        if ([[api getCurrentUser].name isEqualToString:@""]) {
-            [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-            return false;
-            
-        }
+        
         
         sessionName = [NSString stringWithFormat:@"%@.", [api getCurrentUser].name];
-        if (sessionName == nil){
+        if ([api getCurrentUser] == nil){
             sessionName = @"Car Ramp Physics";
         }
         
@@ -958,7 +955,25 @@
             [data setObject:dataToBeJSONed forKey:@"data"];
             data = [[api rowsToCols:data] mutableCopy];
             
-            int ds_id = [api uploadDataWithId:projNum withData:data andName:sessionName];
+            __block int ds_id;
+            
+            if ([api getCurrentUser] == nil) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    DLAVAlertView *contribKeyAlert = [[DLAVAlertView alloc] initWithTitle:@"Enter Contributor Key" message:@"" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Upload", nil];
+                    [contribKeyAlert setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
+                    [contribKeyAlert textFieldAtIndex:0].placeholder = @"Contributor Name";
+                    [contribKeyAlert textFieldAtIndex:1].placeholder = @"Contributor Key";
+                
+                    [contribKeyAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+                        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Upload"]) {
+                            ds_id = [api uploadDataWithId:projNum withData:data withContributorKey:[contribKeyAlert textFieldTextAtIndex:1] as:[contribKeyAlert textFieldTextAtIndex:0] andName:sessionName];
+                        }
+                    }];
+                });
+                
+            } else {
+                ds_id = [api uploadDataWithId:projNum withData:data andName:sessionName];
+            }
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 [message dismissWithClickedButtonIndex:nil animated:YES];
