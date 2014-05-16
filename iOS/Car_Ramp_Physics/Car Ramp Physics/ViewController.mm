@@ -167,7 +167,7 @@
     
     [formatter setRoundingMode: NSNumberFormatterRoundUp];
     
-    useDev = FALSE;
+    useDev = TRUE;
     
     api = [API getInstance];
     [api useDev: useDev];

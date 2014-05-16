@@ -574,7 +574,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "iS Car Ramp";
-				PROVISIONING_PROFILE = "D93993E6-36A5-4772-8EFD-9C59C4A4986D";
+				PROVISIONING_PROFILE = "";
 				REZ_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "arm64 armv7 armv7s";
