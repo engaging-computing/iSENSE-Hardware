@@ -156,7 +156,7 @@ public class Main extends Activity implements LocationListener {
 		api = API.getInstance();
 		api.useDev(useDev);
 		
-		CredentialManager.Login(mContext, api);
+		CredentialManager.login(mContext, api);
 		
 		uq = new UploadQueue("generalpictures", mContext, api);
 
@@ -686,7 +686,7 @@ public class Main extends Activity implements LocationListener {
 					api.useDev(useDev);
 					setDefaultProject();
 				}
-				CredentialManager.Login(this, api);
+				CredentialManager.login(this, api);
 				actionBarTapCount = 0;
 				
 				
@@ -715,7 +715,7 @@ public class Main extends Activity implements LocationListener {
 
 		}
 
-		CredentialManager.Login(this, api);
+		CredentialManager.login(this, api);
 
 		// Rebuilds uploadQueue from saved info
 		uq.buildQueueFromFile();

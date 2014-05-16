@@ -23,12 +23,10 @@ import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.CredentialManagerKey;
-import edu.uml.cs.isense.credentials.Login;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.FieldMatching;
 import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
-import edu.uml.cs.isense.supplements.ObscuredSharedPreferences;
 import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
@@ -401,7 +399,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 				uq.storeAndReRetrieveQueue(false);
 			
 			} else if (dataSetID == -1) {
-				
+				//upload failed
 				// try to see if the data was formatted incorrectly (i.e. was a JSONArray, not JSONObject)
 				JSONObject data = null;
 				try {
@@ -416,10 +414,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 								": <font COLOR=\"#ED0909\">project for this data set may not exist</font>");
 					} else {
 						dataSetUploadStatus.add(uploadSet.getName() + 
-								": <font COLOR=\"#ED0909\">data set formatted incorrectly</font>");
+								": <font COLOR=\"#ED0909\">upload failed</font>");
 					}	
 				}
-				
+				//TODO better errors
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
 			}
@@ -885,60 +883,5 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			break;
 		}
-
 	}
-	
-	// Attempts to login with current user information
-	private class LoginTask extends AsyncTask<Void, Void, Void> {
-
-		private ProgressDialog dia;
-		boolean success;
-		
-		@Override
-		protected void onPreExecute() {
-			OrientationManager.disableRotation(QueueLayout.this);
-
-			dia = new ProgressDialog(QueueLayout.this);
-			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			dia.setMessage("Attempting to find login information...");
-			dia.setCancelable(false);
-			dia.show();
-			
-			super.onPreExecute();
-		}
-		
-		@Override
-		protected Void doInBackground(Void... params) {
-			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-					QueueLayout.mContext,
-					QueueLayout.mContext.getSharedPreferences(
-							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-							Context.MODE_PRIVATE));
-
-			api
-					.createSession(
-								mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME, Login.DEFAULT_USERNAME),
-								mPrefs.getString(Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD, Login.DEFAULT_PASSWORD));
-			
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Void result) {
-
-			OrientationManager.enableRotation(QueueLayout.this);
-			if (dia != null) dia.cancel();
-			
-			if (success)
-				prepareForUpload();
-			else
-				w.make("Login information not found - please login again",
-						Waffle.IMAGE_WARN);
-			
-			super.onPostExecute(result);
-		}
-
-
-	}
-
 }

@@ -17,7 +17,6 @@
 package edu.uml.cs.isense.canobiev2;
 
 import java.io.File;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,8 +56,11 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.dfm.DataFieldManager;
@@ -67,12 +69,10 @@ import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
-import edu.uml.cs.isense.sync.SyncTime;
 import edu.uml.cs.isense.waffle.Waffle;
 import android.app.ActionBar;
 
 
-@SuppressLint("NewApi")
 public class AmusementPark extends Activity implements SensorEventListener,
 		LocationListener {
 
@@ -87,6 +87,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private TextView time;
 	private TextView values;
 	private Button startStop;
+	private ToggleButton gravity;
 	public static EditText dataset; 
 	public static EditText project;
 	public static CheckBox projectLater;
@@ -94,10 +95,14 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	public static EditText studentNumber;
 	public static CheckBox isCanobie;
 	
+	/* Recording Constants */
+	private final int SAMPLE_INTERVAL = 200;
+	private final int DATA_POINT_LIMIT = 3000;
+	
 	/*Values obtained from Configuration*/
 	public static int projectNum = -1;
 	public static String dataName = "";
-	public static String rate = "50";
+	public static String rate = "200";
 	public static String rideNameString = "NOT SET";
 	public static String stNumber = "1";
 	public static Boolean projectLaterChecked = false;
@@ -129,8 +134,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private static boolean useMenu = true;
 	public static boolean setupDone = false;
 
-	/* Recording Constants */
-	private final int SAMPLE_INTERVAL = 50;
+	
 
 	/* Recording Variables */
 	private float rawAccel[];
@@ -142,6 +146,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private String pressure = "";
 	private String light = "";
 	private long srate = SAMPLE_INTERVAL;
+	private boolean includeGravity = true;
 
 	/* Menu Items */
 	private final int MENU_ITEM_SETUP = 0;
@@ -152,7 +157,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	
 	/* Action Bar */
 	private static int actionBarTapCount = 0;
-	private static boolean useDev = true;
+	private static boolean useDev = false;
 
 	/* Start Activity Codes*/
 	private final int QUEUE_UPLOAD_REQUESTED = 1;
@@ -160,7 +165,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int SYNC_TIME_REQUESTED = 4;
 	private final int SETUP_REQUESTED = 5;
 	private final int LOGIN_REQUESTED = 6;
-
+	
 	private int dataPointCount = 0;
 	private int elapsedSecs;
 
@@ -184,6 +189,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Initialize everything you're going to need
 		initVars();
 
+		enableAllFields();
+		
 		// Main Layout Button for Recording Data
 		startStop.setOnLongClickListener(new OnLongClickListener() {
 
@@ -209,7 +216,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					// Stop the recording and reset UI if running
 					if (isRunning) {
 						isRunning = false;
-						useMenu = true;						
+						useMenu = true;	
+						if (android.os.Build.VERSION.SDK_INT >= 11)
+							invalidateOptionsMenu();
 
 						// Unregister sensors to save battery
 						mSensorManager.unregisterListener(AmusementPark.this);
@@ -220,9 +229,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						// Reset main UI
 						time.setText(getResources().getString(
 								R.string.timeElapsed));
-						values.setText("X: " + "\nY: " + "\nZ: ");
+						values.setText(R.string.xyz);
 								
-
+						//enable gravity togglebutton
+						gravity.setEnabled(true);
+						
 						// Cancel the recording timer
 						recordingTimer.cancel();
 						
@@ -236,9 +247,18 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					} else {
 						srate = Integer.parseInt(rate);
 						
+						
 						//new SensorCheckTask().execute();
 						
 						isRunning = true;
+						useMenu = false;			
+						
+						//disable gravity togglebutton
+						gravity.setEnabled(false);
+						
+						//disable menu
+						if (android.os.Build.VERSION.SDK_INT >= 11)
+							invalidateOptionsMenu();
 
 						// Check to see if a valid project was chosen. If not,
 						// (projectNum is -1) enable all fields for recording.
@@ -251,6 +271,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						// sdCard
 						prepWriteToSDCard(new Date());
 
+						//enable sensors needed
 						registerSensors();
 
 						dataSet = new JSONArray();
@@ -265,15 +286,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 							e.printStackTrace();
 						}
 
-						useMenu = false;
-
 						if (mSensorManager != null) {
-							mSensorManager
-									.registerListener(
-											AmusementPark.this,
-											mSensorManager
-													.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
-											SensorManager.SENSOR_DELAY_FASTEST);
+							if (gravity.isChecked() == true) {
+								mSensorManager
+								.registerListener(
+										AmusementPark.this,
+										mSensorManager
+												.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+										SensorManager.SENSOR_DELAY_FASTEST);
+							} else {
+								mSensorManager
+								.registerListener(
+										AmusementPark.this,
+										mSensorManager
+												.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+										SensorManager.SENSOR_DELAY_FASTEST);
+							}
+							
 							mSensorManager
 									.registerListener(
 											AmusementPark.this,
@@ -293,19 +322,39 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						recordingTimer = new Timer();
 						recordingTimer.scheduleAtFixedRate(new TimerTask() {
 							public void run() {
+								if(dataPointCount > DATA_POINT_LIMIT - 2) {
+									AmusementPark.this.runOnUiThread(new Runnable(){
+									    public void run(){
+											startStop.performLongClick();
+									    }
+									});
+								}
 								recordData();
 							}
 						}, srate, srate);
 					}
+					
+					
 					
 					return isRunning;
 				}
 			}
 
 		});
+		
+		gravity.setOnCheckedChangeListener(new OnCheckedChangeListener () {
 
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				includeGravity = gravity.isChecked();				
+			}
+		});
+		
 	}
+	
 
+	
 	private void enableMainButton(boolean enable) {
 		if (enable) {
 
@@ -366,10 +415,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		// Stop the current sensors to save battery.
 		mLocationManager.removeUpdates(AmusementPark.this);
 		mSensorManager.unregisterListener(AmusementPark.this);
+		
+		//Stop recording
+		if (isRunning) {
+			startStop.performLongClick();
+		}
 
-		// Cancel the recording timer
-		if (recordingTimer != null)
-			recordingTimer.cancel();
+
 	}
 
 	@Override
@@ -377,7 +429,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		super.onResume();
 
 		// Silently logs in the user to iSENSE
-		CredentialManager.Login(mContext, api);
+		CredentialManager.login(mContext, api);
 
 		// Rebuilds the upload queue
 		if (uq != null)
@@ -410,20 +462,19 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
+//			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
+//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
-			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
-			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
+//			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
+//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
 		}
 		return true;
 	}
 
 	
-	//TODO
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -438,19 +489,19 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		case R.id.MENU_ITEM_UPLOAD:
 			manageUploadQueue();
 			return true;
-		case R.id.MENU_ITEM_TIME:
-			startActivityForResult(new Intent(getApplicationContext(),
-					SyncTime.class), SYNC_TIME_REQUESTED);
-			return true;
-		case R.id.MENU_ITEM_MEDIA:
-			if ((!setupDone)) {
-				w.make("You must setup before using Media Manager.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-			} else {
-				Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
-				startActivity(iMedia);
-			}
-			return true;
+//		case R.id.MENU_ITEM_TIME:
+//			startActivityForResult(new Intent(getApplicationContext(),
+//					SyncTime.class), SYNC_TIME_REQUESTED);
+//			return true;
+//		case R.id.MENU_ITEM_MEDIA:
+//			if ((!setupDone)) {
+//				w.make("You must setup before using Media Manager.",
+//						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
+//			} else {
+//				Intent iMedia = new Intent(AmusementPark.this, MediaManager.class);
+//				startActivity(iMedia);
+//			}
+//			return true;
 		case android.R.id.home:
 			CountDownTimer cdt = null;
 
@@ -482,10 +533,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 						+ getResources().getString(R.string.mode_type));
 				useDev = !useDev;
 				
+				api.useDev(useDev);
+
 				if (cdt != null)
 					cdt.cancel();
 
-				CredentialManager.Login(this, api);
+				CredentialManager.login(this, api);
 				actionBarTapCount = 0;
 				
 				
@@ -512,8 +565,12 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		DecimalFormat toThou = new DecimalFormat("######0.000");
-		DecimalFormat threeDigit = new DecimalFormat("#,##0.000");
-		if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+		//DecimalFormat threeDigit = new DecimalFormat("#,##0.000");
+		DecimalFormat oneDigit = new DecimalFormat("#,#00.0");
+
+		if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION ||
+				event.sensor.getType() == Sensor.TYPE_ACCELEROMETER ) {
+			
 			if (dfm.enabledFields[Fields.ACCEL_X]
 					|| dfm.enabledFields[Fields.ACCEL_Y]
 					|| dfm.enabledFields[Fields.ACCEL_Z]
@@ -529,10 +586,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				String zPrepend = accel[2] > 0 ? "+" : "";
 
 				if (isRunning) {
-					values.setText("X: " + xPrepend
-							+ threeDigit.format(accel[0]) + "\nY: " + yPrepend
-							+ threeDigit.format(accel[1]) + "\nZ: " + zPrepend
-							+ threeDigit.format(accel[2]));
+					values.setText("Ax: " + xPrepend
+							+ oneDigit.format(accel[0]) + " " + "m/s^2" + "\nAy: " + yPrepend
+							+ oneDigit.format(accel[1]) + " " + "m/s^2" + "\nAz: " + zPrepend
+							+ oneDigit.format(accel[2]) + " " + "m/s^2");
 				}
 
 				accel[3] = (float) Math.sqrt((float) ((Math.pow(accel[0], 2)
@@ -618,9 +675,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			dfm.setEnabledFields(acceptedFields);
 			
 		} else if (requestCode == SETUP_REQUESTED) {
-				//TODO
-				
-				rideName.setText("Ride/Student#: " + rideNameString +"/" + stNumber);
+				rideName.setText("Ride: " + rideNameString);
 				
 				SharedPreferences mPrefs = getSharedPreferences(
 						Setup.PROJ_PREFS_ID, 0);
@@ -656,8 +711,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			
 			Log.e("DATASET", dataSet.toString());
 			
+			Date date = new Date();
+			
 			// Saves data to queue for later upload
-			QDataSet ds = new QDataSet(name + " Ride: " + rideNameString, "Canobie Physics", QDataSet.Type.DATA,
+			QDataSet ds = new QDataSet(name + " Ride: " + rideNameString + " Gravity: " + ((includeGravity) ? "Included" : "Not Included"), "Time: " + getNiceDateString(date) 
+					+ "\n" + "Number of Data Points: " + dataPointCount, QDataSet.Type.DATA,
 					dataSet.toString(), null, projId, null);
 			
 			uq.addDataSetToQueue(ds);
@@ -779,19 +837,23 @@ public class AmusementPark extends Activity implements SensorEventListener,
 				}
 
 		// Login to iSENSE
-		CredentialManager.Login(this, api);
+		CredentialManager.login(this, api);
 
 		// Create a new upload queue
 		uq = new UploadQueue(ACTIVITY_NAME, mContext, api);
 		
 		// OMG a button!
 		startStop = (Button) findViewById(R.id.startStop);
-
+		
+		//Toggle button for gravity
+		gravity = (ToggleButton) findViewById(R.id.tbGravity);
+		gravity.setChecked(includeGravity);
+		
 		// Have some TVs. TextViews I mean.
 		values = (TextView) findViewById(R.id.values);
 		time = (TextView) findViewById(R.id.time);
 		rideName = (TextView) findViewById(R.id.ridename);
-		rideName.setText("Ride/Student#: " + rideNameString);
+		rideName.setText("Ride: " + rideNameString);
 
 		// Start some managers
 		vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -844,7 +906,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			mRoughLocManager.requestLocationUpdates(
 					LocationManager.NETWORK_PROVIDER, 0, 0, AmusementPark.this);
 		} else {
-			//TODO ASK USER TO TURN ON GPS
+			
 		}
 		
 		// This is the location we will get back from GPS
@@ -1075,7 +1137,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 					|| dfm.enabledFields[Fields.ACCEL_TOTAL]) {
 				mSensorManager.registerListener(AmusementPark.this,
 						mSensorManager
-								.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
 			}
 

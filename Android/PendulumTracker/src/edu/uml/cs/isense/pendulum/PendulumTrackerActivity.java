@@ -202,7 +202,7 @@ public class PendulumTrackerActivity extends Activity implements
 		// TODO: add remembe-me login stuff here!
 		// Jeremy Note: Actually the remembering happens automagically
 		// in the API calls
-		CredentialManager.Login(mContext, api);
+		CredentialManager.login(mContext, api);
 		
 		// Event handler
 		mHandler = new Handler();
@@ -849,7 +849,7 @@ public class PendulumTrackerActivity extends Activity implements
 				}
 				
 				/*try to login if successful upload if not prompt for key*/
-				CredentialManager.Login(mContext, api);
+				CredentialManager.login(mContext, api);
 				
 
 				// am I logged in/session created to iSENSE?

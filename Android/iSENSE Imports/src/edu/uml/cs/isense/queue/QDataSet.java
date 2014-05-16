@@ -14,7 +14,6 @@ import android.content.Context;
 import android.util.Log;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.API.TargetType;
-import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 
@@ -247,12 +246,12 @@ public class QDataSet implements Serializable {
 				dataSetID = uploadData();
 
 				if (UploadQueue.getAPI().getCurrentUser() != null) {
-					dataSetID = UploadQueue.getAPI().uploadMedia(
-							Integer.parseInt(projID), picture, TargetType.DATA_SET);
+					UploadQueue.getAPI().uploadMedia(
+							dataSetID, picture, TargetType.DATA_SET);
 				} else {
 					String key = CredentialManagerKey.getKey();
-					dataSetID = UploadQueue.getAPI().uploadMedia(
-							Integer.parseInt(projID), picture, TargetType.DATA_SET, key, name);
+					UploadQueue.getAPI().uploadMedia(
+						dataSetID, picture, TargetType.DATA_SET, key, name);
 				}
 				break;
 

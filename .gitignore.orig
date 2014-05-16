@@ -17,8 +17,12 @@
 
 Android/rSENSETest/bin/
 Android/rSENSETest/gen/
+<<<<<<< HEAD
 
 Android/*/bin
 Android/*/gen
 
 */xcuserdata/
+=======
+Android/.metadata
+>>>>>>> upstream/master
