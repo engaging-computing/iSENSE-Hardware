@@ -44,8 +44,6 @@ import edu.uml.cs.isense.objects.RProjectField;
 public class API {
 	private String version_major = "4";
 	private String version_minor = "1";
-	
-	private String api_version = "1";
 	private String version;
 
 	private static API instance = null;
@@ -102,11 +100,11 @@ public class API {
 					+ "&password=" + URLEncoder.encode(p_password, "UTF-8"),
 					"GET", null);
 			JSONObject j = new JSONObject(reqResult);
-			if(j.getString("username") != null) {
+			if(j.getString("name") != null) {
 				email = p_email;
 				password = p_password;
 				RPerson you = new RPerson();
-				you.name = j.getString("username");
+				you.name = j.getString("name");
 				you.gravatar = j.getString("gravatar");
 				currentUser = you;
 				return you;
@@ -114,6 +112,7 @@ public class API {
 				return null;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -535,7 +534,7 @@ public class API {
 	 * 			The type of the target (project or dataset)
 	 * @return The media object ID for the media uploaded or -1 if upload fails
 	 */
-	public int uploadMedia(int projectId, File mediaToUpload, TargetType ttype) {
+	public int uploadMedia(int dataId, File mediaToUpload, TargetType ttype) {
 		try {
 			URL url = new URL(baseURL + "/media_objects/");
 
@@ -552,7 +551,7 @@ public class API {
 			entity.addPart("email", new StringBody(email));
 			entity.addPart("password", new StringBody(password));
 			entity.addPart("type", new StringBody((ttype == TargetType.PROJECT) ? "project" : "data_set"));
-			entity.addPart("id", new StringBody(""+projectId));
+			entity.addPart("id", new StringBody(""+dataId));
 
 			connection.setRequestProperty("Content-Type", entity
 					.getContentType().getValue());

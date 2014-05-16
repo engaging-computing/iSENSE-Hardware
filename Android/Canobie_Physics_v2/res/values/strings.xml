@@ -5,7 +5,7 @@
     <string name="display_name">iS Canobie Physics</string>
     <string name="login">Login</string>
     <string name="iSenseConfig"><u><b>iSENSE Configurations</b></u></string>
-    <string name="otherConfig"><u><b>Other Configurations</b></u></string>
+    <string name="otherConfig"><u><b>Ride Configurations</b></u></string>
     <string name="rides_prompt">Choose a ride</string>
 
     <string-array name="rides_array">
@@ -71,19 +71,17 @@
     </string-array>
 
     <string name="experiments_no_items">No experiments were found.</string>
-    <string name="xyz">X:\nY:\nZ:</string>
+    <string name="xyz">Ax:\nAy:\nAz:</string>
     <string name="startString">START\n(Press and Hold)</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
     <string name="notLoggedIn"> Not Logged In</string>
-    <string name="rideAndSeat">Ride/St#: </string>
+    <string name="rideAndSeat">Ride: </string>
     <string name="picAndVidCount">Pictures and Videos taken: \0</string>
     <string name="menuDirections">Use Menu to Access Configurations</string>
     <string name="timeElapsed">Time Elapsed: 0:00</string>
     <string name="sessionName">First Name/Last Initial: </string>
     <string name="projectNum">Project #: </string>
     <string name="browse">  Browse&#8230;  </string>
-    <string name="seatNum">Seat/Student #: </string>
-    <string name="seatNumber">1</string>
     <string name="canobieRides">Canobie Lake Park Rides</string>
     <string name="ride">Ride: </string>
     <string name="takePic">Take a Picture</string>
@@ -125,8 +123,6 @@
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
 	    WiFi networks.</string>
     <string name="prompt">Would you like to retry uploading any of the following?</string>
-    <string name="username">Username:   </string>
-    <string name="password">Password:    </string>
     <string name="loading">Loading&#x2026;</string>
     <string name="search">Search</string>
     <string name="select_later">I\'ll select one later</string>
@@ -138,5 +134,6 @@
     <string name="project_name_dialog">Create a Project</string>
     <string name="login_prompt_error">Login Error</string>
     <string name="uploadPicture">Upload a Picture</string>
+    
 
 </resources>
