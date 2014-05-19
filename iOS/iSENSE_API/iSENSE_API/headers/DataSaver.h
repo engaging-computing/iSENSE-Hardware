@@ -14,6 +14,7 @@
 #import "QDataSet.h"
 #import "Queue.h"
 #import <iSENSE_API/API.h>
+#import <DLAVAlertView.h>
 
 #define DATA_NONE_UPLOADED  1500
 #define DATA_UPLOAD_SUCCESS 1501
