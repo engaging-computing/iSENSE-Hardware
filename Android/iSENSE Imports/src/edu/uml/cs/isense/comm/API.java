@@ -95,24 +95,28 @@ public class API {
 	 *            The password of the user to log in as
 	 */
 	public RPerson createSession(String p_email, String p_password) {
-		try {
-			String reqResult = makeRequest(baseURL, "users/myInfo", "email=" + URLEncoder.encode(p_email, "UTF-8")
-					+ "&password=" + URLEncoder.encode(p_password, "UTF-8"),
-					"GET", null);
-			JSONObject j = new JSONObject(reqResult);
-			if(j.getString("name") != null) {
-				email = p_email;
-				password = p_password;
-				RPerson you = new RPerson();
-				you.name = j.getString("name");
-				you.gravatar = j.getString("gravatar");
-				currentUser = you;
-				return you;
-			} else {
+		if( p_email != "" ){
+			try {
+				String reqResult = makeRequest(baseURL, "users/myInfo", "email=" + URLEncoder.encode(p_email, "UTF-8")
+						+ "&password=" + URLEncoder.encode(p_password, "UTF-8"),
+						"GET", null);
+				JSONObject j = new JSONObject(reqResult);
+				if(j.getString("name") != null) {
+					email = p_email;
+					password = p_password;
+					RPerson you = new RPerson();
+					you.name = j.getString("name");
+					you.gravatar = j.getString("gravatar");
+					currentUser = you;
+					return you;
+				} else {
+					return null;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 				return null;
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} else {
 			return null;
 		}
 	}
