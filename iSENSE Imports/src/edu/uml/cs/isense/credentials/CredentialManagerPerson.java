@@ -62,7 +62,7 @@ public class CredentialManagerPerson extends android.support.v4.app.Fragment {
 		
 		ok.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				getActivity().setResult(Activity.RESULT_CANCELED);
+				getActivity().setResult(Activity.RESULT_OK);
 				getActivity().finish();
 			}
 		});

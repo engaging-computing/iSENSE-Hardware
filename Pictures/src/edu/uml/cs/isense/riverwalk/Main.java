@@ -110,7 +110,7 @@ public class Main extends Activity implements LocationListener {
 	
 	/* Action Bar */
 	private static int actionBarTapCount = 0;
-	private static boolean useDev = false;
+	private static boolean useDev = true;
 
 	public static Context mContext;
 
