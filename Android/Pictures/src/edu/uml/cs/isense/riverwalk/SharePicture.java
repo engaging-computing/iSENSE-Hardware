@@ -3,42 +3,37 @@ package edu.uml.cs.isense.riverwalk;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 
 import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.comm.API.TargetType;
 import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.CredentialManagerKey;
-import edu.uml.cs.isense.dfm.Fields;
 import edu.uml.cs.isense.proj.Setup;
-import edu.uml.cs.isense.queue.QDataSet;
-import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+
 public class SharePicture extends Activity {
 	
 	final int PROJECT_REQUESTED = 101;
 	final int LOGIN_REQUESTED = 102;
-	final int KEY_REQUESTED = 103;
-	final int CREDENTIAL_KEY_REQUESTED = 104;
+	final int CREDENTIAL_KEY_REQUESTED = 103;
 	
+	private ProgressDialog dia;
 	
 	int project = -1;
+	int uploadCode = -1;
 	private String key = "";
 		
 	boolean loggedIn;
@@ -50,6 +45,13 @@ public class SharePicture extends Activity {
 	ArrayList<Uri> imageUris = new ArrayList<Uri>();
 	ArrayList<File> imageFiles = new ArrayList<File>();
 	Uri imageUri;
+	
+	String success = "Upload Successful!";
+	String failure = "Upload Failed!";
+
+	private Waffle w;
+
+	
 	
 	API api = API.getInstance();
 	
@@ -70,8 +72,11 @@ public class SharePicture extends Activity {
 		Intent intent = getIntent();
 	    String action = intent.getAction();
 	    String type = intent.getType();
-		
+	    
 	    mContext = this.getApplicationContext();
+	  
+	    w = new Waffle(mContext);
+		
 	    
 	    
 	    if (Intent.ACTION_SEND.equals(action) && type != null) {
@@ -152,7 +157,7 @@ public class SharePicture extends Activity {
 				new uploadLoggedIn().execute();
 				
 			}
-		} else if (requestCode == KEY_REQUESTED) {
+		} else if (requestCode == CREDENTIAL_KEY_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
 				key = CredentialManagerKey.getKey();
 				new uploadWithKey().execute();
@@ -164,6 +169,57 @@ public class SharePicture extends Activity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
+				
+				 dia = new ProgressDialog(SharePicture.this);
+				 dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				 dia.setMessage("Uploading");
+				 dia.setCancelable(false);
+				 dia.show();
+				
+				for(int i = 0; i < imageUris.size(); i++) {
+					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i)));
+				}
+			}
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				for(int i = 0; i < imageUris.size(); i++) {
+					uploadCode = api.uploadMedia(project,imageFiles.get(i), TargetType.PROJECT);
+				}
+				return null;
+			}
+			@Override
+			protected void onPostExecute(Boolean result) {// this method will be
+															// running on UI thread
+				super.onPostExecute(result);
+				dia.cancel();
+				
+				if (uploadCode == -1) {
+					w.make(failure.toString(),
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					
+				} else {
+					w.make(success.toString(),
+							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+				}
+				
+				finish();
+			
+				
+			}
+	}
+		
+		
+		private class uploadWithKey extends AsyncTask<Void, Void, Boolean> {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				
+				 dia = new ProgressDialog(SharePicture.this);
+				 dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+				 dia.setMessage("Uploading");
+				 dia.setCancelable(false);
+				 dia.show();
+				 
 				for(int i = 0; i < imageUris.size(); i++) {
 					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i)));
 				}
@@ -172,7 +228,7 @@ public class SharePicture extends Activity {
 			protected Boolean doInBackground(Void... params) {
 				Log.e("test", "Here");
 				for(int i = 0; i < imageUris.size(); i++) {
-					api.uploadMedia(project,imageFiles.get(i), TargetType.PROJECT);
+					uploadCode = api.uploadMedia(project, imageFiles.get(i), TargetType.DATA_SET, key, "");
 				}
 				return null;
 			}
@@ -180,30 +236,16 @@ public class SharePicture extends Activity {
 			protected void onPostExecute(Boolean result) {// this method will be
 															// running on UI thread
 				super.onPostExecute(result);
-		}
-	}
-		
-		
-		private class uploadWithKey extends AsyncTask<Void, Void, Boolean> {
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				for(int i = 0; i < imageUris.size(); i++) {
-					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i)));
+				dia.cancel();
+				if (uploadCode == -1) {
+					w.make(failure,
+							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+				} else {
+					w.make(success,
+							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 				}
-			}
-			@Override
-			protected Boolean doInBackground(Void... params) {
-				for(int i = 0; i < imageUris.size(); i++) {
-					File picture = imageFiles.get(i);
-					api.uploadMedia(project, picture, TargetType.DATA_SET, key, "");
-				}
-				return null;
-			}
-			@Override
-			protected void onPostExecute(Boolean result) {// this method will be
-															// running on UI thread
-				super.onPostExecute(result);
+				finish();
+			
 		}
 	}
 		

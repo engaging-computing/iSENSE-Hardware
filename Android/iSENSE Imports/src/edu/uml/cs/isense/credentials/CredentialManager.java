@@ -265,7 +265,9 @@ public class CredentialManager extends FragmentActivity implements LoginWrapper,
 			String username = getUsername(appContext[0]);
 			String password = getPassword(appContext[0]);
 			
-			if (api != null && api.getCurrentUser() == null) {
+			Log.e("username:", username);
+			
+			if (api != null && api.getCurrentUser() == null && !username.isEmpty()) {
 				person = api.createSession(username, password);
 				
 				// Update logged in status
