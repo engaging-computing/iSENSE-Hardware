@@ -1194,6 +1194,7 @@ public class Main extends Activity implements LocationListener {
 		return sdf.format(time);
 	}
 
+	@SuppressLint("UseValueOf")
 	private Float convertToDegree(String stringDMS){
 		 Float result = null;
 		 String[] DMS = stringDMS.split(",", 3);
