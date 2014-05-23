@@ -14,6 +14,7 @@ import android.content.Context;
 import android.util.Log;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.API.TargetType;
+import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 
@@ -232,7 +233,7 @@ public class QDataSet implements Serializable {
 
 
 			case PIC:
-				if (UploadQueue.getAPI().getCurrentUser() != null) {
+				if (CredentialManager.isLoggedIn()) {
 					dataSetID = UploadQueue.getAPI().uploadMedia(
 							Integer.parseInt(projID), picture, TargetType.PROJECT);
 				} else {
@@ -245,7 +246,7 @@ public class QDataSet implements Serializable {
 			case BOTH:
 				dataSetID = uploadData();
 
-				if (UploadQueue.getAPI().getCurrentUser() != null) {
+				if (CredentialManager.isLoggedIn()) {
 					UploadQueue.getAPI().uploadMedia(
 							dataSetID, picture, TargetType.DATA_SET);
 				} else {
@@ -254,7 +255,6 @@ public class QDataSet implements Serializable {
 						dataSetID, picture, TargetType.DATA_SET, key, name);
 				}
 				break;
-
 			}
 		}
 
@@ -279,7 +279,7 @@ public class QDataSet implements Serializable {
 			System.out.println("JOBJ: " + jobj.toString());
 			
 			//If not logged in open key dialog and onActivityResult call with credential keys
-			if (UploadQueue.getAPI().getCurrentUser() != null) {
+			if (CredentialManager.isLoggedIn()) {
 				dataSetID = UploadQueue.getAPI().uploadDataSet(
 						Integer.parseInt(projID), jobj, name);
 			
