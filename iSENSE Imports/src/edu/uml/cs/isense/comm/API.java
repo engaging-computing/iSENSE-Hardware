@@ -95,7 +95,6 @@ public class API {
 	 *            The password of the user to log in as
 	 */
 	public RPerson createSession(String p_email, String p_password) {
-		if( p_email != "" ){
 			try {
 				String reqResult = makeRequest(baseURL, "users/myInfo", "email=" + URLEncoder.encode(p_email, "UTF-8")
 						+ "&password=" + URLEncoder.encode(p_password, "UTF-8"),
@@ -115,10 +114,7 @@ public class API {
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
-			}
-		} else {
-			return null;
-		}
+			}		
 	}
 
 	/**
@@ -642,9 +638,7 @@ public class API {
 			connection.setRequestMethod("POST");
 
 			MultipartEntity entity = new MultipartEntity();
-			entity.addPart(
-					"upload",
-					new FileBody(mediaToUpload, URLConnection
+			entity.addPart("upload", new FileBody(mediaToUpload, URLConnection
 							.guessContentTypeFromName(mediaToUpload.getName())));
 			entity.addPart("contribution_key", new StringBody(conKey));
 			entity.addPart("contributor_name", new StringBody(conName));
