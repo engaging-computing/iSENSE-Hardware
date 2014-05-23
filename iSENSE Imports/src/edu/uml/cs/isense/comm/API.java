@@ -761,6 +761,7 @@ public class API {
 			} else {
 				in = new BufferedInputStream(urlConnection.getErrorStream());
 			}
+			
 			try {
 				ByteArrayOutputStream bo = new ByteArrayOutputStream();
 				int i = in.read();
@@ -774,9 +775,9 @@ public class API {
 			} finally {
 				in.close();
 			}
+			
 		} catch (ConnectException ce) {
-			System.err
-			.println("Connection failed: ENETUNREACH (network not reachable)");
+			System.err.println("Connection failed: ENETUNREACH (network not reachable)");
 			ce.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
