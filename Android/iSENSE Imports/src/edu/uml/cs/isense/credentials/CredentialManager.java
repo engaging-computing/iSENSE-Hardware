@@ -143,6 +143,7 @@ public class CredentialManager extends FragmentActivity implements LoginWrapper,
 		loggedIn = false;
 		api.deleteSession();
 		setCredentials(baseContext, "", "");
+		api.deleteSession();
 		loggedOutView();
 	}
 
@@ -215,6 +216,20 @@ public class CredentialManager extends FragmentActivity implements LoginWrapper,
 			new LoginWithSavedCredentialsTask().execute(appContext);
 		}
 	}
+	
+	/**
+	 * This method logs out the app.
+	 * 
+	 * @param appContext
+	 *            Context of the calling application.
+	 * @param appAPI
+	 *            API object that belongs to the caller.
+	 */
+	public static void logout(Context appContext, API appAPI) {
+		loggedIn = false;
+		appAPI.deleteSession();
+		setCredentials(appContext, "", "");
+	}
 
 	/**
 	 * Sets username and password in saved preferences and then calls the async
@@ -250,17 +265,16 @@ public class CredentialManager extends FragmentActivity implements LoginWrapper,
 
 			String username = getUsername(appContext[0]);
 			String password = getPassword(appContext[0]);
-
-			if (api != null) {
+			
+			Log.e("username:", username);
+			
+			if (api != null && api.getCurrentUser() == null && !username.isEmpty()) {
 				person = api.createSession(username, password);
 				
 				// Update logged in status
 				loggedIn = (person != null);
 
-			} else {
-				Log.e("CredentialManager.java",
-						"api passed in to CredentialManager.Login() was null");
-			}
+			} 
 
 			return null;
 		}

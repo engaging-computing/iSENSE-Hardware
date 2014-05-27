@@ -21,7 +21,7 @@
 
     <uses-feature android:name="android.hardware.camera"/>
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
+    
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
@@ -32,10 +32,27 @@
             android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".SharePicture"
+            android:label="Upload to iSense"
+            android:theme="@style/AppThemeDialog"
+            android:screenOrientation="portrait">    
+            <intent-filter>
+		       <action android:name="android.intent.action.SEND" />
+			   <category android:name="android.intent.category.DEFAULT" />
+			   <data android:mimeType="image/*" />
+		   </intent-filter>
+		    <intent-filter>
+		        <action android:name="android.intent.action.SEND_MULTIPLE" />
+		        <category android:name="android.intent.category.DEFAULT" />
+		        <data android:mimeType="image/*" />
+    		</intent-filter>
+        </activity>
+        
         <activity
             android:name=".experiments.BrowseExperiments"
             android:label="@string/app_name_experiments"
@@ -145,6 +162,8 @@
             android:name="edu.uml.cs.isense.credentials.CredentialManagerKey"
             android:label="Add Contributor Key"
             android:theme="@style/AppThemeDialog" />
+         
+        
         
     </application>
 
