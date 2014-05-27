@@ -62,6 +62,12 @@
 	<string name="interval">Time Interval (seconds):</string>
 	<string name="takePicContinuous">Press Here to Continuously Take Pictures</string>
 	<string name="addPicture">Upload a Picture from the Gallery</string>
+	<string name="step1">Step 1:</string>
+	<string name="step2">Step 2:</string>
+	<string name="selectProject">Select a Project</string>
+	<string name="uploadCredentials">Upload with Your Credentials</string>
+	<string name="uploadKey">Upload with a Contribution Key</string>
+	<string name="or">or</string>
     
 	
 	

@@ -967,12 +967,10 @@ public class DataWalk extends Activity implements LocationListener,
 
 			// Catches return from LoginIsense.java
 		} else if (requestCode == LOGIN_ISENSE_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-
-		
-			} else if (resultCode == CredentialManager.RESULT_ERROR) {
-				
-
+			if(CredentialManager.isLoggedIn()) {
+				loggedInAsB.setText(CredentialManager.getUsername(mContext));
+			} else {
+				loggedInAsB.setText(R.string.not_logged_in);
 			}
 		}
 
