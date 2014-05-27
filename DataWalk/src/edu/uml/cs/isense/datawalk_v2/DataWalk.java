@@ -988,6 +988,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 			// Catches return from LoginIsense.java
 		} else if (requestCode == LOGIN_ISENSE_REQUESTED) {
+<<<<<<< HEAD
 			if (resultCode == RESULT_OK) {
 
 				// Get the new login information from preferences
@@ -1029,6 +1030,12 @@ public class DataWalk extends Activity implements LocationListener,
 				startActivityForResult(new Intent(mContext, Login.class),
 						LOGIN_ISENSE_REQUESTED);
 
+=======
+			if(CredentialManager.isLoggedIn()) {
+				loggedInAsB.setText(CredentialManager.getUsername(mContext));
+			} else {
+				loggedInAsB.setText(R.string.not_logged_in);
+>>>>>>> e169c9a1132860f99c8797488c5677feab0cece3
 			}
 		}
 
