@@ -155,11 +155,7 @@
         android:name="edu.uml.cs.isense.credentials.CredentialManagerKey"
         android:label="Add Contributor Key"
         android:theme="@style/AppThemeDialog" />
-        <service
-            android:enabled="true"
-            android:name=".Datawalk_Service"
-            />
-       
+      
     </application>
 
 </manifest>
