@@ -141,6 +141,7 @@ public class CredentialManager extends FragmentActivity implements LoginWrapper,
 	 */
 	public void logout() {
 		loggedIn = false;
+		api.deleteSession();
 		setCredentials(baseContext, "", "");
 		api.deleteSession();
 		loggedOutView();
