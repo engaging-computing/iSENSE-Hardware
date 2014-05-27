@@ -38,7 +38,7 @@
         
         <activity
             android:name=".SharePicture"
-            android:label="Upload to iSense"
+            android:label="Upload to iSENSE"
             android:theme="@style/AppThemeDialog"
             android:screenOrientation="portrait">    
             <intent-filter>
