@@ -57,7 +57,7 @@
         android:digits="@string/digits_restriction"
         android:enabled="false"
         android:imeOptions="actionDone"
-        android:inputType="textCapSentences"
+        android:inputType= "textCapCharacters"
         android:maxLength="1"
         android:singleLine="true"
         android:text="@string/def_last_initial" >

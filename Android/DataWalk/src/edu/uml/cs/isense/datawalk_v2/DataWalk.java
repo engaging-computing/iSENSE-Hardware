@@ -564,6 +564,11 @@ public class DataWalk extends Activity implements LocationListener,
 	protected void onStart() {
 		// Log in automatically
 		CredentialManager.login(this, api);
+		if(CredentialManager.isLoggedIn()) {
+			loggedInAsB.setText(CredentialManager.getUsername(mContext));
+		} else {
+			loggedInAsB.setText(R.string.not_logged_in);
+		}
 		super.onStart();
 	}
 
