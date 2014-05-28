@@ -76,10 +76,7 @@
         <item>Wipeout</item>
         <item>Xtreme Frisbee</item>
         <item>Yankee Cannonball</item>
-        <item>Zero Gravity</item>
-        
-        
-        
+        <item>Zero Gravity</item>    
     </string-array>
 
     <string name="experiments_no_items">No experiments were found.</string>
