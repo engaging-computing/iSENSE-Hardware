@@ -3,6 +3,7 @@ package edu.uml.cs.isense.riverwalk;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -27,6 +28,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -74,7 +76,7 @@ public class Main extends Activity implements LocationListener {
 	private static final int QUEUE_UPLOAD_REQUESTED = 105;
 	private static final int DESCRIPTION_REQUESTED = 106;
 	private static final int SELECT_PICTURE_REQUESTED = 107;
-	
+	 
 	private MediaPlayer mMediaPlayer;
 
 	public static boolean continuous = false;
@@ -110,7 +112,7 @@ public class Main extends Activity implements LocationListener {
 	
 	/* Action Bar */
 	private static int actionBarTapCount = 0;
-	private static boolean useDev = false;
+	private static boolean useDev = true;
 
 	public static Context mContext;
 
@@ -123,6 +125,9 @@ public class Main extends Activity implements LocationListener {
 	// private ProgressDialog dia;
 	private DataFieldManager dfm;
 	private Fields f;
+	
+	private double lat;
+	private double lon;
 
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	private static Camera mCamera;
@@ -373,7 +378,7 @@ public class Main extends Activity implements LocationListener {
 		protected Boolean doInBackground(Void... params) {
 
 			// this method will be running on background thread so don't update
-			// UI frome here
+			// UI from here
 			// do your long running http tasks here,you dont want to pass
 			// argument and u can access the parent class' variable url over
 			// here
@@ -420,7 +425,10 @@ public class Main extends Activity implements LocationListener {
 							}
 						}
 					});
+					//set curTime lat and long before running upload task 
 					curTime = System.currentTimeMillis();
+					lat = loc.getLatitude();
+					lon = loc.getLongitude();
 					uploader.run();
 					uq.buildQueueFromFile();
 
@@ -844,33 +852,18 @@ public class Main extends Activity implements LocationListener {
 			if (!Connection.hasConnectivity(mContext))
 				projNum = "-1";
 
-			if (loc.getLatitude() != 0) {
-				if (dfm.enabledFields[Fields.TIME])
-					f.timeMillis = curTime;
-				System.out.println("curTime =" + f.timeMillis);
-				if (dfm.enabledFields[Fields.LATITUDE])
-					f.latitude = loc.getLatitude();
-				System.out.println("Latitude =" + f.latitude);
-				if (dfm.enabledFields[Fields.LONGITUDE])
-					f.longitude = loc.getLongitude();
-				System.out.println("Longitude =" + f.longitude);
-				
-				dataJSON.put(dfm.putData());
 
-			} else { // no gps
-				loc = mLocationManager
-						.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-				if (dfm.enabledFields[Fields.TIME])
-					f.timeMillis = curTime;
-				System.out.println("curTime (no gps) =" + f.timeMillis);
-				if (dfm.enabledFields[Fields.LATITUDE])
-					f.latitude = loc.getLatitude();
-				System.out.println("Latitude (no gps) =" + f.latitude);
-				if (dfm.enabledFields[Fields.LONGITUDE])
-					f.longitude = loc.getLongitude();
-				System.out.println("Longitude (no gps) =" + f.longitude);
-				dataJSON.put(dfm.putData());
-			}
+			if (dfm.enabledFields[Fields.TIME])
+				f.timeMillis = curTime;
+			System.out.println("curTime =" + f.timeMillis);
+			if (dfm.enabledFields[Fields.LATITUDE])
+				f.latitude = lat;
+			System.out.println("Latitude =" + f.latitude);
+			if (dfm.enabledFields[Fields.LONGITUDE])
+				f.longitude = lon;
+			System.out.println("Longitude =" + f.longitude);
+			
+			dataJSON.put(dfm.putData());
 			
 			QDataSet ds;
 			ds = new QDataSet(name.getText().toString()
@@ -955,6 +948,9 @@ public class Main extends Activity implements LocationListener {
 			uq.buildQueueFromFile();
 			queueCount.setText(getResources().getString(R.string.queueCount)
 					+ uq.queueSize());
+			
+			lat = loc.getLatitude();
+			lon = loc.getLongitude();
 
 			new UploadTask().execute();
 
@@ -969,11 +965,65 @@ public class Main extends Activity implements LocationListener {
 				String picturePath = cursor.getString(columnIndex);
 				cursor.close();
 
-				curTime = System.currentTimeMillis();
+				//curTime = System.currentTimeMillis();
 				picture = new File(picturePath);
+				
+				
+				ExifInterface exifInterface;
+				try {
+					exifInterface = new ExifInterface(picturePath);
 
-				Intent iDesc = new Intent(Main.this, Description.class);
-				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
+					String date = exifInterface.getAttribute(ExifInterface.TAG_GPS_DATESTAMP);
+					String time = exifInterface.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP);
+					
+					String dateTime = date + " " + time;
+					
+					try {
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+						Date parsedDate = dateFormat.parse(dateTime);
+						curTime = parsedDate.getTime();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}					
+					
+					    
+					
+					/*get location data from image*/
+					String latString = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+					String lonString = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+					String latRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+					String lonRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+					
+					if (latString != null && lonString != null) {
+					
+						lat = convertToDegree(latString);
+						lon = convertToDegree(lonString);
+						
+						if(latRef.equals("N")){
+							lat = convertToDegree(latString);
+						} else {
+							lat = 0 - convertToDegree(latString);
+						}
+						 
+						if(lonRef.equals("E")){
+							lon = convertToDegree(lonString);
+						} else {
+						   lon = 0 - convertToDegree(lonString);
+						}	
+						
+					} else {
+						lat = 0;
+						lon = 0;
+					}
+
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				new UploadTask().execute();
+				
+				
 			}
 		} 
 	}
@@ -1014,7 +1064,6 @@ public class Main extends Activity implements LocationListener {
 
 		@Override
 		protected Void doInBackground(Void... voids) {
-
 			uploader.run();
 			publishProgress(100);
 
@@ -1142,6 +1191,33 @@ public class Main extends Activity implements LocationListener {
 				Locale.US);
 		return sdf.format(time);
 	}
+
+	@SuppressLint("UseValueOf")
+	private Float convertToDegree(String stringDMS){
+		 Float result = null;
+		 String[] DMS = stringDMS.split(",", 3);
+
+		 String[] stringD = DMS[0].split("/", 2);
+		    Double D0 = new Double(stringD[0]);
+		    Double D1 = new Double(stringD[1]);
+		    Double FloatD = D0/D1;
+
+		 String[] stringM = DMS[1].split("/", 2);
+		 Double M0 = new Double(stringM[0]);
+		 Double M1 = new Double(stringM[1]);
+		 Double FloatM = M0/M1;
+		  
+		 String[] stringS = DMS[2].split("/", 2);
+		 Double S0 = new Double(stringS[0]);
+		 Double S1 = new Double(stringS[1]);
+		 Double FloatS = S0/S1;
+		  
+		    result = new Float(FloatD + (FloatM/60) + (FloatS/3600));
+		  
+		 return result;
+
+
+		};
 
 
 }
