@@ -37,7 +37,7 @@ typedef struct _RotationDataSaver{
     
 } RotationDataSaver;
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, ProjectBrowserDelegate, ZBarReaderDelegate, CredentialManagerDelegate>
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, ProjectBrowserDelegate, ZBarReaderDelegate, CredentialManagerDelegate, UIActionSheetDelegate>
 {
     
     RotationDataSaver *saver;
@@ -87,9 +87,12 @@ typedef struct _RotationDataSaver{
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) DataSaver *dataSaver;
 
-@property (nonatomic) UIPickerView *picker;
+@property (nonatomic) UIPickerView *pickerLength;
+@property (nonatomic) UIPickerView *pickerRate;
 @property (nonatomic) NSMutableArray *lengths;
+@property (nonatomic) NSMutableArray *rates;
 @property (nonatomic) UITextField *lengthField;
+@property (nonatomic) UITextField *rateField;
 
 @property(nonatomic, retain) NSArray *items;
 @property(nonatomic, strong) CredentialManager *mngr;

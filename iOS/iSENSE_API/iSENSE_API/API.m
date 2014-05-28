@@ -432,7 +432,6 @@ static NSString *email, *password;
     // append a timestamp to the name of the data set
     name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
     
-    
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
     
     [requestData setObject:dataToUpload forKey:@"data"];
@@ -470,6 +469,8 @@ static NSString *email, *password;
 -(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName andName:(NSString *)name{
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
+    
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
     
     [requestData setObject:name forKey:@"title"];
     [requestData setObject:conKey forKey:@"contribution_key"];

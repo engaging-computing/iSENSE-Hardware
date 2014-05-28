@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7605095F19001315006A73BB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7605095E19001315006A73BB /* Security.framework */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
+		76163D98192E59E800FAABB2 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 76163D97192E59E800FAABB2 /* beep.wav */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
 		76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */; };
 		765099CA178DF0CE00425A27 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099C9178DF0CE00425A27 /* CoreLocation.framework */; };
@@ -41,7 +42,6 @@
 		76B58D90178C742C006E1425 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B58D8E178C742B006E1425 /* AboutViewController.m */; };
 		76B58D91178C742C006E1425 /* AboutViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */; };
 		76B58D93178C7492006E1425 /* AboutViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */; };
-		76C54CF41799704100B93A67 /* button-37.wav in Resources */ = {isa = PBXBuildFile; fileRef = 76C54CF31799704100B93A67 /* button-37.wav */; };
 		76C54CF91799754300B93A67 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C54CF81799754300B93A67 /* AudioToolbox.framework */; };
 		76DF6A8317E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8217E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png */; };
 		76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8417E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png */; };
@@ -85,6 +85,7 @@
 /* Begin PBXFileReference section */
 		7605095E19001315006A73BB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
+		76163D97192E59E800FAABB2 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
 		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -124,7 +125,6 @@
 		76B58D8E178C742B006E1425 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPhone.xib; sourceTree = "<group>"; };
 		76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController_iPad.xib; sourceTree = "<group>"; };
-		76C54CF31799704100B93A67 /* button-37.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "button-37.wav"; sourceTree = "<group>"; };
 		76C54CF81799754300B93A67 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		76C62BBB187F2D9A00DAEF36 /* iSENSE_API.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iSENSE_API.xcodeproj; path = ../iSENSE_API/iSENSE_API.xcodeproj; sourceTree = "<group>"; };
 		76DF6A8217E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo57x57.png; path = ../CarRampPhysicsLogo57x57.png; sourceTree = "<group>"; };
@@ -222,7 +222,7 @@
 		7669F030178B275C00E51AD0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				76C54CF31799704100B93A67 /* button-37.wav */,
+				76163D97192E59E800FAABB2 /* beep.wav */,
 				76E91F9417947907001749FC /* Strings */,
 				76E91F93179478FC001749FC /* Images */,
 				7669F031178B275C00E51AD0 /* Car Ramp Physics-Info.plist */,
@@ -406,10 +406,10 @@
 				76E02E31178F19220057D37B /* Fields.strings in Resources */,
 				760FABBC1790566C00951F97 /* Strings.strings in Resources */,
 				76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */,
+				76163D98192E59E800FAABB2 /* beep.wav in Resources */,
 				7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */,
 				76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */,
 				76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */,
-				76C54CF41799704100B93A67 /* button-37.wav in Resources */,
 				76DF6A8317E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png in Resources */,
 				767E4AF119019C5700417FEC /* Images.xcassets in Resources */,
 				76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */,

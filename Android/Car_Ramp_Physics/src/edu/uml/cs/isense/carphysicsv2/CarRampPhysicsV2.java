@@ -57,6 +57,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.uml.cs.isense.carphysicsv2.dialogs.AboutActivity;
+import edu.uml.cs.isense.carphysicsv2.dialogs.ContributorKeyDialog;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.ClassroomMode;
@@ -148,6 +149,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	static boolean exitAppViaBack = false;
 	static boolean dontPromptMeTwice = false;
 
+	private static JSONObject dataToUpload;
+	
 	private Handler mHandler;
 	public static JSONArray dataSet;
 
@@ -286,7 +289,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		}
 
-		if (!Connection.hasConnectivity(mContext)) {
+		if (!Connection.hasConnectivity(mContext) && !saveMode) {
 			projectNumber = "-1";
 		}
 
@@ -398,12 +401,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 									mSensorManager
 											.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 									SensorManager.SENSOR_DELAY_FASTEST);
+							nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Not Included";
 						} else {
 							mSensorManager.registerListener(
 									CarRampPhysicsV2.this,
 									mSensorManager
 											.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 									SensorManager.SENSOR_DELAY_FASTEST);
+							nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Included";
 						}
 					}
 
@@ -527,12 +532,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 								mSensorManager
 										.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 								SensorManager.SENSOR_DELAY_FASTEST);
+				nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Not Included";
 
 			} else {
 				mSensorManager.registerListener(CarRampPhysicsV2.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
+				nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Included";
 			}
 			mSensorManager
 					.registerListener(CarRampPhysicsV2.this, mSensorManager
@@ -550,6 +557,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	@SuppressLint("NewApi")
 	public void changeSensors(CompoundButton view) {
+		nameOfDataSet = firstName + " " + lastInitial + ". Gravity: ";
 
 		mSensorManager.unregisterListener(CarRampPhysicsV2.this, mSensorManager
 				.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
@@ -572,10 +580,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					mSensorManager
 							.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 					SensorManager.SENSOR_DELAY_FASTEST);
+			nameOfDataSet += "Not Included";
 		} else {
 			mSensorManager.registerListener(CarRampPhysicsV2.this,
 					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 					SensorManager.SENSOR_DELAY_FASTEST);
+			nameOfDataSet += "Included";
 		}
 
 		SharedPreferences prefs = getSharedPreferences(ACCEL_SETTINGS, 0);
@@ -643,10 +653,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					mSensorManager
 							.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 					SensorManager.SENSOR_DELAY_FASTEST);
+			nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Not Included";
 		} else {
 			mSensorManager.registerListener(CarRampPhysicsV2.this,
 					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 					SensorManager.SENSOR_DELAY_FASTEST);
+			nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Included";
 		}
 	}
 
@@ -693,7 +705,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		}
 
-		if (!Connection.hasConnectivity(mContext)) {
+		if (!Connection.hasConnectivity(mContext) && !saveMode) {
 			projectNumber = "-1";
 		}
 
@@ -1172,6 +1184,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 
 				}
+				
+				Intent iEnterName = new Intent(mContext, EnterName.class);
+				SharedPreferences classPrefs = getSharedPreferences(
+						ClassroomMode.PREFS_KEY_CLASSROOM_MODE, 0);
+				iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+						classPrefs.getBoolean(
+								ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true));
+				startActivityForResult(iEnterName, RESULT_GOT_NAME);
 
 			}
 		} else if (reqCode == FIELD_MATCHING_REQUESTED) {
@@ -1339,18 +1359,18 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			JSONArray dataJSON = new JSONArray(obj);
 			if (!(dataJSON.isNull(0))) {
 
-				JSONObject jobj = new JSONObject();
+				dataToUpload = new JSONObject();
 				try {
-					jobj.put("data", dataJSON);
+					dataToUpload.put("data", dataJSON);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				jobj = UploadQueue.getAPI().rowsToCols(jobj);
+				dataToUpload = UploadQueue.getAPI().rowsToCols(dataToUpload);
 
-				System.out.println("JOBJ: " + jobj.toString());
+				System.out.println("JOBJ: " + dataToUpload.toString());
 
 				dataSetID = UploadQueue.getAPI().uploadDataSet(
-						Integer.parseInt(projectNumber), jobj, nameOfDataSet);
+						Integer.parseInt(projectNumber), dataToUpload, nameOfDataSet);
 				System.out.println("Data set ID from Upload is: " + dataSetID);
 
 			}
@@ -1395,9 +1415,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (uploadSuccessful) {
 				w.make("Data upload successful.", Waffle.LENGTH_SHORT,
 						Waffle.IMAGE_CHECK);
-				startActivity(new Intent(CarRampPhysicsV2.this, ViewData.class));
 			} else {
-				w.make("Data saved.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+				if (api.getCurrentUser() != null) {
+					w.make("Data saved.", Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+				} else {
+					Intent i = new Intent(mContext, ContributorKeyDialog.class);
+					i.putExtra("ID", Integer.parseInt(CarRampPhysicsV2.projectNumber));
+					i.putExtra("data", CarRampPhysicsV2.dataToUpload.toString());
+					i.putExtra("name", nameOfDataSet);
+					startActivity(i);
+				}
 			}
 
 			OrientationManager.enableRotation(CarRampPhysicsV2.this);
