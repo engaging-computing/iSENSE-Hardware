@@ -822,7 +822,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	/**
 	 * Everything needed to be initialized for onCreate in one helpful function.
 	 */
-	@SuppressLint("NewApi")
 	private void initVars() {
 
 		api = API.getInstance();
