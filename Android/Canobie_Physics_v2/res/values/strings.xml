@@ -43,7 +43,11 @@
         <item>Alpine Swing</item>
         <item>Antique Carousel</item>
         <item>Antique Cars</item>
+        <item>Blue Heron</item> 
+		<item>Boston Harbor Patrol</item> 
+        <item>Boston Tea Party</item>
         <item>Canobie 500</item>
+        <item>Canobie Express</item>
         <item>Caterpillar</item>
         <item>Corkscrew</item>
         <item>Crazy Cups</item>
@@ -55,11 +59,16 @@
         <item>Jungle Bounce</item>
         <item>Junior Sports Cars</item>
         <item>Kiddie Carousel</item>
+        <item>Log Flume</item>
+        <item>Mine of Lost Souls</item>
         <item>Over the Rainbow</item>
-        <item>Pirata</item>
+        <item>Pirate Ship</item>
         <item>Psychodrome</item>
+        <item>Rowdy Rousters</item> 
         <item>Skater</item>
+        <item>Sky Ride</item>
         <item>Star Blaster</item>
+        <item>Tiki Maze</item>
         <item>Turkish Twist</item>
         <item>Twist and Shout</item>
         <item>Untamed</item>
@@ -67,7 +76,7 @@
         <item>Wipeout</item>
         <item>Xtreme Frisbee</item>
         <item>Yankee Cannonball</item>
-        <item>Zero Gravity</item>
+        <item>Zero Gravity</item>    
     </string-array>
 
     <string name="experiments_no_items">No experiments were found.</string>
