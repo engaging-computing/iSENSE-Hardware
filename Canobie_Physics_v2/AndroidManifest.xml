@@ -127,7 +127,7 @@
             android:configChanges="screenSize|orientation"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppThemeDialog" />
-        <activity
+          <activity
             android:name="edu.uml.cs.isense.credentials.CredentialManagerKey"
             android:label="Add Contributor Key"
             android:theme="@style/AppThemeDialog" />
