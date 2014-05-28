@@ -111,6 +111,8 @@ public class DataWalk extends Activity implements LocationListener,
 	public static boolean useDev = true;
 	private String projectID = "5";
 
+	private String loginName = "";
+	private String loginPass = "";
 	private String projectURL = "";
 	private String dataSetName = "";
 	private String baseprojectURL = "http://isenseproject.org/projects/";
@@ -243,7 +245,7 @@ public class DataWalk extends Activity implements LocationListener,
 		} else {
 			nameB.setText(firstName + " " + lastInitial);
 		}
-
+		
 		/* Starts the code for the main button. */
 		startStopB.setOnLongClickListener(new OnLongClickListener() {
 
@@ -395,8 +397,8 @@ public class DataWalk extends Activity implements LocationListener,
 		rcrdIntervalB = (Button) findViewById(R.id.b_rcrdinterval);
 		elapsedTimeTV = (TextView) findViewById(R.id.tv_elapsedtime);
 		pointsUploadedTV = (TextView) findViewById(R.id.tv_pointcount);
-		longitudeTV = (TextView) findViewById(R.id.tv_longitude);
-		latitudeTV = (TextView) findViewById(R.id.tv_latitude);
+		latitudeTV = (TextView) findViewById(R.id.tv_longitude);
+		longitudeTV = (TextView) findViewById(R.id.tv_latitude);
 		distanceTV = (TextView) findViewById(R.id.tv_distance);
 		velocityTV = (TextView) findViewById(R.id.tv_velocity);
 		pointsUploadedTV.setText("Points Recorded: " + dataPointCount);
@@ -439,7 +441,7 @@ public class DataWalk extends Activity implements LocationListener,
 			public void onClick(View v) {
 				// Launch the dialog that allows users to login to iSENSE
 				startActivityForResult(new Intent(getApplicationContext(),
-						CredentialManager.class), LOGIN_ISENSE_REQUESTED);
+						CredentialManager.class), LOGIN_ISENSE_REQUESTED);				
 			}
 
 		});
@@ -561,7 +563,7 @@ public class DataWalk extends Activity implements LocationListener,
 	@Override
 	protected void onStart() {
 		// Log in automatically
-		CredentialManager.login(mContext, api);
+		CredentialManager.login(this, api);
 		super.onStart();
 	}
 
@@ -695,10 +697,6 @@ public class DataWalk extends Activity implements LocationListener,
 	 * Tries to login then launches the upload queue uploading activity.
 	 */
 	private void manageUploadQueue() {
-
-		// Attempt to login with saved credentials, otherwise try default
-		// credentials
-		CredentialManager.login(mContext, api);
 		// If the queue isn't empty, launch the activity. Otherwise tell the
 		// user the queue is empty.
 		if (!uq.emptyQueue()) {
@@ -933,7 +931,6 @@ public class DataWalk extends Activity implements LocationListener,
 
 				// Set variables to default
 				mInterval = DEFAULT_INTERVAL;
-				
 				firstName = "";
 				lastInitial = "";
 				if (useDev)
@@ -949,6 +946,7 @@ public class DataWalk extends Activity implements LocationListener,
 				mEdit.putString(PROJ_ID_DEV, DEFAULT_PROJECT_DEV);
 				mEdit.commit();
 
+				
 				// Tell the user his settings are back to default
 				w.make("Settings have been reset to default.",
 						Waffle.LENGTH_SHORT);
@@ -967,12 +965,10 @@ public class DataWalk extends Activity implements LocationListener,
 
 			// Catches return from LoginIsense.java
 		} else if (requestCode == LOGIN_ISENSE_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-
-		
-			} else if (resultCode == CredentialManager.RESULT_ERROR) {
-				
-
+			if(CredentialManager.isLoggedIn()) {
+				loggedInAsB.setText(CredentialManager.getUsername(mContext));
+			} else {
+				loggedInAsB.setText(R.string.not_logged_in);
 			}
 		}
 
@@ -1079,7 +1075,6 @@ public class DataWalk extends Activity implements LocationListener,
 				} else
 					api.useDev(useDev);
 
-				// TODO CALL SOME LOGIN
 				actionBarTapCount = 0;
 				break;
 			}
@@ -1090,144 +1085,6 @@ public class DataWalk extends Activity implements LocationListener,
 		return false;
 
 	}// Ends on options item selected
-
-//	/**
-//	 * Tries to login the user to iSENSE using the current saved user
-//	 * credentials.
-//	 * 
-//	 * @author Rajia
-//	 */
-//	public class AttemptLoginTask extends AsyncTask<Void, Integer, Void> {
-//
-//		// This booleans check the return values of our API calls
-//		boolean connect = false;
-//		boolean success = false;
-//
-//		/**
-//		 * Preparation before doInBackground.
-//		 */
-//		@Override
-//		protected void onPreExecute() {
-//			super.onPreExecute();
-//
-//			// Retrieve user credentials from shared preferences
-//			final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-//					DataWalk.mContext, DataWalk.mContext.getSharedPreferences(
-//							Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-//							Context.MODE_PRIVATE));
-//			loginName = mPrefs.getString(
-//					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-//					Login.DEFAULT_USERNAME);
-//			loginPass = mPrefs.getString(
-//					Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-//					Login.DEFAULT_PASSWORD);
-//
-//		}
-//
-//		/**
-//		 * Performs the API calls to login and saves the results into our
-//		 * variables.
-//		 */
-//		@Override
-//		protected Void doInBackground(Void... arg0) {
-//
-//			// If we have connectivity, try to login to iSENSE
-//			if (connect = Connection.hasConnectivity(mContext)) {
-//				success = api.createSession(loginName, loginPass);
-//			}
-//
-//			return null;
-//		}
-//
-//		/**
-//		 * Uses our result variables to determine the appropriate course of
-//		 * action once doInBackground has finished.
-//		 */
-//		@Override
-//		protected void onPostExecute(Void result) {
-//			super.onPostExecute(result);
-//
-//			if (connect) {
-//				if (success) {
-//
-//					// Save the user's credentials into preferences
-//					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-//							DataWalk.mContext,
-//							DataWalk.mContext.getSharedPreferences(
-//									Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-//									Context.MODE_PRIVATE));
-//					SharedPreferences.Editor mEditor = mPrefs.edit();
-//					mEditor.putString(
-//							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-//							loginName);
-//					mEditor.putString(
-//							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-//							loginPass);
-//					mEditor.commit();
-//
-//					// Update the UI with the new logged in username
-//					RPerson user = api.getCurrentUser();
-//					loggedInAsB.setText(user.name);
-//
-//					// Update label if in classroom mode and using login for
-//					// name
-//					SharedPreferences classPrefs = getSharedPreferences(
-//							ClassroomMode.PREFS_KEY_CLASSROOM_MODE,
-//							MODE_PRIVATE);
-//					SharedPreferences namePrefs = getSharedPreferences(
-//							EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
-//					boolean classroomMode = classPrefs.getBoolean(
-//							ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true);
-//					if (!classroomMode
-//							&& namePrefs
-//									.getBoolean(
-//											EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
-//											true)) {
-//						firstName = user.name;
-//						lastInitial = "";
-//
-//						nameB.setText(firstName);
-//					}
-//
-//				} else {
-//
-//					// Tell the user his/her credentials are wrong
-//					w.make("Invalid username or password.", Waffle.LENGTH_LONG,
-//							Waffle.IMAGE_X);
-//
-//					// reset to default and log in again
-//					final SharedPreferences mPrefs = new ObscuredSharedPreferences(
-//							DataWalk.mContext,
-//							DataWalk.mContext.getSharedPreferences(
-//									Login.PREFERENCES_KEY_OBSCURRED_USER_INFO,
-//									Context.MODE_PRIVATE));
-//					SharedPreferences.Editor mEditor = mPrefs.edit();
-//					mEditor.putString(
-//							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_USERNAME,
-//							Login.DEFAULT_USERNAME);
-//					mEditor.putString(
-//							Login.PREFERENCES_OBSCURRED_USER_INFO_SUBKEY_PASSWORD,
-//							Login.DEFAULT_PASSWORD);
-//					mEditor.commit();
-//
-//				}
-//
-//			} else {
-//
-//				// Couldn't connect to the Internet, so report this to the user.
-//				w.make("Cannot connect to internet. Please check network settings.",
-//						Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-//
-//				// Update the UI to signal the fact that you aren't logged in
-//				// TODO Consider the case when the user might still be logged as
-//				// something else
-//				loggedInAsB.setText(R.string.not_logged_in);
-//
-//			}
-//
-//		}// Ends onPostExecute
-//
-//	}// Ends AttempLoginTask
 
 	/**
 	 * Checks to see if the last entered project number is valid.
