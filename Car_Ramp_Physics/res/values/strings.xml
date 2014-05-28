@@ -14,7 +14,15 @@
         \n\nYou may modify various settings – explore the menus.
         
         \n\nIf you are setting up your own project: create fields named \"Time\" (time/milliseconds) and
-        any of \"Accel-X\", \"Accel-Y\", \"Accel-Z\", and \"Accel-Magnitude\" (all Acceleration/meters per second squared).\n        
+        any of \"Accel-X\", \"Accel-Y\", \"Accel-Z\", and \"Accel-Total\" (all Acceleration/meters per second squared).\n\n
+        Name\t\t\t\tUnits\n
+        ------\t\t\t\t------\n
+        Time\t\t\t\tNone\n
+        Accel-X\t\t\t\tm/s^2\n
+        Accel-Y\t\t\t\tm/s^2\n
+        Accel-Z\t\t\t\tm/s^2\n
+        Accel-Total\t\tm/s^2\n
+             
     </string>
     
 	<string name="about_title">About</string>
