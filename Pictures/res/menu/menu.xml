@@ -16,6 +16,6 @@
           android:title="@string/About_Title" 
           android:showAsAction="ifRoom"/>
     <item android:id="@+id/MENU_ITEM_HELP"
-          android:title="@string/About_Title" 
+          android:title="@string/help" 
           android:showAsAction="ifRoom"/>
 </menu>
