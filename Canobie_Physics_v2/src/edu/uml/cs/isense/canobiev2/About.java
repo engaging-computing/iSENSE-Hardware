@@ -15,7 +15,7 @@ public class About extends Activity {
 		setContentView(R.layout.about);
 
 		// Creates the OK button so users can leave
-		okButton = (Button) findViewById(R.id.loginButton);
+		okButton = (Button) findViewById(R.id.okButton);
 		okButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
