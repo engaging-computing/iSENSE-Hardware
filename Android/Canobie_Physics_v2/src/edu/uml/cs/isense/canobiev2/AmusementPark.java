@@ -152,8 +152,10 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int MENU_ITEM_SETUP = 0;
 	private final int MENU_ITEM_LOGIN = 1;
 	private final int MENU_ITEM_UPLOAD = 2;
-	private final int MENU_ITEM_TIME = 3;
-	private final int MENU_ITEM_MEDIA = 4;
+	//private final int MENU_ITEM_TIME = 3;
+	//private final int MENU_ITEM_MEDIA = 4;
+	//Todo Rajia
+	private final int MENU_ITEM_ABOUT = 3;
 	
 	/* Action Bar */
 	private static int actionBarTapCount = 0;
@@ -464,12 +466,18 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
 //			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
 //			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
+			
+			//todo rajia
+			menu.getItem(MENU_ITEM_ABOUT).setEnabled(false);
+			
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
 //			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
 //			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
+			//TODO RAJIA
+			menu.getItem(MENU_ITEM_ABOUT).setEnabled(true);
 		}
 		return true;
 	}
@@ -482,6 +490,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			Intent iSetup = new Intent(AmusementPark.this, Configuration.class);
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
+		//*************Rajia ******************	
+		case R.id.MENU_ITEM_ABOUT:
+			// Shows the about dialog
+			startActivity(new Intent(this, About.class));
+			return true;
+		//***************************************	
+			
 		case R.id.MENU_ITEM_LOGIN:
 			startActivityForResult(new Intent(getApplicationContext(),
 					CredentialManager.class), LOGIN_REQUESTED);
@@ -507,7 +522,8 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			// Give user 10 seconds to switch dev/prod mode
 			if (actionBarTapCount == 0) {
-				cdt = new CountDownTimer(5000, 5000) {
+				cdt = new CountDownTimer(5000, 
+000) {
 					public void onTick(long millisUntilFinished) {
 					}
 
@@ -822,6 +838,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	/**
 	 * Everything needed to be initialized for onCreate in one helpful function.
 	 */
+	@SuppressLint("NewApi")
 	private void initVars() {
 
 		api = API.getInstance();
