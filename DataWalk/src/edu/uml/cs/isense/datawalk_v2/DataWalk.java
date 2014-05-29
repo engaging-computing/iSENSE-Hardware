@@ -108,15 +108,13 @@ public class DataWalk extends Activity implements LocationListener,
 	private final String DEFAULT_PROJECT_DEV = "5";
 
 	private int actionBarTapCount = 0;
-	public static boolean useDev = true;
+	public static boolean useDev = false;
 	private String projectID = "5";
 
 	private String loginName = "";
 	private String loginPass = "";
 	private String projectURL = "";
 	private String dataSetName = "";
-	private String baseprojectURL = "http://isenseproject.org/projects/";
-	private String baseprojectURLDev = "http://rsense-dev.cs.uml.edu/projects/";
 	private int dataSetID = -1;
 
 	/* Project Preferences */
@@ -294,13 +292,6 @@ public class DataWalk extends Activity implements LocationListener,
 						projectID = prefs.getString(PROJ_ID_PRODUCTION,
 								DEFAULT_PROJECT);
 
-					// Set the project URL for view data
-					if (useDev)
-						projectURL = baseprojectURLDev + projectID
-								+ "/data_sets/";
-					else
-						projectURL = baseprojectURL + projectID + "/data_sets/";
-
 					// Save the newest DataSet to the Upload Queue if it has at
 					// least 1 point
 					QDataSet ds = new QDataSet(dataSetName, "Data Points: "
@@ -403,6 +394,13 @@ public class DataWalk extends Activity implements LocationListener,
 		velocityTV = (TextView) findViewById(R.id.tv_velocity);
 		pointsUploadedTV.setText("Points Recorded: " + dataPointCount);
 		elapsedTimeTV.setText("Time Elapsed: " + timerTick + " seconds");
+		
+		CredentialManager.login(this, api);
+		if(CredentialManager.isLoggedIn()) {
+			loggedInAsB.setText(CredentialManager.getUsername(mContext));
+		} else {
+			loggedInAsB.setText(R.string.not_logged_in);
+		}
 
 		rcrdIntervalB.setOnClickListener(new OnClickListener() {
 
@@ -564,6 +562,11 @@ public class DataWalk extends Activity implements LocationListener,
 	protected void onStart() {
 		// Log in automatically
 		CredentialManager.login(this, api);
+		if(CredentialManager.isLoggedIn()) {
+			loggedInAsB.setText(CredentialManager.getUsername(mContext));
+		} else {
+			loggedInAsB.setText(R.string.not_logged_in);
+		}
 		super.onStart();
 	}
 

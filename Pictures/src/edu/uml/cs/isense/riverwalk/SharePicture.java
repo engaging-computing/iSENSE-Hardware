@@ -228,7 +228,7 @@ public class SharePicture extends Activity {
 			protected Boolean doInBackground(Void... params) {
 				Log.e("test", "Here");
 				for(int i = 0; i < imageUris.size(); i++) {
-					uploadCode = api.uploadMedia(project, imageFiles.get(i), TargetType.DATA_SET, key, "");
+					uploadCode = api.uploadMedia(project, imageFiles.get(i), TargetType.PROJECT, key, "");
 				}
 				return null;
 			}
