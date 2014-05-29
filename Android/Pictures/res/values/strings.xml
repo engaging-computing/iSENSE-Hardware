@@ -85,7 +85,7 @@ To use the App via the Share Feature in Gallery: While viewing images in your ga
          </string>
   	<string name="About">\n\nThis app can record data regardless of Internet or Wi-Fi connection. After finished recording data, the points you recorded will remain saved. Later, if you have internet connection, you can click on upload (a menu option located at the top of the app). This will show you the session name and time that your data was recorded. Clicking on the upload button will publish that information to iSENSE.\n\n </string>
     <string name="helpText">\nHow to Create a Project for this App:\n\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Click on Create Project.\n\n5. Enter a name for your project, then click finish. \n\n6. Enter a Description.\n\n7. When formatting the project, the fields should be as follows:\n\n 
-        
+Name:\t\t\t\t\t\t\t\tType:\n\n        
 Timestamp\t\t\t\t\tTimestamp\n
 Latitude\t\t\t\t\t\t\tLatitude\n
 Longitude\t\t\t\t\t\tLongitude
