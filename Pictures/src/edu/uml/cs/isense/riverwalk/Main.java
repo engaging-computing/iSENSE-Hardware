@@ -602,6 +602,7 @@ public class Main extends Activity implements LocationListener {
 			menu.getItem(1).setEnabled(false);
 			menu.getItem(2).setEnabled(false);
 			menu.getItem(3).setEnabled(false);
+			menu.getItem(4).setEnabled(false);
 
 		}
 
@@ -610,6 +611,8 @@ public class Main extends Activity implements LocationListener {
 			menu.getItem(1).setEnabled(true);
 			menu.getItem(2).setEnabled(true);
 			menu.getItem(3).setEnabled(true);
+			menu.getItem(4).setEnabled(true);
+
 
 		}
 		return true;
@@ -641,6 +644,16 @@ public class Main extends Activity implements LocationListener {
 			Intent continuous = new Intent(getApplicationContext(),
 					Continuous.class);
 			startActivity(continuous);
+			return true;
+			
+		case R.id.MENU_ITEM_ABOUT:
+			Intent about = new Intent(getApplicationContext(), About.class);
+			startActivity(about);
+			return true;
+			
+		case R.id.MENU_ITEM_HELP:
+			Intent help = new Intent(getApplicationContext(), Help.class);
+			startActivity(help);
 			return true;
 			
 		case android.R.id.home:
