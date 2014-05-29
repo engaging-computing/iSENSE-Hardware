@@ -156,6 +156,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	//private final int MENU_ITEM_MEDIA = 4;
 	//Todo Rajia
 	private final int MENU_ITEM_ABOUT = 3;
+	private final int MENU_ITEM_HELP = 4;
 	
 	/* Action Bar */
 	private static int actionBarTapCount = 0;
@@ -464,12 +465,13 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
+			
 //			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
 //			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
 			
 			//todo rajia
 			menu.getItem(MENU_ITEM_ABOUT).setEnabled(false);
-			
+			menu.getItem(MENU_ITEM_HELP).setEnabled(false);
 		} else {
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
@@ -478,6 +480,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 //			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
 			//TODO RAJIA
 			menu.getItem(MENU_ITEM_ABOUT).setEnabled(true);
+			menu.getItem(MENU_ITEM_HELP).setEnabled(true);
 		}
 		return true;
 	}
@@ -494,6 +497,11 @@ public class AmusementPark extends Activity implements SensorEventListener,
 		case R.id.MENU_ITEM_ABOUT:
 			// Shows the about dialog
 			startActivity(new Intent(this, About.class));
+			return true;
+			
+		case R.id.MENU_ITEM_HELP:
+			// Shows the about dialog
+			startActivity(new Intent(this, Help.class));
 			return true;
 		//***************************************	
 			
