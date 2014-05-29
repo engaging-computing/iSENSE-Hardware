@@ -58,7 +58,10 @@
             android:label="About"
             android:theme="@style/AppTheme" />
             
-        
+        <activity
+            android:name=".Help"
+            android:label="Help"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".experiments.BrowseExperiments"
             android:label="@string/app_name_experiments"
