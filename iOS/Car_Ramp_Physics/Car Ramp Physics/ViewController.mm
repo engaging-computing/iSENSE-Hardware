@@ -25,7 +25,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, items, recordLength, countdown, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,proj_num, loginalert, pickerLength,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, mngr,alert, buttonText, countdownLbl, menu, rates, pickerRate, rateField;
+@synthesize start, menuButton, vector_status, items, recordLength, countdown, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,proj_num, loginalert, pickerLength,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, mngr,alert, buttonText, countdownLbl, menu, rates, pickerRate, rateField, enterName, name;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -64,7 +64,7 @@
                                         options:nil];
             //[self viewDidLoad];
             titleView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"navBar~landscape_iPhone" ofType:@"png"]]];
-            start = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 460, 155)];
+            start = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 460, 120)];
             buttonText = [[UILabel alloc] initWithFrame:CGRectMake(181, 47, 98, 21)];
             start.layer.borderColor = [UIColor grayColor].CGColor;
             start.layer.borderWidth = 2;
@@ -106,28 +106,17 @@
 
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Overriden to allow any orientation.
-    return (running) ? NO : YES;
+    return YES;
 }
 
 // iOS6 enable rotation
 - (BOOL)shouldAutorotate {
-    return (running) ? NO : YES;
+    return YES;
 }
 
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
-    if (running) {
-        if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
-            return UIInterfaceOrientationMaskPortrait;
-        } else if (self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-            return UIInterfaceOrientationMaskPortraitUpsideDown;
-        } else if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-            return UIInterfaceOrientationMaskLandscapeLeft;
-        } else {
-            return UIInterfaceOrientationMaskLandscapeRight;
-        }
-    } else
+
         return UIInterfaceOrientationMaskAll;
 }
 
@@ -205,9 +194,12 @@
     if (saver->hasLogin){
         userName = saver->user;
         passWord = saver->pass;
+        [self login:userName withPassword:passWord];
+        saver->isLoggedIn = true;
     } else {
-        userName = @"mobile.fake@example.com";
-        passWord = @"mobile";
+        userName = @"";
+        passWord = @"";
+        saver->isLoggedIn = false;
         
         
     }
@@ -235,7 +227,7 @@
         mngr = [[CredentialManager alloc] initWithDelegate:self];
         DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
         [parent addChildViewController:mngr];
-        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
         [alert setContentView:mngr.view];
         [alert setDismissesOnBackdropTap:YES];
         [alert show];
@@ -249,8 +241,7 @@
     
     
     
-    [self login:userName withPassword:passWord];
-    saver->isLoggedIn = true;
+    
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
@@ -381,7 +372,7 @@
         mngr = [[CredentialManager alloc] initWithDelegate:self];
         DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
         [parent addChildViewController:mngr];
-        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
         [alert setContentView:mngr.view];
         [alert setDismissesOnBackdropTap:YES];
         menu = nil;
@@ -406,18 +397,25 @@
         NSLog(@"Reset button pressed");
         countdown = recordLength = 10;
         recordingRate = 30;
-        userName = @"mobile.fake@example.com";
-        passWord = @"mobile";
-        [self login:userName withPassword:passWord];
-        saver->hasLogin = true;
-        saver->isLoggedIn = true;
+        [[API getInstance] deleteSession];
         menu = nil;
+        enterName = [[DLAVAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [enterName setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
+        [enterName textFieldAtIndex:0].placeholder = @"First Name";
+        [enterName textFieldAtIndex:1].placeholder = @"Last Initial";
+        [enterName textFieldAtIndex:0].delegate = self;
+        [enterName textFieldAtIndex:1].delegate = self;
+        [enterName textFieldAtIndex:1].secureTextEntry = NO;
+        [enterName textFieldAtIndex:0].tag = FIRST_NAME_FIELD;
+        [enterName showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+            name = [NSString stringWithFormat:@"%@ %@.", [alertView textFieldTextAtIndex:0],[alertView textFieldTextAtIndex:1]];
+        }];
     };
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
     RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Recording Settings" action:settingsBlock];
     RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
-    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Credential\nManager" action:loginBlock];
+    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Login" action:loginBlock];
     RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
     RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
     
@@ -551,6 +549,17 @@
         recordLength = countdown = [defaults integerForKey:@"recordLength"];
         
         [self saveModeDialog];
+        enterName = [[DLAVAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [enterName setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
+        [enterName textFieldAtIndex:0].placeholder = @"First Name";
+        [enterName textFieldAtIndex:1].placeholder = @"Last Initial";
+        [enterName textFieldAtIndex:0].delegate = self;
+        [enterName textFieldAtIndex:1].delegate = self;
+        [enterName textFieldAtIndex:1].secureTextEntry = NO;
+        [enterName textFieldAtIndex:0].tag = FIRST_NAME_FIELD;
+        [enterName showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+            name = [NSString stringWithFormat:@"%@ %@.", [alertView textFieldTextAtIndex:0],[alertView textFieldTextAtIndex:1]];
+        }];
         
     }
     
@@ -944,7 +953,9 @@
     
     dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:nil];
     
+    [self.view makeWaffle:[NSString stringWithFormat:@"Project Number: %d", projNum] duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:@"" image:WAFFLE_CHECKMARK];
     
+    [self launchFieldMatchingViewControllerFromBrowse:FALSE];
     
 }
 
@@ -1040,6 +1051,7 @@
                     [contribKeyAlert setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
                     [contribKeyAlert textFieldAtIndex:0].placeholder = @"Contributor Name";
                     [contribKeyAlert textFieldAtIndex:1].placeholder = @"Contributor Key";
+                    [contribKeyAlert textFieldAtIndex:0].text = name;
                 
                     [contribKeyAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
                         if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Upload"]) {
@@ -1075,10 +1087,12 @@
 
 - (void)showMenu {
     
-    if (menu == nil) {
-        NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
-        [self setUpMenu:isenseBundle];
+    if (menu != nil) {
+        menu = nil;
     }
+    
+    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
+    [self setUpMenu:isenseBundle];
     
     if (![menu isVisible]) {
        [menu showInViewController:self center:CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height/2.f)];

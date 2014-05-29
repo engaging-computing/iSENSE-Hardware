@@ -57,6 +57,8 @@ typedef struct _RotationDataSaver{
 @property(nonatomic, retain) UIAlertView *proj_num;
 @property(nonatomic, retain) UIAlertView *loginalert;
 @property(nonatomic, retain) UIAlertView *saveMode;
+@property(nonatomic, retain) DLAVAlertView *enterName;
+@property(nonatomic, retain) NSString *name;
 @property(nonatomic, retain) API *api;
 @property(nonatomic, retain) NSNumberFormatter *formatter;
 @property DataFieldManager *dfm;
