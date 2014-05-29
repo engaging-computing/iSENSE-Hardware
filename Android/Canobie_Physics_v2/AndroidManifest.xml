@@ -40,8 +40,6 @@
             android:name=".Configuration"
             android:label="Configuration"
             android:theme="@style/AppTheme" />
-        
-        
         <activity
             android:name=".About"
             android:label="About"

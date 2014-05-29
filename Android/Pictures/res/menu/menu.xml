@@ -12,4 +12,10 @@
     <item android:id="@+id/MENU_ITEM_CONTINUOUS"
           android:title="@string/continuous" 
           android:showAsAction="ifRoom"/>
+    <item android:id="@+id/MENU_ITEM_ABOUT"
+          android:title="@string/About_Title" 
+          android:showAsAction="ifRoom"/>
+    <item android:id="@+id/MENU_ITEM_HELP"
+          android:title="@string/About_Title" 
+          android:showAsAction="ifRoom"/>
 </menu>
