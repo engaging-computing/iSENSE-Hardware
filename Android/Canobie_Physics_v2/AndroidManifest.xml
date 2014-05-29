@@ -46,6 +46,10 @@
             android:theme="@style/AppTheme" />
         
         <activity
+            android:name=".Help"
+            android:label="Help"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".MediaManager"
             android:label="Media Manager"
             android:theme="@style/AppThemeDialog" />
