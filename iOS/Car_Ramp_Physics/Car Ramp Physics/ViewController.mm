@@ -25,7 +25,7 @@
 
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, items, recordLength, countdown, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,proj_num, loginalert, picker,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, mngr,alert, buttonText, countdownLbl, menu;
+@synthesize start, menuButton, vector_status, items, recordLength, countdown, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,proj_num, loginalert, pickerLength,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, mngr,alert, buttonText, countdownLbl, menu, rates, pickerRate, rateField, enterName, name;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -64,7 +64,7 @@
                                         options:nil];
             //[self viewDidLoad];
             titleView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"navBar~landscape_iPhone" ofType:@"png"]]];
-            start = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 460, 155)];
+            start = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 460, 120)];
             buttonText = [[UILabel alloc] initWithFrame:CGRectMake(181, 47, 98, 21)];
             start.layer.borderColor = [UIColor grayColor].CGColor;
             start.layer.borderWidth = 2;
@@ -106,28 +106,17 @@
 
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Overriden to allow any orientation.
-    return (running) ? NO : YES;
+    return YES;
 }
 
 // iOS6 enable rotation
 - (BOOL)shouldAutorotate {
-    return (running) ? NO : YES;
+    return YES;
 }
 
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
-    if (running) {
-        if (self.interfaceOrientation == UIInterfaceOrientationPortrait) {
-            return UIInterfaceOrientationMaskPortrait;
-        } else if (self.interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-            return UIInterfaceOrientationMaskPortraitUpsideDown;
-        } else if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
-            return UIInterfaceOrientationMaskLandscapeLeft;
-        } else {
-            return UIInterfaceOrientationMaskLandscapeRight;
-        }
-    } else
+
         return UIInterfaceOrientationMaskAll;
 }
 
@@ -147,11 +136,23 @@
 
 -(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    return [self.lengths objectAtIndex:row];
+    if ([pickerView isEqual:pickerLength]) {
+        return [lengths objectAtIndex:row];
+    } else {
+        return [rates objectAtIndex:row];
+    }
+    
+    
 }
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    lengthField.text = [self.lengths objectAtIndex:row];
+    if ([pickerView isEqual:pickerLength]) {
+        lengthField.text =  [lengths objectAtIndex:row];
+    } else {
+        rateField.text = [rates objectAtIndex:row];
+    }
+    
+    
 }
 
 
@@ -167,7 +168,7 @@
     
     [formatter setRoundingMode: NSNumberFormatterRoundUp];
     
-    useDev = FALSE;
+    useDev = TRUE;
     
     api = [API getInstance];
     [api useDev: useDev];
@@ -193,9 +194,12 @@
     if (saver->hasLogin){
         userName = saver->user;
         passWord = saver->pass;
+        [self login:userName withPassword:passWord];
+        saver->isLoggedIn = true;
     } else {
-        userName = @"mobile.fake@example.com";
-        passWord = @"mobile";
+        userName = @"";
+        passWord = @"";
+        saver->isLoggedIn = false;
         
         
     }
@@ -223,7 +227,7 @@
         mngr = [[CredentialManager alloc] initWithDelegate:self];
         DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
         [parent addChildViewController:mngr];
-        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
         [alert setContentView:mngr.view];
         [alert setDismissesOnBackdropTap:YES];
         [alert show];
@@ -237,8 +241,7 @@
     
     
     
-    [self login:userName withPassword:passWord];
-    saver->isLoggedIn = true;
+    
     
     // Managed Object Context for Data_CollectorAppDelegate
     if (managedObjectContext == nil) {
@@ -254,17 +257,22 @@
     
     
     lengths = [[NSMutableArray alloc] initWithObjects:@"1 sec", @"2 sec", @"5 sec", @"10 sec", @"30 sec", @"60 sec", nil];
+    rates = [[NSMutableArray alloc] initWithObjects:@"1 Hz", @"5 Hz", @"10 Hz", @"15 Hz", @"25 Hz", @"30 Hz", nil];
     
-    picker = [[UIPickerView alloc]init];
-    [picker setDataSource:self];
-    [picker setDelegate:self];
+    pickerLength = [[UIPickerView alloc]init];
+    [pickerLength setDataSource:self];
+    [pickerLength setDelegate:self];
     
-    [picker setShowsSelectionIndicator:YES];
+    [pickerLength setShowsSelectionIndicator:YES];
+    
+    pickerRate = [[UIPickerView alloc]init];
+    [pickerRate setDataSource:self];
+    [pickerRate setDelegate:self];
+    
+    [pickerRate setShowsSelectionIndicator:YES];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     recordLength = countdown = [defaults integerForKey:@"recordLength"];
-    
-    [self setPickerDefault];
     
     dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:nil];
     
@@ -289,6 +297,34 @@
     
 }
 
+- (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex {
+    //NSLog(@"Index: %@", buttonIndex);
+    if ([popup.title isEqualToString:@"Recording Settings"]) {
+        if ([[popup buttonTitleAtIndex:buttonIndex] isEqualToString:@"Recording Length"]) {
+            NSLog(@"Length");
+                    UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+                    [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+                    lengthField = [talert textFieldAtIndex:0];
+                    lengthField.inputView = pickerLength;
+                    [self setPickerDefault:pickerLength];
+                    [talert show];
+            
+        } else if ([[popup buttonTitleAtIndex:buttonIndex] isEqualToString:@"Recording Rate"]) {
+
+                    NSLog(@"Rate");
+                    UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording rate" message:@"Enter rate in Hz." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
+                    [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+                    rateField = [talert textFieldAtIndex:0];
+                    rateField.inputView = pickerRate;
+                    [self setPickerDefault: pickerRate];
+                    [talert show];
+            
+        }
+        
+        
+    }
+}
+
 - (void) setUpMenu: (NSBundle*) isenseBundle {
     UIImage *upload = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"upload2" ofType:@"png"]];
     UIImage *settings = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"settings" ofType:@"png"]];;
@@ -311,13 +347,11 @@
         
     };
     void (^settingsBlock)() = ^() {
-        UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-        [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-        lengthField = [talert textFieldAtIndex:0];
-        lengthField.inputView = picker;
-        [self setPickerDefault];
         menu = nil;
-        [talert show];
+        UIActionSheet *settings = [[UIActionSheet alloc] initWithTitle:@"Recording Settings" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Recording Length", @"Recording Rate", nil];
+        settings.tag = 1;
+        [settings showInView:self.view];
+        
         
     };
     void (^codeBlock)() = ^() {
@@ -338,7 +372,7 @@
         mngr = [[CredentialManager alloc] initWithDelegate:self];
         DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
         [parent addChildViewController:mngr];
-        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
+        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
         [alert setContentView:mngr.view];
         [alert setDismissesOnBackdropTap:YES];
         menu = nil;
@@ -362,18 +396,26 @@
     void (^resetBlock)() = ^() {
         NSLog(@"Reset button pressed");
         countdown = recordLength = 10;
-        userName = @"mobile.fake@example.com";
-        passWord = @"mobile";
-        [self login:userName withPassword:passWord];
-        saver->hasLogin = true;
-        saver->isLoggedIn = true;
+        recordingRate = 30;
+        [[API getInstance] deleteSession];
         menu = nil;
+        enterName = [[DLAVAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [enterName setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
+        [enterName textFieldAtIndex:0].placeholder = @"First Name";
+        [enterName textFieldAtIndex:1].placeholder = @"Last Initial";
+        [enterName textFieldAtIndex:0].delegate = self;
+        [enterName textFieldAtIndex:1].delegate = self;
+        [enterName textFieldAtIndex:1].secureTextEntry = NO;
+        [enterName textFieldAtIndex:0].tag = FIRST_NAME_FIELD;
+        [enterName showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+            name = [NSString stringWithFormat:@"%@ %@.", [alertView textFieldTextAtIndex:0],[alertView textFieldTextAtIndex:1]];
+        }];
     };
     
     RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
-    RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Set\nRecording\nLength" action:settingsBlock];
+    RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Recording Settings" action:settingsBlock];
     RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
-    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Credential\nManager" action:loginBlock];
+    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Login" action:loginBlock];
     RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
     RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
     
@@ -405,41 +447,74 @@
     [loginalert setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
     [loginalert textFieldAtIndex:0].delegate = self;
     [loginalert textFieldAtIndex:0].tag = LOGIN_USER;
+    [[loginalert textFieldAtIndex:0] becomeFirstResponder];
     [loginalert textFieldAtIndex:1].delegate = self;
     [loginalert textFieldAtIndex:1].tag = LOGIN_PASS;
     [loginalert textFieldAtIndex:0].placeholder = @"Email";
     [loginalert show];
 }
 
-- (void) setPickerDefault {
-    switch (countdown) {
-        case 1:
-            [picker selectRow:0 inComponent:0 animated:YES];
-            lengthField.text = [picker.delegate pickerView:picker titleForRow:0 forComponent:0];
-            break;
-        case 2:
-            [picker selectRow:1 inComponent:0 animated:YES];
-            lengthField.text = [picker.delegate pickerView:picker titleForRow:1 forComponent:0];
-            break;
-        case 5:
-            [picker selectRow:2 inComponent:0 animated:YES];
-            lengthField.text = [picker.delegate pickerView:picker titleForRow:2 forComponent:0];
-            break;
-        case 10:
-            [picker selectRow:3 inComponent:0 animated:YES];
-            lengthField.text = [picker.delegate pickerView:picker titleForRow:3 forComponent:0];
-            break;
-        case 30:
-            [picker selectRow:4 inComponent:0 animated:YES];
-            lengthField.text = [picker.delegate pickerView:picker titleForRow:4 forComponent:0];
-            break;
-        case 60:
-            [picker selectRow:5 inComponent:0 animated:YES];
-            lengthField.text = [picker.delegate pickerView:picker titleForRow:5 forComponent:0];
-            break;
-        default:
-            break;
-    }
+- (void) setPickerDefault:(UIPickerView *) picker {
+    if ([picker isEqual:pickerLength]) {
+            switch (countdown) {
+                case 1:
+                    [picker selectRow:0 inComponent:0 animated:YES];
+                    lengthField.text = [lengths objectAtIndex:0];
+                    break;
+                case 2:
+                    [picker selectRow:1 inComponent:0 animated:YES];
+                    lengthField.text = [lengths objectAtIndex:1];
+                    break;
+                case 5:
+                    [picker selectRow:2 inComponent:0 animated:YES];
+                    lengthField.text = [lengths objectAtIndex:2];
+                    break;
+                case 10:
+                    [picker selectRow:3 inComponent:0 animated:YES];
+                    lengthField.text = [lengths objectAtIndex:3];
+                    break;
+                case 30:
+                    [picker selectRow:4 inComponent:0 animated:YES];
+                    lengthField.text = [lengths objectAtIndex:4];
+                    break;
+                case 60:
+                    [picker selectRow:5 inComponent:0 animated:YES];
+                    lengthField.text = [lengths objectAtIndex:5];
+                    break;
+                default:
+                    break;
+            }
+    } else {
+            switch (recordingRate) {
+                case 1:
+                    [picker selectRow:0 inComponent:0 animated:YES];
+                    rateField.text = [rates objectAtIndex:0];
+                    break;
+                case 5:
+                    [picker selectRow:1 inComponent:0 animated:YES];
+                    rateField.text = [rates objectAtIndex:1];
+                    break;
+                case 10:
+                    [picker selectRow:2 inComponent:0 animated:YES];
+                    rateField.text = [rates objectAtIndex:2];
+                    break;
+                case 15:
+                    [picker selectRow:3 inComponent:0 animated:YES];
+                    rateField.text = [rates objectAtIndex:3];
+                    break;
+                case 25:
+                    [picker selectRow:4 inComponent:0 animated:YES];
+                    rateField.text = [rates objectAtIndex:4];
+                    break;
+                case 30:
+                    [picker selectRow:5 inComponent:0 animated:YES];
+                    rateField.text = [rates objectAtIndex:5];
+                    break;
+                default:
+                    break;
+
+            }
+        }
     
     [picker reloadComponent:0];
 }
@@ -474,6 +549,17 @@
         recordLength = countdown = [defaults integerForKey:@"recordLength"];
         
         [self saveModeDialog];
+        enterName = [[DLAVAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [enterName setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
+        [enterName textFieldAtIndex:0].placeholder = @"First Name";
+        [enterName textFieldAtIndex:1].placeholder = @"Last Initial";
+        [enterName textFieldAtIndex:0].delegate = self;
+        [enterName textFieldAtIndex:1].delegate = self;
+        [enterName textFieldAtIndex:1].secureTextEntry = NO;
+        [enterName textFieldAtIndex:0].tag = FIRST_NAME_FIELD;
+        [enterName showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+            name = [NSString stringWithFormat:@"%@ %@.", [alertView textFieldTextAtIndex:0],[alertView textFieldTextAtIndex:1]];
+        }];
         
     }
     
@@ -539,10 +625,7 @@
     //[start setTitle:[NSString stringWithFormat:@"%d", countdown] forState:UIControlStateNormal];
     // Get the recording rate
     float rate = 0.02;
-    /*NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-     NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
-     sampleInterval = [sampleIntervalString floatValue];*/
-    sampleInterval = 20;
+    sampleInterval = 15;
     if (sampleInterval > 0) rate = sampleInterval / 1000;
     
     elapsedTime = 0;
@@ -733,7 +816,7 @@
         
     });
     
-    NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/button-37.wav"];
+    NSString *path = [NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath], @"/beep.wav"];
     SystemSoundID soundID;
     NSURL *filePath = [NSURL fileURLWithPath:path isDirectory:NO];
     CFURLRef url = (__bridge CFURLRef)filePath;
@@ -830,6 +913,8 @@
 
 - (void) didFinishChoosingProject:(ProjectBrowserViewController *) browser withID: (int) project_id {
     projNum = project_id;
+    NSLog(@"ID = %d", projNum);
+    dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:nil];
     [self launchFieldMatchingViewControllerFromBrowse:TRUE];
 }
 
@@ -866,7 +951,11 @@
         
     }
     
+    dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:nil];
     
+    [self.view makeWaffle:[NSString stringWithFormat:@"Project Number: %d", projNum] duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:@"" image:WAFFLE_CHECKMARK];
+    
+    [self launchFieldMatchingViewControllerFromBrowse:FALSE];
     
 }
 
@@ -936,15 +1025,11 @@
     if ([API hasConnectivity]) {
         
         
-        if ([[api getCurrentUser].name isEqualToString:@""]) {
-            [self.view makeWaffle:@"Not logged in" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-            return false;
-            
-        }
+        
         
         sessionName = [NSString stringWithFormat:@"%@.", [api getCurrentUser].name];
-        if (sessionName == nil){
-            sessionName = @"Car Ramp Physics";
+        if ([api getCurrentUser] == nil){
+            sessionName = @"";
         }
         
         UIAlertView *message = [self getDispatchDialogWithMessage:@"Uploading to iSENSE..."];
@@ -958,7 +1043,26 @@
             [data setObject:dataToBeJSONed forKey:@"data"];
             data = [[api rowsToCols:data] mutableCopy];
             
-            int ds_id = [api uploadDataWithId:projNum withData:data andName:sessionName];
+            __block int ds_id;
+            
+            if ([api getCurrentUser] == nil) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    DLAVAlertView *contribKeyAlert = [[DLAVAlertView alloc] initWithTitle:@"Enter Contributor Key" message:@"" delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles:@"Upload", nil];
+                    [contribKeyAlert setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
+                    [contribKeyAlert textFieldAtIndex:0].placeholder = @"Contributor Name";
+                    [contribKeyAlert textFieldAtIndex:1].placeholder = @"Contributor Key";
+                    [contribKeyAlert textFieldAtIndex:0].text = name;
+                
+                    [contribKeyAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+                        if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Upload"]) {
+                            ds_id = [api uploadDataWithId:projNum withData:data withContributorKey:[contribKeyAlert textFieldTextAtIndex:1] as:@"" andName:[contribKeyAlert textFieldTextAtIndex:0]];
+                        }
+                    }];
+                });
+                
+            } else {
+                ds_id = [api uploadDataWithId:projNum withData:data andName:sessionName];
+            }
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 [message dismissWithClickedButtonIndex:nil animated:YES];
@@ -983,10 +1087,12 @@
 
 - (void)showMenu {
     
-    if (menu == nil) {
-        NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
-        [self setUpMenu:isenseBundle];
+    if (menu != nil) {
+        menu = nil;
     }
+    
+    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
+    [self setUpMenu:isenseBundle];
     
     if (![menu isVisible]) {
        [menu showInViewController:self center:CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height/2.f)];
@@ -1033,6 +1139,17 @@
             [defaults setInteger:recordLength forKey:@"recordLength"];
             
         }
+    } else if ([alertView.title isEqualToString:@"Enter recording rate"]) {
+        
+        if([title isEqualToString:@"Done"])
+        {
+            UITextField *length = [alertView textFieldAtIndex:0];
+            
+            NSArray *lolcats = [length.text componentsSeparatedByString:@" "];
+            sampleInterval = recordingRate = [lolcats[0] floatValue];
+            NSLog(@"Sample Interval is %f", sampleInterval);
+            
+        }
     } else if ([alertView.title isEqualToString:@"Login to iSENSE"]) {
         [self login:[alertView textFieldAtIndex:0].text withPassword:[alertView textFieldAtIndex:1].text];
         userName = [alertView textFieldAtIndex:0].text;
@@ -1057,6 +1174,8 @@
         }
     } else if ([alertView.title isEqualToString:@"Enter Project ID"]) {
         projNum = [[alertView textFieldAtIndex:0].text intValue];
+        NSLog(@"ID = %d", projNum);
+        dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:nil];
         [self launchFieldMatchingViewControllerFromBrowse:FALSE];
     } else if ([alertView.title isEqualToString:@"No Connectivity"]) {
         if ([title isEqualToString:@"Try Again"]){

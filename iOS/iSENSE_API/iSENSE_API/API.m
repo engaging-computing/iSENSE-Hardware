@@ -103,12 +103,12 @@ static NSString *email, *password;
     email = p_email;
     password = p_password;
     
-    if ([result objectForKey:@"username"] != nil) {
+    if ([result objectForKey:@"name"] != nil) {
         NSLog(@"Loglog");
         email = p_email;
         password = p_password;
         RPerson *you = [[RPerson alloc] init];
-        you.name = [result objectForKey:@"username"];
+        you.name = [result objectForKey:@"name"];
         you.gravatar = [result objectForKey:@"gravatar"];
         
         NSURL *imageURL = [NSURL URLWithString:[you gravatar]];
@@ -432,7 +432,6 @@ static NSString *email, *password;
     // append a timestamp to the name of the data set
     name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
     
-    
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
     
     [requestData setObject:dataToUpload forKey:@"data"];
@@ -467,11 +466,14 @@ static NSString *email, *password;
  * @param conName - Name of contributor
  * @return The integer ID of the newly uploaded dataset, or -1 if upload fails
  */
--(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName {
+-(int) uploadDataWithId:(int)projectId withData:(NSDictionary *)dataToUpload withContributorKey:(NSString *) conKey as:(NSString *) conName andName:(NSString *)name{
     
     NSMutableDictionary *requestData = [[NSMutableDictionary alloc] init];
     
-    [requestData setObject:conKey forKey:@"contributor_key"];
+    name = [NSString stringWithFormat:@"%@ - %@", name, [self appendedTimeStamp]];
+    
+    [requestData setObject:name forKey:@"title"];
+    [requestData setObject:conKey forKey:@"contribution_key"];
     [requestData setObject:conName forKey:@"contributor_name"];
     [requestData setObject:dataToUpload forKey:@"data"];
     

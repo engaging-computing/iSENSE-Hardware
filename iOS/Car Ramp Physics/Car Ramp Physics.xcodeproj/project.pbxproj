@@ -383,6 +383,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = ECG;
+				TargetAttributes = {
+					7669F025178B275C00E51AD0 = {
+						DevelopmentTeam = 7EYWDK4LSD;
+					};
+				};
 			};
 			buildConfigurationList = 7669F021178B275C00E51AD0 /* Build configuration list for PBXProject "Car Ramp Physics" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -608,6 +613,8 @@
 		7669F04D178B275C00E51AD0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -619,6 +626,7 @@
 				LIBRARY_SEARCH_PATHS = "/Users/$USER/iSENSE-Hardware/iOS/iSENSE_API/**";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "iS Car Ramp";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -626,8 +634,8 @@
 		7669F04E178B275C00E51AD0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Car Ramp Physics/Car Ramp Physics-Prefix.pch";
 				HEADER_SEARCH_PATHS = (

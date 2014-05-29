@@ -379,11 +379,11 @@
     
     [start setTitle:[NSString stringWithFormat:@"%d", countdown] forState:UIControlStateNormal];
     // Get the recording rate
-    float rate = .125;
+    float rate = 0.01;
     /*NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
      NSString *sampleIntervalString = [prefs valueForKey:[StringGrabber grabString:@"key_sample_interval"]];
      sampleInterval = [sampleIntervalString floatValue];*/
-    sampleInterval = 125;
+    sampleInterval = 10;
     if (sampleInterval > 0) rate = sampleInterval / 1000;
     
     elapsedTime = 0;
@@ -661,8 +661,8 @@
 
 - (void) browseproj {
     [project dismissWithClickedButtonIndex:1 animated:YES];
-    ProjectBrowseViewController *browse;
-    browse = [[ProjectBrowseViewController alloc] init];
+    ProjectBrowserViewController *browse;
+    browse = [[ProjectBrowserViewController alloc] init];
     browse.title = @"Browse for Projects";
     [self.navigationController pushViewController:browse animated:YES];
     
@@ -1187,11 +1187,6 @@
     [message addSubview:spinner];
     [spinner startAnimating];
     return message;
-}
-
--(void)projectViewController:(ProjectBrowseViewController *)controller didFinishChoosingProject:(NSNumber *)projectNum {
-    projNum = projectNum.intValue;
-    [self launchFieldMatchingViewControllerFromBrowse:TRUE];
 }
 
 - (void) launchFieldMatchingViewControllerFromBrowse:(bool)fromBrowse {

@@ -85,6 +85,7 @@ typedef void (^DLAVAlertViewCompletionHandler)(DLAVAlertView *alertView, NSInteg
 
 - (void)addTextFieldWithText:(NSString *)text placeholder:(NSString *)placeholder;
 - (NSString *)textFieldTextAtIndex:(NSInteger)textFieldIndex;
+- (UITextField *)textFieldAtIndex:(NSInteger)textFieldIndex;
 - (NSInteger)numberOfTextFields;
 
 - (void)setKeyboardType:(UIKeyboardType)keyboardType ofTextFieldAtIndex:(NSInteger)index;
