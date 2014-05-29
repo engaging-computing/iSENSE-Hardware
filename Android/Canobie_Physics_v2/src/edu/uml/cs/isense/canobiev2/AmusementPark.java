@@ -494,6 +494,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			startActivityForResult(iSetup, SETUP_REQUESTED);
 			return true;
 		//*************Rajia ******************	
+		case R.id.MENU_ITEM_UPLOAD:
+			manageUploadQueue();
+			return true;
 		case R.id.MENU_ITEM_ABOUT:
 			// Shows the about dialog
 			startActivity(new Intent(this, About.class));
@@ -509,9 +512,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			startActivityForResult(new Intent(getApplicationContext(),
 					CredentialManager.class), LOGIN_REQUESTED);
 			return true;
-		case R.id.MENU_ITEM_UPLOAD:
-			manageUploadQueue();
-			return true;
+		
 //		case R.id.MENU_ITEM_TIME:
 //			startActivityForResult(new Intent(getApplicationContext(),
 //					SyncTime.class), SYNC_TIME_REQUESTED);

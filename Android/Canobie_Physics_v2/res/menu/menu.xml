@@ -6,15 +6,16 @@
     <item android:id="@+id/MENU_ITEM_LOGIN"
           android:title="@string/login" 
           android:showAsAction="always"/>
+     <item android:id="@+id/MENU_ITEM_UPLOAD"
+          android:title="@string/upload" 
+          android:showAsAction="ifRoom"/>
     <item android:id="@+id/MENU_ITEM_ABOUT"
           android:title="@string/about"
           android:showAsAction="ifRoom"/>
     <item android:id="@+id/MENU_ITEM_HELP"
           android:title="@string/help"
           android:showAsAction="ifRoom"/>
- <item android:id="@+id/MENU_ITEM_UPLOAD"
-          android:title="@string/upload" 
-          android:showAsAction="ifRoom"/>
+
 <!--<item android:id="@+id/MENU_ITEM_TIME"
           android:title="@string/time" 
           android:showAsAction="ifRoom"/> 
