@@ -15,7 +15,7 @@ public class Help extends Activity {
 		setContentView(R.layout.help);
 
 		// Creates the OK button so users can leave
-		okButton = (Button) findViewById(R.id.loginButton2);
+		okButton = (Button) findViewById(R.id.okButton);
 		okButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
