@@ -8,52 +8,23 @@
     <string name="otherConfig"><u><b>Ride Configurations</b></u></string>
     <string name="rides_prompt">Choose a ride</string>
     <string name="about">About</string>
+     <string name="help">Help</string>
     <!-- Rajia -->
-    <string name="aboutApp">\n\nAbout\n\nThis app enables you to record your location and accel/magn in all directions while riding any ride at Canobie Lake Park, and it allows you to share that data online. When the app is activated, your data is saved once every 200ms and then can be shared on the iSENSE web system (isenseproject.org), where the data can be viewed publicly. The recording interval can be changed via the Setup option in the Menu. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\nInstructions:\n\n In order to begin recording and sharing data, first click Setup and then enter your first name and last initial, the sample interval in which you would like data to be recorded, the project you would like the data to be uploaded to and the ride you are going record data on. After pressing Okay, press and hold the button that says \"Start.\" This allows data to be recorded and saved. When you are ready to stop recording, press and hold the button that says \"Stop.\" While data is being recorded, please refrain from exiting the app by pressing the Back button. Pressing the Home button will interrupt the recording but your data will remain saved. When you are ready to upload your data, click on the Upload option in the menu.</string>
-    <string name="Help">\nHow to Create a Project for this App\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Click on Create Project.\n\n5. Enter a name for your project, then click finish. \n\n6. Enter a Description.\n\n7. When formatting the project, the fields should be as follows: 
-Name         Type\n
-Timestamp    Timestamp
-accel-x
-
-
-Number
-accel-y
-
-
-Number
-accel-z
-
-
-Number
-accel-mag
-
-
-Number
-magnetic-x
-
-
-Number
-magnetic-y
-
-
-Number
-magnetic-z
-
-
-Number
-magnetic-mag
-
-
-Number
-Latitude
-
-
-Latitude
-Longitude
-
-
-Longitude
-        </string>
+    <string name="aboutApp">About:\n\nThis app enables you to record your location and accel/magn in all directions while riding any ride at Canobie Lake Park, and it allows you to share that data online. When the app is activated, your data is saved once every 200ms and then can be shared on the iSENSE web system (isenseproject.org), where the data can be viewed publicly. The recording interval can be changed via the Setup option in the Menu. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\nInstructions:\n\n In order to begin recording and sharing data, first click Setup and then enter your first name and last initial, the sample interval in which you would like data to be recorded, the project you would like the data to be uploaded to and the ride you are going record data on. After pressing Okay, press and hold the button that says \"Start.\" This allows data to be recorded and saved. When you are ready to stop recording, press and hold the button that says \"Stop.\" While data is being recorded, please refrain from exiting the app by pressing the Back button. Pressing the Home button will interrupt the recording but your data will remain saved. When you are ready to upload your data, click on the Upload option in the menu.</string>
+    <string name="Help">\nHow to Create a Project for this App:\n\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Click on Create Project.\n\n5. Enter a name for your project, then click finish. \n\n6. Enter a Description.\n\n7. When formatting the project, the fields should be as follows:\n\n 
+Name:\t\t\t\t\t\tType:\n\n
+Timestamp&#160; &#160; &#160; &#160; &#160; &#160;Timestamp\n
+accel-x&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;Number\n
+accel-y&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;Number\n
+accel-z&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;Number\n
+accel-mag&#160; &#160; &#160; &#160; &#160; &#160; &#160;Number\n
+magnetic-x&#160; &#160; &#160; &#160; &#160; &#160; &#160;Number\n
+magnetic-y&#160; &#160; &#160; &#160; &#160; &#160; &#160;Number\n
+magnetic-z&#160; &#160; &#160; &#160; &#160; &#160; &#160;Number\n
+magnetic-mag&#160; &#160; &#160; &#160;Number\n
+Latitude&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;Latitude\n
+Longitude&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160;Longitude\n\n
+8. Your project\'s QR code is shown near the top left corner of the page and the project number will be listed two lines under the project\'s title.\n\n9. Remember to change the project number in the app to match your project number!\n\nYou may also use the Create a Project feature in this app by clicking on the data recorded in the upload menu then pressing “Select Project” and then selecting “Create New Project” from the new menu that pops up. This will allow you to create a new project with the proper fields set up for you.</string>
 
     <string-array name="rides_array">
         <item>Unknown</item>

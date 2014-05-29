@@ -17,8 +17,9 @@
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="@string/aboutApp"
+            android:text="@string/Help"
             android:textSize="16sp" />
+
 
         <LinearLayout
             android:id="@+id/LinearLayout2"
@@ -27,7 +28,7 @@
             android:background="@android:color/transparent" >
 
             <Button
-                android:id="@+id/loginButton"
+                android:id="@+id/loginButton2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@android:string/ok" />
