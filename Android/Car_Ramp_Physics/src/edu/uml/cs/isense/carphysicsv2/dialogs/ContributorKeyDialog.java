@@ -59,8 +59,12 @@ public class ContributorKeyDialog extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				new UploadViaContributorKeyTask().execute();
-				
+				if (keyField.getText().length() != 0) {
+					key = keyField.getText().toString();
+					new UploadViaContributorKeyTask().execute();
+				} else if (keyField.getText().length() == 0) {
+					keyField.setError("Key can not be empty.");
+				}
 			}
 		});
 	}

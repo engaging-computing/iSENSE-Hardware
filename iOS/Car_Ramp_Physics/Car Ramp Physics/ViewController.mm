@@ -106,18 +106,30 @@
 
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
+    return !running;
 }
 
 // iOS6 enable rotation
 - (BOOL)shouldAutorotate {
-    return YES;
+    return !running;
 }
 
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
 
+    if (running) {
+        if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait) {
+            return UIInterfaceOrientationMaskPortrait;
+        } else if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortraitUpsideDown) {
+            return UIInterfaceOrientationMaskPortraitUpsideDown;
+        } else if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeLeft) {
+            return UIInterfaceOrientationMaskLandscapeLeft;
+        } else if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeRight) {
+            return UIInterfaceOrientationMaskLandscapeRight;
+        }
+    } else {
         return UIInterfaceOrientationMaskAll;
+    }
 }
 
 // returns the number of 'columns' to display.
