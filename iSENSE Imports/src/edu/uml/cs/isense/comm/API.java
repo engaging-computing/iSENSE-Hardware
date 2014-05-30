@@ -255,7 +255,7 @@ public class API {
 				JSONObject mField = new JSONObject();
 				mField.put("project_id", pid);
 				mField.put("field_type", rpf.type);
-				mField.put("field_name", rpf.name);
+				mField.put("name", rpf.name);
 				mField.put("units", rpf.unit);
 				JSONObject postData2 = new JSONObject();
 				postData2.put("email", email);

@@ -467,7 +467,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
 //			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
 //			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
-			//TODO rajia
 			menu.getItem(MENU_ITEM_ABOUT).setEnabled(false);
 			menu.getItem(MENU_ITEM_HELP).setEnabled(false);
 		} else {
@@ -476,7 +475,6 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
 //			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
 //			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
-			//TODO RAJIA
 			menu.getItem(MENU_ITEM_ABOUT).setEnabled(true);
 			menu.getItem(MENU_ITEM_HELP).setEnabled(true);
 		}
