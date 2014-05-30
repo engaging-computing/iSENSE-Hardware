@@ -73,7 +73,7 @@ public class SharePicture extends Activity {
 	    String action = intent.getAction();
 	    String type = intent.getType();
 	    
-	    mContext = this.getApplicationContext();
+	    mContext = this;
 	  
 	    w = new Waffle(mContext);
 		
@@ -177,7 +177,7 @@ public class SharePicture extends Activity {
 				 dia.show();
 				
 				for(int i = 0; i < imageUris.size(); i++) {
-					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i)));
+					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i), mContext));
 				}
 			}
 			@Override
@@ -203,8 +203,6 @@ public class SharePicture extends Activity {
 				}
 				
 				finish();
-			
-				
 			}
 	}
 		
@@ -221,9 +219,10 @@ public class SharePicture extends Activity {
 				 dia.show();
 				 
 				for(int i = 0; i < imageUris.size(); i++) {
-					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i)));
+					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i), mContext));
 				}
 			}
+			
 			@Override
 			protected Boolean doInBackground(Void... params) {
 				Log.e("test", "Here");
@@ -232,6 +231,7 @@ public class SharePicture extends Activity {
 				}
 				return null;
 			}
+			
 			@Override
 			protected void onPostExecute(Boolean result) {// this method will be
 															// running on UI thread
@@ -244,8 +244,7 @@ public class SharePicture extends Activity {
 					w.make(success,
 							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
 				}
-				finish();
-			
+			    finish();
 		}
 	}
 		

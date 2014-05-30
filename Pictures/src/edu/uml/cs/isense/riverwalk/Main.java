@@ -774,7 +774,7 @@ public class Main extends Activity implements LocationListener {
 	}
 
 	@SuppressLint("NewApi")
-	public static File convertImageUriToFile(Uri imageUri) {
+	public static File convertImageUriToFile(Uri imageUri, Context c) {
 		int apiLevel = getApiLevel();
 		if (apiLevel >= 11) {
 
@@ -785,7 +785,7 @@ public class Main extends Activity implements LocationListener {
 			String[] selectionArgs = null;
 			String sortOrder = null;
 
-			CursorLoader cursorLoader = new CursorLoader(mContext, imageUri,
+			CursorLoader cursorLoader = new CursorLoader(c, imageUri,
 					proj, selection, selectionArgs, sortOrder);
 
 			Cursor cursor = cursorLoader.loadInBackground();
@@ -808,7 +808,7 @@ public class Main extends Activity implements LocationListener {
 				String[] proj = { MediaStore.Images.Media.DATA,
 						MediaStore.Images.Media._ID,
 						MediaStore.Images.ImageColumns.ORIENTATION };
-				ContentResolver cr = mContext.getContentResolver();
+				ContentResolver cr = c.getContentResolver();
 				cursor = cr.query(imageUri, proj, // Which columns
 													// to return
 						null, // WHERE clause; which rows to return (all rows)
@@ -922,7 +922,7 @@ public class Main extends Activity implements LocationListener {
 
 			if (resultCode == RESULT_OK) {
 				curTime = System.currentTimeMillis();
-				picture = convertImageUriToFile(imageUri);
+				picture = convertImageUriToFile(imageUri, mContext);
 
 				Intent iDesc = new Intent(Main.this, Description.class);
 				startActivityForResult(iDesc, DESCRIPTION_REQUESTED);
