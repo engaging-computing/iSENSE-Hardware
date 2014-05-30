@@ -825,6 +825,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startActivityForResult(new Intent(this, ResetToDefaults.class),
 					RESET_REQUESTED);
 			return true;
+		case R.id.helpMenuItem:
+			MessageDialogTemplate.createMessageDialog(this, mContext, "Help", this.getString(R.string.help_app), 900000);
+			return true;
 		case android.R.id.home:
 			CountDownTimer cdt = null;
 
