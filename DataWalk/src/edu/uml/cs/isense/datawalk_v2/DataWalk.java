@@ -7,7 +7,6 @@ import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -52,7 +51,6 @@ import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog;
 import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
 import edu.uml.cs.isense.datawalk_v2.dialogs.NoGps;
-import edu.uml.cs.isense.datawalk_v2.dialogs.ViewData;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.proj.Setup;
@@ -874,10 +872,6 @@ public class DataWalk extends Activity implements LocationListener,
 				if (data != null) {
 					dataSetID = data.getIntExtra(
 							QueueLayout.LAST_UPLOADED_DATA_SET_ID, -1);
-					if (dataSetID != -1) {
-						Intent i = new Intent(DataWalk.this, ViewData.class);
-						startActivityForResult(i, DIALOG_VIEW_DATA);
-					}
 				}
 			}
 
@@ -1267,7 +1261,7 @@ public class DataWalk extends Activity implements LocationListener,
 				if ((timerTick % (mInterval / 1000)) == 0 && timerTick != 0) {
 
 					// Prepare a new row of data
-					JSONObject dataJSON = new JSONObject();
+					JSONArray dataJSON = new JSONArray();
 
 					// Determine how long you've been recording for
 					elapsedMillis += mInterval;
@@ -1276,12 +1270,12 @@ public class DataWalk extends Activity implements LocationListener,
 					try {
 
 						// Store new values into JSON Object
-						dataJSON.put("0", "u " + time);
-						dataJSON.put("1", accel[3]);
-						dataJSON.put("2", velocity);
-						dataJSON.put("3", totalDistance);
-						dataJSON.put("4", loc.getLatitude());
-						dataJSON.put("5", loc.getLongitude());
+						dataJSON.put("u " + time);
+						dataJSON.put(accel[3]);
+						dataJSON.put(velocity);
+						dataJSON.put(totalDistance);
+						dataJSON.put(loc.getLatitude());
+						dataJSON.put(loc.getLongitude());
 
 						// Save this data point if GPS says it has a lock
 						if (gpsWorking) {
