@@ -153,7 +153,7 @@
 	<string name="credential_manager">Credential Manager</string>
 	<string name="add_key">Add Contributor Key</string>
 	<string name="key">Contributor Key:</string>
-	<string name="key_info">A contributor key allows you to contribute data to a specific project without an iSense account.</string>
+	<string name="key_info">A contributor key allows you to contribute data to a specific project without an iSENSE account.</string>
 	<string name="selectProject">Select a Project</string>
 	<string name="contribute"><u>You Can Contribute To:</u></string>
 	<string name="credentials"><u>Credentials</u></string>

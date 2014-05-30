@@ -8,7 +8,7 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Contributor Key: "
+        android:text="@string/key_info"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
