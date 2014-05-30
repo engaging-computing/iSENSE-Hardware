@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="dexedLibs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Canobie_Physics_v2/bin/dexedLibs/isense imports-07f90eb952ca880719c962ad076de374.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Canobie_Physics_v2/bin/dexedLibs/android-support-v4-6b4c0d22a64a0fd59e4a2e83d5d7e409.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Canobie_Physics_v2/bin/dexedLibs/httpmime-4.2.5-785b6814c30aae3e49856e6426c2404c.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="isense imports">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/iSENSE Imports/bin/isense imports.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
