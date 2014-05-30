@@ -155,6 +155,10 @@
             android:name="edu.uml.cs.isense.credentials.CredentialManagerKey"
             android:label="Add Contributor Key"
             android:theme="@style/AppThemeDialog" />
+        <activity
+            android:name="edu.uml.cs.isense.carphysicsv2.dialogs.ContributorKeyDialog"
+            android:label="Add Contributor Key"
+            android:theme="@style/AppThemeDialog" />
         
     </application>
 

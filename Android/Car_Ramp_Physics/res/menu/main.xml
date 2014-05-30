@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/upload"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/upload">
     </item>
     <item
@@ -18,7 +18,7 @@
     </item>
     <item
         android:id="@+id/login"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/login_title">
     </item>
     <item
@@ -28,7 +28,7 @@
     </item>
     <item
         android:id="@+id/about_app"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/about_title">
     </item>
     <item
@@ -43,7 +43,7 @@
     </item>
     <item
         android:id="@+id/helpMenuItem"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="Help">
     </item>
 
