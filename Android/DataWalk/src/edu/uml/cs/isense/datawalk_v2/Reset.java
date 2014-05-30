@@ -30,7 +30,7 @@ public class Reset extends Activity {
 				SharedPreferences sp = getSharedPreferences("RecordingPrefs", 0);
 				SharedPreferences.Editor editor = sp.edit();
 				editor.putString("DataUploadRate", "10000").commit();
-
+			
 				setResult(RESULT_OK);
 				finish();
 			}
