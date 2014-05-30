@@ -21,7 +21,6 @@ public class MessageDialogTemplate extends Activity {
 		messageBox.setText(getIntent().getExtras().getString("message"));
 
 		pos = (Button) findViewById(R.id.positive);
-		neg = (Button) findViewById(R.id.negative);
 
 		pos.setOnClickListener(new View.OnClickListener() {
 
@@ -32,17 +31,6 @@ public class MessageDialogTemplate extends Activity {
 
 			}
 		});
-
-		neg.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				setResult(RESULT_CANCELED);
-				finish();
-
-			}
-		});
-
 	}
 
 	/**
@@ -56,15 +44,14 @@ public class MessageDialogTemplate extends Activity {
 	 *            message
 	 * @param int reqCode and it creates a dialog with a single message.
 	 */
-	public static void createMessageDialog(Context mContext, String title,
+	public static void createMessageDialog(Activity parent, Context mContext, String title,
 			String message, int reqCode) {
 
-		MessageDialogTemplate temp = new MessageDialogTemplate();
 		Intent i = new Intent(mContext, MessageDialogTemplate.class);
 		i.putExtra("title", title);
 		i.putExtra("message", message);
 
-		temp.startActivityForResult(i, reqCode);
+		parent.startActivityForResult(i, reqCode);
 
 	}
 

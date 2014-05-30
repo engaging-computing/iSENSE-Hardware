@@ -15,19 +15,11 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/negative"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/cancel" />
-        
-        <Button
             android:id="@+id/positive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@android:string/ok" />
-
     </LinearLayout>
 
 </LinearLayout>

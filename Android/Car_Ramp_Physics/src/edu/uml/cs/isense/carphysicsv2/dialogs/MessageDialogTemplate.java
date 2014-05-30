@@ -22,7 +22,6 @@ public class MessageDialogTemplate extends Activity {
 		messageBox.setText(getIntent().getExtras().getString("message"));
 
 		pos = (Button) findViewById(R.id.positive);
-		neg = (Button) findViewById(R.id.negative);
 
 		pos.setOnClickListener(new View.OnClickListener() {
 
