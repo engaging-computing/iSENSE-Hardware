@@ -154,7 +154,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	private final int MENU_ITEM_UPLOAD = 2;
 	//private final int MENU_ITEM_TIME = 3;
 	//private final int MENU_ITEM_MEDIA = 4;
-	//Todo Rajia
+	// TODO Rajia
 	private final int MENU_ITEM_ABOUT = 3;
 	private final int MENU_ITEM_HELP = 4;
 	
@@ -465,11 +465,9 @@ public class AmusementPark extends Activity implements SensorEventListener,
 			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
 			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
 			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
-			
 //			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
 //			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
-			
-			//todo rajia
+			//TODO rajia
 			menu.getItem(MENU_ITEM_ABOUT).setEnabled(false);
 			menu.getItem(MENU_ITEM_HELP).setEnabled(false);
 		} else {
@@ -531,8 +529,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 
 			// Give user 10 seconds to switch dev/prod mode
 			if (actionBarTapCount == 0) {
-				cdt = new CountDownTimer(5000, 
-000) {
+				cdt = new CountDownTimer(5000, 5000) {
 					public void onTick(long millisUntilFinished) {
 					}
 
