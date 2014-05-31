@@ -302,7 +302,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				 
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
 				projectNumber = prefs.getString("project_id", null);
-				Log.d("projectNumber", projectNumber);
 				if (!projectNumber.equals("-1")) {
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
@@ -782,9 +781,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		CarRampPhysicsV2.menu = menu;
 		menu.setGroupEnabled(0, useMenu);
-		return useMenu;
+		return true;
 	}
 
 	@Override
