@@ -19,6 +19,7 @@ package edu.uml.cs.isense.carphysicsv2;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -345,8 +346,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 								OrientationManager.enableRotation(CarRampPhysicsV2.this);
 							}
 							else{
-								w.make("Data Saved!",Waffle.LENGTH_LONG);
-								uq.buildQueueFromFile();
+								new AddToQueueTask().execute(); 
 
 								
 							}
@@ -1261,37 +1261,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			int dataSetID = -1;
 
 			nameOfDataSet = firstName + " " + lastInitial;
+		
+			uploadSuccessful = false;
+			QDataSet ds = new QDataSet(nameOfDataSet + " Gravity: " + ((switchGravity.isActivated()) ? "Not Included" : "Included") ,
+					"Data uploaded from Android Car Ramp Physics",
+					QDataSet.Type.DATA, dataSet.toString(), null,
+					projectNumber, null);
 
-			if (Connection.hasConnectivity(mContext)) {
-
-				dataSetID = CarRampPhysicsV2.upload(api, mContext);
-
-				if (dataSetID != -1) {
-					dataSetUrl = baseDataSetUrl + projectNumber + "/data_sets/"
-							+ dataSetID + "?embed=true";
-
-					uploadSuccessful = true;
-				} else {
-					uploadSuccessful = false;
-					QDataSet ds = new QDataSet(nameOfDataSet + " Gravity: " + ((switchGravity.isActivated()) ? "Included" : "Not Included") ,
-							"Data uploaded from Android Car Ramp Physics",
-							QDataSet.Type.DATA, dataSet.toString(), null,
-							projectNumber, null);
-
-					CarRampPhysicsV2.uq.addDataSetToQueue(ds);
-				}
-			} else {
-
-				uploadSuccessful = false;
-				QDataSet ds = new QDataSet(nameOfDataSet,
-						"Data uploaded from Android Car Ramp Physics",
-						QDataSet.Type.DATA, dataSet.toString(), null,
-						projectNumber, null);
-
-				CarRampPhysicsV2.uq.addDataSetToQueue(ds);
-
-				return;
-			}
+			CarRampPhysicsV2.uq.addDataSetToQueue(ds);
+				
+			return;
 
 		}
 
@@ -1408,32 +1387,50 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		}
 	}
+	
+	/**
+	 * Uploads data to iSENSE or something.
+	 * 
+	 * @author jpoulin
+	 */
+	private class AddToQueueTask extends AsyncTask<String, Void, String> {
 
-	private class NoToastTwiceTask extends AsyncTask<Void, Integer, Void> {
+		ProgressDialog dia;
+
 		@Override
 		protected void onPreExecute() {
-			dontToastMeTwice = true;
-			exitAppViaBack = true;
+
+			dia = new ProgressDialog(CarRampPhysicsV2.this);
+			dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			dia.setMessage("Please wait while your data and media saved to Queue");
+			dia.setCancelable(false);
+			dia.show();
+
+		}
+		
+		@Override
+		protected String doInBackground(String... strings) {
+			uploader.run();
+			return null; //strings[0];
 		}
 
 		@Override
-		protected Void doInBackground(Void... voids) {
-			try {
-				Thread.sleep(1500);
-				exitAppViaBack = false;
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				exitAppViaBack = false;
-				e.printStackTrace();
-			}
-			return null;
-		}
+		protected void onPostExecute(String sdFileName) {
 
-		@Override
-		protected void onPostExecute(Void voids) {
-			dontToastMeTwice = false;
+			dia.setMessage("Done");
+			dia.dismiss();
+			
+			w.make("Data Saved to Queue", Waffle.LENGTH_SHORT,
+					Waffle.IMAGE_CHECK);
+			manageUploadQueue();
+			
+
+			Date date = new Date();
+
 		}
 	}
+
+
 
 	private void manageUploadQueue() {
 
