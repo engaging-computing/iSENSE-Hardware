@@ -17,6 +17,7 @@
 
 package edu.uml.cs.isense.carphysicsv2;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,6 +69,7 @@ import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.FieldMatching;
 import edu.uml.cs.isense.dfm.Fields;
+import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.proj.Setup;
 import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
@@ -232,47 +234,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		if (savedInstanceState == null) {
 			if (firstName.equals("") || lastInitial.equals("")) {
-				SharedPreferences classPrefs = getSharedPreferences(
-						ClassroomMode.PREFS_KEY_CLASSROOM_MODE, MODE_PRIVATE);
-				SharedPreferences namePrefs = getSharedPreferences(
-						EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
-				boolean classroomMode = classPrefs.getBoolean(
-						ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE, true);
-
-				if (!classroomMode) {
-					if (namePrefs
-							.getBoolean(
-									EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
-									true)
-							&& Connection.hasConnectivity(mContext)) {
-
-					} else {
-						firstName = namePrefs
-								.getString(
-										EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME,
-										"");
-						lastInitial = namePrefs
-								.getString(
-										EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL,
-										"");
-
-						if (firstName.length() == 0) {
-							Intent iEnterName = new Intent(this,
-									EnterName.class);
-							iEnterName.putExtra(
-									EnterName.PREFERENCES_CLASSROOM_MODE,
-									classroomMode);
-							startActivityForResult(iEnterName, RESULT_GOT_NAME);
-						} else {
-							// nameB.setText(firstName + " " + lastInitial);
-						}
-					}
-				} else {
-					Intent iEnterName = new Intent(this, EnterName.class);
-					iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
-							classroomMode);
-					startActivityForResult(iEnterName, RESULT_GOT_NAME);
-				}
+			
+				Intent iEnterName = new Intent(this, EnterName.class);
+				iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+						true);
+				startActivityForResult(iEnterName, RESULT_GOT_NAME);
+				
 			}
 		}
 
@@ -1086,13 +1053,31 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		} else if (reqCode == RESULT_GOT_NAME) {
 			if (resultCode == RESULT_OK) {
+				SharedPreferences namePrefs = getSharedPreferences(
+						EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
 
-				if (!inApp)
-					inApp = true;
+				if (namePrefs
+						.getBoolean(
+								EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
+								true)) {
+					RPerson user = api.getCurrentUser();
 
-			} else {
-				if (!inApp)
-					finish();
+					firstName = user.name;
+					lastInitial = "";
+
+
+				} else {
+					firstName = namePrefs.getString(
+							EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME,
+							"");
+					lastInitial = namePrefs
+							.getString(
+									EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL,
+									"");
+
+					
+				}
+
 			}
 		} else if (reqCode == RESET_REQUESTED) {
 			if (resultCode == RESULT_OK) {
@@ -1259,11 +1244,15 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		public void run() {
 
 			int dataSetID = -1;
+			
+			String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+
 
 			nameOfDataSet = firstName + " " + lastInitial;
 		
 			uploadSuccessful = false;
-			QDataSet ds = new QDataSet(nameOfDataSet + " Gravity: " + ((switchGravity.isActivated()) ? "Not Included" : "Included") ,
+			QDataSet ds = new QDataSet(nameOfDataSet + " Gravity: " + ((switchGravity.isActivated()) ? "Not Included" : "Included") 
+						+ " " + currentDateTimeString,
 					"Data uploaded from Android Car Ramp Physics",
 					QDataSet.Type.DATA, dataSet.toString(), null,
 					projectNumber, null);
