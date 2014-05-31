@@ -3,8 +3,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.carphysicsv2"
-    android:versionCode="19"
-    android:versionName="3.0.0" >
+    android:versionCode="20"
+    android:versionName="3.1.0" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -35,7 +35,12 @@
             android:theme="@style/AppThemeDialog" >
         </activity>
         <activity
-            android:name="edu.uml.cs.isense.carphysicsv2.dialogs.AboutActivity"
+            android:name="edu.uml.cs.isense.carphysicsv2.dialogs.About"
+            android:label="@string/about_title"
+            android:theme="@style/AppThemeDialog" >
+        </activity>
+        <activity
+            android:name="edu.uml.cs.isense.carphysicsv2.dialogs.Help"
             android:label="@string/about_title"
             android:theme="@style/AppThemeDialog" >
         </activity>
