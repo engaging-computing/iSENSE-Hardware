@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import edu.uml.cs.isense.carphysicsv2.R;
 
-public class AboutActivity extends Activity {
+public class Help extends Activity {
 
 	private Button okButton;
 
@@ -14,7 +14,7 @@ public class AboutActivity extends Activity {
 		super.onCreate(savedInstanceBundle);
 		setContentView(R.layout.about);
 
-		okButton = (Button) findViewById(R.id.loginButton);
+		okButton = (Button) findViewById(R.id.okButton);
 
 		okButton.setOnClickListener(new View.OnClickListener() {
 
