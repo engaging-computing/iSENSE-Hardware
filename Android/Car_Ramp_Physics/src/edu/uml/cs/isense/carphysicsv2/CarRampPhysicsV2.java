@@ -167,6 +167,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public static Bundle saved;
 
 	public static Menu menu;
+	
+	private Switch switchGravity;
 
 	/* Action Bar */
 	private static int actionBarTapCount = 0;
@@ -410,14 +412,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 										mSensorManager
 												.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 										SensorManager.SENSOR_DELAY_FASTEST);
-								nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Not Included";
 							} else {
 								mSensorManager.registerListener(
 										CarRampPhysicsV2.this,
 										mSensorManager
 												.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 										SensorManager.SENSOR_DELAY_FASTEST);
-								nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Included";
 							}
 						}
 	
@@ -523,10 +523,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				
 				
 			} else {
-				Switch button = (Switch) findViewById(R.id.switch1);
-				button.setChecked(isLinear);
+				switchGravity = (Switch) findViewById(R.id.switch1);
+				switchGravity.setChecked(isLinear);
 				
-				button.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				switchGravity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
@@ -545,14 +545,12 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 								mSensorManager
 										.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 								SensorManager.SENSOR_DELAY_FASTEST);
-				nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Not Included";
 
 			} else {
 				mSensorManager.registerListener(CarRampPhysicsV2.this,
 						mSensorManager
 								.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 						SensorManager.SENSOR_DELAY_FASTEST);
-				nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Included";
 			}
 			mSensorManager
 					.registerListener(CarRampPhysicsV2.this, mSensorManager
@@ -571,8 +569,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	@SuppressLint("NewApi")
 	public void changeSensors(CompoundButton view) {
-		nameOfDataSet = firstName + " " + lastInitial + ". Gravity: ";
-
 		mSensorManager.unregisterListener(CarRampPhysicsV2.this, mSensorManager
 				.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION));
 		mSensorManager.unregisterListener(CarRampPhysicsV2.this,
@@ -594,12 +590,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					mSensorManager
 							.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 					SensorManager.SENSOR_DELAY_FASTEST);
-			nameOfDataSet += "Not Included";
 		} else {
 			mSensorManager.registerListener(CarRampPhysicsV2.this,
 					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 					SensorManager.SENSOR_DELAY_FASTEST);
-			nameOfDataSet += "Included";
 		}
 
 		SharedPreferences prefs = getSharedPreferences(ACCEL_SETTINGS, 0);
@@ -667,12 +661,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					mSensorManager
 							.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
 					SensorManager.SENSOR_DELAY_FASTEST);
-			nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Not Included";
 		} else {
 			mSensorManager.registerListener(CarRampPhysicsV2.this,
 					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
 					SensorManager.SENSOR_DELAY_FASTEST);
-			nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Included";
 		}
 	}
 
@@ -1280,7 +1272,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					uploadSuccessful = true;
 				} else {
 					uploadSuccessful = false;
-					QDataSet ds = new QDataSet(nameOfDataSet,
+					QDataSet ds = new QDataSet(nameOfDataSet + " Gravity: " + ((switchGravity.isActivated()) ? "Included" : "Not Included") ,
 							"Data uploaded from Android Car Ramp Physics",
 							QDataSet.Type.DATA, dataSet.toString(), null,
 							projectNumber, null);
