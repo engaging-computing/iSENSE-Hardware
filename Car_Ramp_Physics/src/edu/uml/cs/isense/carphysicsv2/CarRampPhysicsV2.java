@@ -45,7 +45,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -336,19 +335,19 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	
 							/*Intent dataIntent = new Intent(mContext,
 									DataActivity.class);
-							startActivityForResult(dataIntent, UPLOAD_OK_REQUESTED);*/
-							//TODO RAJIA
+							startActivityForResult(dataIntent, UPLOAD_OK_REQUESTED);
+							 */
 							if (len == 0 || len2 == 0) {
 								w.make("There are no data to upload!", Waffle.LENGTH_LONG,
 										Waffle.IMAGE_X);
 								OrientationManager.enableRotation(CarRampPhysicsV2.this);
 							}
-
 							else{
-								w.make("Data Saved!", Waffle.LENGTH_LONG);
+								w.make("Data Saved!",Waffle.LENGTH_LONG);
 								uq.buildQueueFromFile();
+
+								
 							}
-	
 						} else if (usedHomeButton) {
 							setupDone = false;
 							timeHasElapsed = false;
@@ -770,19 +769,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	@Override
 	public void onBackPressed() {
-		if (!dontToastMeTwice) {
-			if (running)
-				w.make(
-
-				"Cannot exit via BACK while recording data; use HOME instead.",
-						Waffle.LENGTH_LONG, Waffle.IMAGE_WARN);
-			else
-				w.make("Press back again to exit.", Waffle.LENGTH_SHORT);
-			new NoToastTwiceTask().execute();
-		} else if (exitAppViaBack && !running) {
-			setupDone = false;
-			super.onBackPressed();
-		}
+		super.onBackPressed();
 	}
 
 	@Override
@@ -1032,8 +1019,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				else
 					new UploadTask().execute();
-			
-		} */else if (reqCode == LOGIN_STATUS_REQUESTED) {
+			 
+		}*/ else if (reqCode == LOGIN_STATUS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
 			}
