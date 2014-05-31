@@ -270,7 +270,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			public boolean onLongClick(View arg0) {
 				 
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
-				projectNumber = prefs.getString("project_id", null);
+				projectNumber = prefs.getString("project_id", "-1");
 				if (!projectNumber.equals("-1")) {
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
