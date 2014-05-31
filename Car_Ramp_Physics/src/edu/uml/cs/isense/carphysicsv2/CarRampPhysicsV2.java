@@ -333,10 +333,21 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 							startStop
 									.setBackgroundResource(R.drawable.button_rsense);
 	
-							Intent dataIntent = new Intent(mContext,
+							/*Intent dataIntent = new Intent(mContext,
 									DataActivity.class);
 							startActivityForResult(dataIntent, UPLOAD_OK_REQUESTED);
-	
+							 */
+							if (len == 0 || len2 == 0) {
+								w.make("There are no data to upload!", Waffle.LENGTH_LONG,
+										Waffle.IMAGE_X);
+								OrientationManager.enableRotation(CarRampPhysicsV2.this);
+							}
+							else{
+								w.make("Data Saved!",Waffle.LENGTH_LONG);
+								uq.buildQueueFromFile();
+
+								
+							}
 						} else if (usedHomeButton) {
 							setupDone = false;
 							timeHasElapsed = false;
@@ -999,8 +1010,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		} else if (reqCode == QUEUE_UPLOAD_REQUESTED) {
 			uq.buildQueueFromFile();
 
-		} else if (reqCode == UPLOAD_OK_REQUESTED) {
-			if (resultCode == RESULT_OK) {
+		} /*else if (reqCode == UPLOAD_OK_REQUESTED) {
 				if (len == 0 || len2 == 0) {
 					w.make("There are no data to upload!", Waffle.LENGTH_LONG,
 							Waffle.IMAGE_X);
@@ -1009,12 +1019,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				else
 					new UploadTask().execute();
-			} else {
-				w.make("Data set discarded", Waffle.LENGTH_LONG,
-						Waffle.IMAGE_WARN);
-				OrientationManager.enableRotation(CarRampPhysicsV2.this);
-			}
-		} else if (reqCode == LOGIN_STATUS_REQUESTED) {
+			 
+		}*/ else if (reqCode == LOGIN_STATUS_REQUESTED) {
 			if (resultCode == RESULT_OK) {
 
 			}
