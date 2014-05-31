@@ -35,7 +35,12 @@
             android:theme="@style/AppThemeDialog" >
         </activity>
         <activity
-            android:name="edu.uml.cs.isense.carphysicsv2.dialogs.AboutActivity"
+            android:name="edu.uml.cs.isense.carphysicsv2.dialogs.About"
+            android:label="@string/about_title"
+            android:theme="@style/AppThemeDialog" >
+        </activity>
+        <activity
+            android:name="edu.uml.cs.isense.carphysicsv2.dialogs.Help"
             android:label="@string/about_title"
             android:theme="@style/AppThemeDialog" >
         </activity>

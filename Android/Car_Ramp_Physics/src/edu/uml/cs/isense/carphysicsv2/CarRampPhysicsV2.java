@@ -45,6 +45,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,8 +57,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import edu.uml.cs.isense.carphysicsv2.dialogs.AboutActivity;
+import edu.uml.cs.isense.carphysicsv2.dialogs.About;
 import edu.uml.cs.isense.carphysicsv2.dialogs.ContributorKeyDialog;
+import edu.uml.cs.isense.carphysicsv2.dialogs.Help;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.ClassroomMode;
@@ -76,9 +78,8 @@ import edu.uml.cs.isense.waffle.Waffle;
 public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		LocationListener {
 
-	public static String projectNumber = "12";
-	public static final String DEFAULT_PROJ_PROD = "12";
-	public static final String DEFAULT_PROJ_DEV = "12";
+	public static String projectNumber = "-1";
+	public static final String DEFAULT_PROJ = "-1";
 	public static boolean useDev = false;
 	public static boolean promptForName = true;
 
@@ -186,7 +187,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
 		saved = savedInstanceState;
 		mContext = this;
 
@@ -210,7 +210,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			// make the actionbar clickable
 			bar.setDisplayHomeAsUpEnabled(true);
 		}
-
+		
 		f = new Fields();
 		uq = new UploadQueue("carrampphysics", mContext, api);
 		uq.buildQueueFromFile();
@@ -282,11 +282,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
 		projectNumber = prefs2.getString("project_id", null);
 		if (projectNumber == null) {
-			if (useDev) {
-				projectNumber = DEFAULT_PROJ_DEV;
-			} else {
-				projectNumber = DEFAULT_PROJ_PROD;
-			}
+			projectNumber = DEFAULT_PROJ;
 		}
 
 		if (!Connection.hasConnectivity(mContext) && !saveMode) {
@@ -303,190 +299,198 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			@Override
 			public boolean onLongClick(View arg0) {
-
-				mMediaPlayer.setLooping(false);
-				mMediaPlayer.start();
-
-				if (!Connection.hasConnectivity(mContext) && !saveMode) {
-					startActivityForResult(new Intent(mContext,
-							SaveModeDialog.class), SAVE_MODE_REQUESTED);
-					return false;
-				}
-
-				if (running) {
-
-					if (timeHasElapsed) {
-
-						getWindow().clearFlags(
-								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-						setupDone = false;
-						timeHasElapsed = false;
-						useMenu = true;
-						countdown = length;
-
-						running = false;
-						startStop.setText("Hold to Start");
-
-						timeTimer.cancel();
-						choiceViaMenu = false;
-
-						startStop.setEnabled(true);
-						startStop
-								.setBackgroundResource(R.drawable.button_rsense);
-
-						Intent dataIntent = new Intent(mContext,
-								DataActivity.class);
-						startActivityForResult(dataIntent, UPLOAD_OK_REQUESTED);
-
-					} else if (usedHomeButton) {
-						setupDone = false;
-						timeHasElapsed = false;
-						useMenu = true;
-						countdown = length;
-
-						running = false;
-						startStop.setText("Hold to Start");
-
-						timeTimer.cancel();
-						choiceViaMenu = false;
-
-						startStop.setEnabled(true);
-						startStop
-								.setBackgroundResource(R.drawable.button_rsense);
-
+				 
+				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
+				projectNumber = prefs.getString("project_id", null);
+				Log.d("projectNumber", projectNumber);
+				if (!projectNumber.equals("-1")) {
+					mMediaPlayer.setLooping(false);
+					mMediaPlayer.start();
+	
+					if (!Connection.hasConnectivity(mContext) && !saveMode) {
+						startActivityForResult(new Intent(mContext,
+								SaveModeDialog.class), SAVE_MODE_REQUESTED);
+						return false;
 					}
-
-				} else {
-
-					OrientationManager.disableRotation(CarRampPhysicsV2.this);
-					getWindow().addFlags(
-							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-					startStop.setEnabled(false);
-					startStop
-							.setBackgroundResource(R.drawable.button_rsense_green);
-
-					dataSet = new JSONArray();
-					elapsedMillis = 0;
-					len = 0;
-					len2 = 0;
-					i = 0;
-					currentTime = getUploadTime(0);
-
-					setEnabledFields();
-
-					if (saveMode) {
-						dfm.getOrder();
-					}
-
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						w.make("Data recording has offset 100 milliseconds due to an error.",
-								Waffle.LENGTH_SHORT);
-						e.printStackTrace();
-					}
-
-					useMenu = false;
-
-					SharedPreferences prefs2 = getSharedPreferences(
-							ACCEL_SETTINGS, 0);
-					if (mSensorManager != null) {
-						boolean isLinear = prefs2.getBoolean("LINEAR_ACCEL",
-								false);
-						if (isLinear) {
-							mSensorManager.registerListener(
-									CarRampPhysicsV2.this,
-									mSensorManager
-											.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
-									SensorManager.SENSOR_DELAY_FASTEST);
-							nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Not Included";
-						} else {
-							mSensorManager.registerListener(
-									CarRampPhysicsV2.this,
-									mSensorManager
-											.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-									SensorManager.SENSOR_DELAY_FASTEST);
-							nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Included";
+	
+					if (running) {
+	
+						if (timeHasElapsed) {
+	
+							getWindow().clearFlags(
+									WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	
+							setupDone = false;
+							timeHasElapsed = false;
+							useMenu = true;
+							countdown = length;
+	
+							running = false;
+							startStop.setText("Hold to Start");
+	
+							timeTimer.cancel();
+							choiceViaMenu = false;
+	
+							startStop.setEnabled(true);
+							startStop
+									.setBackgroundResource(R.drawable.button_rsense);
+	
+							Intent dataIntent = new Intent(mContext,
+									DataActivity.class);
+							startActivityForResult(dataIntent, UPLOAD_OK_REQUESTED);
+	
+						} else if (usedHomeButton) {
+							setupDone = false;
+							timeHasElapsed = false;
+							useMenu = true;
+							countdown = length;
+	
+							running = false;
+							startStop.setText("Hold to Start");
+	
+							timeTimer.cancel();
+							choiceViaMenu = false;
+	
+							startStop.setEnabled(true);
+							startStop
+									.setBackgroundResource(R.drawable.button_rsense);
+	
 						}
-					}
-
-					running = true;
-					startStop.setText("" + countdown);
-
-					timeTimer = new Timer();
-					timeTimer.scheduleAtFixedRate(new TimerTask() {
-
-						public void run() {
-
-							elapsedMillis += INTERVAL;
-
-							if (i >= (length * (1000 / INTERVAL))) {
-
-								timeTimer.cancel();
-								timeHasElapsed = true;
-
-								mHandler.post(new Runnable() {
-									@Override
-									public void run() {
-										startStop.performLongClick();
-									}
-								});
-
+	
+					} else {
+	
+						OrientationManager.disableRotation(CarRampPhysicsV2.this);
+						getWindow().addFlags(
+								WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	
+						startStop.setEnabled(false);
+						startStop
+								.setBackgroundResource(R.drawable.button_rsense_green);
+	
+						dataSet = new JSONArray();
+						elapsedMillis = 0;
+						len = 0;
+						len2 = 0;
+						i = 0;
+						currentTime = getUploadTime(0);
+	
+						setEnabledFields();
+	
+						if (saveMode) {
+							dfm.getOrder();
+						}
+	
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							w.make("Data recording has offset 100 milliseconds due to an error.",
+									Waffle.LENGTH_SHORT);
+							e.printStackTrace();
+						}
+	
+						useMenu = false;
+	
+						SharedPreferences prefs2 = getSharedPreferences(
+								ACCEL_SETTINGS, 0);
+						if (mSensorManager != null) {
+							boolean isLinear = prefs2.getBoolean("LINEAR_ACCEL",
+									false);
+							if (isLinear) {
+								mSensorManager.registerListener(
+										CarRampPhysicsV2.this,
+										mSensorManager
+												.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+										SensorManager.SENSOR_DELAY_FASTEST);
+								nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Not Included";
 							} else {
-
-								i++;
-								len++;
-								len2++;
-
-								if (i % (1000 / INTERVAL) == 0) {
+								mSensorManager.registerListener(
+										CarRampPhysicsV2.this,
+										mSensorManager
+												.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+										SensorManager.SENSOR_DELAY_FASTEST);
+								nameOfDataSet = firstName + " " + lastInitial + ". Gravity: Included";
+							}
+						}
+	
+						running = true;
+						startStop.setText("" + countdown);
+	
+						timeTimer = new Timer();
+						timeTimer.scheduleAtFixedRate(new TimerTask() {
+	
+							public void run() {
+	
+								elapsedMillis += INTERVAL;
+	
+								if (i >= (length * (1000 / INTERVAL))) {
+	
+									timeTimer.cancel();
+									timeHasElapsed = true;
+	
 									mHandler.post(new Runnable() {
 										@Override
 										public void run() {
-											startStop.setText("" + countdown);
+											startStop.performLongClick();
 										}
 									});
-									countdown--;
+	
+								} else {
+	
+									i++;
+									len++;
+									len2++;
+	
+									if (i % (1000 / INTERVAL) == 0) {
+										mHandler.post(new Runnable() {
+											@Override
+											public void run() {
+												startStop.setText("" + countdown);
+											}
+										});
+										countdown--;
+									}
+	
+									f.timeMillis = currentTime + elapsedMillis;
+	
+									if (dfm.getOrderList().contains(
+											mContext.getString(R.string.accel_x))) {
+										f.accel_x = toThou.format(accel[0]);
+									}
+									if (dfm.getOrderList().contains(
+											mContext.getString(R.string.accel_y))) {
+										f.accel_y = toThou.format(accel[1]);
+									}
+									if (dfm.getOrderList().contains(
+											mContext.getString(R.string.accel_z))) {
+										f.accel_z = toThou.format(accel[2]);
+									}
+									if (dfm.getOrderList()
+											.contains(
+													mContext.getString(R.string.accel_total))) {
+										f.accel_total = toThou.format(accel[3]);
+									}
+	
+									dataSet.put(dfm.putData());
+	
 								}
-
-								f.timeMillis = currentTime + elapsedMillis;
-
-								if (dfm.getOrderList().contains(
-										mContext.getString(R.string.accel_x))) {
-									f.accel_x = toThou.format(accel[0]);
-								}
-								if (dfm.getOrderList().contains(
-										mContext.getString(R.string.accel_y))) {
-									f.accel_y = toThou.format(accel[1]);
-								}
-								if (dfm.getOrderList().contains(
-										mContext.getString(R.string.accel_z))) {
-									f.accel_z = toThou.format(accel[2]);
-								}
-								if (dfm.getOrderList()
-										.contains(
-												mContext.getString(R.string.accel_total))) {
-									f.accel_total = toThou.format(accel[3]);
-								}
-
-								dataSet.put(dfm.putData());
-
+	
 							}
-
-						}
-					}, 0, INTERVAL);
-
+						}, 0, INTERVAL);
+	
+					}
+	
+					if (android.os.Build.VERSION.SDK_INT >= 11) {
+						CarRampPhysicsV2.this.invalidateOptionsMenu();
+					}
+	
+					return running;
+				
+	
+				} else {
+					w.make("No Project Selected",Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+					return timeHasElapsed;
 				}
-
-				if (android.os.Build.VERSION.SDK_INT >= 11) {
-					CarRampPhysicsV2.this.invalidateOptionsMenu();
-				}
-
-				return running;
-
 			}
-
 		});
 
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -552,6 +556,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		accel = new float[4];
 		mMediaPlayer = MediaPlayer.create(this, R.raw.beep);
+		
 
 	}
 
@@ -698,11 +703,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
 		projectNumber = prefs2.getString("project_id", null);
 		if (projectNumber == null) {
-			if (useDev) {
-				projectNumber = DEFAULT_PROJ_DEV;
-			} else {
-				projectNumber = DEFAULT_PROJ_PROD;
-			}
+				projectNumber = DEFAULT_PROJ;
 		}
 
 		if (!Connection.hasConnectivity(mContext) && !saveMode) {
@@ -789,9 +790,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.about_app:
-			startActivity(new Intent(this, AboutActivity.class));
-			return true;
 		case R.id.login:
 			startActivityForResult(new Intent(this, CredentialManager.class),
 					LOGIN_STATUS_REQUESTED);
@@ -809,9 +807,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			createSingleInputDialog("Change Recording Length", "",
 					RECORDING_LENGTH_REQUESTED);
 			return true;
-		case R.id.classroomMode:
-			startActivity(new Intent(this, ClassroomMode.class));
-			return true;
 		case R.id.changename:
 			Intent iEnterName = new Intent(mContext, EnterName.class);
 			SharedPreferences classPrefs = getSharedPreferences(
@@ -825,8 +820,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startActivityForResult(new Intent(this, ResetToDefaults.class),
 					RESET_REQUESTED);
 			return true;
+		case R.id.about_app:
+			startActivity(new Intent(this, About.class));
+			return true;
 		case R.id.helpMenuItem:
-			MessageDialogTemplate.createMessageDialog(this, mContext, "Help", this.getString(R.string.help_app), 900000);
+			startActivity(new Intent(this, Help.class));
 			return true;
 		case android.R.id.home:
 			CountDownTimer cdt = null;
@@ -958,11 +956,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
 				projectNumber = prefs.getString("project_id", null);
 				if (projectNumber == null) {
-					if (useDev) {
-						projectNumber = DEFAULT_PROJ_DEV;
-					} else {
-						projectNumber = DEFAULT_PROJ_PROD;
-					}
+					projectNumber = DEFAULT_PROJ;
 				}
 				dfm = new DataFieldManager(Integer.parseInt(projectNumber),
 						api, mContext, f);
@@ -1127,11 +1121,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				SharedPreferences eprefs = getSharedPreferences("PROJID", 0);
 				SharedPreferences.Editor editor = eprefs.edit();
-				if (useDev) {
-					projectNumber = DEFAULT_PROJ_DEV;
-				} else {
-					projectNumber = DEFAULT_PROJ_PROD;
-				}
+				projectNumber = DEFAULT_PROJ;
 				editor.putString("project_id", projectNumber);
 				editor.commit();
 				INTERVAL = 50;
