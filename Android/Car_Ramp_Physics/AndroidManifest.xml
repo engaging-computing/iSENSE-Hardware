@@ -42,12 +42,12 @@
         <activity
             android:name="edu.uml.cs.isense.carphysicsv2.dialogs.Help"
             android:label="@string/about_title"
-            android:theme="@style/AppThemeDialog" >
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name=".DataActivity"
             android:label="@string/upload_or_trash"
-            android:theme="@style/AppThemeDialog" >
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="edu.uml.cs.isense.proj.Setup"

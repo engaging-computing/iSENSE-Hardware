@@ -461,23 +461,7 @@ public class AmusementPark extends Activity implements SensorEventListener,
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (!useMenu) {
-			menu.getItem(MENU_ITEM_SETUP).setEnabled(false);
-			menu.getItem(MENU_ITEM_LOGIN).setEnabled(false);
-			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(false);
-//			menu.getItem(MENU_ITEM_TIME).setEnabled(false);
-//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(false);
-			menu.getItem(MENU_ITEM_ABOUT).setEnabled(false);
-			menu.getItem(MENU_ITEM_HELP).setEnabled(false);
-		} else {
-			menu.getItem(MENU_ITEM_SETUP).setEnabled(true);
-			menu.getItem(MENU_ITEM_LOGIN).setEnabled(true);
-			menu.getItem(MENU_ITEM_UPLOAD).setEnabled(true);
-//			menu.getItem(MENU_ITEM_TIME).setEnabled(true);
-//			menu.getItem(MENU_ITEM_MEDIA).setEnabled(true);
-			menu.getItem(MENU_ITEM_ABOUT).setEnabled(true);
-			menu.getItem(MENU_ITEM_HELP).setEnabled(true);
-		}
+		menu.setGroupEnabled(0, useMenu);
 		return true;
 	}
 
