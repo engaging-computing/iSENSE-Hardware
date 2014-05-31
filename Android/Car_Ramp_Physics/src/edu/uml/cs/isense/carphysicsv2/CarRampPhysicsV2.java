@@ -1254,6 +1254,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private Runnable uploader = new Runnable() {
 
+		@SuppressLint("NewApi")
 		@Override
 		public void run() {
 
