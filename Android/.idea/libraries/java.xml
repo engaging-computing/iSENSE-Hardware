@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="java">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/OpenCV-2.4.5-android-sdk/sdk/java/bin/java.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
