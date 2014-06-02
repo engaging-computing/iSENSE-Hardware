@@ -1,0 +1,77 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="8" android:versionName="2.2.0" package="edu.uml.cs.isense.riverwalk">
+
+    <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="19"/>
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    
+    <application android:allowBackup="false" android:icon="@drawable/ic_launcher" android:label="@string/app_name">
+        
+        <activity android:label="@string/app_name" android:name="edu.uml.cs.isense.riverwalk.Main" android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        
+        <activity android:label="Upload to iSENSE" android:name="edu.uml.cs.isense.riverwalk.SharePicture" android:screenOrientation="portrait" android:theme="@style/AppThemeDialog">    
+            <intent-filter>
+		       <action android:name="android.intent.action.SEND"/>
+			   <category android:name="android.intent.category.DEFAULT"/>
+			   <data android:mimeType="image/*"/>
+		   </intent-filter>
+		    <intent-filter>
+		        <action android:name="android.intent.action.SEND_MULTIPLE"/>
+		        <category android:name="android.intent.category.DEFAULT"/>
+		        <data android:mimeType="image/*"/>
+    		</intent-filter>
+        </activity>
+        
+        <activity android:label="About" android:name="edu.uml.cs.isense.riverwalk.About" android:theme="@style/AppTheme"/>
+            
+        <activity android:label="Help" android:name="edu.uml.cs.isense.riverwalk.Help" android:theme="@style/AppTheme"/>
+        <activity android:label="@string/app_name_experiments" android:name="edu.uml.cs.isense.riverwalk.experiments.BrowseExperiments" android:theme="@style/AppTheme"/>
+        <activity android:label="No GPS Found" android:name="edu.uml.cs.isense.riverwalk.dialogs.NoGps" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="No Connectivity" android:name="edu.uml.cs.isense.riverwalk.dialogs.NoConnectivity" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Ready To Upload" android:name="edu.uml.cs.isense.riverwalk.dialogs.ReadyUpload" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Experiment ID" android:name="edu.uml.cs.isense.riverwalk.experiments.ExperimentDialog" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="No Barcode Scanner Found" android:name="edu.uml.cs.isense.riverwalk.dialogs.NoQR" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Describe Photo" android:name="edu.uml.cs.isense.riverwalk.dialogs.Description" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Continuous Photo Shooting" android:name="edu.uml.cs.isense.riverwalk.dialogs.Continuous" android:theme="@style/AppThemeDialog"/>
+
+        <!-- from iSENSE imports -->
+        <activity android:label="Upload Data" android:name="edu.uml.cs.isense.queue.QueueLayout" android:theme="@style/AppThemeQueue"/>
+        <activity android:label="Alter Data Set" android:name="edu.uml.cs.isense.queue.QueueAlter" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Edit Data" android:name="edu.uml.cs.isense.queue.QueueEditData" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Rename Data Set" android:name="edu.uml.cs.isense.queue.QueueEditRename" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Delete Selected Data Sets" android:name="edu.uml.cs.isense.queue.QueueDeleteSelected" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="No Associated Projects" android:name="edu.uml.cs.isense.queue.NoInitialProject" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Projects" android:name="edu.uml.cs.isense.proj.BrowseProjects" android:windowSoftInputMode="stateHidden"/>
+        <activity android:label="No QR Code Scanner Found" android:name="edu.uml.cs.isense.proj.NoQR" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Select a Project" android:name="edu.uml.cs.isense.proj.Setup" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Select a File" android:name="edu.uml.cs.isense.supplements.FileBrowser" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Summary" android:name="edu.uml.cs.isense.queue.QueueSummary" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Select Fields" android:name="edu.uml.cs.isense.dfm.FieldMatching" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="@string/login_prompt" android:name="edu.uml.cs.isense.credentials.Login" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="@string/login_error_prompt" android:name="edu.uml.cs.isense.credentials.LoginError" android:theme="@style/AppThemeDialog"/>
+        <activity android:configChanges="orientation|keyboardHidden|screenSize" android:label="Create New Project" android:name="edu.uml.cs.isense.proj.ProjectCreate" android:theme="@style/AppThemeDialog"/>
+        <activity android:label="Create New Project" android:name="edu.uml.cs.isense.proj.ProjectNameDialog" android:theme="@style/AppThemeDialog"/>
+        <activity android:configChanges="screenSize|orientation" android:label="Credential Manager" android:name="edu.uml.cs.isense.credentials.CredentialManager" android:theme="@style/AppThemeDialog" android:windowSoftInputMode="adjustPan"/>
+        <activity android:label="Add Contributor Key" android:name="edu.uml.cs.isense.credentials.CredentialManagerKey" android:theme="@style/AppThemeDialog"/>
+         
+        
+        
+    </application>
+
+</manifest>

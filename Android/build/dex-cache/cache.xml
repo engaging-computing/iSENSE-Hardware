@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/build/pre-dexed/debug/classes-610e28fbbc551ae9d79b86bee296edc63cd9e58c.jar"
+        jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="b49494590c61704279775f035d7da197f65cb5b4"/>
+    <item
+        dex="/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/build/pre-dexed/debug/httpmime-4.2.5-f22d59824ac7ad5cdb8dc82163f059b8ace746f8.jar"
+        jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/libs/httpmime-4.2.5.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="6efc2f9df23c2ac4d3b701a11cab9f9fa6a641d4"/>
+    <item
+        dex="/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/build/pre-dexed/debug/android-support-v4-d22c0b8abf961291a070afe83b14c271b0124e6f.jar"
+        jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/libs/android-support-v4.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="5896b0a4e377ac4242eb2bc785220c1c4fc052f4"/>
+
+</pre-dex-items>
