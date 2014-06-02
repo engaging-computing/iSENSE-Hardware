@@ -553,14 +553,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		// Determine if normal or linear acceleration
 		if (on) {
-			mSensorManager.registerListener(CarRampPhysicsV2.this,
-					mSensorManager
-							.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
-					SensorManager.SENSOR_DELAY_FASTEST);
+            mSensorManager.registerListener(CarRampPhysicsV2.this,
+                    mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                    SensorManager.SENSOR_DELAY_FASTEST);
 		} else {
-			mSensorManager.registerListener(CarRampPhysicsV2.this,
-					mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-					SensorManager.SENSOR_DELAY_FASTEST);
+            mSensorManager.registerListener(CarRampPhysicsV2.this,
+                    mSensorManager
+                            .getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+                    SensorManager.SENSOR_DELAY_FASTEST);
 		}
 
 		SharedPreferences prefs = getSharedPreferences(ACCEL_SETTINGS, 0);
