@@ -126,7 +126,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	private boolean timeHasElapsed = false;
 	private boolean usedHomeButton = false;
-	public static boolean saveMode = false;
 
 	private MediaPlayer mMediaPlayer;
 
@@ -243,18 +242,13 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 		}
 
-		if (!Connection.hasConnectivity(mContext) && !saveMode) {
-			startActivityForResult(new Intent(mContext, SaveModeDialog.class),
-					SAVE_MODE_REQUESTED);
-		}
-
 		SharedPreferences prefs2 = getSharedPreferences("PROJID", 0);
 		projectNumber = prefs2.getString("project_id", null);
 		if (projectNumber == null) {
 			projectNumber = DEFAULT_PROJ;
 		}
 
-		if (!Connection.hasConnectivity(mContext) && !saveMode) {
+		if (!Connection.hasConnectivity(mContext)) {
 			projectNumber = "-1";
 		}
 
@@ -271,15 +265,14 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				 
 				SharedPreferences prefs = getSharedPreferences("PROJID", 0);
 				projectNumber = prefs.getString("project_id", "-1");
-				if (!projectNumber.equals("-1")) {
+
+                if (projectNumber.equals("-1")) {
+                    setUpNoProject();
+                }
+
+				//if (!projectNumber.equals("-1")) {
 					mMediaPlayer.setLooping(false);
 					mMediaPlayer.start();
-	
-					if (!Connection.hasConnectivity(mContext) && !saveMode) {
-						startActivityForResult(new Intent(mContext,
-								SaveModeDialog.class), SAVE_MODE_REQUESTED);
-						return false;
-					}
 	
 					if (running) {
 	
@@ -354,10 +347,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	
 						setEnabledFields();
 	
-						if (saveMode) {
-							dfm.getOrder();
-						}
-	
+//						if (saveMode) {
+//							dfm.getOrder();
+//						}
+
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -462,10 +455,10 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					return running;
 				
 	
-				} else {
-					w.make("No Project Selected",Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-					return timeHasElapsed;
-				}
+//				} else {
+//					w.make("No Project Selected",Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+//					return timeHasElapsed;
+//				}
 			}
 		});
 
@@ -674,7 +667,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 				projectNumber = DEFAULT_PROJ;
 		}
 
-		if (!Connection.hasConnectivity(mContext) && !saveMode) {
+		if (!Connection.hasConnectivity(mContext)) {
 			projectNumber = "-1";
 		}
 
@@ -1156,85 +1149,85 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 			}
 		} else if (reqCode == FIELD_MATCHING_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				if (FieldMatching.acceptedFields.isEmpty()) {
-					Intent iProj = new Intent(mContext, Setup.class);
-					iProj.putExtra("from_where", "main");
-					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
-				} else if (!FieldMatching.compatible) {
-					Intent iProj = new Intent(mContext, Setup.class);
-					iProj.putExtra("from_where", "main");
-					startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
-				}
-			} else if (resultCode == RESULT_CANCELED) {
-				Intent iProj = new Intent(mContext, Setup.class);
-				iProj.putExtra("from_where", "main");
-				startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
-			}
-		} else if (reqCode == SAVE_MODE_REQUESTED) {
-			if (resultCode == RESULT_OK) {
-				saveMode = true;
-
-				CarRampPhysicsV2.projectNumber = "-1";
-				dfm = new DataFieldManager(Integer.parseInt(projectNumber),
-						api, mContext, f);
-				dfm.getOrder();
-				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
-				if (dfm.getOrderList().contains(
-						mContext.getString(R.string.accel_x))) {
-					values.setText("X: " + oneDigit.format(accel[0]));
-				}
-				if (dfm.getOrderList().contains(
-						mContext.getString(R.string.accel_y))) {
-					if (dfm.getOrderList().contains(
-							mContext.getString(R.string.accel_x))) {
-						values.setText(values.getText() + " Y: "
-								+ oneDigit.format(accel[1]));
-					} else {
-						values.setText("Y: " + oneDigit.format(accel[1]));
-					}
-				}
-				if (dfm.getOrderList().contains(
-						mContext.getString(R.string.accel_z))) {
-					if (dfm.getOrderList().contains(
-							mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(
-									mContext.getString(R.string.accel_y))) {
-						values.setText(values.getText() + " Z: "
-								+ oneDigit.format(accel[2]));
-					} else {
-						values.setText("Z: " + oneDigit.format(accel[2]));
-					}
-
-				}
-				if (dfm.getOrderList().contains(
-						mContext.getString(R.string.accel_total))) {
-					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
-							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
-
-					if (dfm.getOrderList().contains(
-							mContext.getString(R.string.accel_x))
-							|| dfm.getOrderList().contains(
-									mContext.getString(R.string.accel_y))
-							|| dfm.getOrderList().contains(
-									mContext.getString(R.string.accel_z))) {
-						values.setText(values.getText() + " Magnitude: "
-								+ oneDigit.format(accel[3]));
-					} else {
-						values.setText("Magnitude: "
-								+ oneDigit.format(accel[3]));
-					}
-
-				}
-			} else {
-				if (!Connection.hasConnectivity(mContext)) {
-					startActivityForResult(new Intent(mContext,
-							SaveModeDialog.class), SAVE_MODE_REQUESTED);
-				} else {
-					saveMode = false;
-				}
-			}
-		}
+            if (resultCode == RESULT_OK) {
+                if (FieldMatching.acceptedFields.isEmpty()) {
+                    Intent iProj = new Intent(mContext, Setup.class);
+                    iProj.putExtra("from_where", "main");
+                    startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+                } else if (!FieldMatching.compatible) {
+                    Intent iProj = new Intent(mContext, Setup.class);
+                    iProj.putExtra("from_where", "main");
+                    startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                Intent iProj = new Intent(mContext, Setup.class);
+                iProj.putExtra("from_where", "main");
+                startActivityForResult(iProj, ALTER_DATA_PROJ_REQUESTED);
+            }
+//		} else if (reqCode == SAVE_MODE_REQUESTED) {
+//			if (resultCode == RESULT_OK) {
+//				saveMode = true;
+//
+//				CarRampPhysicsV2.projectNumber = "-1";
+//				dfm = new DataFieldManager(Integer.parseInt(projectNumber),
+//						api, mContext, f);
+//				dfm.getOrder();
+//				DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+//				if (dfm.getOrderList().contains(
+//						mContext.getString(R.string.accel_x))) {
+//					values.setText("X: " + oneDigit.format(accel[0]));
+//				}
+//				if (dfm.getOrderList().contains(
+//						mContext.getString(R.string.accel_y))) {
+//					if (dfm.getOrderList().contains(
+//							mContext.getString(R.string.accel_x))) {
+//						values.setText(values.getText() + " Y: "
+//								+ oneDigit.format(accel[1]));
+//					} else {
+//						values.setText("Y: " + oneDigit.format(accel[1]));
+//					}
+//				}
+//				if (dfm.getOrderList().contains(
+//						mContext.getString(R.string.accel_z))) {
+//					if (dfm.getOrderList().contains(
+//							mContext.getString(R.string.accel_x))
+//							|| dfm.getOrderList().contains(
+//									mContext.getString(R.string.accel_y))) {
+//						values.setText(values.getText() + " Z: "
+//								+ oneDigit.format(accel[2]));
+//					} else {
+//						values.setText("Z: " + oneDigit.format(accel[2]));
+//					}
+//
+//				}
+//				if (dfm.getOrderList().contains(
+//						mContext.getString(R.string.accel_total))) {
+//					accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+//							+ Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+//
+//					if (dfm.getOrderList().contains(
+//							mContext.getString(R.string.accel_x))
+//							|| dfm.getOrderList().contains(
+//									mContext.getString(R.string.accel_y))
+//							|| dfm.getOrderList().contains(
+//									mContext.getString(R.string.accel_z))) {
+//						values.setText(values.getText() + " Magnitude: "
+//								+ oneDigit.format(accel[3]));
+//					} else {
+//						values.setText("Magnitude: "
+//								+ oneDigit.format(accel[3]));
+//					}
+//
+//				}
+//			} else {
+//				if (!Connection.hasConnectivity(mContext)) {
+//					startActivityForResult(new Intent(mContext,
+//							SaveModeDialog.class), SAVE_MODE_REQUESTED);
+//				} else {
+//					saveMode = false;
+//				}
+//			}
+        }
 	}
 
 	private Runnable uploader = new Runnable() {
@@ -1453,6 +1446,64 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 		startActivityForResult(i, reqCode);
 
 	}
+
+    /**
+     *
+     */
+    private void setUpNoProject() {
+        CarRampPhysicsV2.projectNumber = "-1";
+        dfm = new DataFieldManager(Integer.parseInt(projectNumber),
+                api, mContext, f);
+        dfm.getOrder();
+        DecimalFormat oneDigit = new DecimalFormat("#,##0.0");
+        if (dfm.getOrderList().contains(
+                mContext.getString(R.string.accel_x))) {
+            values.setText("X: " + oneDigit.format(accel[0]));
+        }
+        if (dfm.getOrderList().contains(
+                mContext.getString(R.string.accel_y))) {
+            if (dfm.getOrderList().contains(
+                    mContext.getString(R.string.accel_x))) {
+                values.setText(values.getText() + " Y: "
+                        + oneDigit.format(accel[1]));
+            } else {
+                values.setText("Y: " + oneDigit.format(accel[1]));
+            }
+        }
+        if (dfm.getOrderList().contains(
+                mContext.getString(R.string.accel_z))) {
+            if (dfm.getOrderList().contains(
+                    mContext.getString(R.string.accel_x))
+                    || dfm.getOrderList().contains(
+                            mContext.getString(R.string.accel_y))) {
+                values.setText(values.getText() + " Z: "
+                        + oneDigit.format(accel[2]));
+            } else {
+                values.setText("Z: " + oneDigit.format(accel[2]));
+            }
+
+        }
+        if (dfm.getOrderList().contains(
+                mContext.getString(R.string.accel_total))) {
+            accel[3] = (float) Math.sqrt(Math.pow(accel[0], 2)
+                    + Math.pow(accel[1], 2) + Math.pow(accel[2], 2));
+
+            if (dfm.getOrderList().contains(
+                    mContext.getString(R.string.accel_x))
+                    || dfm.getOrderList().contains(
+                            mContext.getString(R.string.accel_y))
+                    || dfm.getOrderList().contains(
+                            mContext.getString(R.string.accel_z))) {
+                values.setText(values.getText() + " Magnitude: "
+                        + oneDigit.format(accel[3]));
+            } else {
+                values.setText("Magnitude: "
+                        + oneDigit.format(accel[3]));
+            }
+
+        }
+
+    }
 
 	@Override
 	public void onProviderDisabled(String arg0) {
