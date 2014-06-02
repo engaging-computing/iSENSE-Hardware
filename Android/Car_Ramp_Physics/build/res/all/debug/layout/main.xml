@@ -33,7 +33,7 @@
                 android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/linear_accel"
+                android:text="@string/gravity"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -43,7 +43,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textOff="OFF"
-                android:textOn="ON" />
+                android:textOn="ON"
+                android:checked="false" />
         </LinearLayout>
     </LinearLayout>
 

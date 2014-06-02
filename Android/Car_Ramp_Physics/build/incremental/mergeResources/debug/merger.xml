@@ -1428,8 +1428,6 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
                 </string>
                 <string name="not_logged_in" >Not Logged In
                 </string>
-                <string name="linear_accel" >Linear Acceleration:   
-                </string>
                 <string name="about_app" >About:\n\nThis app enables you to record your accel/magn in all directions and it allows you to share that data online. When the app is activated, your data is collected for ten seconds and then saved so that it can later be shared on the iSENSE web system (isenseproject.org), where it can be viewed publicly. The recording length can be changed via the Menu. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\nInstructions:\n\n In order to begin recording and sharing data, first enter your first name and last initial. Next, choose the sample length in which you would like data to be recorded, this can be done via the \"Recording Length\" menu option. Choose the project you would like the data to be uploaded to by going to the \"Select Project\" menu option. Finally, when you are ready to begin recording data press and hold the button that says \"Hold to Start.\" This allows data to be recorded and saved. When you are ready to upload your data, click on the Upload option in the menu. While data is being recorded, you will not be able to exit the app by pressing the Back button. Pressing the Home button will interrupt the recording. 
                 </string>
                 <string name="record_length" >Recording Length
@@ -1466,6 +1464,8 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
                 <string name="recordSettings" >Recording Fields
                 </string>
                 <string name="reset" >Reset Settings
+                </string>
+                <string name="gravity" >Include Gravity:   
                 </string>
                 <string name="placeDevice" >Place device on its back with the top edge facing the direction of displacement.
                 </string>
