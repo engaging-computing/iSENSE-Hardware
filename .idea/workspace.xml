@@ -6,6 +6,14 @@
         <option name="name" value="app: edu.uml.cs.isense.canobiev2" />
         <option name="packageNamePattern" value="edu.uml.cs.isense.canobiev2" />
       </filter>
+      <filter>
+        <option name="name" value="app: edu.uml.cs.isense.riverwalk" />
+        <option name="packageNamePattern" value="edu.uml.cs.isense.riverwalk" />
+      </filter>
+      <filter>
+        <option name="name" value="app: edu.uml.cs.isense.carphysicsv2" />
+        <option name="packageNamePattern" value="edu.uml.cs.isense.carphysicsv2" />
+      </filter>
     </filters>
   </component>
   <component name="AndroidLayoutPreviewToolWindow">
@@ -15,11 +23,23 @@
   </component>
   <component name="AndroidLayouts">
     <shared>
-      <config />
+      <config>
+        <devices>
+          <device id="Nexus 5" />
+        </devices>
+      </config>
     </shared>
+    <layouts>
+      <layout url="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land-v14/main.xml">
+        <config>
+          <state>Landscape</state>
+          <theme>@android:style/Theme.Holo</theme>
+        </config>
+      </layout>
+    </layouts>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: edu.uml.cs.isense.canobiev2" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: edu.uml.cs.isense.carphysicsv2" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89820c26-a511-4ac5-b5ed-11e17333df15" name="Default" comment="" />
@@ -230,9 +250,50 @@
       <file leaf-file-name="CarRampPhysicsV2.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="10.318182" vertical-offset="0" max-vertical-offset="20370">
-              <caret line="558" column="16" selection-start-line="558" selection-start-column="16" selection-end-line="558" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.3319672" vertical-offset="16863" max-vertical-offset="20370">
+              <caret line="1253" column="128" selection-start-line="1253" selection-start-column="128" selection-end-line="1253" selection-end-column="128" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-v14/main.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-5.962963" vertical-offset="349" max-vertical-offset="1035">
+              <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land/main.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-5.962963" vertical-offset="349" max-vertical-offset="1020">
+              <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land-v14/main.xml">
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-6.9259257" vertical-offset="548" max-vertical-offset="1035">
+              <caret line="49" column="4" selection-start-line="49" selection-start-column="4" selection-end-line="49" selection-end-column="4" />
+              <folding>
+                <element signature="e#1289#1306#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -3897,6 +3958,9 @@
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/layout-v14/main.xml" />
+        <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land/main.xml" />
+        <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land-v14/main.xml" />
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java" />
       </list>
     </option>
@@ -4083,7 +4147,7 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/iSENSE Imports/lib/httpmime-4.2.5.jar" />
-    <property name="android.project.structure.last.selected" value="iSENSE Imports" />
+    <property name="android.project.structure.last.selected" value="Project" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="FullScreen" value="false" />
     <property name="restartRequiresConfirmation" value="true" />
@@ -4095,7 +4159,7 @@
       <recent name="$PROJECT_DIR$/iSENSE Imports/lib" />
     </key>
   </component>
-  <component name="RunManager" selected="Android Application.Canobie_Physics_v2">
+  <component name="RunManager" selected="Android Application.Car_Ramp_Physics">
     <configuration default="false" name="All Tests" type="AndroidTestRunConfigurationType" factoryName="Android Tests" temporary="true" nameIsGenerated="true">
       <module name="Canobie_Physics_v2" />
       <option name="TESTING_TYPE" value="0" />
@@ -4268,7 +4332,7 @@
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
       <option name="ARTIFACT_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
@@ -4280,6 +4344,8 @@
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <RunnerSettings RunnerId="AndroidDebugRunner" />
+      <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
       <method />
     </configuration>
     <configuration default="false" name="PendulumTracker" type="AndroidRunConfigurationType" factoryName="Android Application">
@@ -4288,7 +4354,7 @@
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
       <option name="ARTIFACT_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
@@ -4390,7 +4456,7 @@
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
       <option name="ARTIFACT_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
@@ -4430,7 +4496,7 @@
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
       <option name="ARTIFACT_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
       <option name="USE_LAST_SELECTED_DEVICE" value="false" />
       <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
@@ -4519,15 +4585,15 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913166" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18669528" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="FLOATING" visible="false" weight="0.32913166" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" x="25" y="430" width="1398" height="235" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3207283" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18669528" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2464986" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" x="4" y="599" width="1398" height="235" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24089636" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18669528" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -4713,10 +4779,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-v14/main.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.962963" vertical-offset="349" max-vertical-offset="1035">
+          <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land/main.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.962963" vertical-offset="349" max-vertical-offset="1020">
+          <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land-v14/main.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.9259257" vertical-offset="548" max-vertical-offset="1035">
+          <caret line="49" column="4" selection-start-line="49" selection-start-column="4" selection-end-line="49" selection-end-column="4" />
+          <folding>
+            <element signature="e#1289#1306#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="10.318182" vertical-offset="0" max-vertical-offset="20370">
-          <caret line="558" column="16" selection-start-line="558" selection-start-column="16" selection-end-line="558" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.3319672" vertical-offset="16863" max-vertical-offset="20370">
+          <caret line="1253" column="128" selection-start-line="1253" selection-start-column="128" selection-end-line="1253" selection-end-column="128" />
           <folding />
         </state>
       </provider>

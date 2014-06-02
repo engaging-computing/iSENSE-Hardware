@@ -24,7 +24,7 @@
         </activity>
         <activity android:label="@string/choose_project_title" android:name="edu.uml.cs.isense.proj.Setup" android:theme="@style/AppThemeDialog" tools:ignore="MissingRegistered">
         </activity>
-        <activity android:label="@string/select_proj" android:name="edu.uml.cs.isense.proj.BrowseProjects" tools:ignore="MissingRegistered">
+        <activity android:label="@string/select_proj" android:name="edu.uml.cs.isense.proj.BrowseProjects" android:windowSoftInputMode="stateHidden" tools:ignore="MissingRegistered">
         </activity>
         <activity android:label="@string/no_qr" android:name="edu.uml.cs.isense.proj.NoQR" android:theme="@style/AppThemeDialog" tools:ignore="MissingRegistered">
         </activity>

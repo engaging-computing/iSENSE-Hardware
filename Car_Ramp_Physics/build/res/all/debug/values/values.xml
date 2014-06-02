@@ -146,6 +146,13 @@
     <eat-comment />
 
     <string name="first_name">First Name:</string>
+    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <eat-comment />
+
+    <string name="gravity">Include Gravity:   </string>
+    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <eat-comment />
+
     <string name="heading_deg">Angle (Degrees)</string>
     <string name="heading_rad">Angle (Radians)</string>
     <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
@@ -184,13 +191,6 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
 
     <string name="last_initial">Last Initial:</string>
     <string name="latitude">Latitude</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
-    <eat-comment />
-
-    <string name="linear_accel">Linear Acceleration:   </string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
-    <eat-comment />
-
     <string name="loading">Loading…</string>
     <string name="logged_in">Logged in as:</string>
     <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
