@@ -1,6 +1,8 @@
 package edu.uml.cs.isense.datawalk_v2;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -291,8 +293,11 @@ public class DataWalk extends Activity implements LocationListener,
 
 					// Save the newest DataSet to the Upload Queue if it has at
 					// least 1 point
+					
+					String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+
 					QDataSet ds = new QDataSet(dataSetName, "Data Points: "
-							+ dataPointCount, QDataSet.Type.DATA, dataSet
+							+ dataPointCount + " " + currentDateTimeString, QDataSet.Type.DATA, dataSet
 							.toString(), null, projectID, null);
 					ds.setRequestDataLabelInOrder(true);
 					if (dataPointCount > 0) {
