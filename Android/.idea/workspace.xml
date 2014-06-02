@@ -36,10 +36,15 @@
           <theme>@android:style/Theme.Holo</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/Pictures/res/layout/share_picture.xml">
+        <config>
+          <theme>@android:style/Theme.Holo.Light.Dialog</theme>
+        </config>
+      </layout>
     </layouts>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: edu.uml.cs.isense.carphysicsv2" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: edu.uml.cs.isense.riverwalk" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89820c26-a511-4ac5-b5ed-11e17333df15" name="Default" comment="" />
@@ -247,25 +252,43 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CarRampPhysicsV2.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java">
+      <file leaf-file-name="SharePicture.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pictures/src/edu/uml/cs/isense/riverwalk/SharePicture.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9634146" vertical-offset="5343" max-vertical-offset="21195">
-              <caret line="460" column="17" selection-start-line="457" selection-start-column="16" selection-end-line="460" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2899" max-vertical-offset="3585">
+              <caret line="247" column="9" selection-start-line="247" selection-start-column="9" selection-end-line="247" selection-end-column="9" />
               <folding>
-                <element signature="e#8521#13563#0" expanded="true" />
-                <element signature="e#13558#13559#0" expanded="true" />
-                <element signature="e#42084#42120#0" expanded="true" />
-                <element signature="e#42255#42291#0" expanded="true" />
-                <element signature="e#42361#42397#0" expanded="true" />
-                <element signature="e#42682#42718#0" expanded="true" />
-                <element signature="e#42788#42824#0" expanded="true" />
-                <element signature="e#42906#42942#0" expanded="true" />
-                <element signature="e#43228#43268#0" expanded="true" />
-                <element signature="e#43472#43508#0" expanded="true" />
-                <element signature="e#43590#43626#0" expanded="true" />
-                <element signature="e#43708#43744#0" expanded="true" />
+                <element signature="e#1168#1174#0" expanded="true" />
+                <element signature="e#2395#2751#0" expanded="true" />
+                <element signature="e#2742#2743#0" expanded="true" />
+                <element signature="e#2834#3025#0" expanded="true" />
+                <element signature="e#3020#3021#0" expanded="true" />
+                <element signature="e#3090#3376#0" expanded="true" />
+                <element signature="e#3367#3368#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="share_picture.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Pictures/res/layout/share_picture.xml">
+          <provider selected="true" editor-type-id="android-designer">
+            <state />
+          </provider>
+          <provider editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="226" max-vertical-offset="885">
+              <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Pictures/res/values/strings.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.33230293" vertical-offset="805" max-vertical-offset="1530">
+              <caret line="68" column="54" selection-start-line="68" selection-start-column="54" selection-end-line="68" selection-end-column="54" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -3911,8 +3934,11 @@
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land-v14/main.xml" />
         <option value="$PROJECT_DIR$/Canobie_Physics_v2/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/Pictures/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java" />
+        <option value="$PROJECT_DIR$/Pictures/src/edu/uml/cs/isense/riverwalk/SharePicture.java" />
+        <option value="$PROJECT_DIR$/Pictures/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/Pictures/src/edu/uml/cs/isense/riverwalk/Main.java" />
+        <option value="$PROJECT_DIR$/Pictures/res/values/strings.xml" />
       </list>
     </option>
   </component>
@@ -3993,7 +4019,7 @@
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Car_Ramp_Physics" />
+              <option name="myItemId" value="Pictures" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -4007,15 +4033,55 @@
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Car_Ramp_Physics" />
+              <option name="myItemId" value="Pictures" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
+              <option name="myItemId" value="res" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="carphysicsv2" />
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Android" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pictures" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Android" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Android" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pictures" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -4048,7 +4114,7 @@
       <recent name="$PROJECT_DIR$/iSENSE Imports/lib" />
     </key>
   </component>
-  <component name="RunManager" selected="Android Application.Car_Ramp_Physics">
+  <component name="RunManager" selected="Android Application.Pictures">
     <configuration default="false" name="All Tests" type="AndroidTestRunConfigurationType" factoryName="Android Tests" temporary="true" nameIsGenerated="true">
       <module name="Canobie_Physics_v2" />
       <option name="TESTING_TYPE" value="0" />
@@ -4469,6 +4535,7 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3295129" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913166" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -4478,7 +4545,7 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18669528" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24089636" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" x="4" y="599" width="1398" height="235" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.57983196" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.56442577" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18669528" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -4487,7 +4554,6 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18669528" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913166" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3280116" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -4539,20 +4605,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="16863" max-vertical-offset="20370">
           <caret line="1253" column="128" selection-start-line="1253" selection-start-column="128" selection-end-line="1253" selection-end-column="128" />
-          <folding>
-            <element signature="e#8521#13563#0" expanded="true" />
-            <element signature="e#13558#13559#0" expanded="true" />
-            <element signature="e#42084#42120#0" expanded="true" />
-            <element signature="e#42255#42291#0" expanded="true" />
-            <element signature="e#42361#42397#0" expanded="true" />
-            <element signature="e#42682#42718#0" expanded="true" />
-            <element signature="e#42788#42824#0" expanded="true" />
-            <element signature="e#42906#42942#0" expanded="true" />
-            <element signature="e#43228#43268#0" expanded="true" />
-            <element signature="e#43472#43508#0" expanded="true" />
-            <element signature="e#43590#43626#0" expanded="true" />
-            <element signature="e#43708#43744#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -4779,14 +4832,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Pictures/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.79571986" vertical-offset="1916" max-vertical-offset="2430">
-          <caret line="155" column="0" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/iSENSE Imports/src/edu/uml/cs/isense/dfm/DataFieldManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="2.947471" vertical-offset="0" max-vertical-offset="16905">
@@ -4795,24 +4840,91 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Canobie_Physics_v2/src/edu/uml/cs/isense/canobiev2/AmusementPark.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33230293" vertical-offset="9160" max-vertical-offset="17340">
+          <caret line="720" column="141" selection-start-line="720" selection-start-column="140" selection-end-line="720" selection-end-column="141" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9634146" vertical-offset="5343" max-vertical-offset="21195">
-          <caret line="460" column="17" selection-start-line="457" selection-start-column="16" selection-end-line="460" selection-end-column="17" />
+        <state vertical-scroll-proportion="-5.2045455" vertical-offset="16691" max-vertical-offset="21120">
+          <caret line="1246" column="129" selection-start-line="1246" selection-start-column="129" selection-end-line="1246" selection-end-column="129" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataWalk/src/edu/uml/cs/isense/datawalk_v2/DataWalk.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.038462" vertical-offset="3290" max-vertical-offset="18120">
+          <caret line="299" column="95" selection-start-line="299" selection-start-column="95" selection-end-line="299" selection-end-column="95" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pictures/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1744" max-vertical-offset="2430">
+          <caret line="34" column="46" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pictures/src/edu/uml/cs/isense/riverwalk/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31060606" vertical-offset="13790" max-vertical-offset="18075">
+          <caret line="972" column="0" selection-start-line="972" selection-start-column="0" selection-end-line="972" selection-end-column="0" />
           <folding>
-            <element signature="e#8521#13563#0" expanded="true" />
-            <element signature="e#13558#13559#0" expanded="true" />
-            <element signature="e#42084#42120#0" expanded="true" />
-            <element signature="e#42255#42291#0" expanded="true" />
-            <element signature="e#42361#42397#0" expanded="true" />
-            <element signature="e#42682#42718#0" expanded="true" />
-            <element signature="e#42788#42824#0" expanded="true" />
-            <element signature="e#42906#42942#0" expanded="true" />
-            <element signature="e#43228#43268#0" expanded="true" />
-            <element signature="e#43472#43508#0" expanded="true" />
-            <element signature="e#43590#43626#0" expanded="true" />
-            <element signature="e#43708#43744#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#29414#29415#0" expanded="true" />
+            <element signature="e#29435#29436#0" expanded="true" />
+            <element signature="e#30728#30773#0" expanded="true" />
+            <element signature="e#32195#32887#0" expanded="true" />
+            <element signature="e#32268#32876#0" expanded="true" />
+            <element signature="e#32547#32567#0" expanded="true" />
+            <element signature="e#32626#32646#0" expanded="true" />
+            <element signature="e#32705#32725#0" expanded="true" />
+            <element signature="e#32784#32804#0" expanded="true" />
+            <element signature="e#32869#32870#0" expanded="true" />
+            <element signature="e#32882#32883#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pictures/src/edu/uml/cs/isense/riverwalk/SharePicture.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2899" max-vertical-offset="3585">
+          <caret line="247" column="9" selection-start-line="247" selection-start-column="9" selection-end-line="247" selection-end-column="9" />
+          <folding>
+            <element signature="e#1168#1174#0" expanded="true" />
+            <element signature="e#2395#2751#0" expanded="true" />
+            <element signature="e#2742#2743#0" expanded="true" />
+            <element signature="e#2834#3025#0" expanded="true" />
+            <element signature="e#3020#3021#0" expanded="true" />
+            <element signature="e#3090#3376#0" expanded="true" />
+            <element signature="e#3367#3368#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pictures/res/layout/share_picture.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="226" max-vertical-offset="885">
+          <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Pictures/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33230293" vertical-offset="805" max-vertical-offset="1530">
+          <caret line="68" column="54" selection-start-line="68" selection-start-column="54" selection-end-line="68" selection-end-column="54" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -246,6 +246,7 @@ public class SharePicture extends Activity {
 				}
 			    finish();
 		}
+
 	}
 		
 }
