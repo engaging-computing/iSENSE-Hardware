@@ -91,14 +91,6 @@
             android:label="Select Fields"
             android:theme="@style/AppThemeDialog" />
          <activity
-            android:name="edu.uml.cs.isense.credentials.Login"
-            android:label="@string/login_prompt"
-            android:theme="@style/AppThemeDialog" />
-         <activity
-            android:name="edu.uml.cs.isense.credentials.LoginError"
-            android:label="@string/login_prompt_error"
-            android:theme="@style/AppThemeDialog" />
-         <activity
             android:name="edu.uml.cs.isense.proj.Setup"
             android:label="@string/project_prompt"
             android:theme="@style/AppThemeDialog" />
