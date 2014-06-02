@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE project>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.carphysicsv2"
@@ -37,7 +36,7 @@
         <activity
             android:name="edu.uml.cs.isense.carphysicsv2.dialogs.About"
             android:label="@string/about_title"
-            android:theme="@style/AppThemeDialog" >
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="edu.uml.cs.isense.carphysicsv2.dialogs.Help"
@@ -105,16 +104,6 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.EnterName"
             android:label="@string/enter_name_prompt"
-            android:theme="@style/AppThemeDialog"
-            tools:ignore="MissingRegistered" />
-        <activity
-            android:name="edu.uml.cs.isense.credentials.Login"
-            android:label="@string/login_prompt"
-            android:theme="@style/AppThemeDialog"
-            tools:ignore="MissingRegistered" />
-        <activity
-            android:name="edu.uml.cs.isense.credentials.LoginError"
-            android:label="@string/login_error_prompt"
             android:theme="@style/AppThemeDialog"
             tools:ignore="MissingRegistered" />
         <activity
