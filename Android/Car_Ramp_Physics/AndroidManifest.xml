@@ -58,6 +58,7 @@
         <activity
             android:name="edu.uml.cs.isense.proj.BrowseProjects"
             android:label="@string/select_proj"
+            android:windowSoftInputMode="stateHidden"
             tools:ignore="MissingRegistered" >
         </activity>
         <activity
