@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger>
+
+    <dataSet config="main" >
+        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/src/androidTest/assets" />
+    </dataSet>
+
+</merger>

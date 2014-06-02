@@ -526,7 +526,7 @@ public class API {
 	/**
 	 * Uploads a file to the media section of a project while logged in
 	 * 
-	 * @param targetId
+	 * @param dataId
 	 *            The ID of the thing you're uploading to
 	 * @param mediaToUpload
 	 *            The file to upload
@@ -616,7 +616,7 @@ public class API {
 	/**
 	 * Uploads a file to the media section of a project with a contributor key
 	 * 
-	 * @param targetId
+	 * @param projectId
 	 *            The ID of the thing you're uploading to
 	 * @param mediaToUpload
 	 *            The file to upload
