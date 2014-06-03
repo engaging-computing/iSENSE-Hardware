@@ -342,11 +342,11 @@ public class DataWalk extends Activity implements LocationListener,
 					// TODO CHECK IF THIS KEEPS SCREEN ON OR REMOVE THIS WHEN
 					// THE APP IS SERVICE BASED
 					// Prevent the screen from turning off and prevent rotation
-					getWindow().addFlags(
-							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//					getWindow().addFlags(
+//							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 					OrientationManager.disableRotation(DataWalk.this);
 
-					// Record and update the UI as necessary
+//					// Record and update the UI as necessary
 					runRecordingTimer();
 
 					// Change the text on the main button
@@ -796,8 +796,8 @@ public class DataWalk extends Activity implements LocationListener,
 	 */
 	private void initManagers() {
 
-		// Waffles
-		w = new Waffle(mContext);
+	        // Waffles
+        w = new Waffle(mContext);
 
 		// iSENSE API
 		api = API.getInstance();
