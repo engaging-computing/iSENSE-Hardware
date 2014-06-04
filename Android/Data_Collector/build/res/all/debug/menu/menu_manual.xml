@@ -14,4 +14,4 @@
         android:showAsAction="ifRoom|withText"
         android:title="@string/menu_login"/>
 
-</menu><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Data_Collector/res/menu/menu_manual.xml -->
+</menu><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/Data_Collector/res/menu/menu_manual.xml -->

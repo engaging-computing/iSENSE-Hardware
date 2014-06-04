@@ -42,7 +42,275 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: edu.uml.cs.isense.carphysicsv2" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89820c26-a511-4ac5-b5ed-11e17333df15" name="Default" comment="" />
+    <list default="true" id="89820c26-a511-4ac5-b5ed-11e17333df15" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Canobie_Physics_v2/build/apk/Canobie_Physics_v2-debug-test-unaligned.apk" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Canobie_Physics_v2/build/apk/Canobie_Physics_v2-debug-unaligned.apk" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Canobie_Physics_v2/build/dex/debug/classes.dex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Canobie_Physics_v2/build/dex/test/debug/classes.dex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Canobie_Physics_v2/build/pre-dexed/debug/android-support-v4-d22c0b8abf961291a070afe83b14c271b0124e6f.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Canobie_Physics_v2/build/pre-dexed/debug/classes-610e28fbbc551ae9d79b86bee296edc63cd9e58c.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Canobie_Physics_v2/build/pre-dexed/debug/httpmime-4.2.5-f22d59824ac7ad5cdb8dc82163f059b8ace746f8.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Canobie_Physics_v2/build/source/buildConfig/test/debug/edu/uml/cs/isense/canobiev2/test/BuildConfig.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Car_Ramp_Physics/build/pre-dexed/debug/android-support-v4-d22c0b8abf961291a070afe83b14c271b0124e6f.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Car_Ramp_Physics/build/pre-dexed/debug/classes-610e28fbbc551ae9d79b86bee296edc63cd9e58c.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Car_Ramp_Physics/build/pre-dexed/debug/httpmime-4.2.5-f22d59824ac7ad5cdb8dc82163f059b8ace746f8.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/apk/Pictures-debug-unaligned.apk" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/assets/debug/apache-mime4j-0.6.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/dex/debug/classes.dex" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/incremental/aidl/debug/dependency.store" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/incremental/mergeAssets/debug/merger.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/incremental/mergeResources/debug/merger.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/libs/Pictures-debug.ap_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/manifests/debug/AndroidManifest.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/pre-dexed/debug/android-support-v4-d22c0b8abf961291a070afe83b14c271b0124e6f.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/pre-dexed/debug/classes-610e28fbbc551ae9d79b86bee296edc63cd9e58c.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/pre-dexed/debug/httpmime-4.2.5-f22d59824ac7ad5cdb8dc82163f059b8ace746f8.jar" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/backarrow.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/bluecheck.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/checkmark.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/grey_scroll.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/icon_file.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/icon_folder.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/logo.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/red_x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/rsense_logo_recording_right.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/rsense_logo_right.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/spinner_1_black.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/spinner_black_16.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/warning_icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-hdpi/x_icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/bluecheck.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/checkmark.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/grey_scroll.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/logo.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/red_x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/rsense_logo_recording_right.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/rsense_logo_right.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/spinner_1_black.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/spinner_black_16.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-mdpi/warning_icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/bluecheck.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/checkmark.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/grey_scroll.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/ic_launcher.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/logo.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/red_x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/rsense_logo.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/rsense_logo_recording_right.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/rsense_logo_right.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/spinner_1_black.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/spinner_black_16.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xhdpi/warning_icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xxhdpi/checkmark.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xxhdpi/red_x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xxhdpi/rsense_logo_right.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xxhdpi/spinner_1_black.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable-xxhdpi/warning_icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/background.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/button_color.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/button_rsense.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/button_rsense_green.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/filerow_state_selector.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/listelement_bkgd.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/listelement_bkgd_changer.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/listelement_bkgd_changer_selected.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/listelement_bkgd_selected.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/listelement_bkgdflash.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/progress_small.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/toast_background_check.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/toast_background_default.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/toast_background_warning.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/drawable/toast_background_x.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-land/main.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-port/main.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/classroom_mode.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/continuous_shooting.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/description.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/dialog_filebrowser.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/enter_name.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/field_matching.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/login_dialog.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/login_error.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/logindialog.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/new_project_name.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/no_initial_project.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/no_qr.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/project_create.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/project_id.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/queue_delete_selected.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/queue_summary.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/queueblock_alter.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/queueedit_data.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/queueedit_rename.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/queueprompt.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/synctime.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/time_fail.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/time_received.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout-v11/time_reset.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/about.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/classroom_mode.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/continuous_shooting.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/credential_manager.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/credential_manager_add_key.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/credential_manager_key.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/credential_manager_keys.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/credential_manager_login.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/credential_manager_person.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/description.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/dialog_filebrowser.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/edit_row.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/enter_name.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/field_match_cell.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/field_matching.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/filerow.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/help.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/loadrow.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/login_dialog.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/login_error.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/logindialog.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/new_project_name.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/no_gps.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/no_initial_project.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/no_qr.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/project_create.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/project_field.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/project_field_location.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/project_id.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/projectrow.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/projects.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/queue_delete_selected.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/queue_summary.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/queueblock_alter.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/queueblock_data.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/queueblock_pic.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/queueedit_data.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/queueedit_rename.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/queueprompt.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/ready_upload.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/share_picture.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/synctime.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/time_fail.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/time_received.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/time_reset.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/toast_layout_check.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/toast_layout_warning.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/layout/toast_layout_x.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/menu/key_menu.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/menu/menu.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/raw/beep.mp3" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/values-v11/values.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/values-v14/values.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/res/all/debug/values/values.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/source/buildConfig/debug/edu/uml/cs/isense/riverwalk/BuildConfig.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/source/r/debug/edu/uml/cs/isense/R.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/source/r/debug/edu/uml/cs/isense/riverwalk/R.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Pictures/build/symbols/debug/R.txt" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics/AboutViewController.m" afterPath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics/AboutViewController.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../iOS/iSENSE_API/RNGridMenu.m" afterPath="$PROJECT_DIR$/../iOS/iSENSE_API/RNGridMenu.m" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics/Strings.strings" afterPath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics/Strings.strings" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics.xcodeproj/project.xcworkspace/xcuserdata/balabhv.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics.xcodeproj/project.xcworkspace/xcuserdata/balabhv.xcuserdatad/UserInterfaceState.xcuserstate" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Car_Ramp_Physics/build/dex/debug/classes.dex" afterPath="$PROJECT_DIR$/Car_Ramp_Physics/build/dex/debug/classes.dex" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android.OpenCV-2.4.5-android-sdk.sdk/java/unspecified/classes.jar" afterPath="$PROJECT_DIR$/build/exploded-aar/Android.OpenCV-2.4.5-android-sdk.sdk/java/unspecified/classes.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/classes.jar" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/classes.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../iOS/iSENSE_API/iSENSE_API.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/../iOS/iSENSE_API/iSENSE_API.xcodeproj/project.pbxproj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics/AboutViewController.h" afterPath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics/AboutViewController.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpenCV-2.4.5-android-sdk/sdk/java/build/source/aidl/release/org/opencv/engine/OpenCVEngineInterface.java" afterPath="$PROJECT_DIR$/OpenCV-2.4.5-android-sdk/sdk/java/build/source/aidl/release/org/opencv/engine/OpenCVEngineInterface.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../iOS/iSENSE_API/RNGridMenu.h" afterPath="$PROJECT_DIR$/../iOS/iSENSE_API/RNGridMenu.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics/ViewController.mm" afterPath="$PROJECT_DIR$/../iOS/Car_Ramp_Physics/Car Ramp Physics/ViewController.mm" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense_green.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense_green.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/dex-cache/cache.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/classroom_mode.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/classroom_mode.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/classroom_mode.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/classroom_mode.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_add_key.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_add_key.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_key.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_key.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_keys.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_keys.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_login.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_login.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_person.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_person.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/dialog_filebrowser.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/dialog_filebrowser.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/dialog_filebrowser.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/dialog_filebrowser.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/edit_row.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/edit_row.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/enter_name.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/enter_name.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/enter_name.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/enter_name.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_match_cell.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_match_cell.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_matching.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_matching.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/field_matching.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/field_matching.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/filerow.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/filerow.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/filerow_state_selector.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/filerow_state_selector.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/httpmime_4_2_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/httpmime_4_2_5.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/menu/key_menu.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/menu/key_menu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer_selected.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer_selected.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_selected.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_selected.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgdflash.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgdflash.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/loadrow.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/loadrow.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_dialog.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_dialog.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_dialog.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_dialog.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_error.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_error.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_error.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_error.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/new_project_name.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/new_project_name.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/new_project_name.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/new_project_name.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_initial_project.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_initial_project.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_initial_project.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_initial_project.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_qr.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_qr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_qr.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_qr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/progress_small.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/progress_small.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_create.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_create.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_create.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_create.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field_location.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field_location.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_id.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_id.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_id.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_id.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projectrow.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projectrow.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projects.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projects.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_delete_selected.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_delete_selected.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_delete_selected.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_delete_selected.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_summary.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_summary.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_summary.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_summary.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_alter.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_alter.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueblock_alter.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueblock_alter.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_data.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_data.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_pic.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_pic.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_data.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_data.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_data.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_data.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_rename.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_rename.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_rename.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_rename.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueprompt.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueprompt.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueprompt.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueprompt.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Car_Ramp_Physics/res/values/strings.xml" afterPath="$PROJECT_DIR$/Car_Ramp_Physics/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/synctime.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/synctime.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/synctime.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/synctime.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_fail.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_fail.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_fail.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_fail.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_received.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_received.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_received.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_received.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_reset.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_reset.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_reset.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_reset.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_check.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_check.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_default.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_default.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_warning.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_warning.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_x.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_x.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_check.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_check.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_warning.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_warning.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_x.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_x.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android.OpenCV-2.4.5-android-sdk.sdk/java/unspecified/res/values/values.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android.OpenCV-2.4.5-android-sdk.sdk/java/unspecified/res/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/values/values.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v11/values.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v11/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v14/values.xml" afterPath="$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v14/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="Android.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -95,8 +363,8 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties converted="true" />
     <breakpoint_rules converted="true" />
+    <ui_properties converted="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
@@ -250,21 +518,18 @@
       <file leaf-file-name="CarRampPhysicsV2.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9634146" vertical-offset="5343" max-vertical-offset="21195">
-              <caret line="460" column="17" selection-start-line="457" selection-start-column="16" selection-end-line="460" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.50970876" vertical-offset="0" max-vertical-offset="21945">
+              <caret line="79" column="13" selection-start-line="79" selection-start-column="13" selection-end-line="79" selection-end-column="13" />
               <folding>
-                <element signature="e#8521#13563#0" expanded="true" />
-                <element signature="e#13558#13559#0" expanded="true" />
-                <element signature="e#42084#42120#0" expanded="true" />
-                <element signature="e#42255#42291#0" expanded="true" />
-                <element signature="e#42361#42397#0" expanded="true" />
-                <element signature="e#42682#42718#0" expanded="true" />
-                <element signature="e#42788#42824#0" expanded="true" />
-                <element signature="e#42906#42942#0" expanded="true" />
-                <element signature="e#43228#43268#0" expanded="true" />
-                <element signature="e#43472#43508#0" expanded="true" />
-                <element signature="e#43590#43626#0" expanded="true" />
-                <element signature="e#43708#43744#0" expanded="true" />
+                <element signature="e#0#44298#0" expanded="true" />
+                <element signature="e#12123#12124#0" expanded="true" />
+                <element signature="e#12176#12177#0" expanded="true" />
+                <element signature="e#12395#12396#0" expanded="true" />
+                <element signature="e#12455#12456#0" expanded="true" />
+                <element signature="e#14179#14180#0" expanded="true" />
+                <element signature="e#14219#14220#0" expanded="true" />
+                <element signature="e#14539#14540#0" expanded="true" />
+                <element signature="e#14585#14586#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -276,6 +541,9 @@
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="true" />
     </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="GradleLocalSettings">
     <option name="tasksExpandState">
@@ -3316,7 +3584,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="14015908617000" />
+        <entry key="$PROJECT_DIR$" value="14018960553000" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -3901,10 +4169,7 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/build.gradle" />
-        <option value="$PROJECT_DIR$/iSENSE Imports/build.gradle" />
         <option value="$PROJECT_DIR$/iSENSE Imports/src/edu/uml/cs/isense/comm/API.java" />
-        <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/layout-v14/main.xml" />
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land/main.xml" />
@@ -3913,13 +4178,17 @@
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/Pictures/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java" />
+        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/iSENSE Imports/build.gradle" />
+        <option value="$PROJECT_DIR$/Car_Ramp_Physics/res/values/strings.xml" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="1680" />
     <option name="y" value="22" />
-    <option name="width" value="1440" />
-    <option name="height" value="830" />
+    <option name="width" value="1920" />
+    <option name="height" value="1058" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -3937,7 +4206,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -3963,8 +4232,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -4021,27 +4288,28 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="GoToClass.includeLibraries" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
-    <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="options.lastSelected" value="preferences.externalResources" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
-    <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/iSENSE Imports/lib/httpmime-4.2.5.jar" />
-    <property name="android.project.structure.last.selected" value="Project" />
-    <property name="android.project.structure.proportion" value="0.15" />
+    <property name="options.lastSelected" value="reference.settingsdialog.project.gradle" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
     <property name="FullScreen" value="false" />
-    <property name="restartRequiresConfirmation" value="true" />
-    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="0037b8bddcd141c5" />
-    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="testoldandroid" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="04997cf6" />
+    <property name="LayoutCode.rearrangeEntriesXML" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -4173,6 +4441,15 @@
       </option>
       <envs />
       <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="AppEngineRunConfiguration" factoryName="App Engine DevAppServer">
+      <module name="" />
+      <setting name="serverAddress" value="" />
+      <setting name="sdkPath" value="" />
+      <setting name="serverPort" value="" />
+      <setting name="vmArgs" value="" />
+      <setting name="warPath" value="" />
       <method />
     </configuration>
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
@@ -4463,57 +4740,37 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1440" height="830" extended-state="6" />
-    <editor active="true" />
+    <frame x="1680" y="22" width="1920" height="1058" extended-state="6" />
+    <editor active="false" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913166" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18669528" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18669528" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24089636" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" x="4" y="599" width="1398" height="235" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.57983196" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18669528" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18669528" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913166" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297568" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3280116" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-    </layout>
-    <layout-to-restore>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913166" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3280116" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917964" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="FLOATING" visible="false" weight="0.32913166" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" x="25" y="430" width="1398" height="235" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3207283" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917964" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917964" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32917964" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18669528" sideWeight="0.5" order="4" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913166" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1890625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32917964" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -4535,283 +4792,93 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java">
+    <entry file="file://$PROJECT_DIR$/DataWalk/src/edu/uml/cs/isense/datawalk_v2/DataWalk.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="16863" max-vertical-offset="20370">
-          <caret line="1253" column="128" selection-start-line="1253" selection-start-column="128" selection-end-line="1253" selection-end-column="128" />
-          <folding>
-            <element signature="e#8521#13563#0" expanded="true" />
-            <element signature="e#13558#13559#0" expanded="true" />
-            <element signature="e#42084#42120#0" expanded="true" />
-            <element signature="e#42255#42291#0" expanded="true" />
-            <element signature="e#42361#42397#0" expanded="true" />
-            <element signature="e#42682#42718#0" expanded="true" />
-            <element signature="e#42788#42824#0" expanded="true" />
-            <element signature="e#42906#42942#0" expanded="true" />
-            <element signature="e#43228#43268#0" expanded="true" />
-            <element signature="e#43472#43508#0" expanded="true" />
-            <element signature="e#43590#43626#0" expanded="true" />
-            <element signature="e#43708#43744#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-v14/main.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="349" max-vertical-offset="1035">
-          <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="19920">
+          <caret line="73" column="24" selection-start-line="73" selection-start-column="24" selection-end-line="73" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land/main.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/iSENSE Imports/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="349" max-vertical-offset="1020">
-          <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="675">
+          <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land-v14/main.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="735" max-vertical-offset="1035">
-          <caret line="49" column="4" selection-start-line="49" selection-start-column="4" selection-end-line="49" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout/main.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1050">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="643">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.17706576" vertical-offset="0" max-vertical-offset="593">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataWalk/src/edu/uml/cs/isense/datawalk_v2/DataWalk.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="18960">
+          <caret line="73" column="24" selection-start-line="73" selection-start-column="24" selection-end-line="73" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/iSENSE Imports/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.097087376" vertical-offset="0" max-vertical-offset="675">
+          <caret line="4" column="23" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/iSENSE Imports/src/edu/uml/cs/isense/comm/API.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="109" max-vertical-offset="13245">
+          <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+          <folding>
+            <element signature="e#2038#2039#0" expanded="false" />
+            <element signature="e#2064#2065#0" expanded="false" />
+            <element signature="e#3478#3479#0" expanded="false" />
+            <element signature="e#3503#3504#0" expanded="false" />
+            <element signature="e#23937#23938#0" expanded="false" />
+            <element signature="e#23959#23960#0" expanded="false" />
+            <element signature="e#24150#24151#0" expanded="false" />
+            <element signature="e#24173#24174#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="885" max-vertical-offset="1020">
-          <caret line="59" column="37" selection-start-line="59" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="675">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/src/edu/uml/cs/isense/comm/API.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="7605" max-vertical-offset="13245">
-          <caret line="527" column="7" selection-start-line="527" selection-start-column="7" selection-end-line="527" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="345" max-vertical-offset="600">
-          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="225">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="525">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="225">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/src/edu/uml/cs/isense/credentials/CredentialManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5445">
-          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/src/edu/uml/cs/isense/comm/API.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2950" max-vertical-offset="12810">
-          <caret line="257" column="28" selection-start-line="257" selection-start-column="28" selection-end-line="257" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/src/edu/uml/cs/isense/credentials/CredentialManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="5205">
-          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="225">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/.classpath">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="451">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="600">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/src/edu/uml/cs/isense/comm/API.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="5.4054055" vertical-offset="0" max-vertical-offset="13245">
-          <caret line="164" column="30" selection-start-line="164" selection-start-column="30" selection-end-line="164" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="885" max-vertical-offset="1020">
-          <caret line="59" column="37" selection-start-line="59" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout/main.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1035">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-v14/main.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="349" max-vertical-offset="1035">
-          <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land/main.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="349" max-vertical-offset="1020">
-          <caret line="34" column="45" selection-start-line="34" selection-start-column="45" selection-end-line="34" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/res/layout-land-v14/main.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="735" max-vertical-offset="1035">
-          <caret line="49" column="4" selection-start-line="49" selection-start-column="4" selection-end-line="49" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Canobie_Physics_v2/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3319672" vertical-offset="483" max-vertical-offset="2160">
-          <caret line="43" column="32" selection-start-line="43" selection-start-column="27" selection-end-line="43" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39344263" vertical-offset="378" max-vertical-offset="2475">
-          <caret line="38" column="42" selection-start-line="38" selection-start-column="42" selection-end-line="38" selection-end-column="42" />
-          <folding>
-            <element signature="e#1678#1698#0" expanded="true" />
-            <element signature="e#1850#1875#0" expanded="true" />
-            <element signature="e#2299#2320#0" expanded="true" />
-            <element signature="e#2541#2556#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Pictures/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.79571986" vertical-offset="1916" max-vertical-offset="2430">
-          <caret line="155" column="0" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/iSENSE Imports/src/edu/uml/cs/isense/dfm/DataFieldManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.947471" vertical-offset="0" max-vertical-offset="16905">
-          <caret line="117" column="16" selection-start-line="117" selection-start-column="16" selection-end-line="117" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.32231405" vertical-offset="0" max-vertical-offset="1020">
+          <caret line="13" column="11" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Car_Ramp_Physics/src/edu/uml/cs/isense/carphysicsv2/CarRampPhysicsV2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9634146" vertical-offset="5343" max-vertical-offset="21195">
-          <caret line="460" column="17" selection-start-line="457" selection-start-column="16" selection-end-line="460" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.50970876" vertical-offset="0" max-vertical-offset="21945">
+          <caret line="79" column="13" selection-start-line="79" selection-start-column="13" selection-end-line="79" selection-end-column="13" />
           <folding>
-            <element signature="e#8521#13563#0" expanded="true" />
-            <element signature="e#13558#13559#0" expanded="true" />
-            <element signature="e#42084#42120#0" expanded="true" />
-            <element signature="e#42255#42291#0" expanded="true" />
-            <element signature="e#42361#42397#0" expanded="true" />
-            <element signature="e#42682#42718#0" expanded="true" />
-            <element signature="e#42788#42824#0" expanded="true" />
-            <element signature="e#42906#42942#0" expanded="true" />
-            <element signature="e#43228#43268#0" expanded="true" />
-            <element signature="e#43472#43508#0" expanded="true" />
-            <element signature="e#43590#43626#0" expanded="true" />
-            <element signature="e#43708#43744#0" expanded="true" />
+            <element signature="e#0#44298#0" expanded="true" />
+            <element signature="e#12123#12124#0" expanded="true" />
+            <element signature="e#12176#12177#0" expanded="true" />
+            <element signature="e#12395#12396#0" expanded="true" />
+            <element signature="e#12455#12456#0" expanded="true" />
+            <element signature="e#14179#14180#0" expanded="true" />
+            <element signature="e#14219#14220#0" expanded="true" />
+            <element signature="e#14539#14540#0" expanded="true" />
+            <element signature="e#14585#14586#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -4868,7 +4935,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>Canobie_Physics_v2</last-edited>
+          <last-edited>iSENSE Imports</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

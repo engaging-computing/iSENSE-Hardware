@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string-array name="field_type_array">
@@ -38,7 +38,7 @@
     <color name="blue_light">#A1D3FF</color>
     <color name="blue_lighter">#C7E5FF</color>
     <color name="navy_light">#608CBF</color>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android.OpenCV-2.4.5-android-sdk.sdk/java/unspecified/res/values/values.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android.OpenCV-2.4.5-android-sdk.sdk/java/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <declare-styleable name="CameraBridgeViewBase">
@@ -49,7 +49,7 @@
             <enum name="front" value="1" />
         </attr>
     </declare-styleable>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="accel_total">Accel-Magnitude</string>
@@ -59,11 +59,11 @@
     <string name="add_key">Add Contributor Key</string>
     <string name="altitude">Altitude</string>
     <string name="always_prompt_first_name">Always prompt for first name and last initial</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/PendulumTracker/res/values/strings.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/PendulumTracker/res/values/strings.xml -->
     <eat-comment />
 
     <string name="app_name">iSENSE Pendulum Tracker</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="back">Back</string>
@@ -89,11 +89,11 @@
     <string name="delete_selected">Delete Selected</string>
     <string name="deselect_all">Deselect All</string>
     <string name="digits_restriction">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/PendulumTracker/res/values/strings.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/PendulumTracker/res/values/strings.xml -->
     <eat-comment />
 
     <string name="display_name">iS Pendulum Tracker</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="enter_name_prompt">Please Enter Your Name</string>
@@ -160,11 +160,11 @@
     <string name="prompt">Select which data sets you would like to upload to iSENSE.
 	    \n\t• Tap data sets to enable/disable them for upload.
 	    \n\t• Long press a data set to reconfigure it.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/PendulumTracker/res/values/strings.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/PendulumTracker/res/values/strings.xml -->
     <eat-comment />
 
     <string name="promptForName">Enter name for session:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="qr_prompt">Your device does not have the proper Barcode Scanner application installed
@@ -182,14 +182,14 @@
     <string name="select_all">Select All</string>
     <string name="select_proj">Select Project</string>
     <string name="send">Send</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/PendulumTracker/res/values/strings.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/PendulumTracker/res/values/strings.xml -->
     <eat-comment />
 
     <string name="startCollection">Start data collection</string>
     <string name="startHere">Start here!</string>
     <string name="startInstructions">(1) center pendulum in box\n(2) pull pendulum to edge of screen</string>
     <string name="stopCollection">Stop data collection</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="sure_delete_selected">Are you sure you would like to delete all selected data sets? 

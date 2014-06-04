@@ -2,10 +2,10 @@
 <merger>
 
     <dataSet config="main" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/assets" />
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/assets" />
     </dataSet>
     <dataSet config="release" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/build-types/release/assets" />
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/build-types/release/assets" />
     </dataSet>
 
 </merger>

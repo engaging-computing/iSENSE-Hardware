@@ -111,6 +111,8 @@ typedef struct _RotationDataSaver{
 @property (nonatomic) BOOL mag;
 @property (nonatomic) BOOL  setupDone;
 
+@property (nonatomic) BOOL  menuShown;
+
 @property (nonatomic) BOOL saveModeEnabled;
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture;

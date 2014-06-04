@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values-v14/values.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values-v14/values.xml -->
     <eat-comment />
 
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
@@ -31,13 +31,13 @@
         <item name="android:popupMenuStyle">@style/AppTheme.PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/AppTheme.DropDownListView</item>
     </style>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Data_Collector/res/values-v14/styles.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/Data_Collector/res/values-v14/styles.xml -->
     <eat-comment />
 
     <style name="AppThemeHideActionBarBackArrow" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:homeAsUpIndicator">@null</item>
     </style>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values-v14/values.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values-v14/values.xml -->
     <eat-comment />
 
     <style name="CustomProgressDialogStyle">
@@ -57,7 +57,7 @@
         <item name="android:alertDialogStyle">@style/CustomProgressDialogStyle</item>
         <item name="android:textColorPrimary">#000000</item>
     </style>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Data_Collector/res/values-v14/themes.xml -->
+    <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/Data_Collector/res/values-v14/themes.xml -->
     <eat-comment />
 
     <style name="theme_dialog_white" parent="@android:style/Theme.Holo.Light.Dialog">
