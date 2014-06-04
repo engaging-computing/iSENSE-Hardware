@@ -11,6 +11,10 @@
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="19"/>
 
     <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/display_name">
+
+        <service android:enabled="true" android:name="edu.uml.cs.isense.datawalk_v2.Datawalk_Service"/>
+
+
         <activity android:label="Summary" android:name="edu.uml.cs.isense.queue.QueueSummary" android:theme="@style/AppThemeDialog" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingRegistered"/>
         <activity android:label="Select Fields" android:name="edu.uml.cs.isense.dfm.FieldMatching" android:theme="@style/AppThemeDialog" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingRegistered"/>
         <activity android:configChanges="keyboardHidden|screenSize" android:label="@string/display_name" android:name="edu.uml.cs.isense.datawalk_v2.DataWalk" android:theme="@style/AppTheme">
