@@ -1461,11 +1461,11 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
                 </string>
                 <string name="Y" >Y
                 </string>
+                <string name="gravity" >Include Gravity:   
+                </string>
                 <string name="recordSettings" >Recording Fields
                 </string>
                 <string name="reset" >Reset Settings
-                </string>
-                <string name="gravity" >Include Gravity:   
                 </string>
                 <string name="placeDevice" >Place device on its back with the top edge facing the direction of displacement.
                 </string>

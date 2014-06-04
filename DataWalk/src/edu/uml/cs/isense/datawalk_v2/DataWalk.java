@@ -1,15 +1,5 @@
 package edu.uml.cs.isense.datawalk_v2;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -40,11 +30,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.text.DecimalFormat;
+import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.ClassroomMode;
@@ -56,10 +54,8 @@ import edu.uml.cs.isense.datawalk_v2.dialogs.NoGps;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.proj.Setup;
-import edu.uml.cs.isense.queue.QDataSet;
 import edu.uml.cs.isense.queue.QueueLayout;
 import edu.uml.cs.isense.queue.UploadQueue;
-import edu.uml.cs.isense.supplements.OrientationManager;
 import edu.uml.cs.isense.waffle.Waffle;
 
 /**
@@ -164,6 +160,8 @@ public class DataWalk extends Activity implements LocationListener,
 	boolean bFirstPoint = true;
 	float totalDistance = 0;
 
+    Intent service;
+
 	@SuppressLint("NewApi")
 	/**
 	 * Called when the application is created for the first time.
@@ -175,6 +173,9 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Save current context
 		mContext = this;
+
+        //initialize intent for service
+        service = new Intent(mContext, Datawalk_Service.class);
 
 		// Initialize action bar customization for API >= 11
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
@@ -255,105 +256,111 @@ public class DataWalk extends Activity implements LocationListener,
 				mMediaPlayer.setLooping(false);
 				mMediaPlayer.start();
 
-				// Handles when you press the button to STOP recording
-				if (running) {
-					// Swap the layouts below the recording button
-					nameAndLoginRL.setVisibility(View.VISIBLE);
-					recordingExtrasLL.setVisibility(View.GONE);
+                if (Datawalk_Service.running) {
+                    stopService(service);
+                } else {
+                    startService(service);
+                }
 
-					// No longer recording so set menu flag to enabled
-					running = false;
-					useMenu = true;
-					if (android.os.Build.VERSION.SDK_INT >= 11)
-						invalidateOptionsMenu();
-
-					// Enabled the Recording Interval Button
-					rcrdIntervalB.setEnabled(true);
-
-					// Reset the text on the main button
-					startStopB.setText(getString(R.string.start_prompt));
-
-					// Cancel the recording timer
-					if (recordTimer != null)
-						recordTimer.cancel();
-
-					// Create the name of the session using the entered name
-					dataSetName = firstName + " " + lastInitial;
-
-					// Get user's project #, or the default if there is none
-					// saved
-					SharedPreferences prefs = getSharedPreferences(
-							PROJ_PREFS_KEY, Context.MODE_PRIVATE);
-					if (useDev)
-						projectID = prefs.getString(PROJ_ID_DEV,
-								DEFAULT_PROJECT_DEV);
-					else
-						projectID = prefs.getString(PROJ_ID_PRODUCTION,
-								DEFAULT_PROJECT);
-
-					// Save the newest DataSet to the Upload Queue if it has at
-					// least 1 point
-					
-					String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-
-					QDataSet ds = new QDataSet(dataSetName, "Data Points: "
-							+ dataPointCount + " " + currentDateTimeString, QDataSet.Type.DATA, dataSet
-							.toString(), null, projectID, null);
-					ds.setRequestDataLabelInOrder(true);
-					if (dataPointCount > 0) {
-						uq.addDataSetToQueue(ds);
-						// Tell the user recording has stopped
-						w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
-								Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-
-					} else {
-						w.make("Data not saved because no points were recorded.",
-								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-
-					}
-
-					// Re-enable rotation in the main activity
-					OrientationManager.enableRotation(DataWalk.this);
-
-					// Handles when you press the button to START recording
-				} else {
-					// Swap the layouts below the recording button
-					nameAndLoginRL.setVisibility(View.GONE);
-					recordingExtrasLL.setVisibility(View.VISIBLE);
-
-					// Recording so set menu flag to disabled
-					useMenu = false;
-					if (android.os.Build.VERSION.SDK_INT >= 11)
-						invalidateOptionsMenu();
-
-					// Disable the Recording Interval Button
-					rcrdIntervalB.setEnabled(false);
-
-					running = true;
-
-					// Reset the main UI text boxes
-					nameB.setText(firstName + " " + lastInitial);
-					pointsUploadedTV.setText("Points Recorded: " + "0");
-					elapsedTimeTV.setText("Time Elapsed:" + " 0 seconds");
-					// Reset the number of data points and the current dataSet
-					// ID
-					dataPointCount = 0;
-					dataSetID = -1;
-					// TODO CHECK IF THIS KEEPS SCREEN ON OR REMOVE THIS WHEN
-					// THE APP IS SERVICE BASED
-					// Prevent the screen from turning off and prevent rotation
-//					getWindow().addFlags(
-//							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-					OrientationManager.disableRotation(DataWalk.this);
-
-//					// Record and update the UI as necessary
-					runRecordingTimer();
-
-					// Change the text on the main button
-					startStopB.setText(getString(R.string.stop_prompt));
-
-				}
-
+//				// Handles when you press the button to STOP recording
+//				if (running) {
+//					// Swap the layouts below the recording button
+//					nameAndLoginRL.setVisibility(View.VISIBLE);
+//					recordingExtrasLL.setVisibility(View.GONE);
+//
+//					// No longer recording so set menu flag to enabled
+//					running = false;
+//					useMenu = true;
+//					if (android.os.Build.VERSION.SDK_INT >= 11)
+//						invalidateOptionsMenu();
+//
+//					// Enabled the Recording Interval Button
+//					rcrdIntervalB.setEnabled(true);
+//
+//					// Reset the text on the main button
+//					startStopB.setText(getString(R.string.start_prompt));
+//
+//					// Cancel the recording timer
+//					if (recordTimer != null)
+//						recordTimer.cancel();
+//
+//					// Create the name of the session using the entered name
+//					dataSetName = firstName + " " + lastInitial;
+//
+//					// Get user's project #, or the default if there is none
+//					// saved
+//					SharedPreferences prefs = getSharedPreferences(
+//							PROJ_PREFS_KEY, Context.MODE_PRIVATE);
+//					if (useDev)
+//						projectID = prefs.getString(PROJ_ID_DEV,
+//								DEFAULT_PROJECT_DEV);
+//					else
+//						projectID = prefs.getString(PROJ_ID_PRODUCTION,
+//								DEFAULT_PROJECT);
+//
+//					// Save the newest DataSet to the Upload Queue if it has at
+//					// least 1 point
+//
+//					String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+//
+//					QDataSet ds = new QDataSet(dataSetName, "Data Points: "
+//							+ dataPointCount + " " + currentDateTimeString, QDataSet.Type.DATA, dataSet
+//							.toString(), null, projectID, null);
+//					ds.setRequestDataLabelInOrder(true);
+//					if (dataPointCount > 0) {
+//						uq.addDataSetToQueue(ds);
+//						// Tell the user recording has stopped
+//						w.make("Finished recording data! Click on Upload to publish data to iSENSE.",
+//								Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+//
+//					} else {
+//						w.make("Data not saved because no points were recorded.",
+//								Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+//
+//					}
+//
+//					// Re-enable rotation in the main activity
+//					OrientationManager.enableRotation(DataWalk.this);
+//
+//					// Handles when you press the button to START recording
+//				} else {
+//					// Swap the layouts below the recording button
+//					nameAndLoginRL.setVisibility(View.GONE);
+//					recordingExtrasLL.setVisibility(View.VISIBLE);
+//
+//					// Recording so set menu flag to disabled
+//					useMenu = false;
+//					if (android.os.Build.VERSION.SDK_INT >= 11)
+//						invalidateOptionsMenu();
+//
+//					// Disable the Recording Interval Button
+//					rcrdIntervalB.setEnabled(false);
+//
+//					running = true;
+//
+//					// Reset the main UI text boxes
+//					nameB.setText(firstName + " " + lastInitial);
+//					pointsUploadedTV.setText("Points Recorded: " + "0");
+//					elapsedTimeTV.setText("Time Elapsed:" + " 0 seconds");
+//					// Reset the number of data points and the current dataSet
+//					// ID
+//					dataPointCount = 0;
+//					dataSetID = -1;
+//					// TODO CHECK IF THIS KEEPS SCREEN ON OR REMOVE THIS WHEN
+//					// THE APP IS SERVICE BASED
+//					// Prevent the screen from turning off and prevent rotation
+////					getWindow().addFlags(
+////							WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//					OrientationManager.disableRotation(DataWalk.this);
+//
+////					// Record and update the UI as necessary
+//					runRecordingTimer();
+//
+//					// Change the text on the main button
+//					startStopB.setText(getString(R.string.stop_prompt));
+//
+//				}
+//
 				return running;
 
 			}
@@ -727,7 +734,7 @@ public class DataWalk extends Activity implements LocationListener,
 		mLocationManager.addGpsStatusListener(this);
 
 		// Check if GPS is enabled. If not, direct user to their settings.
-		if (mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+		if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 			mLocationManager.requestLocationUpdates(
 					mLocationManager.getBestProvider(criteria, true), 0, 0,
 					DataWalk.this);
