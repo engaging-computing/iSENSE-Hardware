@@ -64,24 +64,12 @@
             android:label="Help"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".experiments.BrowseExperiments"
-            android:label="@string/app_name_experiments"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".dialogs.NoGps"
             android:label="No GPS Found"
             android:theme="@style/AppThemeDialog" />
         <activity
-            android:name=".dialogs.NoConnectivity"
-            android:label="No Connectivity"
-            android:theme="@style/AppThemeDialog" />
-        <activity
             android:name=".dialogs.ReadyUpload"
             android:label="Ready To Upload"
-            android:theme="@style/AppThemeDialog" />
-        <activity
-            android:name=".experiments.ExperimentDialog"
-            android:label="Experiment ID"
             android:theme="@style/AppThemeDialog" />
         <activity
             android:name=".dialogs.NoQR"
@@ -146,14 +134,6 @@
             android:label="Select Fields"
             android:theme="@style/AppThemeDialog" />
         <activity
-            android:name="edu.uml.cs.isense.credentials.Login"
-            android:label="@string/login_prompt"
-            android:theme="@style/AppThemeDialog" />
-        <activity
-            android:name="edu.uml.cs.isense.credentials.LoginError"
-            android:label="@string/login_error_prompt"
-            android:theme="@style/AppThemeDialog" />
-        <activity
             android:name="edu.uml.cs.isense.proj.ProjectCreate"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Create New Project"
@@ -172,9 +152,6 @@
             android:name="edu.uml.cs.isense.credentials.CredentialManagerKey"
             android:label="Add Contributor Key"
             android:theme="@style/AppThemeDialog" />
-         
-        
-        
     </application>
 
 </manifest>

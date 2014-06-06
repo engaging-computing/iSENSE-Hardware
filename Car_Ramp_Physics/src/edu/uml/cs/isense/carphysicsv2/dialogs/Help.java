@@ -12,7 +12,7 @@ public class Help extends Activity {
 
 	public void onCreate(Bundle savedInstanceBundle) {
 		super.onCreate(savedInstanceBundle);
-		setContentView(R.layout.about);
+		setContentView(R.layout.help);
 
 		okButton = (Button) findViewById(R.id.okButton);
 
