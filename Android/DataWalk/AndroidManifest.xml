@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.datawalk_v2"
-    android:versionCode="20"
-    android:versionName="2.4.0" >
+    android:versionCode="21"
+    android:versionName="2.4.1" >
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,6 +21,10 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/display_name" >
+
+        <service android:enabled="true" android:name=".Datawalk_Service" />
+
+
         <activity
             android:name="edu.uml.cs.isense.queue.QueueSummary"
             android:label="Summary"
@@ -119,16 +123,6 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.EnterName"
             android:label="@string/enter_name_prompt"
-            android:theme="@style/AppThemeDialog"
-            tools:ignore="MissingRegistered" />
-        <activity
-            android:name="edu.uml.cs.isense.credentials.Login"
-            android:label="@string/login_prompt"
-            android:theme="@style/AppThemeDialog"
-            tools:ignore="MissingRegistered" />
-        <activity
-            android:name="edu.uml.cs.isense.credentials.LoginError"
-            android:label="@string/login_error_prompt"
             android:theme="@style/AppThemeDialog"
             tools:ignore="MissingRegistered" />
         <activity
