@@ -10,7 +10,10 @@
 		7605095F19001315006A73BB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7605095E19001315006A73BB /* Security.framework */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
 		76163D98192E59E800FAABB2 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 76163D97192E59E800FAABB2 /* beep.wav */; };
+		7621BA771940D9410043D0F3 /* Menu_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7621BA761940D9410043D0F3 /* Menu_iPhone.xib */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
+		762BBED51942155A00352B4C /* checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 762BBED31942155A00352B4C /* checked.png */; };
+		762BBED61942155A00352B4C /* unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 762BBED41942155A00352B4C /* unchecked.png */; };
 		76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */; };
 		765099CA178DF0CE00425A27 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099C9178DF0CE00425A27 /* CoreLocation.framework */; };
 		765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099CB178DF0D500425A27 /* CoreMotion.framework */; };
@@ -86,7 +89,10 @@
 		7605095E19001315006A73BB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		76163D97192E59E800FAABB2 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
+		7621BA761940D9410043D0F3 /* Menu_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Menu_iPhone.xib; sourceTree = "<group>"; };
 		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
+		762BBED31942155A00352B4C /* checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checked.png; sourceTree = "<group>"; };
+		762BBED41942155A00352B4C /* unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unchecked.png; sourceTree = "<group>"; };
 		76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		765099C9178DF0CE00425A27 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -254,6 +260,7 @@
 		76E91F8E1794789F001749FC /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				7621BA761940D9410043D0F3 /* Menu_iPhone.xib */,
 				76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */,
 				76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */,
 				7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */,
@@ -300,6 +307,8 @@
 		76E91F93179478FC001749FC /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				762BBED31942155A00352B4C /* checked.png */,
+				762BBED41942155A00352B4C /* unchecked.png */,
 				76DF6A8A17E4FF8D00CF5DDD /* AppLogos */,
 			);
 			name = Images;
@@ -407,12 +416,15 @@
 				760FABBC1790566C00951F97 /* Strings.strings in Resources */,
 				76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */,
 				76163D98192E59E800FAABB2 /* beep.wav in Resources */,
+				7621BA771940D9410043D0F3 /* Menu_iPhone.xib in Resources */,
+				762BBED61942155A00352B4C /* unchecked.png in Resources */,
 				7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */,
 				76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */,
 				76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */,
 				76DF6A8317E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png in Resources */,
 				767E4AF119019C5700417FEC /* Images.xcassets in Resources */,
 				76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */,
+				762BBED51942155A00352B4C /* checked.png in Resources */,
 				76DF6A8717E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png in Resources */,
 				76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */,
 			);

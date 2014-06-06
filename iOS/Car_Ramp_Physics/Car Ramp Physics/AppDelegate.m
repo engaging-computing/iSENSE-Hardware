@@ -22,7 +22,7 @@
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
     } else {
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
-    }    
+    }
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     self.viewController.navigationItem.rightBarButtonItem = self.viewController.menuButton;
     navigation.navigationBar.barStyle = UIBarStyleBlackOpaque;

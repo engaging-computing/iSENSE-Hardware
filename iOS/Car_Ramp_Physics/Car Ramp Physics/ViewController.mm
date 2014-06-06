@@ -296,27 +296,243 @@
     
 }
 
+
 - (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex {
     //NSLog(@"Index: %@", buttonIndex);
     if ([popup.title isEqualToString:@"Recording Settings"]) {
         if ([[popup buttonTitleAtIndex:buttonIndex] isEqualToString:@"Recording Length"]) {
             NSLog(@"Length");
-            UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-            [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-            lengthField = [talert textFieldAtIndex:0];
-            lengthField.inputView = pickerLength;
-            [self setPickerDefault:pickerLength];
-            [talert show];
+            DLAVAlertView *recordLengthAlert = [[DLAVAlertView alloc] initWithTitle:@"Change Recording Length" message:nil delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+            UIView *radioView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, recordLengthAlert.frame.size.width, recordLengthAlert.frame.size.height*2)];
+            NSMutableArray *group = [[NSMutableArray alloc] init];
+            CGRect frame = radioView.frame;
+            int framex =0;
+            framex= frame.size.width/1;
+            int framey = 0;
+            framey =frame.size.height/(6/(1));
+            int rem =6%1;
+            if(rem !=0){
+                framey =frame.size.height/((6/1)+1);
+            }
+            int k = 0;
+            for(int i=0;i<(6/1);i++){
+                for(int j=0;j<1;j++){
+                    
+                    int x = framex*0.25;
+                    int y = framey*0.25;
+                    RadioButton *btTemp = [[RadioButton alloc]initWithFrame:CGRectMake(framex*j+x, framey*i+y, framex/2+x, framey/2+y)];
+                    btTemp.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                    [btTemp setImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+                    [btTemp setImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateSelected];
+                    [btTemp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                    btTemp.titleLabel.font =[UIFont systemFontOfSize:14.f];
+                    [btTemp setTitle:[lengths objectAtIndex:k] forState:UIControlStateNormal];
+                    btTemp.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+                    [group addObject:btTemp];
+                    [radioView addSubview:btTemp];
+                    k++;
+                    
+                }
+            }
+            
+            for(int j=0;j<rem;j++){
+                
+                int x = framex*0.25;
+                int y = framey*0.25;
+                RadioButton *btTemp = [[RadioButton alloc]initWithFrame:CGRectMake(framex*j+x, framey*(6/1), framex/2+x, framey/2+y)];
+                btTemp.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                [btTemp setImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+                [btTemp setImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateSelected];
+                [btTemp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                btTemp.titleLabel.font =[UIFont systemFontOfSize:14.f];
+                [btTemp setTitle:[lengths objectAtIndex:k] forState:UIControlStateNormal];
+                btTemp.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+                [group addObject:btTemp];
+                [radioView addSubview:btTemp];
+                k++;
+                
+                
+            }
+            
+            RadioButton *button1 = [group objectAtIndex:0];
+            button1.groupButtons = group;
+            switch (recordLength) {
+                case 1:
+                    [button1.groupButtons[0] setSelected:YES];
+                    break;
+                case 2:
+                    [button1.groupButtons[1] setSelected:YES];
+                    break;
+                case 5:
+                    [button1.groupButtons[2] setSelected:YES];
+                    break;
+                case 10:
+                    [button1.groupButtons[3] setSelected:YES];
+                    break;
+                case 30:
+                    [button1.groupButtons[4] setSelected:YES];
+                    break;
+                case 60:
+                    [button1.groupButtons[5] setSelected:YES];
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            
+            [recordLengthAlert setContentView:radioView];
+            
+            [recordLengthAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+                int index ;
+                for (int i = 0 ; i < group.count ; i++) {
+                    if ([[group objectAtIndex:i] isSelected]) {
+                        index = i;
+                    }
+                }
+                
+                switch (index) {
+                    case 0:
+                        recordLength = countdown = 1;
+                        break;
+                    case 1:
+                        recordLength = countdown = 2;
+                        break;
+                    case 2:
+                        recordLength = countdown = 5;
+                        break;
+                    case 3:
+                        recordLength = countdown = 10;
+                        break;
+                    case 4:
+                        recordLength = countdown = 30;
+                        break;
+                    case 5:
+                        recordLength = countdown = 60;
+                        break;
+                }
+                
+                [self.view makeWaffle:[NSString stringWithFormat:@"Recording length set to %d seconds.", recordLength] duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
+                
+            }];
             
         } else if ([[popup buttonTitleAtIndex:buttonIndex] isEqualToString:@"Recording Rate"]) {
             
             NSLog(@"Rate");
-            UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording rate" message:@"Enter rate in Hz." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-            [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-            rateField = [talert textFieldAtIndex:0];
-            rateField.inputView = pickerRate;
-            [self setPickerDefault: pickerRate];
-            [talert show];
+            DLAVAlertView *recordLengthAlert = [[DLAVAlertView alloc] initWithTitle:@"Change Recording Rate" message:nil delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+            UIView *radioView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, recordLengthAlert.frame.size.width, recordLengthAlert.frame.size.height*2)];
+            NSMutableArray *group = [[NSMutableArray alloc] init];
+            CGRect frame = radioView.frame;
+            int framex =0;
+            framex= frame.size.width/1;
+            int framey = 0;
+            framey =frame.size.height/(6/(1));
+            int rem =6%1;
+            if(rem !=0){
+                framey =frame.size.height/((6/1)+1);
+            }
+            int k = 0;
+            for(int i=0;i<(6/1);i++){
+                for(int j=0;j<1;j++){
+                    
+                    int x = framex*0.25;
+                    int y = framey*0.25;
+                    RadioButton *btTemp = [[RadioButton alloc]initWithFrame:CGRectMake(framex*j+x, framey*i+y, framex/2+x, framey/2+y)];
+                    btTemp.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                    [btTemp setImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+                    [btTemp setImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateSelected];
+                    [btTemp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                    btTemp.titleLabel.font =[UIFont systemFontOfSize:14.f];
+                    [btTemp setTitle:[rates objectAtIndex:k] forState:UIControlStateNormal];
+                    btTemp.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+                    [group addObject:btTemp];
+                    [radioView addSubview:btTemp];
+                    k++;
+                    
+                }
+            }
+            
+            for(int j=0;j<rem;j++){
+                
+                int x = framex*0.25;
+                int y = framey*0.25;
+                RadioButton *btTemp = [[RadioButton alloc]initWithFrame:CGRectMake(framex*j+x, framey*(6/1), framex/2+x, framey/2+y)];
+                btTemp.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                [btTemp setImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+                [btTemp setImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateSelected];
+                [btTemp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                btTemp.titleLabel.font =[UIFont systemFontOfSize:14.f];
+                [btTemp setTitle:[rates objectAtIndex:k] forState:UIControlStateNormal];
+                btTemp.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+                [group addObject:btTemp];
+                [radioView addSubview:btTemp];
+                k++;
+                
+                
+            }
+            
+            RadioButton *button1 = [group objectAtIndex:0];
+            button1.groupButtons = group;
+            switch (recordingRate) {
+                case 1:
+                    [button1.groupButtons[0] setSelected:YES];
+                    break;
+                case 5:
+                    [button1.groupButtons[1] setSelected:YES];
+                    break;
+                case 10:
+                    [button1.groupButtons[2] setSelected:YES];
+                    break;
+                case 15:
+                    [button1.groupButtons[3] setSelected:YES];
+                    break;
+                case 25:
+                    [button1.groupButtons[4] setSelected:YES];
+                    break;
+                case 30:
+                    [button1.groupButtons[5] setSelected:YES];
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            
+            [recordLengthAlert setContentView:radioView];
+            
+            [recordLengthAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+                int index ;
+                for (int i = 0 ; i < group.count ; i++) {
+                    if ([[group objectAtIndex:i] isSelected]) {
+                        index = i;
+                    }
+                }
+                
+                switch (index) {
+                    case 0:
+                        recordingRate = 1;
+                        break;
+                    case 1:
+                        recordingRate = 5;
+                        break;
+                    case 2:
+                        recordingRate = 10;
+                        break;
+                    case 3:
+                        recordingRate = 15;
+                        break;
+                    case 4:
+                        recordingRate = 25;
+                        break;
+                    case 5:
+                        recordingRate = 30;
+                        break;
+                }
+                
+                [self.view makeWaffle:[NSString stringWithFormat:@"Recording rate set to %d Hz.", recordingRate] duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
+                
+            }];
+
             
         }
         
@@ -1111,14 +1327,8 @@
     NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
     [self setUpMenu:isenseBundle];
     
-    if (!menuShown) {
-        [menu showInViewController:self center:CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height/2.f)];
-        menuShown = YES;
-    } else {
-        [menu dismissAnimated:YES];
-        menu = nil;
-        menuShown = NO;
-    }
+    [menu showInViewController:self center:CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height/2.f)];
+    
     
 }
 
