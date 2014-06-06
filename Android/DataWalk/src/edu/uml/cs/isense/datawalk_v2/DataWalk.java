@@ -88,7 +88,7 @@ public class DataWalk extends Activity implements LocationListener,
 	private Vibrator vibrator;
 	private MediaPlayer mMediaPlayer;
 	private API api;
-	private UploadQueue uq;
+	public static UploadQueue uq;
 	private SensorManager mSensorManager;
 	private Location loc;
 	// Rajia: Added Previous Location and fistLoc
@@ -104,7 +104,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 	private int actionBarTapCount = 0;
 	public static boolean useDev = false;
-	private String projectID = "5";
+	public static String projectID = "5";
 
 	private String loginName = "";
 	private String loginPass = "";
@@ -257,8 +257,10 @@ public class DataWalk extends Activity implements LocationListener,
 				mMediaPlayer.start();
 
                 if (Datawalk_Service.running) {
+                    setLayoutNotRecording();
                     stopService(service);
                 } else {
+                    setLayoutRecording();
                     startService(service);
                 }
 
@@ -473,6 +475,52 @@ public class DataWalk extends Activity implements LocationListener,
 		});
 
 	}
+
+
+    /**
+     * Set layout up for not recording
+     */
+    void setLayoutNotRecording() {
+        // Swap the layouts below the recording button
+        nameAndLoginRL.setVisibility(View.VISIBLE);
+        recordingExtrasLL.setVisibility(View.GONE);
+
+        // No longer recording so set menu flag to enabled
+        useMenu = true;
+        if (android.os.Build.VERSION.SDK_INT >= 11)
+            invalidateOptionsMenu();
+
+        // Enabled the Recording Interval Button
+        rcrdIntervalB.setEnabled(true);
+
+        // Reset the text on the main button
+        startStopB.setText(getString(R.string.start_prompt));
+    }
+
+    /**
+     * Set layout up for recording
+     */
+    void setLayoutRecording() {
+        //Swap the layouts below the recording button
+        nameAndLoginRL.setVisibility(View.GONE);
+        recordingExtrasLL.setVisibility(View.VISIBLE);
+
+        // Recording so set menu flag to disabled
+        useMenu = false;
+        if (android.os.Build.VERSION.SDK_INT >= 11)
+            invalidateOptionsMenu();
+
+        // Disable the Recording Interval Button
+        rcrdIntervalB.setEnabled(false);
+
+        // Change the text on the main button
+		startStopB.setText(getString(R.string.stop_prompt));
+
+        // Reset the main UI text boxes
+        nameB.setText(firstName + " " + lastInitial);
+        pointsUploadedTV.setText("Points Recorded: " + "0");
+        elapsedTimeTV.setText("Time Elapsed:" + " 0 seconds");
+    }
 
 	/**
 	 * Is called every time this activity is paused. For example, whenever a new
