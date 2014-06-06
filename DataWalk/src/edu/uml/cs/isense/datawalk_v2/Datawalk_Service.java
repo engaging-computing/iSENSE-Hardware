@@ -3,7 +3,9 @@ package edu.uml.cs.isense.datawalk_v2;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -16,12 +18,10 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.text.DateFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.uml.cs.isense.queue.QDataSet;
-import edu.uml.cs.isense.waffle.Waffle;
 
 
 public class Datawalk_Service extends Service {
@@ -31,7 +31,8 @@ public class Datawalk_Service extends Service {
 
     private SensorManager mSensorManager;
     private LocationManager mLocationManager;
-    public MyLocationListener listener;
+    private MyLocationListener locationListener;
+    private MySensorListener sensorListener;
 
 
     private Location loc;
@@ -83,16 +84,15 @@ public class Datawalk_Service extends Service {
         Log.e("oncreate", "");
         running = true;
 
-        // GPS
+        // initialize GPS and Sensor managers
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
 
         initLocationManager();
 
-        //waitingforGPS done in Datawalk
+        //TODO callback to update ui with location data instead of having two location managers (one here and one in DataWalk.java)
 //        waitingForGPS();
-
-        // Sensors
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
 	}
 
@@ -117,59 +117,60 @@ public class Datawalk_Service extends Service {
 
 
     @Override
-    public boolean stopService(Intent name) {
-        // Cancel the recording timer
-        if (recordTimer != null)
-            recordTimer.cancel();
-
-        // Create the name of the session using the entered name
-        dataSetName = "Testing"; //firstName + " " + lastInitial; //TODO real datasetname
-
-        // Get user's project #, or the default if there is none
-        // saved
-
-        String projectID = "10"; //TODO real project
-
-        // Save the newest DataSet to the Upload Queue if it has at
-        // least 1 point
+    public void onDestroy() {
+        Log.e("onDestroy", "");
 
 
-        QDataSet ds = new QDataSet(dataSetName,
-                "Data Points: " + dataPointCount,
-                QDataSet.Type.DATA,
-                dataSet.toString(),
-                null,
-                projectID,
-                null);
+        if (running) {
 
-        ds.setRequestDataLabelInOrder(true);
-        if (dataPointCount > 0) {
-            uq.addDataSetToQueue(ds);         // TODO pass in queue to add data to it
+            running = false;
+
+            // Cancel the recording timer
+            if (recordTimer != null)
+                recordTimer.cancel();
+
+            // Create the name of the session using the entered name
+            dataSetName = DataWalk.firstName + " " + DataWalk.lastInitial; //TODO real datasetname
+
+            // Get user's project #, or the default if there is none
+            // saved
+
+            String projectID = "10"; //TODO real project
+
+            // Save the newest DataSet to the Upload Queue if it has at
+            // least 1 point
+
+
+            QDataSet ds = new QDataSet(dataSetName,
+                    "Data Points: " + dataPointCount,
+                    QDataSet.Type.DATA,
+                    dataSet.toString(),
+                    null,
+                    DataWalk.projectID,
+                    null);
+
+            ds.setRequestDataLabelInOrder(true);
+
+            Log.e("dataset: ", ds.getData());
+
+                    if (dataPointCount > 0) {
+                        DataWalk.uq.addDataSetToQueue(ds);
+                    }
+
+            if (mLocationManager != null)
+                mLocationManager.removeUpdates(locationListener);
+
+            if (mSensorManager != null)
+                mSensorManager.unregisterListener(sensorListener);
+        } else {
 
         }
 
-
-
-        return super.stopService(name);
+        super.onDestroy();
     }
 
 
-    /**
-     *
-     */
-	@Override
-	public void onDestroy() {
 
-        Log.e("onDestroy", "");
-
-        if (mLocationManager != null)
-            mLocationManager.removeUpdates(listener);
-
-//        if (mSensorManager != null)
-//            mSensorManager.unregisterListener(listener);
-
-        super.onDestroy();
-	}
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -188,11 +189,13 @@ public class Datawalk_Service extends Service {
      * second.
      */
     void runRecordingTimer(Intent intent) {
+        //MySensorListener is an object of the class I made down below
+        sensorListener = new MySensorListener();
 
-//        // Start the sensor manager so we can get accelerometer data
-//        mSensorManager.registerListener(intent.this,
-//                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-//                SensorManager.SENSOR_DELAY_FASTEST);
+        // Start the sensor manager so we can get accelerometer data
+        mSensorManager.registerListener(sensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_FASTEST);
 
         // Prepare new containers where our recorded values will be stored
         dataSet = new JSONArray();
@@ -346,12 +349,12 @@ public class Datawalk_Service extends Service {
         Criteria criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
 
-        listener = new MyLocationListener();
+        locationListener = new MyLocationListener();
 
 
         mLocationManager.requestLocationUpdates(
                 mLocationManager.getBestProvider(criteria, true), 0, 0,
-                listener);
+                locationListener);
 
 
         // Save new GPS points in our loc variable
@@ -411,6 +414,10 @@ public class Datawalk_Service extends Service {
 //    }
 
 
+    /**
+     * You can not implement a LocationListener to a service so that is why
+     * There is a separate class here that implements a LocationListener
+     */
     public class MyLocationListener implements LocationListener
     {
 
@@ -445,6 +452,31 @@ public class Datawalk_Service extends Service {
 
         }
 
+    }
+
+    /**
+     * You can not implement a SensorEventListener to a service so that is why
+     * There is a separate class here that implements a SensorEventListener
+     */
+    public class MySensorListener implements SensorEventListener {
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                accel[0] = event.values[0];
+                accel[1] = event.values[1];
+                accel[2] = event.values[2];
+                accel[3] = (float) Math.sqrt((float) (Math.pow(accel[0], 2)
+                        + Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
+            }
+
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
     }
 
 
