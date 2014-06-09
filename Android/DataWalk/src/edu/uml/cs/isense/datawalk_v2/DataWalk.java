@@ -1021,9 +1021,10 @@ public class DataWalk extends Activity implements LocationListener,
 			if (resultCode == RESULT_OK) {
 
 				// Set variables to default
-				mInterval = 1000; //TODO
+				mInterval = 10000; //TODO
 				firstName = "";
 				lastInitial = "";
+                //TODO
 				rcrdIntervalB.setText("10 seconds");
 				if (useDev)
 					projectID = DEFAULT_PROJECT_DEV;
