@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string-array name="canobie_array">
@@ -44,7 +44,7 @@
         <item>Yankee Cannonball</item>
         <item>Zero Gravity</item>
     </string-array>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string-array name="field_type_array">
@@ -75,7 +75,7 @@
         <item>Temp. (Fahrenheit)</item>
         <item>Temp. (Kelvin)</item>
     </string-array>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string-array name="rides_array">
@@ -108,7 +108,7 @@
         <item>Zero Gravity</item>
         <item>Zipper</item>
     </string-array>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <color name="actionbar_background">#113</color>
@@ -116,7 +116,7 @@
     <color name="blue_light">#A1D3FF</color>
     <color name="blue_lighter">#C7E5FF</color>
     <color name="navy_light">#608CBF</color>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="Help">\nHow to Create a Project for this App:\n\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Click on Create Project.\n\n5. Enter a name for your project, then click finish. \n\n6. Enter a Description.\n\n7. When formatting the project, the fields should be as follows:\n\n 
@@ -135,7 +135,7 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
 8. Your project\'s QR code is shown near the top left corner of the page and the project number will be listed two lines under the project\'s title.\n\n9. Remember to change the project number in the app to match your project number!\n\nYou may also use the Create a Project feature in this app by clicking on the data recorded in the upload menu then pressing “Select Project” and then selecting “Create New Project” from the new menu that pops up. This will allow you to create a new project with the proper fields set up for you.</string>
     <string name="about">About</string>
     <string name="aboutApp">About:\n\nThis app enables you to record your location and accel/magn in all directions while riding any ride at Canobie Lake Park, and it allows you to share that data online. When the app is activated, your data is saved once every 200ms and then can be shared on the iSENSE web system (isenseproject.org), where the data can be viewed publicly. The recording interval can be changed via the Setup option in the Menu. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\nInstructions:\n\n In order to begin recording and sharing data, first click Setup and then enter your first name and last initial, the sample interval in which you would like data to be recorded, the project you would like the data to be uploaded to and the ride you are going record data on. After pressing Okay, press and hold the button that says \"Start.\" This allows data to be recorded and saved. When you are ready to stop recording, press and hold the button that says \"Stop.\" While data is being recorded, please refrain from exiting the app by pressing the Back button. Pressing the Home button will interrupt the recording but your data will remain saved. When you are ready to upload your data, click on the Upload option in the menu.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="accel_total">Accel-Magnitude</string>
@@ -145,29 +145,29 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <string name="add_key">Add Contributor Key</string>
     <string name="altitude">Altitude</string>
     <string name="always_prompt_first_name">Always prompt for first name and last initial</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="app_name">Canobie Physics</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="back">Back</string>
     <string name="blank_desc"></string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="browse">  Browse…  </string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="browse_proj">Browse Projects</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="cancel">Cancel</string>
     <string name="canobieRides">Canobie Lake Park Rides</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="change_data">Change Data</string>
@@ -189,21 +189,21 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <string name="delete_selected">Delete Selected</string>
     <string name="deselect_all">Deselect All</string>
     <string name="digits_restriction">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="display_name">iS Canobie Physics</string>
     <string name="done">Done</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="enter_name_prompt">Please Enter Your Name</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="exit">Exit</string>
     <string name="experiments_no_items">No experiments were found.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="field_matching_text">Match the project\'s fields (left) with fields that this app can record data for 
@@ -214,27 +214,27 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <string name="first_name">First Name:</string>
     <string name="heading_deg">Angle (Degrees)</string>
     <string name="heading_rad">Angle (Radians)</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="help">Help</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="how_to_add_field">Select a field type from the drop down menu below to add a new field to your project.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="iSenseConfig"><u><b>iSENSE Configurations</b></u></string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="incompatible">Incompatible</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="instructions">Instructions:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="invalidProject">No fields found for this project. 
@@ -247,29 +247,29 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <string name="key_info">A contributor key allows you to contribute data to a specific project without an iSENSE account.</string>
     <string name="last_initial">Last Initial:</string>
     <string name="latitude">Latitude</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="loading">Loading…</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="logged_in">Logged in as:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="login">Login</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="login_error_prompt">Login Failed</string>
     <string name="login_isense_first">Please login to iSENSE first</string>
     <string name="login_prompt">Login to iSENSE</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="login_prompt_error">Login Error</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="login_success">Login Successful</string>
@@ -280,13 +280,13 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <string name="magnetic_x">Magnetic-X</string>
     <string name="magnetic_y">Magnetic-Y</string>
     <string name="magnetic_z">Magnetic-Z</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="media">Media</string>
     <string name="media_desc">Select one of the following options:</string>
     <string name="menuDirections">Use Menu to Access Configurations</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="mode_type">\u0020mode</string>
@@ -297,40 +297,40 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <string name="no_initial_proj">        One or more of the data sets you have selected to upload have no associated project.  This is indicated by the text that
         states \"No Project\" with each associated data set.  In order to upload these data sets, press and hold the data
         sets with no associated project and select \"Select Project\" to associate the data set with a project.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="notLoggedIn"> Not Logged In</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="now_in_mode">Now in\u0020</string>
     <string name="null_string">strNullID</string>
     <string name="numbers_restriction">1234567890.-</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="ok">OK</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="one_location_only">Cannot add more than one location</string>
     <string name="one_more_tap">1 more tap to enter\u0020</string>
     <string name="one_timestamp_only">Cannot add more than one timestamp</string>
     <string name="or">OR</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="otherConfig"><u><b>Ride Configurations</b></u></string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="password">Password:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="picAndVidCount">Pictures and Videos taken: \0</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
@@ -339,29 +339,29 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <string name="please_enter_proj_name">Please enter a new project name</string>
     <string name="pressure">Pressure</string>
     <string name="proj">Project:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="projectNum">Project #: </string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="project_failed_create">Project failed to create - please try again</string>
     <string name="project_field">Project Field</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="project_name_dialog">Create a Project</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="project_no_items">No projects were found.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="project_prompt">Select a Project</string>
     <string name="prompt">Would you like to retry uploading any of the following?</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="qr_prompt">Your device does not have the proper Barcode Scanner application installed
@@ -369,16 +369,16 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
 		this application (\"Barcode Scanner\" by the Zxing Team).</string>
     <string name="queue_alter">What would you like to do with this data set?</string>
     <string name="queue_rename">Enter a new name for your data set:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="receive">Receive</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="rename">Rename</string>
     <string name="reset">Reset</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="retry">Try Again</string>
@@ -386,29 +386,29 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <string name="rideAndSeat">Ride: </string>
     <string name="rides_prompt">Choose a ride</string>
     <string name="sample_rate">Sample Interval (milli-seconds): </string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="scan_qr">Scan QR</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="search">Search</string>
     <string name="selectProject">Select a Project</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="select_all">Select All</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="select_fields_for">	    Please select the fields you would like to record for project #</string>
     <string name="select_later">I\'ll select one later</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="select_proj">Select Project</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="send">Send</string>
@@ -416,12 +416,12 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <string name="setup">Setup</string>
     <string name="startString">START\n(Press and Hold)</string>
     <string name="stopString">STOP\n(Press and Hold)</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="sure_delete_selected">Are you sure you would like to delete all selected data sets? 
          Selected data sets are the ones highlighted green.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="syncTime">	    Synchronizing time is useful when using multiple devices on a ride at the
@@ -449,42 +449,42 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
 	    WiFi networks.</string>
     <string name="takePic">Take a Picture</string>
     <string name="takeVid">Take a Video"</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="temperature_c">Temp. (Celsius)</string>
     <string name="temperature_f">Temp. (Fahrenheit)</string>
     <string name="temperature_k">Temp. (Kelvin)</string>
     <string name="time">Time</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="timeElapsed">Time Elapsed: 0:00</string>
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="two_more_taps">2 more taps to enter\u0020</string>
     <string name="type_data">Type: Data</string>
     <string name="type_picture">Type: Picture</string>
     <string name="units">units</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="upload">Upload</string>
     <string name="uploadPicture">Upload a Picture</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="use_isense_name">Use iSENSE Account Name:</string>
     <string name="user_img_desc">iSense Gravatar</string>
     <string name="username">Email:</string>
     <string name="visit">Visit</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
     <string name="xyz">Ax:\nAy:\nAz:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <style name="AppTheme" parent="android:Theme.Light" />
