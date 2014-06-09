@@ -94,7 +94,6 @@ public class DataWalk extends Activity implements LocationListener,
 	public static UploadQueue uq;
 	private SensorManager mSensorManager;
 	private Location loc;
-	// Rajia: Added Previous Location and fistLoc
 	private Location prevLoc;
 	private Location firstLoc;
 	private Timer recordTimer;
@@ -287,9 +286,11 @@ public class DataWalk extends Activity implements LocationListener,
                 if (Datawalk_Service.running) {
                     setLayoutNotRecording();
                     stopService(service);
-                } else {
+                } else if (!Datawalk_Service.running && gpsWorking) {
                     setLayoutRecording();
                     startService(service);
+                } else if (!gpsWorking) {
+                    w.make("No GPS Signal", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
                 }
 
 //				// Handles when you press the button to STOP recording
@@ -412,7 +413,7 @@ public class DataWalk extends Activity implements LocationListener,
 		else
 			projectID = prefs.getString(PROJ_ID_PRODUCTION, DEFAULT_PROJECT);
 
-		projNumB.setText("to project " + projectID);
+		projNumB.setText("Project: " + projectID);
 	}
 
 	private void initialize() {
@@ -634,7 +635,7 @@ public class DataWalk extends Activity implements LocationListener,
 		if (projectID == "-1") {
 			projNumB.setText(getResources().getString(R.string.project_num));
 		} else {
-			projNumB.setText("to project " + projectID);
+			projNumB.setText("Project: " + projectID);
 		}
 		if (mInterval == 1000) {
 			rcrdIntervalB.setText("1 second");

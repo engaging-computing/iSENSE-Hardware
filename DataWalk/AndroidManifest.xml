@@ -39,7 +39,8 @@
             android:name=".DataWalk"
             android:configChanges="keyboardHidden|screenSize"
             android:label="@string/display_name"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,12 +55,12 @@
         <activity
             android:name=".Help"
             android:label="How to Create a New Experiment:"
-            android:theme="@style/AppThemeDialog" >
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name=".About"
             android:label="About"
-            android:theme="@style/AppThemeDialog" >
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name=".Reset"

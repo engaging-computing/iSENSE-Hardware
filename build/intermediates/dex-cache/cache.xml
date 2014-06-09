@@ -2,20 +2,20 @@
 <pre-dex-items>
 
     <item
-        dex="/home/bobby/iSENSE-Hardware/Android/DataWalk/build/intermediates/pre-dexed/debug/android-support-v4-9d318dde8c637c11e73bd87aa93eb72e48f61933.jar"
-        jar="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/libs/android-support-v4.jar"
+        dex="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/intermediates/pre-dexed/debug/classes-6be2748b05fa77a5896f90674ca7e24be55266dd.jar"
+        jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="10294a852df7be58eb0628b4a622e02d05471cfb"/>
+    <item
+        dex="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/intermediates/pre-dexed/debug/android-support-v4-36231bad5d4e7cee554a3e912d3893a6feed0bba.jar"
+        jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/libs/android-support-v4.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="5896b0a4e377ac4242eb2bc785220c1c4fc052f4"/>
     <item
-        dex="/home/bobby/iSENSE-Hardware/Android/DataWalk/build/intermediates/pre-dexed/debug/classes-c508df8f4629220298564bb4d84b14dded888cfa.jar"
-        jar="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="056a6c25393db20a6d75621e384a94bcfc1e5edb"/>
-    <item
-        dex="/home/bobby/iSENSE-Hardware/Android/DataWalk/build/intermediates/pre-dexed/debug/httpmime-4.2.5-fefa2e9c1ecbf41a64d42f06ba148897dd3cb098.jar"
-        jar="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/libs/httpmime-4.2.5.jar"
+        dex="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/intermediates/pre-dexed/debug/httpmime-4.2.5-92627dde54df50d8864b97f5f66afcb53fb700aa.jar"
+        jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/libs/httpmime-4.2.5.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="6efc2f9df23c2ac4d3b701a11cab9f9fa6a641d4"/>

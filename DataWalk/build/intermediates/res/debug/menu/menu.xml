@@ -7,12 +7,6 @@
         android:title="@string/About_Title">
     </item>
     <item
-        android:id="@+id/reset"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_reset"
-        android:titleCondensed="@string/menu_reset_condensed">
-    </item>
-    <item
         android:id="@+id/help"
         android:showAsAction="ifRoom"
         android:title="@string/help">
@@ -22,5 +16,10 @@
         android:showAsAction="ifRoom"
         android:title="@string/classroom">
     </item>
-
+    <item
+        android:id="@+id/reset"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_reset"
+        android:titleCondensed="@string/menu_reset_condensed">
+    </item>
 </menu><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/menu/menu.xml -->
