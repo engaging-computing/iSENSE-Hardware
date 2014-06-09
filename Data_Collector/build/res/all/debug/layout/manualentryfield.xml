@@ -22,4 +22,4 @@
         android:hint="@string/qmark"
         android:inputType="textCapWords" />
 
-</LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Data_Collector/res/layout/manualentryfield.xml -->
+</LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/Data_Collector/res/layout/manualentryfield.xml -->

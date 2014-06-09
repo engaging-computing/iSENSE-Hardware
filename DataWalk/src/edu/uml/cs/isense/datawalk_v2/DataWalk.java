@@ -3,8 +3,10 @@ package edu.uml.cs.isense.datawalk_v2;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -24,6 +26,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -146,8 +149,8 @@ public class DataWalk extends Activity implements LocationListener,
 
 	/* Timer Related Globals and Constants */
 	private final int TIMER_LOOP = 1000;
-	private final int DEFAULT_INTERVAL = 10000;
-	private int mInterval = DEFAULT_INTERVAL;
+	private static final int DEFAULT_INTERVAL = 10000;
+	public static int mInterval = DEFAULT_INTERVAL;
 	private int elapsedMillis = 0;
 	private int dataPointCount = 0;
 	private int timerTick = 0;
@@ -161,6 +164,7 @@ public class DataWalk extends Activity implements LocationListener,
 	float totalDistance = 0;
 
     Intent service;
+    BroadcastReceiver receiver;
 
 	@SuppressLint("NewApi")
 	/**
@@ -190,6 +194,30 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Initialize main UI elements
 		initialize();
+
+        /* update UI with data passed back from service */
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.hasExtra("VELOCITY")) {
+                    String s = intent.getStringExtra("VELOCITY");
+                    velocityTV.setText(s);
+
+                } else if (intent.hasExtra("TIME")) {
+                    String s = intent.getStringExtra("TIME");
+                    elapsedTimeTV.setText(s);
+
+                } else if (intent.hasExtra("DISTANCE")) {
+                    String s = intent.getStringExtra("DISTANCE");
+                    distanceTV.setText(s);
+
+                } else if (intent.hasExtra("POINTS")) {
+                    String s = intent.getStringExtra("POINTS");
+                    pointsUploadedTV.setText(s);
+                }
+
+            }
+        };
 
 		// Gets first name and last initial the first time
 		if (firstName.equals("") || lastInitial.equals("")) {
@@ -558,7 +586,10 @@ public class DataWalk extends Activity implements LocationListener,
 			if (mSensorManager != null)
 				mSensorManager.unregisterListener(DataWalk.this);
 		}
-	}
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+
+    }
 
 	/**
 	 * Called whenever this activity is called from within the application, like
@@ -624,7 +655,10 @@ public class DataWalk extends Activity implements LocationListener,
 		} else {
 			loggedInAsB.setText(R.string.not_logged_in);
 		}
-		super.onStart();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(Datawalk_Service.DATAWALK_RESULT));
+
+        super.onStart();
 	}
 
 	/**

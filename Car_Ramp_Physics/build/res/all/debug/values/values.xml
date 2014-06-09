@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string-array name="field_type_array">
@@ -32,7 +32,7 @@
         <item>Temp. (Fahrenheit)</item>
         <item>Temp. (Kelvin)</item>
     </string-array>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string-array name="lengths_array">
@@ -43,7 +43,7 @@
         <item>30 sec</item>
         <item>60 sec</item>
     </string-array>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <color name="actionbar_background">#113</color>
@@ -51,7 +51,7 @@
     <color name="blue_light">#A1D3FF</color>
     <color name="blue_lighter">#C7E5FF</color>
     <color name="navy_light">#608CBF</color>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="InternetMsg">	    Cannot establish internet connectivity with this device.  You will not be able to upload data to iSENSE
@@ -62,7 +62,7 @@
     <string name="Z">Z</string>
     <string name="about_app">About:\n\nThis app enables you to record your accel/magn in all directions and it allows you to share that data online. When the app is activated, your data is collected for ten seconds and then saved so that it can later be shared on the iSENSE web system (isenseproject.org), where it can be viewed publicly. The recording length can be changed via the Menu. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\nInstructions:\n\n In order to begin recording and sharing data, first enter your first name and last initial. Next, choose the sample length in which you would like data to be recorded, this can be done via the \"Recording Length\" menu option. Choose the project you would like the data to be uploaded to by going to the \"Select Project\" menu option. Finally, when you are ready to begin recording data press and hold the button that says \"Hold to Start.\" This allows data to be recorded and saved. When you are ready to upload your data, click on the Upload option in the menu. While data is being recorded, you will not be able to exit the app by pressing the Back button. Pressing the Home button will interrupt the recording. </string>
     <string name="about_title">About</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="accel_total">Accel-Magnitude</string>
@@ -72,38 +72,38 @@
     <string name="add_key">Add Contributor Key</string>
     <string name="altitude">Altitude</string>
     <string name="always_prompt_first_name">Always prompt for first name and last initial</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="app_name">iSENSE Car Ramp Physics</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="back">Back</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="blankContentDesc"></string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="blank_desc"></string>
     <string name="browse">Browse</string>
     <string name="browse_proj">Browse Projects</string>
     <string name="change_data">Change Data</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="changename">Change Name</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="chooseProject">Enter Project ID:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="choose_project_title">Select Project</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="classroom_mode">Classroom Mode</string>
@@ -122,14 +122,14 @@
     <string name="delete">Delete</string>
     <string name="delete_selected">Delete Selected</string>
     <string name="deselect_all">Deselect All</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="digits_restriction">	    ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@</string>
     <string name="discard">Discard</string>
     <string name="display_name">iS Car Ramp Physics</string>
     <string name="done">Done</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="enter_name_prompt">Please Enter Your Name</string>
@@ -138,24 +138,24 @@
         available, leave the drop down blank.</string>
     <string name="field_name">field name</string>
     <string name="field_type">Add Field</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="firstName"> First Name: </string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="first_name">First Name:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="gravity">Include Gravity:   </string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="heading_deg">Angle (Degrees)</string>
     <string name="heading_rad">Angle (Radians)</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="help_app">\nHow to Create a Project for this App:\n\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Click on Create Project.\n\n5. Enter a name for your project, then click finish. \n\n6. Enter a Description.\n\n7. When formatting the project, the fields should be as follows:\n\n 
@@ -168,7 +168,7 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
 8. Your project\'s QR code is shown near the top left corner of the page and the project number will be listed two lines under the project\'s title.\n\n9. Remember to change the project number in the app to match your project number!\n\nYou may also use the Create a Project feature in this app by clicking on the data recorded in the upload menu then pressing “Select Project” and then selecting “Create New Project” from the new menu that pops up. This will allow you to create a new project with the proper fields set up for you.</string>
     <string name="help_title">Help</string>
     <string name="holdToStart">Hold to Start</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="how_to_add_field">Select a field type from the drop down menu below to add a new field to your project.</string>
@@ -182,22 +182,22 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
     <string name="isense_fields">Fields</string>
     <string name="key">Contributor Key:</string>
     <string name="key_info">A contributor key allows you to contribute data to a specific project without an iSENSE account.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="lastInitial"> Last Initial: </string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="last_initial">Last Initial:</string>
     <string name="latitude">Latitude</string>
     <string name="loading">Loading…</string>
     <string name="logged_in">Logged in as:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="logged_in_as">Logged in as: </string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="login">Login</string>
@@ -205,21 +205,21 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
     <string name="login_isense_first">Please login to iSENSE first</string>
     <string name="login_prompt">Login to iSENSE</string>
     <string name="login_success">Login Successful</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="login_title">Login</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="logout">Log out</string>
     <string name="longitude">Longitude</string>
     <string name="luminous_flux">Light</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="mag">Magnitude</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="magnetic_total">Magnetic-Magnitude</string>
@@ -228,11 +228,11 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
     <string name="magnetic_z">Magnetic-Z</string>
     <string name="mode_type">\u0020mode</string>
     <string name="new_proj_name">New Project Name</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="new_proj_name_title">Create New Project</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="noCompatibleFields">No compatible fields found. (Hitting \"Okay\" 
@@ -241,12 +241,12 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
     <string name="no_initial_proj">        One or more of the data sets you have selected to upload have no associated project.  This is indicated by the text that
         states \"No Project\" with each associated data set.  In order to upload these data sets, press and hold the data
         sets with no associated project and select \"Select Project\" to associate the data set with a project.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="no_qr">No QR Scanner</string>
     <string name="not_logged_in">Not Logged In</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="now_in_mode">Now in\u0020</string>
@@ -257,11 +257,11 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
     <string name="one_timestamp_only">Cannot add more than one timestamp</string>
     <string name="or">OR</string>
     <string name="password">Password:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="placeDevice">Place device on its back with the top edge facing the direction of displacement.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="placeholder_breadcrumb">Breadcrumbs > Placeholder</string>
@@ -276,11 +276,11 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
     <string name="prompt">Select which data sets you would like to upload to iSENSE.
 	    \n\t• Tap data sets to enable/disable them for upload.
 	    \n\t• Long press a data set to reconfigure it.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="publish">Publish</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="qr_prompt">Your device does not have the proper Barcode Scanner application installed
@@ -289,28 +289,28 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
     <string name="queue_alter">What would you like to do with this data set?</string>
     <string name="queue_rename">Enter a new name for your data set:</string>
     <string name="receive">Receive</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="recordSettings">Recording Fields</string>
     <string name="record_length">Recording Length</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="rename">Rename</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="reset">Reset Settings</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="retry">Try Again</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="saveMode">Save Mode</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="scan_qr">Scan QR</string>
@@ -349,48 +349,48 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
     <string name="temperature_k">Temp. (Kelvin)</string>
     <string name="time">Time</string>
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="tryAgain">Try Again</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="two_more_taps">2 more taps to enter\u0020</string>
     <string name="type_data">Type: Data</string>
     <string name="type_picture">Type: Picture</string>
     <string name="units">units</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="upload">Upload</string>
     <string name="upload_or_trash">Upload Data or Throw It Away</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="use_isense_name">Use iSENSE Account Name:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="userName">Username</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="user_img_desc">iSense Gravatar</string>
     <string name="username">Email:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="view">View</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <string name="visit">Visit</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/values/strings.xml -->
     <eat-comment />
 
     <string name="yString">Y: </string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
     <style name="AppTheme" parent="android:Theme.Light" />

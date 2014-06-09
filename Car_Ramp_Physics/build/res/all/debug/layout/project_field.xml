@@ -39,4 +39,4 @@
         android:scaleType="fitCenter"
         android:src="@drawable/x_icon" />
 
-</LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/project_field.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/project_field.xml -->
+</LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/project_field.xml --><!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/project_field.xml -->

@@ -2,10 +2,10 @@
 <merger>
 
     <dataSet config="main" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE Imports/assets" />
+        <source path="/home/bobby/iSENSE-Hardware/Android/iSENSE Imports/assets" />
     </dataSet>
     <dataSet config="release" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE Imports/build-types/release/assets" />
+        <source path="/home/bobby/iSENSE-Hardware/Android/iSENSE Imports/build-types/release/assets" />
     </dataSet>
 
 </merger>
