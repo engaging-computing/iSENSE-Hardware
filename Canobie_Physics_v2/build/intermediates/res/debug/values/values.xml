@@ -342,7 +342,7 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
     <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/res/values/strings.xml -->
     <eat-comment />
 
-    <string name="projectNum">Project #: </string>
+    <string name="projectNum">Project: Not Selected </string>
     <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/values/values.xml -->
     <eat-comment />
 
