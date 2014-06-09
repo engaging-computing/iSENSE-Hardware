@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.uml.cs.isense"
+    android:versionCode="4"
+    android:versionName="4.1" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="19" />
+
+    <activity
+        android:name="edu.uml.cs.isense.queue.QueueLayout"
+        android:label="Upload Data"
+        android:theme="@style/AppThemeQueue" />
+    <activity
+        android:name="edu.uml.cs.isense.queue.QueueAlter"
+        android:label="Alter Data Set"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.queue.QueueEditData"
+        android:label="Edit Data"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.queue.QueueEditRename"
+        android:label="Rename Data Set"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.queue.QueueDeleteSelected"
+        android:label="Delete Selected Data Sets"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.queue.NoInitialProject"
+        android:label="No Associated Projects"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.proj.BrowseProjects"
+        android:label="Projects"
+        android:windowSoftInputMode="stateHidden" />
+    <activity
+        android:name="edu.uml.cs.isense.proj.NoQR"
+        android:label="No QR Code Scanner Found"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.proj.Setup"
+        android:label="Select a Project"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.dfm.FieldMatching"
+        android:label="Select Fields"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.supplements.FileBrowser"
+        android:label="Select a File"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.queue.QueueSummary"
+        android:label="Summary"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.credentials.Login"
+        android:label="@string/login_prompt"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.credentials.ClassroomMode"
+        android:label="@string/classroom_mode"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.credentials.EnterName"
+        android:label="@string/enter_name_prompt"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.credentials.LoginError"
+        android:label="@string/login_error_prompt"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.credentials.CredentialManager"
+        android:label="@string/credential_manager"
+        android:theme="@style/AppThemeDialog" />
+    <activity
+        android:name="edu.uml.cs.isense.proj.ProjectCreate"
+        android:configChanges="orientation|keyboardHidden|screenSize"
+        android:label="Create New Project"
+        android:theme="@style/AppTheme" />
+    <activity
+        android:name="edu.uml.cs.isense.proj.ProjectNameDialog"
+        android:label="Enter Projet Name"
+        android:theme="@style/AppThemeDialog" />
+
+</manifest>
