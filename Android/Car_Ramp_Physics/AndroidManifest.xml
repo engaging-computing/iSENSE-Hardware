@@ -17,6 +17,10 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/display_name" >
+        
+        <uses-library android:name="android.test.runner" />
+        
+        
         <activity
             android:name=".CarRampPhysicsV2"
             android:configChanges="orientation|keyboardHidden"
@@ -156,5 +160,10 @@
             android:theme="@style/AppThemeDialog" />
         
     </application>
+    
+      <instrumentation
+			android:targetPackage="edu.uml.cs.isense.carphysicsv2"
+			android:name="android.test.InstrumentationTestRunner" />
+        
 
 </manifest>

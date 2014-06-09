@@ -41,11 +41,8 @@
         <activity android:label="About" android:name="edu.uml.cs.isense.riverwalk.About" android:theme="@style/AppTheme"/>
             
         <activity android:label="Help" android:name="edu.uml.cs.isense.riverwalk.Help" android:theme="@style/AppTheme"/>
-        <activity android:label="@string/app_name_experiments" android:name="edu.uml.cs.isense.riverwalk.experiments.BrowseExperiments" android:theme="@style/AppTheme"/>
         <activity android:label="No GPS Found" android:name="edu.uml.cs.isense.riverwalk.dialogs.NoGps" android:theme="@style/AppThemeDialog"/>
-        <activity android:label="No Connectivity" android:name="edu.uml.cs.isense.riverwalk.dialogs.NoConnectivity" android:theme="@style/AppThemeDialog"/>
         <activity android:label="Ready To Upload" android:name="edu.uml.cs.isense.riverwalk.dialogs.ReadyUpload" android:theme="@style/AppThemeDialog"/>
-        <activity android:label="Experiment ID" android:name="edu.uml.cs.isense.riverwalk.experiments.ExperimentDialog" android:theme="@style/AppThemeDialog"/>
         <activity android:label="No Barcode Scanner Found" android:name="edu.uml.cs.isense.riverwalk.dialogs.NoQR" android:theme="@style/AppThemeDialog"/>
         <activity android:label="Describe Photo" android:name="edu.uml.cs.isense.riverwalk.dialogs.Description" android:theme="@style/AppThemeDialog"/>
         <activity android:label="Continuous Photo Shooting" android:name="edu.uml.cs.isense.riverwalk.dialogs.Continuous" android:theme="@style/AppThemeDialog"/>
@@ -63,15 +60,10 @@
         <activity android:label="Select a File" android:name="edu.uml.cs.isense.supplements.FileBrowser" android:theme="@style/AppThemeDialog"/>
         <activity android:label="Summary" android:name="edu.uml.cs.isense.queue.QueueSummary" android:theme="@style/AppThemeDialog"/>
         <activity android:label="Select Fields" android:name="edu.uml.cs.isense.dfm.FieldMatching" android:theme="@style/AppThemeDialog"/>
-        <activity android:label="@string/login_prompt" android:name="edu.uml.cs.isense.credentials.Login" android:theme="@style/AppThemeDialog"/>
-        <activity android:label="@string/login_error_prompt" android:name="edu.uml.cs.isense.credentials.LoginError" android:theme="@style/AppThemeDialog"/>
         <activity android:configChanges="orientation|keyboardHidden|screenSize" android:label="Create New Project" android:name="edu.uml.cs.isense.proj.ProjectCreate" android:theme="@style/AppThemeDialog"/>
         <activity android:label="Create New Project" android:name="edu.uml.cs.isense.proj.ProjectNameDialog" android:theme="@style/AppThemeDialog"/>
         <activity android:configChanges="screenSize|orientation" android:label="Credential Manager" android:name="edu.uml.cs.isense.credentials.CredentialManager" android:theme="@style/AppThemeDialog" android:windowSoftInputMode="adjustPan"/>
         <activity android:label="Add Contributor Key" android:name="edu.uml.cs.isense.credentials.CredentialManagerKey" android:theme="@style/AppThemeDialog"/>
-         
-        
-        
     </application>
 
 </manifest>
