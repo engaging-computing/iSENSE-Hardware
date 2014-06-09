@@ -1,5 +1,9 @@
 package edu.uml.cs.isense.datawalk_v2;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -86,7 +90,7 @@ public class Datawalk_Service extends Service {
      * This is called when service is first created. The location manager is initiated but no data is
      * being recorded at this point
      */
-
+    @SuppressLint("NewApi")
     @Override
 	public void onCreate() {
 		super.onCreate();
@@ -101,6 +105,25 @@ public class Datawalk_Service extends Service {
 
         broadcaster = LocalBroadcastManager.getInstance(this);
 
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+            Intent intent = new Intent(DataWalk.mContext, DataWalk.class);
+            //PendingIntent pendingIntent = PendingIntent.getActivity(this, 01, intent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(DataWalk.mContext, 01, intent, 0);
+
+            Notification.Builder builder = new Notification.Builder(getApplicationContext());
+            builder.setContentIntent(pendingIntent);
+            builder.setContentTitle("iSense DataWalk");
+            builder.setContentText("Recording Data");
+            builder.setTicker("Started Recording");
+            builder.setSmallIcon(R.drawable.ic_launcher);
+            builder.setContentIntent(pendingIntent);
+            builder.setOngoing(true);
+            builder.setPriority(0);
+            Notification notification = builder.build();
+            NotificationManager notificationManger =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManger.notify(01, notification);
+        }
 
         //TODO callback to update ui with location data instead of having two location managers (one here and one in DataWalk.java)
 //        waitingForGPS();
@@ -149,6 +172,8 @@ public class Datawalk_Service extends Service {
         Log.e("onStartCommand", "");
 
         running = true;
+
+        dataPointCount = 0;
 
         //record data
         runRecordingTimer(intent);
@@ -205,6 +230,9 @@ public class Datawalk_Service extends Service {
 
         if (mSensorManager != null)
             mSensorManager.unregisterListener(sensorListener);
+
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(01);
 
         super.onDestroy();
     }
@@ -309,36 +337,6 @@ public class Datawalk_Service extends Service {
 
 
 
-
-                //TODO create handler to update ui while recording
-//                // Update the main UI with the correct number of seconds
-//                runOnUiThread(new Runnable() {
-//
-//                    @Override
-//                    public void run() {
-//                        if (timerTick == 1) {
-//                            elapsedTimeTV.setText("Time Elapsed: " + timerTick
-//                                    + " second");
-//                        } else {
-//                            elapsedTimeTV.setText("Time Elapsed: " + timerTick
-//                                    + " seconds");
-//                        }
-//
-//                        // Update distance and velocity text boxes
-//                        distanceTV.setText("Distance: "
-//                                + roundTwoDecimals(totalDistance * 0.000621371)
-//                                + " Miles " + roundTwoDecimals(totalDistance)
-//                                + " Meters");
-//
-//                        velocityTV.setText("Velocity: "
-//                                + roundTwoDecimals(velocity * 2.23694)
-//                                + " MPH " + roundTwoDecimals(velocity)
-//                                + " M/Sec    ");
-//
-//                    }
-//                });
-
-
                                 // Update the main UI with the correct number of seconds
 
 
@@ -394,18 +392,6 @@ public class Datawalk_Service extends Service {
                             // the main UI
                             dataPointCount++;
 
-
-                            //TODO update pointcount on ui
-//                            runOnUiThread(new Runnable() {
-//
-//                                @Override
-//                                public void run() {
-//                                    pointsUploadedTV
-//                                            .setText("Points Recorded: "
-//                                                    + dataPointCount);
-//                                }
-//
-//                            });
 
 
                        updateDataPoints("Points Recorded: "
@@ -552,7 +538,7 @@ public class Datawalk_Service extends Service {
         @Override
         public void onSensorChanged(SensorEvent event) {
 
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
                 accel[0] = event.values[0];
                 accel[1] = event.values[1];
                 accel[2] = event.values[2];

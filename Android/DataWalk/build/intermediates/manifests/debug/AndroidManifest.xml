@@ -114,6 +114,7 @@
             android:name="edu.uml.cs.isense.datawalk_v2.DataWalk"
             android:configChanges="keyboardHidden|screenSize"
             android:label="@string/display_name"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -129,12 +130,12 @@
         <activity
             android:name="edu.uml.cs.isense.datawalk_v2.Help"
             android:label="How to Create a New Experiment:"
-            android:theme="@style/AppThemeDialog" >
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="edu.uml.cs.isense.datawalk_v2.About"
             android:label="About"
-            android:theme="@style/AppThemeDialog" >
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name="edu.uml.cs.isense.datawalk_v2.Reset"
