@@ -103,6 +103,15 @@ public class Datawalk_Service extends Service {
 
         initLocationManager();
 
+        //MySensorListener is an object of the class I made down below
+        sensorListener = new MySensorListener();
+
+        // Start the sensor manager so we can get accelerometer data
+        mSensorManager.registerListener(sensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+                SensorManager.SENSOR_DELAY_FASTEST);
+
+
         broadcaster = LocalBroadcastManager.getInstance(this);
 
         if (android.os.Build.VERSION.SDK_INT >= 11) {
@@ -270,13 +279,7 @@ public class Datawalk_Service extends Service {
      * second.
      */
     void runRecordingTimer(Intent intent) {
-        //MySensorListener is an object of the class I made down below
-        sensorListener = new MySensorListener();
 
-        // Start the sensor manager so we can get accelerometer data
-        mSensorManager.registerListener(sensorListener,
-                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_FASTEST);
 
         // Prepare new containers where our recorded values will be stored
         dataSet = new JSONArray();
@@ -310,29 +313,30 @@ public class Datawalk_Service extends Service {
                 // Convert Interval to Seconds
                 int nSeconds = DataWalk.mInterval / 1000;
 
+                if (gpsWorking) {
+                    if (timerTick % nSeconds == 0) {
 
-                if (timerTick % nSeconds == 0) {
+                        // For first point we do not have a previous location
+                        // yet
+                        // This will happen only once
+                        if (bFirstPoint) {
+                            prevLoc.set(loc);
+                            bFirstPoint = false;
+                            // Also Try this for total distance
+                            firstLoc.set(loc);
+                        }
+                        distance = loc.distanceTo(prevLoc);
 
-                    // For first point we do not have a previous location
-                    // yet
-                    // This will happen only once
-                    if (bFirstPoint) {
+                        // Calculate Velocity
+                        velocity = distance / nSeconds;
+
+                        // Rajia: Now this location will be the previous one the
+                        // next time we get here
                         prevLoc.set(loc);
-                        bFirstPoint = false;
-                        // Also Try this for total distance
-                        firstLoc.set(loc);
+
+                        // Rajia Accumlate total distance
+                        totalDistance += distance;
                     }
-                    distance = loc.distanceTo(prevLoc);
-
-                    // Calculate Velocity
-                    velocity = distance / nSeconds;
-
-                    // Rajia: Now this location will be the previous one the
-                    // next time we get here
-                    prevLoc.set(loc);
-
-                    // Rajia Accumlate total distance
-                    totalDistance += distance;
                 }
 
 
@@ -361,7 +365,6 @@ public class Datawalk_Service extends Service {
 
 
 
-                //TODO this is bad. Should have a loop that sleeps for the given interval instead
                 // Every n seconds which is determined by interval
                 // (not including time 0)
                 if ((timerTick % (DataWalk.mInterval / 1000)) == 0 && timerTick != 0) {
@@ -439,56 +442,6 @@ public class Datawalk_Service extends Service {
         return Double.valueOf(twoDForm.format(d));
     }
 
-//    /**
-//     * Starts a timer that displays gps points when they are found and the
-//     * waiting for gps loop when they are not.
-//     */
-//    private void waitingForGPS() {
-//
-//        // Creates the new timer to update the main UI every second
-//        gpsTimer = new Timer();
-////        gpsTimer.scheduleAtFixedRate(new TimerTask() {
-////
-////            @Override
-////            public void run() {
-////
-////                runOnUiThread(new Runnable() {
-////
-////                    @Override
-////                    public void run() {
-////
-////                        // Show the GPS coordinate on the main UI, else continue
-////                        // with our loop.
-////                        if (gpsWorking) {
-////                            latitudeTV.setText(getResources().getString(
-////                                    R.string.latitude)
-////                                    + " " + loc.getLatitude());
-////                            longitudeTV.setText(getResources().getString(
-////                                    R.string.longitude)
-////                                    + " " + loc.getLongitude());
-////                        } else {
-////                            switch (gpsWaitingCounter % 5) {
-////                                case (0):
-////                                    latitudeTV.setText(R.string.latitude);
-////                                    longitudeTV.setText(R.string.longitude);
-////                                    break;
-////                                default:
-////                                    String latitude = (String) latitudeTV.getText();
-////                                    String longitude = (String) longitudeTV
-////                                            .getText();
-////                                    latitudeTV.setText(latitude + " .");
-////                                    longitudeTV.setText(longitude + " .");
-////                                    break;
-////                            }
-////                            gpsWaitingCounter++;
-////                        }
-////                    }
-////                });
-////            }
-////        }, 0, TIMER_LOOP);
-//    }
-
-
     /**
      * You can not implement a LocationListener to a service so that is why
      * There is a separate class here that implements a LocationListener
@@ -520,6 +473,7 @@ public class Datawalk_Service extends Service {
 
 
         public void onProviderEnabled(String provider) {
+            gpsWorking = true;
         }
 
 
@@ -537,6 +491,7 @@ public class Datawalk_Service extends Service {
 
         @Override
         public void onSensorChanged(SensorEvent event) {
+            Log.e("onSensorChanged ", "here");
 
             if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
                 accel[0] = event.values[0];
