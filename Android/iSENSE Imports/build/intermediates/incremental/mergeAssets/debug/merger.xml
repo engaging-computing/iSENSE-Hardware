@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="2" >
+
+    <dataSet config="main" >
+        <source path="/home/bobby/iSENSE-Hardware/Android/iSENSE Imports/assets" />
+    </dataSet>
+    <dataSet config="debug" >
+        <source path="/home/bobby/iSENSE-Hardware/Android/iSENSE Imports/build-types/debug/assets" />
+    </dataSet>
+
+</merger>
