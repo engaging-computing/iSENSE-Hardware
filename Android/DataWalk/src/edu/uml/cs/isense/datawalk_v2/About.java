@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import edu.uml.cs.isense.datawalk_v2.R;
 
 /**
  * Displays information explaining the purpose of the iSENSE Data Walk Application.
@@ -21,7 +20,7 @@ public class About extends Activity {
 		setContentView(R.layout.about);
 
 		// Creates the OK button so users can leave
-		okButton = (Button) findViewById(R.id.loginButton);
+		okButton = (Button) findViewById(R.id.okButton);
 		okButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override

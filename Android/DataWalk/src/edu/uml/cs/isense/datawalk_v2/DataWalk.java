@@ -417,7 +417,9 @@ public class DataWalk extends Activity implements LocationListener,
 	}
 
 	private void initialize() {
-		// Initialize main UI elements
+        CredentialManager.login(this, api);
+
+        // Initialize main UI elements
 		nameAndLoginRL = (RelativeLayout) findViewById(R.id.rl_nameandlogin);
 		recordingExtrasLL = (LinearLayout) findViewById(R.id.ll_recordingextras);
 		startStopB = (Button) findViewById(R.id.b_startstop);
@@ -435,7 +437,6 @@ public class DataWalk extends Activity implements LocationListener,
 		pointsUploadedTV.setText("Points Recorded: " + dataPointCount);
 		elapsedTimeTV.setText("Time Elapsed: " + timerTick + " seconds");
 		
-		CredentialManager.login(this, api);
 		if(CredentialManager.isLoggedIn()) {
 			loggedInAsB.setText(CredentialManager.getUsername(mContext));
 		} else {
