@@ -6,7 +6,11 @@
         jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/classes.jar"
         jumboMode="false"
         revision="19.1.0"
+<<<<<<< HEAD
         sha1="10294a852df7be58eb0628b4a622e02d05471cfb"/>
+=======
+        sha1="2f280db9fc3370d01a969901ad841aaaf8ae1c28"/>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
     <item
         dex="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/intermediates/pre-dexed/debug/android-support-v4-36231bad5d4e7cee554a3e912d3893a6feed0bba.jar"
         jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/libs/android-support-v4.jar"
