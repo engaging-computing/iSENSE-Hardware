@@ -52,11 +52,19 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build/assets" />
+<<<<<<< HEAD
+=======
+      <excludeFolder url="file://$MODULE_DIR$/build/dex" />
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
       <excludeFolder url="file://$MODULE_DIR$/build/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates" />
       <excludeFolder url="file://$MODULE_DIR$/build/libs" />
       <excludeFolder url="file://$MODULE_DIR$/build/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+<<<<<<< HEAD
+=======
+      <excludeFolder url="file://$MODULE_DIR$/build/pre-dexed" />
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
       <excludeFolder url="file://$MODULE_DIR$/build/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/source" />
@@ -65,8 +73,6 @@
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
-    <orderEntry type="library" exported="" name="1_android-support-v4" level="project" />
-    <orderEntry type="library" exported="" name="httpmime-4.2.5" level="project" />
     <orderEntry type="module" module-name="iSENSE Imports" exported="" />
   </component>
 </module>
