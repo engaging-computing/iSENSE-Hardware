@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import edu.uml.cs.isense.datawalk_v2.R;
 
 /**
  * Displays information explaining how to use the iSENSE Data Walk Application.
@@ -22,7 +21,7 @@ public class Help extends Activity {
 		setContentView(R.layout.help_dialog);
 		this.setTitle("How to Create a New Project: ");
 		// Creates the OK button so users can leave
-		okButton = (Button) findViewById(R.id.helpOkButton);
+		okButton = (Button) findViewById(R.id.okButton);
 		okButton.setOnClickListener(new View.OnClickListener() {
 		
 			@Override
