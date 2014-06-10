@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/MENU_ITEM_DELETE" android:title="@string/delete_selected"></item>
-    
-
-</menu>
-<!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/menu/key_menu.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/menu/key_menu.xml -->
