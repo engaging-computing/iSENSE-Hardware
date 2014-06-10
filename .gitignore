@@ -1,24 +1,29 @@
-#	Class Files
 
+# files for the dex VM
+*.dex
+
+# Java class files
 *.class
 
-#	Useless Mac files
+# generated files
+bin/
+gen/
 
-*.DS_Store
+# Local configuration file (sdk path, etc)
+local.properties
 
-#	Backup Files
-*.*~
+# Windows thumbnail db
+Thumbs.db
 
-#	Eclipse files
+# OSX files
+.DS_Store
+
+# Eclipse project files
 .classpath
 .project
-.settings
-.metadata
 
-Android/rSENSETest/bin/
-Android/rSENSETest/gen/
-
-Android/*/bin
-Android/*/gen
-
-*/xcuserdata/
+# Android Studio
+.idea
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+.gradle
+build/
