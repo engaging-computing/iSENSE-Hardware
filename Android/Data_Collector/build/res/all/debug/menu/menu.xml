@@ -14,4 +14,4 @@
         android:showAsAction="withText|ifRoom"
         android:title="@string/menu_sync"/>
 
-</menu><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Data_Collector/res/menu/menu.xml -->
+</menu><!-- From: file:/home/bobby/iSENSE-Hardware/Android/Data_Collector/res/menu/menu.xml -->

@@ -307,8 +307,9 @@ public class Main extends Activity implements LocationListener {
 				}
 
 				Intent intent = new Intent(Intent.ACTION_PICK);
-				intent.setType("image/*");
-				startActivityForResult(
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                startActivityForResult(
 						Intent.createChooser(intent, "Select Picture"),
 						SELECT_PICTURE_REQUESTED);
 
@@ -969,7 +970,8 @@ public class Main extends Activity implements LocationListener {
 
 		} else if (requestCode == SELECT_PICTURE_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
-				Uri selectedImageUri = data.getData();
+
+                Uri selectedImageUri = data.getData();
 				String[] filePathColumn = { MediaStore.Images.Media.DATA };
 				Cursor cursor = getContentResolver().query(selectedImageUri,
 						filePathColumn, null, null, null);
@@ -978,10 +980,11 @@ public class Main extends Activity implements LocationListener {
 				String picturePath = cursor.getString(columnIndex);
 				cursor.close();
 
-				//curTime = System.currentTimeMillis();
 				picture = new File(picturePath);
+
+
 				
-				
+				/*get data from picture file*/
 				ExifInterface exifInterface;
 				try {
 					exifInterface = new ExifInterface(picturePath);
@@ -998,9 +1001,7 @@ public class Main extends Activity implements LocationListener {
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}					
-					
-					    
-					
+
 					/*get location data from image*/
 					String latString = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
 					String lonString = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
@@ -1033,7 +1034,9 @@ public class Main extends Activity implements LocationListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+
+
+                /*add image to upload queue*/
 				new UploadTask().execute();
 				
 				

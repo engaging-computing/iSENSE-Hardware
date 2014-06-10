@@ -15,7 +15,6 @@
         android:digits="@string/digits_restriction"
         android:hint="@string/search"
         android:imeOptions="actionDone"
-        android:textColor="#000000"
         android:layout_marginBottom="10dp" />
 
     <ListView
@@ -32,4 +31,4 @@
         android:layout_height="fill_parent"
         android:text="@string/project_no_items" />
 
-</LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projects.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/projects.xml -->
+</LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projects.xml --><!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/projects.xml -->
