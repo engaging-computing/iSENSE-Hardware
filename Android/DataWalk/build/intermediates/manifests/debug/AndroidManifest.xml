@@ -98,13 +98,10 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/display_name" >
-<<<<<<< HEAD
         <service
             android:name="edu.uml.cs.isense.datawalk_v2.Datawalk_Service"
             android:enabled="true" />
 
-=======
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
         <activity
             android:name="edu.uml.cs.isense.queue.QueueSummary"
             android:label="Summary"
@@ -117,10 +114,7 @@
             android:name="edu.uml.cs.isense.datawalk_v2.DataWalk"
             android:configChanges="keyboardHidden|screenSize"
             android:label="@string/display_name"
-<<<<<<< HEAD
             android:launchMode="singleTop"
-=======
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
             android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -136,20 +130,12 @@
         <activity
             android:name="edu.uml.cs.isense.datawalk_v2.Help"
             android:label="How to Create a New Experiment:"
-<<<<<<< HEAD
             android:theme="@style/AppTheme" >
-=======
-            android:theme="@style/AppThemeDialog" >
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
         </activity>
         <activity
             android:name="edu.uml.cs.isense.datawalk_v2.About"
             android:label="About"
-<<<<<<< HEAD
             android:theme="@style/AppTheme" >
-=======
-            android:theme="@style/AppThemeDialog" >
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
         </activity>
         <activity
             android:name="edu.uml.cs.isense.datawalk_v2.Reset"
@@ -207,17 +193,6 @@
             android:label="@string/enter_name_prompt"
             android:theme="@style/AppThemeDialog" />
         <activity
-<<<<<<< HEAD
-=======
-            android:name="edu.uml.cs.isense.credentials.Login"
-            android:label="@string/login_prompt"
-            android:theme="@style/AppThemeDialog" />
-        <activity
-            android:name="edu.uml.cs.isense.credentials.LoginError"
-            android:label="@string/login_error_prompt"
-            android:theme="@style/AppThemeDialog" />
-        <activity
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
             android:name="edu.uml.cs.isense.credentials.ClassroomMode"
             android:label="@string/classroom_mode"
             android:theme="@style/AppThemeDialog" />

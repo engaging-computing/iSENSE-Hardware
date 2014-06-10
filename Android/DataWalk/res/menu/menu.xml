@@ -4,22 +4,19 @@
     <item
         android:id="@+id/About"
         android:showAsAction="ifRoom"
-        android:title="@string/About_Title">
-    </item>
+        android:title="@string/About_Title"/>
     <item
         android:id="@+id/help"
         android:showAsAction="ifRoom"
-        android:title="@string/help">
-    </item>
+        android:title="@string/help"/>
     <item
         android:id="@+id/classroom"
         android:showAsAction="ifRoom"
-        android:title="@string/classroom">
-    </item>
+        android:title="@string/classroom"/>
     <item
         android:id="@+id/reset"
         android:showAsAction="ifRoom"
         android:title="@string/menu_reset"
-        android:titleCondensed="@string/menu_reset_condensed">
-    </item>
+        android:titleCondensed="@string/menu_reset_condensed"/>
+
 </menu>

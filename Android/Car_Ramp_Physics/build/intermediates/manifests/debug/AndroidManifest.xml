@@ -12,13 +12,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-<<<<<<< HEAD
-=======
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:targetPackage="edu.uml.cs.isense.carphysicsv2" />
 
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
     <activity
         android:name="edu.uml.cs.isense.queue.QueueLayout"
         android:label="Upload Data"
@@ -101,11 +98,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/display_name" >
-<<<<<<< HEAD
-=======
         <uses-library android:name="android.test.runner" />
 
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
         <activity
             android:name="edu.uml.cs.isense.carphysicsv2.CarRampPhysicsV2"
             android:configChanges="orientation|keyboardHidden"
