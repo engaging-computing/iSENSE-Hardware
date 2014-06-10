@@ -525,31 +525,53 @@
                 </string>
                 <string name="one_location_only" >Cannot add more than one location
                 </string>
+<<<<<<< HEAD
                 <string name="queue_alter" >What would you like to do with this data set?
                 </string>
                 <string name="login_prompt" >Login to iSENSE
                 </string>
+=======
+                <string name="login_prompt" >Login to iSENSE
+                </string>
+                <string name="queue_alter" >What would you like to do with this data set?
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="no_initial_proj" >        One or more of the data sets you have selected to upload have no associated project.  This is indicated by the text that
         states \"No Project\" with each associated data set.  In order to upload these data sets, press and hold the data
         sets with no associated project and select \"Select Project\" to associate the data set with a project.
                 </string>
                 <string name="placeholder_breadcrumb" >Breadcrumbs > Placeholder
                 </string>
+<<<<<<< HEAD
                 <string name="incompatible" >Incompatible
                 </string>
                 <string name="sure_delete_selected" >Are you sure you would like to delete all selected data sets? 
          Selected data sets are the ones highlighted green.
                 </string>
+=======
+                <string name="sure_delete_selected" >Are you sure you would like to delete all selected data sets? 
+         Selected data sets are the ones highlighted green.
+                </string>
+                <string name="incompatible" >Incompatible
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="magnetic_total" >Magnetic-Magnitude
                 </string>
                 <string name="change_data" >Change Data
                 </string>
                 <string name="luminous_flux" >Light
                 </string>
+<<<<<<< HEAD
                 <string name="password" >Password:
                 </string>
                 <string name="browse" >Browse
                 </string>
+=======
+                <string name="browse" >Browse
+                </string>
+                <string name="password" >Password:
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="null_string" >strNullID
                 </string>
                 <string name="project_failed_create" >Project failed to create - please try again
@@ -649,6 +671,7 @@ Credentials
                 </string>
                 <string name="units" >units
                 </string>
+<<<<<<< HEAD
                 <string name="pressure" >Pressure
                 </string>
                 <string name="key" >Contributor Key:
@@ -664,6 +687,21 @@ Credentials
                 <string name="magnetic_z" >Magnetic-Z
                 </string>
                 <string name="noProjectYet" >Don\'t have a project yet?
+=======
+                <string name="key" >Contributor Key:
+                </string>
+                <string name="pressure" >Pressure
+                </string>
+                <string name="one_timestamp_only" >Cannot add more than one timestamp
+                </string>
+                <string name="field_type" >Add Field
+                </string>
+                <string name="magnetic_y" >Magnetic-Y
+                </string>
+                <string name="magnetic_z" >Magnetic-Z
+                </string>
+                <string name="rename" >Rename
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 </string>
                 <string name="syncTime" >Synchronizing time is useful when using multiple devices to record data at the
 	    same time.  By default, many Android devices\' clocks will not match one
@@ -689,15 +727,28 @@ Credentials
 	    WiFi networks.  Should you want to revert to your phone\'s local timestamp, you
 	    can use the \"Reset\" button.
                 </string>
+<<<<<<< HEAD
+=======
+                <string name="noProjectYet" >Don\'t have a project yet?
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="queue_rename" >Enter a new name for your data set:
                 </string>
                 <string name="loading" >Loading…
                 </string>
+<<<<<<< HEAD
                 <string name="new_proj_name" >New Project Name
                 </string>
                 <string name="magnetic_x" >Magnetic-X
                 </string>
                 <string name="login_success" >Login Successful
+=======
+                <string name="login_success" >Login Successful
+                </string>
+                <string name="magnetic_x" >Magnetic-X
+                </string>
+                <string name="new_proj_name" >New Project Name
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 </string>
                 <string name="contributor" >Contributor Name:
                 </string>
@@ -705,11 +756,19 @@ Credentials
         (dropdowns on the right).  If no match is
         available, leave the drop down blank.
                 </string>
+<<<<<<< HEAD
                 <string name="contribute" ><u>
 You Can Contribute To:
                     </u></string>
                 <string name="scan_qr" >Scan QR
                 </string>
+=======
+                <string name="scan_qr" >Scan QR
+                </string>
+                <string name="contribute" ><u>
+You Can Contribute To:
+                    </u></string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="digits_restriction" >ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
                 </string>
                 <string name="login" >Login
@@ -839,10 +898,17 @@ wrap_content
                 </string>
                 <string name="accel_y" >Accel-Y
                 </string>
+<<<<<<< HEAD
                 <string name="accel_z" >Accel-Z
                 </string>
                 <string name="timeFailed" >Failed to synchronize time.  You may try again.
                 </string>
+=======
+                <string name="timeFailed" >Failed to synchronize time.  You may try again.
+                </string>
+                <string name="accel_z" >Accel-Z
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
 
                 <style name="CustomProgressDialogStyle" >
                     <item name="android:bottomBright">
@@ -886,17 +952,29 @@ wrap_content
                 </string>
                 <string name="def_username" >Mobile
                 </string>
+<<<<<<< HEAD
                 <string name="prompt" >Select which data sets you would like to upload to iSENSE.
 	    \n\t• Tap data sets to enable/disable them for upload.
 	    \n\t• Long press a data set to reconfigure it.
                 </string>
                 <string name="altitude" >Altitude
                 </string>
+=======
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
 
                 <style
                     name="AppTheme"
                     parent="android:Theme.Light" />
 
+<<<<<<< HEAD
+=======
+                <string name="altitude" >Altitude
+                </string>
+                <string name="prompt" >Select which data sets you would like to upload to iSENSE.
+	    \n\t• Tap data sets to enable/disable them for upload.
+	    \n\t• Long press a data set to reconfigure it.
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="invalidProject" >No fields found for this project. 
         This project may have been deleted, or may not exist at all. There is also a
         chance that you are simply not connected to the internet and thus cannot currently
@@ -912,10 +990,13 @@ Instructions:
                 </string>
                 <string name="createProject" >Create New Project
                 </string>
+<<<<<<< HEAD
                 <string name="or" >OR
                 </string>
                 <string name="latitude" >Latitude
                 </string>
+=======
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
 
                 <string-array name="field_type_array" >
                     <item>
@@ -932,17 +1013,29 @@ Location
                     </item>
                 </string-array>
 
+<<<<<<< HEAD
                 <string name="numbers_restriction" >1234567890.-
+=======
+                <string name="latitude" >Latitude
+                </string>
+                <string name="or" >OR
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 </string>
 
                 <color name="navy_light" >#608CBF
                 </color>
 
+<<<<<<< HEAD
+=======
+                <string name="numbers_restriction" >1234567890.-
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="project_field" >Project Field
                 </string>
                 <string name="select_all" >Select All
                 </string>
                 <string name="contentDesc" ></string>
+<<<<<<< HEAD
                 <string name="delete" >Delete
                 </string>
                 <string name="enter_name_prompt" >Please Enter Your Name
@@ -951,6 +1044,16 @@ Location
                 </string>
                 <string name="deg" >deg
                 </string>
+=======
+                <string name="enter_name_prompt" >Please Enter Your Name
+                </string>
+                <string name="delete" >Delete
+                </string>
+                <string name="deg" >deg
+                </string>
+                <string name="key_info" >A contributor key allows you to contribute data to a specific project without an iSENSE account.
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
             </file>
             <file
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v11/values.xml"
@@ -968,6 +1071,20 @@ Location
                 </style>
 
                 <style
+<<<<<<< HEAD
+=======
+                    name="AppThemeDialog"
+                    parent="@android:style/Theme.Holo.Light.Dialog" >
+                    <item name="android:layout_height">
+wrap_content
+                    </item>
+                    <item name="android:layout_width">
+wrap_content
+                    </item>
+                </style>
+
+                <style
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                     name="AppTheme"
                     parent="android:Theme.Holo.Light.DarkActionBar" >
                     <item name="android:actionBarStyle">
@@ -982,6 +1099,7 @@ Location
                 </style>
 
                 <style
+<<<<<<< HEAD
                     name="AppThemeDialog"
                     parent="@android:style/Theme.Holo.Light.Dialog" >
                     <item name="android:layout_height">
@@ -993,6 +1111,8 @@ wrap_content
                 </style>
 
                 <style
+=======
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                     name="AppTheme.Widget"
                     parent="@android:style/Theme.Holo.Light" >
                     <item name="android:popupMenuStyle">
@@ -1004,6 +1124,13 @@ wrap_content
                 </style>
 
                 <style
+<<<<<<< HEAD
+=======
+                    name="AppTheme.DropDownListView"
+                    parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
+
+                <style
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                     name="AppTheme.ActionBar"
                     parent="@android:style/Widget.Holo.Light.ActionBar" >
                     <item name="android:background">
@@ -1020,10 +1147,13 @@ showHome|useLogo
                     </item>
                 </style>
 
+<<<<<<< HEAD
                 <style
                     name="AppTheme.DropDownListView"
                     parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
 
+=======
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <style name="CustomProgressDialogStyle" >
                     <item name="android:bottomBright">
 #FF0000
@@ -1114,10 +1244,13 @@ wrap_content
                     </item>
                 </style>
 
+<<<<<<< HEAD
                 <style
                     name="AppTheme.PopupMenu"
                     parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
 
+=======
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <style name="CustomProgressDialogStyle" >
                     <item name="android:bottomBright">
 #FF0000
@@ -1152,6 +1285,13 @@ wrap_content
                 </style>
 
                 <style
+<<<<<<< HEAD
+=======
+                    name="AppTheme.PopupMenu"
+                    parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
+
+                <style
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                     name="AppTheme.ActionBar"
                     parent="@android:style/Widget.Holo.Light.ActionBar" >
                     <item name="android:background">
@@ -1484,14 +1624,22 @@ Zero Gravity
                     </item>
                 </string-array>
 
+<<<<<<< HEAD
                 <string name="help" >Help
                 </string>
                 <string name="rides_prompt" >Choose a ride
                 </string>
+=======
+                <string name="rides_prompt" >Choose a ride
+                </string>
+                <string name="help" >Help
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="retry" >Try Again
                 </string>
                 <string name="canobieRides" >Canobie Lake Park Rides
                 </string>
+<<<<<<< HEAD
                 <string name="select_fields_for" >	    Please select the fields you would like to record for project #
                 </string>
                 <string name="sessionName" >First Name/Last Initial: 
@@ -1499,6 +1647,15 @@ Zero Gravity
                 <string name="receive" >Receive
                 </string>
                 <string name="projectNum" >Project: Not Selected 
+=======
+                <string name="sessionName" >First Name/Last Initial: 
+                </string>
+                <string name="select_fields_for" >	    Please select the fields you would like to record for project #
+                </string>
+                <string name="receive" >Receive
+                </string>
+                <string name="projectNum" >Project #: 
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 </string>
                 <string name="sample_rate" >Sample Interval (milli-seconds): 
                 </string>
@@ -1588,12 +1745,20 @@ Longitude\t\t\t\t\t\t\tLongitude\n\n
                 </string>
                 <string name="setup" >Setup
                 </string>
+<<<<<<< HEAD
                 <string name="app_name" >Canobie Physics
                 </string>
+=======
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="login_prompt_error" >Login Error
                 </string>
                 <string name="timeElapsed" >Time Elapsed: 0:00
                 </string>
+<<<<<<< HEAD
+=======
+                <string name="app_name" >Canobie Physics
+                </string>
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
                 <string name="ride" >Ride: 
                 </string>
                 <string name="notLoggedIn" > Not Logged In
