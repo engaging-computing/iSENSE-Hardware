@@ -1244,9 +1244,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			nameOfDataSet = firstName + " " + lastInitial;
 		
 			uploadSuccessful = false;
-			QDataSet ds = new QDataSet(nameOfDataSet + " Gravity: " + ((switchGravity.isChecked()) ? "Included" : "Not Included")
-						+ " " + currentDateTimeString,
-					"Data uploaded from Android Car Ramp Physics",
+			QDataSet ds = new QDataSet(nameOfDataSet + " Gravity: " + ((switchGravity.isChecked()) ? "Included" : "Not Included"),
+                    currentDateTimeString,
 					QDataSet.Type.DATA, dataSet.toString(), null,
 					projectNumber, null);
 

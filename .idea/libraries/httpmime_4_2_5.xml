@@ -1,7 +1,11 @@
 <component name="libraryTable">
   <library name="httpmime-4.2.5">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/build/exploded-aar/Android/iSENSE Imports/unspecified/libs/httpmime-4.2.5.jar!/" />
+<<<<<<< HEAD
+      <root url="jar://$PROJECT_DIR$/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/libs/httpmime-4.2.5.jar!/" />
+=======
+      <root url="jar://$PROJECT_DIR$/iSENSE Imports/lib/httpmime-4.2.5.jar!/" />
+>>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
     </CLASSES>
     <JAVADOC />
     <SOURCES />

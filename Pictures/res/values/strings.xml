@@ -66,7 +66,7 @@
 	<string name="step2">Step 2:</string>
 	<string name="selectProject">Select a Project</string>
 	<string name="uploadCredentials">Upload with Your Credentials</string>
-	<string name="uploadKey">Upload with a Contribution Key</string>
+	<string name="uploadKey">Upload with a Contributor Key</string>
 	<string name="or">or</string>
     <string name="About_Title">About</string>
     <string name="Help_Title">Help</string>
