@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -46,38 +45,3 @@
     </LinearLayout>
 
 </RelativeLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/help_dialog.xml -->
-=======
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
-    <LinearLayout
-        android:id="@+id/LinearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/HelpText"
-            android:textSize="16sp"
-            android:padding="5dp" />
-
-        <LinearLayout
-            android:id="@+id/LinearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent" >
-
-            <Button
-                android:id="@+id/helpOkButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@android:string/ok" />
-        </LinearLayout>
-    </LinearLayout>
-
-</ScrollView><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/help_dialog.xml -->
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4

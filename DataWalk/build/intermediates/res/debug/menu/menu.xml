@@ -4,35 +4,19 @@
     <item
         android:id="@+id/About"
         android:showAsAction="ifRoom"
-        android:title="@string/About_Title">
-    </item>
+        android:title="@string/About_Title"/>
     <item
-<<<<<<< HEAD
-=======
-        android:id="@+id/reset"
-        android:showAsAction="ifRoom"
-        android:title="@string/menu_reset"
-        android:titleCondensed="@string/menu_reset_condensed">
-    </item>
-    <item
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
         android:id="@+id/help"
         android:showAsAction="ifRoom"
-        android:title="@string/help">
-    </item>
+        android:title="@string/help"/>
     <item
         android:id="@+id/classroom"
         android:showAsAction="ifRoom"
-        android:title="@string/classroom">
-    </item>
-<<<<<<< HEAD
+        android:title="@string/classroom"/>
     <item
         android:id="@+id/reset"
         android:showAsAction="ifRoom"
         android:title="@string/menu_reset"
-        android:titleCondensed="@string/menu_reset_condensed">
-    </item>
-=======
+        android:titleCondensed="@string/menu_reset_condensed"/>
 
->>>>>>> ea24b87feccf1165e7dd1073fcbc6cd286458bb4
 </menu><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/menu/menu.xml -->
