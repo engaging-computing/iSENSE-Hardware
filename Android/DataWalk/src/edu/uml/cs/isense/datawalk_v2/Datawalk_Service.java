@@ -73,6 +73,7 @@ public class Datawalk_Service extends Service {
     float deltaTime = 0;
     boolean bFirstPoint = true;
     float totalDistance = 0;
+    long startTime;
 
     Intent intent;
 
@@ -286,7 +287,7 @@ public class Datawalk_Service extends Service {
         accel = new float[4];
 
         // Reset timer variables
-        final long startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
 
         elapsedMillis = 0;
         timerTick = 0;
@@ -303,113 +304,121 @@ public class Datawalk_Service extends Service {
         recordTimer.scheduleAtFixedRate(new TimerTask() {
 
             public void run() {
-
-                // Increase the timerTick count
-                timerTick++;
-
-                // Rajia: Begin Distance and Velocity Calculation
-                // : Only if GPS is working
-
-                // Convert Interval to Seconds
-                int nSeconds = DataWalk.mInterval / 1000;
-
-                if (gpsWorking) {
-                    if (timerTick % nSeconds == 0) {
-
-                        // For first point we do not have a previous location
-                        // yet
-                        // This will happen only once
-                        if (bFirstPoint) {
-                            prevLoc.set(loc);
-                            bFirstPoint = false;
-                            // Also Try this for total distance
-                            firstLoc.set(loc);
-                        }
-                        distance = loc.distanceTo(prevLoc);
-
-                        // Calculate Velocity
-                        velocity = distance / nSeconds;
-
-                        // Rajia: Now this location will be the previous one the
-                        // next time we get here
-                        prevLoc.set(loc);
-
-                        // Rajia Accumlate total distance
-                        totalDistance += distance;
-                    }
-                }
-
-
-
-                                // Update the main UI with the correct number of seconds
-
-
-                        if (timerTick == 1) {
-                            updateTime("Time Elapsed: " + timerTick
-                                    + " second");
-                        } else {
-                            updateTime("Time Elapsed: " + timerTick
-                                    + " seconds");
-                        }
-
-                        // Update distance and velocity text boxes
-                        updateDistance("Distance: "
-                                + roundTwoDecimals(totalDistance * 0.000621371)
-                                + " Miles " + roundTwoDecimals(totalDistance)
-                                + " Meters");
-
-                        updateVelocity("Velocity: "
-                                + roundTwoDecimals(velocity * 2.23694)
-                                + " MPH " + roundTwoDecimals(velocity)
-                                + " M/Sec    ");
-
-
-
-                // Every n seconds which is determined by interval
-                // (not including time 0)
-                if ((timerTick % (DataWalk.mInterval / 1000)) == 0 && timerTick != 0) {
-
-                    // Prepare a new row of data
-                    JSONArray dataJSON = new JSONArray();
-
-                    // Determine how long you've been recording for
-                    elapsedMillis += DataWalk.mInterval;
-                    long time = startTime + elapsedMillis;
-
-                    try {
-
-                        // Store new values into JSON Object
-                        dataJSON.put("u " + time);
-                        dataJSON.put(accel[3]);
-                        dataJSON.put(velocity);
-                        dataJSON.put(totalDistance);
-                        dataJSON.put(loc.getLatitude());
-                        dataJSON.put(loc.getLongitude());
-
-                        // Save this data point if GPS says it has a lock
-
-
-                            dataSet.put(dataJSON);
-
-                            // Updated the number of points recorded here and on
-                            // the main UI
-                            dataPointCount++;
-
-
-
-                       updateDataPoints("Points Recorded: "
-                                        + dataPointCount);
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+                recordData();
             }
 
-        }, 0, TIMER_LOOP);
+        }, 3000, TIMER_LOOP); //3000 is 3 second delay before starting to give gps time to boot up
 
     }
+
+    void recordData() {
+
+        // Increase the timerTick count
+        timerTick++;
+
+        // Rajia: Begin Distance and Velocity Calculation
+        // : Only if GPS is working
+
+        // Convert Interval to Seconds
+        int nSeconds = DataWalk.mInterval / 1000;
+
+        if (gpsWorking) {
+            if (timerTick % nSeconds == 0) {
+
+                // For first point we do not have a previous location
+                // yet
+                // This will happen only once
+                if (bFirstPoint) {
+                    prevLoc.set(loc);
+                    bFirstPoint = false;
+                    // Also Try this for total distance
+                    firstLoc.set(loc);
+                }
+                distance = loc.distanceTo(prevLoc);
+
+                // Calculate Velocity
+                velocity = distance / nSeconds;
+
+                // Rajia: Now this location will be the previous one the
+                // next time we get here
+                prevLoc.set(loc);
+
+                // Rajia Accumlate total distance
+                totalDistance += distance;
+            }
+        }
+
+
+
+        // Update the main UI with the correct number of seconds
+
+
+        if (timerTick == 1) {
+            updateTime("Time Elapsed: " + timerTick
+                    + " second");
+        } else {
+            updateTime("Time Elapsed: " + timerTick
+                    + " seconds");
+        }
+
+        // Update distance and velocity text boxes
+        updateDistance("Distance: "
+                + roundTwoDecimals(totalDistance * 0.000621371)
+                + " Miles " + roundTwoDecimals(totalDistance)
+                + " Meters");
+
+        updateVelocity("Velocity: "
+                + roundTwoDecimals(velocity * 2.23694)
+                + " MPH " + roundTwoDecimals(velocity)
+                + " M/Sec    ");
+
+
+        // Every n seconds which is determined by interval
+        // (not including time 0)
+        if ((timerTick % (DataWalk.mInterval / 1000)) == 0 && timerTick != 0) {
+
+            // Prepare a new row of data
+            JSONArray dataJSON = new JSONArray();
+
+            // Determine how long you've been recording for
+            elapsedMillis += DataWalk.mInterval;
+            long time = startTime + elapsedMillis;
+
+            try {
+
+                // Store new values into JSON Object
+                dataJSON.put("u " + time);
+                dataJSON.put(accel[3]);
+                dataJSON.put(velocity);
+                dataJSON.put(totalDistance);
+                dataJSON.put(loc.getLatitude());
+                dataJSON.put(loc.getLongitude());
+
+                // Save this data point if GPS says it has a lock
+
+
+                dataSet.put(dataJSON);
+
+                // Updated the number of points recorded here and on
+                // the main UI
+                dataPointCount++;
+
+
+
+                updateDataPoints("Points Recorded: "
+                        + dataPointCount);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+
 
     /**
      * Sets up the locations manager so that it request GPS permission if
