@@ -959,7 +959,6 @@ public class DataWalk extends Activity implements LocationListener,
 	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		// The accel array new holds:
 		// x acceleration in accel[0]
 		// y acceleration in accel[1]
 		// z acceleration in accel[2]
@@ -1130,11 +1129,7 @@ public class DataWalk extends Activity implements LocationListener,
 				gpsWaitingCounter = 0;
 			}
 			gpsWorking = false;
-			// Rajia Will that fix the random velocity problem
 			prevLoc.set(loc);
-			// Rajia: Waffeling number of GPS Sattelites
-			// w.make("Weak GPS signal.",Waffle.LENGTH_SHORT,
-			// Waffle.IMAGE_WARN);
 		}
 	}
 
