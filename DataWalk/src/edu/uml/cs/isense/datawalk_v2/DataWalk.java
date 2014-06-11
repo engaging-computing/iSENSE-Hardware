@@ -27,6 +27,7 @@ import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -880,15 +881,36 @@ public class DataWalk extends Activity implements LocationListener,
 
 			// Resets iSENSE and recording variables to their defaults.
 		} else if (requestCode == RESET_REQUESTED) {
-
-			if (resultCode == RESULT_OK) {
-
+                Log.e("HERE","HERE");
 				// Set variables to default
 				mInterval = 10000; //TODO
 				firstName = "";
 				lastInitial = "";
+
+                SharedPreferences mPrefs = mContext
+                        .getSharedPreferences(EnterName.PREFERENCES_KEY_USER_INFO,
+                                MODE_PRIVATE);
+                SharedPreferences.Editor nameEdit = mPrefs.edit();
+
+                nameEdit.putString(
+                        EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME,
+                        firstName).commit();
+                nameEdit.putString(
+                        EnterName.PREFERENCES_USER_INFO_SUBKEY_LAST_INITIAL,
+                        lastInitial)
+                        .commit();
+
+
                 //TODO
 				rcrdIntervalB.setText("10 seconds");
+                SharedPreferences sp = getSharedPreferences(
+                        DataWalk.INTERVAL_PREFS_KEY, Context.MODE_PRIVATE);
+
+
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString(DataWalk.INTERVAL_VALUE_KEY, "10000" )
+                        .commit();
+
 				if (useDev)
 					projectID = DEFAULT_PROJECT_DEV;
 				else
@@ -916,8 +938,6 @@ public class DataWalk extends Activity implements LocationListener,
 								ClassroomMode.PREFS_BOOLEAN_CLASSROOM_MODE,
 								true));
 				startActivityForResult(iEnterName, NAME_REQUESTED);
-
-			}
 
 			// Catches return from LoginIsense.java
 		} else if (requestCode == LOGIN_ISENSE_REQUESTED) {
