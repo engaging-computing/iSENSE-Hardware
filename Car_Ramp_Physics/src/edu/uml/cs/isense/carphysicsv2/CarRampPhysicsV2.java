@@ -17,17 +17,6 @@
 
 package edu.uml.cs.isense.carphysicsv2;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -58,6 +47,18 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.uml.cs.isense.carphysicsv2.dialogs.About;
 import edu.uml.cs.isense.carphysicsv2.dialogs.ContributorKeyDialog;
 import edu.uml.cs.isense.carphysicsv2.dialogs.Help;
@@ -480,7 +481,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 					}
 					
 				});
-				
 				
 			} else {
 				switchGravity = (Switch) findViewById(R.id.switch1);

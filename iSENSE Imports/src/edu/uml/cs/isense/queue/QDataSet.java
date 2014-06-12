@@ -173,10 +173,11 @@ public class QDataSet implements Serializable {
 							Integer.parseInt(this.projID), api, c, null);
 					this.data = dfm.convertInternalDataToJSONObject(ja)
 							.toString();
+                    requestDataLabelInOrder = false;
 				}
 			} catch (JSONException e) {
 				// we have a JSONArray of JSONObjects: this is bad
-                Log.e("QDataSet in iSENSE Imports: ", "JSONArray of JSONObjects - ");
+                Log.e("QDataSet method 'upload' in iSENSE Imports: ", "JSONArray of JSONObjects - ");
                 e.printStackTrace();
 				return -1;
 			}
