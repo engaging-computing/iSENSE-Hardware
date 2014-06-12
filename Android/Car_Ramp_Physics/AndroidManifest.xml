@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.carphysicsv2"
     android:versionCode="21"
-    android:versionName="3.1.1" >
+    android:versionName="3.1.1"
+    android:sharedUserId="edu.uml.cs.isense">
 
     <uses-sdk
         android:minSdkVersion="9"

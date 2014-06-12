@@ -2,11 +2,11 @@
 <pre-dex-items>
 
     <item
-        dex="/Users/bobbydonald/iSENSE-Hardware/Android/Canobie_Physics_v2/build/intermediates/pre-dexed/debug/classes-6be2748b05fa77a5896f90674ca7e24be55266dd.jar"
+        dex="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/intermediates/pre-dexed/debug/classes-6be2748b05fa77a5896f90674ca7e24be55266dd.jar"
         jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/classes.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="9790c5a015a241450bd6c0a906e8ba5841de9117"/>
+        sha1="43e4d268614d5323be61b999601f618ca800f894"/>
     <item
         dex="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/intermediates/pre-dexed/debug/android-support-v4-36231bad5d4e7cee554a3e912d3893a6feed0bba.jar"
         jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/libs/android-support-v4.jar"

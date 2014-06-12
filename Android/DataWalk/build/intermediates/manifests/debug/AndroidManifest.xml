@@ -191,6 +191,7 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.EnterName"
             android:label="@string/enter_name_prompt"
+            android:launchMode="singleTop"
             android:theme="@style/AppThemeDialog" />
         <activity
             android:name="edu.uml.cs.isense.credentials.ClassroomMode"
