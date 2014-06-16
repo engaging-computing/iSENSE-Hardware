@@ -15,7 +15,9 @@
         android:digits="@string/digits_restriction"
         android:hint="@string/search"
         android:imeOptions="actionDone"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"/>
 
     <ListView
         android:id="@+id/android:list"
