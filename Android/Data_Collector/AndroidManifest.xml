@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.collector"
     android:versionCode="34"
-    android:versionName="4.1.0" >
+    android:versionName="4.1.0"
+    android:sharedUserId="edu.uml.cs.isense">
 
     <uses-sdk
         android:minSdkVersion="9"

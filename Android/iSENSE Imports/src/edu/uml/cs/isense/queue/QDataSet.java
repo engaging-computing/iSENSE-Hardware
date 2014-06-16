@@ -1,17 +1,18 @@
 package edu.uml.cs.isense.queue;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.Random;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.util.Log;
+import java.io.File;
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.Random;
+
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.API.TargetType;
 import edu.uml.cs.isense.credentials.CredentialManager;
@@ -172,9 +173,12 @@ public class QDataSet implements Serializable {
 							Integer.parseInt(this.projID), api, c, null);
 					this.data = dfm.convertInternalDataToJSONObject(ja)
 							.toString();
+                    requestDataLabelInOrder = false;
 				}
 			} catch (JSONException e) {
 				// we have a JSONArray of JSONObjects: this is bad
+                Log.e("QDataSet method 'upload' in iSENSE Imports: ", "JSONArray of JSONObjects - ");
+                e.printStackTrace();
 				return -1;
 			}
 		} else {
@@ -207,6 +211,7 @@ public class QDataSet implements Serializable {
 				}
 
 			} catch (JSONException e) {
+                Log.w("QDataSet in iSENSEImports: ", "we already have a JSONArray of JSONObjects, should continue to upload anyways");
 				// we have a JSONArray of JSONObjects for data already -
 				// continue without reOrdering
 			}

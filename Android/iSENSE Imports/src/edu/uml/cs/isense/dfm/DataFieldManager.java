@@ -1,19 +1,20 @@
 package edu.uml.cs.isense.dfm;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Locale;
+
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.objects.RProjectField;
@@ -549,8 +550,6 @@ public class DataFieldManager extends Application {
 	 *            putData()} method.
 	 * @param projID
 	 *            - The project ID which the data will be re-ordered to match.
-	 * @param api
-	 *            - An {@link edu.uml.cs.isense.comm.API API} class instance.
 	 * @param c
 	 *            - The context of the Activity calling this function
 	 * @param fieldOrder

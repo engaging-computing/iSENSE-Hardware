@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.uml.cs.isense.datawalk_v2"
+    android:sharedUserId="edu.uml.cs.isense"
     android:versionCode="21"
     android:versionName="2.4.1" >
 
@@ -191,6 +192,7 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.EnterName"
             android:label="@string/enter_name_prompt"
+            android:launchMode="singleTop"
             android:theme="@style/AppThemeDialog" />
         <activity
             android:name="edu.uml.cs.isense.credentials.ClassroomMode"

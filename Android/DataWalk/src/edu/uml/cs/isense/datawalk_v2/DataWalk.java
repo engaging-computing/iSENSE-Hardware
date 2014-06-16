@@ -52,7 +52,6 @@ import edu.uml.cs.isense.credentials.ClassroomMode;
 import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.EnterName;
 import edu.uml.cs.isense.datawalk_v2.dialogs.DataRateDialog;
-import edu.uml.cs.isense.datawalk_v2.dialogs.ForceStop;
 import edu.uml.cs.isense.objects.RPerson;
 import edu.uml.cs.isense.objects.RProject;
 import edu.uml.cs.isense.proj.Setup;
@@ -126,7 +125,6 @@ public class DataWalk extends Activity implements LocationListener,
 	public static final String INTERVAL_VALUE_KEY = "interval_val";
 
 	/* Manage Work Flow Within DataWalk.java */
-	private boolean running = false;
 	private boolean gpsWorking = true;
 	private boolean useMenu = true;
 
@@ -259,16 +257,17 @@ public class DataWalk extends Activity implements LocationListener,
 					}
 				}
 			} else {
-				Intent iEnterName = new Intent(this, EnterName.class);
-				iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
-						classroomMode);
-				startActivityForResult(iEnterName, NAME_REQUESTED);
+                if (!EnterName.isOpen) {
+                    Intent iEnterName = new Intent(this, EnterName.class);
+                    iEnterName.putExtra(EnterName.PREFERENCES_CLASSROOM_MODE,
+                            classroomMode);
+                    startActivityForResult(iEnterName, NAME_REQUESTED);
+                }
 			}
 
 		} else {
 			nameB.setText(firstName + " " + lastInitial);
 		}
-		
 		/* Starts the code for the main button. */
 		startStopB.setOnLongClickListener(new OnLongClickListener() {
 
@@ -284,14 +283,14 @@ public class DataWalk extends Activity implements LocationListener,
                 if (Datawalk_Service.running) {
                     setLayoutNotRecording();
                     stopService(service);
-                } else if (!Datawalk_Service.running && gpsWorking) {
+                } else if (!Datawalk_Service.running && gpsWorking ) { //&& gpsWorking ) {
                     setLayoutRecording();
                     startService(service);
                 } else if (!gpsWorking) {
                     w.make("No GPS Signal", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
                 }
 
-				return running;
+				return Datawalk_Service.running;
 
 			}
 
@@ -300,6 +299,12 @@ public class DataWalk extends Activity implements LocationListener,
 		// Additional initializations that are dependent on whether or not we're
 		// on dev
 		onCreateInit();
+        if (Datawalk_Service.running) {
+            setLayoutRecording();
+        } else {
+            setLayoutNotRecording();
+
+        }
 
 	}// ends onCreate
 
@@ -316,6 +321,7 @@ public class DataWalk extends Activity implements LocationListener,
 	}
 
 	private void initialize() {
+        //TODO
         CredentialManager.login(this, api);
 
         // Initialize main UI elements
@@ -466,7 +472,7 @@ public class DataWalk extends Activity implements LocationListener,
 
 		// Stops the GPS and accelerometer when the application is not
 		// recording.
-		if (!running) {
+		if (!Datawalk_Service.running) {
 			if (mLocationManager != null)
 				mLocationManager.removeUpdates(DataWalk.this);
 
@@ -478,7 +484,18 @@ public class DataWalk extends Activity implements LocationListener,
 
     }
 
-	/**
+
+    @Override
+    protected void onDestroy() {
+        if(isFinishing() && Datawalk_Service.running) {
+            setLayoutNotRecording();
+            stopService(service);
+        }
+
+        super.onDestroy();
+    }
+
+    /**
 	 * Called whenever this activity is called from within the application, like
 	 * from the login dialog.
 	 */
@@ -504,12 +521,6 @@ public class DataWalk extends Activity implements LocationListener,
 		// Rebuild the upload queue
 		if (uq != null)
 			uq.buildQueueFromFile();
-
-		// Check to see if the recording was canceled while running
-		if (running) {
-			Intent i = new Intent(DataWalk.this, ForceStop.class);
-			startActivityForResult(i, DIALOG_FORCE_STOP);
-		}
 
 		// Restart the GPS counter
 		if (mLocationManager != null)
@@ -538,13 +549,12 @@ public class DataWalk extends Activity implements LocationListener,
 		// Log in automatically
 		CredentialManager.login(this, api);
 
-
         LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(Datawalk_Service.DATAWALK_RESULT));
 
         super.onStart();
 	}
 
-	/**
+    /**
 	 * Sets the project Id to the one the user specified.
 	 */
 	private void setProjectIDFromSetupClass() {
@@ -804,7 +814,7 @@ public class DataWalk extends Activity implements LocationListener,
 					new GetProjectTask().execute();
 				}
 			} else {
-				// TODO There is no Internet so we cannot pull fields from
+				// There is no Internet so we cannot pull fields from
 				// iSENSE.
 				// IMPORTANT -- Inform the user of this situation and act
 				// appropriately
@@ -883,7 +893,7 @@ public class DataWalk extends Activity implements LocationListener,
 		} else if (requestCode == RESET_REQUESTED) {
                 Log.e("HERE","HERE");
 				// Set variables to default
-				mInterval = 10000; //TODO
+				mInterval = 10000;
 				firstName = "";
 				lastInitial = "";
 
@@ -901,7 +911,6 @@ public class DataWalk extends Activity implements LocationListener,
                         .commit();
 
 
-                //TODO
 				rcrdIntervalB.setText("10 seconds");
                 SharedPreferences sp = getSharedPreferences(
                         DataWalk.INTERVAL_PREFS_KEY, Context.MODE_PRIVATE);
@@ -959,7 +968,6 @@ public class DataWalk extends Activity implements LocationListener,
 	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		// The accel array new holds:
 		// x acceleration in accel[0]
 		// y acceleration in accel[1]
 		// z acceleration in accel[2]
@@ -1130,11 +1138,7 @@ public class DataWalk extends Activity implements LocationListener,
 				gpsWaitingCounter = 0;
 			}
 			gpsWorking = false;
-			// Rajia Will that fix the random velocity problem
 			prevLoc.set(loc);
-			// Rajia: Waffeling number of GPS Sattelites
-			// w.make("Weak GPS signal.",Waffle.LENGTH_SHORT,
-			// Waffle.IMAGE_WARN);
 		}
 	}
 
