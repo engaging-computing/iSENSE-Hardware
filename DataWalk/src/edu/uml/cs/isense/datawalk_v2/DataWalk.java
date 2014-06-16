@@ -484,7 +484,18 @@ public class DataWalk extends Activity implements LocationListener,
 
     }
 
-	/**
+
+    @Override
+    protected void onDestroy() {
+        if(isFinishing() && Datawalk_Service.running) {
+            setLayoutNotRecording();
+            stopService(service);
+        }
+
+        super.onDestroy();
+    }
+
+    /**
 	 * Called whenever this activity is called from within the application, like
 	 * from the login dialog.
 	 */
