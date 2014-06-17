@@ -30,7 +30,8 @@ import edu.uml.cs.isense.dfm.DataFieldManager;
 @SuppressLint("ParserError")
 public class QDataSet implements Serializable {
     //ERROR Message Displayed if something goes wrong
-    private String error_message = "Failed";
+    private final String default_error_message = "Failed";
+    private String error_message = default_error_message;
 
 	// DO NOT MODIFY -- AUTO-GENERATED SERIAL ID
 	private static final long serialVersionUID = 3776465868309657210L;
@@ -156,9 +157,12 @@ public class QDataSet implements Serializable {
 	public int upload(API api, Context c) {		
 		// if no project is associated with this data set yet, we can't upload
 		// it
-		if (this.projID.equals("-1"))
-			return -1;
-
+		if (this.projID.equals("-1")) {
+            error_message = "No Project Selected";
+            return -1;
+        } else {
+            error_message = default_error_message;
+        }
 		// if the data is already in a forced order and just needs to be labeled
 		// with the
 		// project's field IDs, we'll do so here
@@ -181,7 +185,8 @@ public class QDataSet implements Serializable {
 				// we have a JSONArray of JSONObjects: this is bad
                 Log.e("QDataSet method 'upload' in iSENSE Imports: ", "JSONArray of JSONObjects - ");
                 e.printStackTrace();
-				return -1;
+                error_message = "Wrong JSON Format";
+                return -1;
 			}
 		} else {
 			// if there was no initial project, we must reOrder the data with
@@ -230,7 +235,6 @@ public class QDataSet implements Serializable {
 	 *         failed
 	 */
 	private int uploadDataAndMedia() {
-		//TODO Pictures do not work for upload to dataset 3/27/14
 		int dataSetID = -1;
 		if (this.rdyForUpload) {			
 			switch (type) {
@@ -279,6 +283,7 @@ public class QDataSet implements Serializable {
 				jobj.put("data", dataJSON);
 			} catch (JSONException e) {
 				e.printStackTrace();
+                error_message = "JSON ERROR";
 				return -1;
 			}
 			jobj = UploadQueue.getAPI().rowsToCols(jobj);
@@ -472,6 +477,21 @@ public class QDataSet implements Serializable {
 	public void setRequestDataLabelInOrder(boolean rdlio) {
 		this.requestDataLabelInOrder = rdlio;
 	}
-	
+
+    /**
+     *
+     * @param message
+     */
+    public void setErrorMessage(String message) {
+        error_message = message;
+    }
+
+    /**
+     *
+     * @return error_message
+     */
+    public String getErrorMessage() {
+        return error_message;
+    }
 	
 }
