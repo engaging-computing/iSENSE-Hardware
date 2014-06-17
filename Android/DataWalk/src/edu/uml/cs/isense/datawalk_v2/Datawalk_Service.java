@@ -84,7 +84,7 @@ public class Datawalk_Service extends Service {
     private int dataSetID = -1;
 
     LocalBroadcastManager broadcaster;
-    static final public String DATAWALK_RESULT = "com.controlj.copame.backend.COPAService.REQUEST_PROCESSED";
+    static final public String DATAWALK_RESULT = "edu.uml.cs.isense.datawalk_v2.Datawalk_Service.REQUEST_PROCESSED";
 
 
     /**
