@@ -29,9 +29,6 @@ import edu.uml.cs.isense.dfm.DataFieldManager;
  */
 @SuppressLint("ParserError")
 public class QDataSet implements Serializable {
-    //ERROR Message Displayed if something goes wrong
-    private String error_message = "Failed";
-
 	// DO NOT MODIFY -- AUTO-GENERATED SERIAL ID
 	private static final long serialVersionUID = 3776465868309657210L;
 
