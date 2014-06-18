@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.collector"
-    android:versionCode="35"
-    android:versionName="4.1.1"
+    android:versionCode="36"
+    android:versionName="4.1.2"
     android:sharedUserId="edu.uml.cs.isense">
 
     <uses-sdk
