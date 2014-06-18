@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
+import edu.uml.cs.isense.comm.dataSetUploadInfo;
 import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.dfm.DataFieldManager;
 import edu.uml.cs.isense.dfm.FieldMatching;
@@ -73,7 +74,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 	private static LinearLayout scrollQueue;
 	private Runnable sdUploader;
 	private static UploadQueue uq;
-	private int dataSetID = -1;
+	private dataSetUploadInfo uploadInfo = new dataSetUploadInfo();
 	private static String parentName = "";
 
 	protected static QDataSet lastDataSetLongClicked;
@@ -320,7 +321,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 		if (result_code == RESULT_OK) {
 			uq.storeAndReRetrieveQueue(true);
 			Intent iRet = new Intent();
-			iRet.putExtra(LAST_UPLOADED_DATA_SET_ID, dataSetID);
+			iRet.putExtra(LAST_UPLOADED_DATA_SET_ID, uploadInfo.DataSetId);
 			setResult(RESULT_OK, iRet);
 		} else {
 			setResult(RESULT_CANCELED);
@@ -335,19 +336,19 @@ public class QueueLayout extends Activity implements OnClickListener {
 		boolean dialogShow = true;
 		ProgressDialog dia = null;
 		QDataSet uploadSet;
-		boolean doThings = true;
+		boolean selectedToUpload = true;
 
 		@Override
 		protected void onPreExecute() {
 
 			uploadSet = uq.mirrorQueue.remove();
 			if (!uploadSet.isUploadable())
-				doThings = false;
+                selectedToUpload = false;
 
 			createRunnable(uploadSet);
 
 			OrientationManager.disableRotation(QueueLayout.this);
-			if (doThings) {
+			if (selectedToUpload) {
 				dia = new ProgressDialog(QueueLayout.this);
 				dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				dia.setMessage("Please wait while \"" + uploadSet.getName()
@@ -363,10 +364,10 @@ public class QueueLayout extends Activity implements OnClickListener {
 				dia = null;
 
 		}
-
+        /*upload all the datasets in the queue */
 		@Override
 		protected Void doInBackground(Void... voids) {
-			if (doThings)
+			if (selectedToUpload)
 				sdUploader.run();
 
 			if (dia != null)
@@ -378,26 +379,25 @@ public class QueueLayout extends Activity implements OnClickListener {
 		@Override
 		protected void onPostExecute(Void voids) {
 
-			if (!doThings) {
-			
-				dataSetUploadStatus.add(uploadSet.getName() + 
+			if (!selectedToUpload) {
+				dataSetUploadStatus.add(uploadSet.getName() +
 						": <font COLOR=\"#888888\">selected not to upload</font>");
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
 			
-			} else if (dataSetID != -1) {
+			} else if (uploadInfo.DataSetId != -1) { //has a valid id so successfully uploaded
 
 				dataSetUploadStatus.add(uploadSet.getName() + 
 						": <font COLOR=\"#07B50A\">upload successful</font>");
 			
-			} else if (uploadSet.getProjID().equals("-1")) {
+			} else if (uploadSet.getProjID().equals("-1")) { //invalid project id
 				
 				dataSetUploadStatus.add(uploadSet.getName() + 
 						": <font COLOR=\"#D9A414\">requires a project first</font>");
 				uq.queue.add(uploadSet);
 				uq.storeAndReRetrieveQueue(false);
 			
-			} else if (dataSetID == -1) {
+			} else if (uploadInfo.DataSetId == -1) { //invalid data set id
 				//upload failed
 				// try to see if the data was formatted incorrectly (i.e. was a JSONArray, not JSONObject)
 				JSONObject data = null;
@@ -413,7 +413,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 								": <font COLOR=\"#ED0909\">project for this data set may not exist</font>");
 					} else {
 						dataSetUploadStatus.add(uploadSet.getName() + 
-								": <font COLOR=\"#ED0909\">upload failed</font>");
+								": <font COLOR=\"#ED0909\">" + uploadInfo.ErrorMessage + "</font>");
 					}	
 				}
 				//TODO better errors
@@ -424,6 +424,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 			if (dialogShow && dia != null)
 				dia.dismiss();
 
+            //if finished uploading show summary
 			if (uq.mirrorQueue.isEmpty()) {
 				uq.storeAndReRetrieveQueue(true);
 				
@@ -452,7 +453,7 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 			public void run() {
 				if (ds.isUploadable()) {
-					dataSetID = ds.upload(api, mContext);
+                    uploadInfo = ds.upload(api, mContext);
 				} else {
 					uq.queue.add(ds);
 					uq.storeAndReRetrieveQueue(false);
