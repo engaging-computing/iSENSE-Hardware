@@ -1,10 +1,5 @@
 package edu.uml.cs.isense.queue;
 
-import java.util.LinkedList;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,6 +14,12 @@ import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.LinkedList;
+
 import edu.uml.cs.isense.R;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
@@ -229,7 +230,16 @@ public class QueueLayout extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		int id = v.getId();
 		if (id == R.id.upload) {
-			runUploadSanityChecks();
+			if(runUploadSanityChecks()) {
+                // TODO remove login task and replace with credential managers
+                if (api.getCurrentUser() == null) {
+                    //Not logged in so get a Contributor key
+                    Intent key_intent = new Intent().setClass(mContext, CredentialManagerKey.class);
+                    startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);
+                } else {
+                    prepareForUpload();
+                }
+            }
 		} else if (id == R.id.cancel) {
 			setResultAndFinish(RESULT_CANCELED);
 			finish();
@@ -262,31 +272,20 @@ public class QueueLayout extends Activity implements OnClickListener {
 
 	}
 	
-	private void runUploadSanityChecks() {
+	private boolean runUploadSanityChecks() {
 		if (allSelectedDataSetsHaveProjects()) {
 			if (!Connection.hasConnectivity(mContext)) {
 				w.make("No internet connection found", Waffle.IMAGE_X);
-				return;
+				return false;
 			}
 			
-			// TODO remove login task and replace with credential managers
-			if (api.getCurrentUser() == null) {
-				Log.e("queueLayout runUploadSanityChecks()", "api current user is null");
-				
-				//Call intent to get a key
-				Intent key_intent = new Intent().setClass(mContext, CredentialManagerKey.class);
-				startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);		
-				
-//				new LoginTask().execute();
-//				return;
-			} else {
-				prepareForUpload();
-			}
-			
+
+			return true;
 		} else {
 			Intent iNoInitialProject = new Intent(QueueLayout.this,
 					NoInitialProject.class);
 			startActivity(iNoInitialProject);
+            return false;
 		}
 	}
 	
