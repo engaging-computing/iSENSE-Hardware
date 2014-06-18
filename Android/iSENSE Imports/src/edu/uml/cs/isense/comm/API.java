@@ -1,5 +1,14 @@
 package edu.uml.cs.isense.comm;
 
+import android.util.Log;
+
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,13 +27,6 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Random;
-
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import edu.uml.cs.isense.objects.RDataSet;
 import edu.uml.cs.isense.objects.RPerson;
@@ -403,9 +405,10 @@ public class API {
 	 * @return The integer ID of the newly uploaded dataset, or -1 if upload
 	 *         fails
 	 */
-	public int uploadDataSet(int projectId, JSONObject data, String datasetName) {
+	public dataSetUploadInfo uploadDataSet(int projectId, JSONObject data, String datasetName) {
+        dataSetUploadInfo ret = new dataSetUploadInfo();
 		datasetName += appendedTimeStamp();
-
+        String reqResult = "";
 		JSONObject requestData = new JSONObject();
 
 		try {
@@ -413,16 +416,20 @@ public class API {
 			requestData.put("password", password);
 			requestData.put("title", datasetName);
 			requestData.put("data", data);
-			String reqResult = makeRequest(
+			reqResult = makeRequest(
 					baseURL,
 					"projects/" + projectId + "/jsonDataUpload", "", "POST",
 					requestData);
 			JSONObject jobj = new JSONObject(reqResult);
-			return jobj.getInt("id");
+            ret.DataSetId = jobj.getInt("id");
+			return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
+            ret.ErrorMessage = reqResult;
+            //TODO based on server response set dataset id
 		}
-		return -1;
+        ret.DataSetId = -1;
+		return ret;
 	}
 
 	/**
@@ -442,30 +449,43 @@ public class API {
 	 * @return The integer ID of the newly uploaded dataset, or -1 if upload
 	 *         fails
 	 */
-	public int uploadDataSet(int projectId, JSONObject data, String dataName, String conKey,  String conName) {
+	public dataSetUploadInfo uploadDataSet(int projectId, JSONObject data, String dataName, String conKey,  String conName) {
+        dataSetUploadInfo ret = new dataSetUploadInfo();
 		JSONObject requestData = new JSONObject();
-
+        String reqResult = "";
 		try {
 			requestData.put("contribution_key", conKey);
 			requestData.put("contributor_name", conName);
 			requestData.put("data", data);
 			requestData.put("title", dataName + appendedTimeStamp()); //dataset name is conName + timestamp
-			String reqResult = makeRequest(
+			reqResult = makeRequest(
 					baseURL,
 					"projects/" + projectId + "/jsonDataUpload", "", "POST",
 					requestData);
 			JSONObject jobj = new JSONObject(reqResult);
-			return jobj.getInt("id");
+            ret.DataSetId = jobj.getInt("id");
+			return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
+            Log.e("message" , e.getLocalizedMessage());
+            try {
+                JSONObject jobj = new JSONObject(reqResult);
+                ret.ErrorMessage = jobj.getString("msg");
+                ret.DataSetId = -1;
+                return ret;
+            } catch (Exception e2) {
+       
+            }
+            //TODO instead of -1 return back error codes
 		}
-		return -1;
+        ret.DataSetId = -1;
+		return ret;
 	}
 
 	/**
 	 * Append new rows of data to the end of an existing data set ** This
 	 * currently works for horrible reasons regarding how the website handles
-	 * edit data sets ** Will fix hopefully --J TODO
+	 * edit data sets ** Will fix hopefully --J
 	 * 
 	 * @param dataSetId
 	 *            The ID of the data set to append to

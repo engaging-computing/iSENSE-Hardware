@@ -576,17 +576,17 @@
                 </string>
                 <string name="accel_x" >Accel-X
                 </string>
-                <string name="luminous_flux" >Light
-                </string>
                 <string name="temperature_f" >Temp. (Fahrenheit)
+                </string>
+                <string name="luminous_flux" >Light
                 </string>
                 <string name="temperature_c" >Temp. (Celsius)
                 </string>
                 <string name="heading_deg" >Angle (Degrees)
                 </string>
-                <string name="null_string" >strNullID
-                </string>
                 <string name="altitude" >Altitude
+                </string>
+                <string name="null_string" >strNullID
                 </string>
             </file>
             <file
@@ -625,19 +625,21 @@
                 </string>
                 <string name="proj" >Project:
                 </string>
-                <string name="password" >Password:
+                <string name="credential_manager" >Credential Manager
                 </string>
                 <string name="browse" >Browse
                 </string>
-                <string name="credential_manager" >Credential Manager
+                <string name="password" >Password:
                 </string>
                 <string name="type_data" >Type: Data
                 </string>
                 <string name="project_failed_create" >Project failed to create - please try again
                 </string>
+                <string name="field_name" >field name
+                </string>
                 <string name="classroom_mode" >Classroom Mode
                 </string>
-                <string name="field_name" >field name
+                <string name="retry" >Try Again
                 </string>
 
                 <string-array name="isense_fields_array" >
@@ -701,8 +703,6 @@ Temp. (Kelvin)
                     </item>
                 </string-array>
 
-                <string name="retry" >Try Again
-                </string>
                 <string name="please_enter_field" >Please enter at least one field for your project
                 </string>
                 <string name="logout" >Log out
@@ -783,27 +783,27 @@ Credentials
                 </string>
                 <string name="loading" >Loading…
                 </string>
-                <string name="new_proj_name" >New Project Name
-                </string>
                 <string name="login_success" >Login Successful
+                </string>
+                <string name="new_proj_name" >New Project Name
                 </string>
                 <string name="timeFailed" >Failed to synchronize time.  You may try again.
                 </string>
                 <string name="contributor" >Contributor Name:
                 </string>
-                <string name="first_name" >First Name:
-                </string>
                 <string name="field_matching_text" >Match the project\'s fields (left) with fields that this app can record data for 
         (dropdowns on the right).  If no match is
         available, leave the drop down blank.
                 </string>
-                <string name="scan_qr" >Scan QR
-                </string>
-                <string name="def_username" >Mobile
+                <string name="first_name" >First Name:
                 </string>
                 <string name="contribute" ><u>
 You Can Contribute To:
                     </u></string>
+                <string name="def_username" >Mobile
+                </string>
+                <string name="scan_qr" >Scan QR
+                </string>
                 <string name="digits_restriction" >ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_.,01234567879()@
                 </string>
                 <string name="login" >Login
@@ -823,19 +823,15 @@ Instructions:
                 </string>
                 <string name="how_to_add_field" >Select a field type from the drop down menu below to add a new field to your project.
                 </string>
-                <string name="deselect_all" >Deselect All
-                </string>
-                <string name="createProjectButton" >Create Project
+                <string name="now_in_mode" >Now in\u0020
                 </string>
                 <string name="def_last_initial" >U.
                 </string>
-                <string name="now_in_mode" >Now in\u0020
+                <string name="createProjectButton" >Create Project
+                </string>
+                <string name="deselect_all" >Deselect All
                 </string>
                 <string name="createProject" >Create New Project
-                </string>
-                <string name="or" >OR
-                </string>
-                <string name="always_prompt_first_name" >Always prompt for first name and last initial
                 </string>
 
                 <string-array name="field_type_array" >
@@ -853,11 +849,15 @@ Location
                     </item>
                 </string-array>
 
+                <string name="always_prompt_first_name" >Always prompt for first name and last initial
+                </string>
+                <string name="or" >OR
+                </string>
                 <string name="numbers_restriction" >1234567890.-
                 </string>
-                <string name="project_field" >Project Field
-                </string>
                 <string name="two_more_taps" >2 more taps to enter\u0020
+                </string>
+                <string name="project_field" >Project Field
                 </string>
                 <string name="please_enter_proj_name" >Please enter a new project name
                 </string>
@@ -866,15 +866,15 @@ Location
                 <string name="last_initial" >Last Initial:
                 </string>
                 <string name="contentDesc" ></string>
-                <string name="delete" >Delete
-                </string>
                 <string name="enter_name_prompt" >Please Enter Your Name
                 </string>
-                <string name="isense_fields" >Fields
+                <string name="delete" >Delete
+                </string>
+                <string name="key_info" >A contributor key allows you to contribute data to a specific project without an iSENSE account.
                 </string>
                 <string name="deg" >deg
                 </string>
-                <string name="key_info" >A contributor key allows you to contribute data to a specific project without an iSENSE account.
+                <string name="isense_fields" >Fields
                 </string>
                 <string name="logged_in" >Logged in as:
                 </string>
@@ -891,17 +891,6 @@ wrap_content
                     </item>
                     <item name="android:layout_width">
 wrap_content
-                    </item>
-                </style>
-
-                <style
-                    name="PDTheme"
-                    parent="@android:style/Theme.Dialog" >
-                    <item name="android:alertDialogStyle">
-@style/CustomProgressDialogStyle
-                    </item>
-                    <item name="android:textColorPrimary">
-#000000
                     </item>
                 </style>
 
@@ -939,8 +928,15 @@ wrap_content
                 </style>
 
                 <style
-                    name="AppTheme"
-                    parent="android:Theme.Light" />
+                    name="PDTheme"
+                    parent="@android:style/Theme.Dialog" >
+                    <item name="android:alertDialogStyle">
+@style/CustomProgressDialogStyle
+                    </item>
+                    <item name="android:textColorPrimary">
+#000000
+                    </item>
+                </style>
 
                 <style
                     name="AppThemeQueue"
@@ -949,6 +945,10 @@ wrap_content
 wrap_content
                     </item>
                 </style>
+
+                <style
+                    name="AppTheme"
+                    parent="android:Theme.Light" />
             </file>
             <file
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE Imports/res/values-v11/styles.xml"
@@ -962,6 +962,17 @@ wrap_content
                     </item>
                     <item name="android:textColorPrimary">
 #000000
+                    </item>
+                </style>
+
+                <style
+                    name="AppThemeDialog"
+                    parent="@android:style/Theme.Holo.Light.Dialog" >
+                    <item name="android:layout_height">
+wrap_content
+                    </item>
+                    <item name="android:layout_width">
+wrap_content
                     </item>
                 </style>
 
@@ -980,17 +991,6 @@ wrap_content
                 </style>
 
                 <style
-                    name="AppThemeDialog"
-                    parent="@android:style/Theme.Holo.Light.Dialog" >
-                    <item name="android:layout_height">
-wrap_content
-                    </item>
-                    <item name="android:layout_width">
-wrap_content
-                    </item>
-                </style>
-
-                <style
                     name="AppTheme.Widget"
                     parent="@android:style/Theme.Holo.Light" >
                     <item name="android:popupMenuStyle">
@@ -1000,6 +1000,10 @@ wrap_content
 @style/AppTheme.DropDownListView
                     </item>
                 </style>
+
+                <style
+                    name="AppTheme.DropDownListView"
+                    parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
 
                 <style
                     name="AppTheme.ActionBar"
@@ -1017,10 +1021,6 @@ showHome|useLogo
 @style/AppTheme.ActionBar.TitleTextStyle
                     </item>
                 </style>
-
-                <style
-                    name="AppTheme.DropDownListView"
-                    parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
 
                 <style name="CustomProgressDialogStyle" >
                     <item name="android:bottomBright">
@@ -1112,6 +1112,10 @@ wrap_content
                     </item>
                 </style>
 
+                <style
+                    name="AppTheme.PopupMenu"
+                    parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
+
                 <style name="CustomProgressDialogStyle" >
                     <item name="android:bottomBright">
 #FF0000
@@ -1144,10 +1148,6 @@ wrap_content
 #FF0000
                     </item>
                 </style>
-
-                <style
-                    name="AppTheme.PopupMenu"
-                    parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
 
                 <style
                     name="AppTheme.ActionBar"

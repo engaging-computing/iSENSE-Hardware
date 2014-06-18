@@ -15,6 +15,7 @@ import java.util.Random;
 
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.API.TargetType;
+import edu.uml.cs.isense.comm.dataSetUploadInfo;
 import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.dfm.DataFieldManager;
@@ -150,13 +151,15 @@ public class QDataSet implements Serializable {
 	 * @return The ID of the data set created on iSENSE, or -1 if the upload
 	 *         failed
 	 */
-	public int upload(API api, Context c) {		
+	public dataSetUploadInfo upload(API api, Context c) {
+        dataSetUploadInfo info = new dataSetUploadInfo();
 		// if no project is associated with this data set yet, we can't upload
 		// it
-		if (this.projID.equals("-1"))
-			return -1;
-
-		// if the data is already in a forced order and just needs to be labeled
+		if (this.projID.equals("-1")) {
+            info.ErrorMessage = "No Project Selected";
+            return info;
+        }
+        // if the data is already in a forced order and just needs to be labeled
 		// with the
 		// project's field IDs, we'll do so here
 		if (this.requestDataLabelInOrder) {
@@ -178,7 +181,9 @@ public class QDataSet implements Serializable {
 				// we have a JSONArray of JSONObjects: this is bad
                 Log.e("QDataSet method 'upload' in iSENSE Imports: ", "JSONArray of JSONObjects - ");
                 e.printStackTrace();
-				return -1;
+                info.DataSetId = -1;
+                info.ErrorMessage = "Wrong JSON Format";
+                return info;
 			}
 		} else {
 			// if there was no initial project, we must reOrder the data with
@@ -226,13 +231,13 @@ public class QDataSet implements Serializable {
 	 * @return The ID of the data set created on iSENSE, or -1 if the upload
 	 *         failed
 	 */
-	private int uploadDataAndMedia() {
-		//TODO Pictures do not work for upload to dataset 3/27/14
+	private dataSetUploadInfo uploadDataAndMedia() {
+        dataSetUploadInfo info = new dataSetUploadInfo();
 		int dataSetID = -1;
 		if (this.rdyForUpload) {			
 			switch (type) {
 			case DATA:
-				dataSetID = uploadData();
+				info = uploadData();
 				break;
 
 
@@ -248,7 +253,7 @@ public class QDataSet implements Serializable {
 				break;
 
 			case BOTH:
-				dataSetID = uploadData();
+				info = uploadData();
 
 				if (CredentialManager.isLoggedIn()) {
 					UploadQueue.getAPI().uploadMedia(
@@ -262,11 +267,12 @@ public class QDataSet implements Serializable {
 			}
 		}
 
-		return dataSetID;
+		return info;
 	}
 
-	private int uploadData() {
-		int dataSetID = -1;
+	private dataSetUploadInfo uploadData() {
+//		int dataSetID = -1;
+        dataSetUploadInfo info = new dataSetUploadInfo();
 
 		JSONArray dataJSON = prepDataForUpload();
 		if (!(dataJSON.isNull(0))) {
@@ -276,7 +282,9 @@ public class QDataSet implements Serializable {
 				jobj.put("data", dataJSON);
 			} catch (JSONException e) {
 				e.printStackTrace();
-				return -1;
+                info.DataSetId = -1;
+                info.ErrorMessage = "JSON Error";
+				return info;
 			}
 			jobj = UploadQueue.getAPI().rowsToCols(jobj);
 
@@ -284,21 +292,23 @@ public class QDataSet implements Serializable {
 			
 			//If not logged in open key dialog and onActivityResult call with credential keys
 			if (CredentialManager.isLoggedIn()) {
-				dataSetID = UploadQueue.getAPI().uploadDataSet(
+
+                info = UploadQueue.getAPI().uploadDataSet(
 						Integer.parseInt(projID), jobj, name);
 			
 			}else{
 				String key = CredentialManagerKey.getKey();
 				String conName = CredentialManagerKey.getName();
-				dataSetID = UploadQueue.getAPI().uploadDataSet(
+
+                info = UploadQueue.getAPI().uploadDataSet(
 						Integer.parseInt(projID), jobj, name, key, conName);
 						
 			}
 			
-			System.out.println("Data set ID from Upload is: " + dataSetID);
+			System.out.println("Data set ID from Upload is: " + info.DataSetId);
 		}
 
-		return dataSetID;
+		return info;
 	}
 	
 //	@Override
@@ -469,6 +479,5 @@ public class QDataSet implements Serializable {
 	public void setRequestDataLabelInOrder(boolean rdlio) {
 		this.requestDataLabelInOrder = rdlio;
 	}
-	
 	
 }
