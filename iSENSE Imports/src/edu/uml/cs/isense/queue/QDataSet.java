@@ -15,7 +15,7 @@ import java.util.Random;
 
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.API.TargetType;
-import edu.uml.cs.isense.comm.dataSetUploadInfo;
+import edu.uml.cs.isense.comm.uploadInfo;
 import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.CredentialManagerKey;
 import edu.uml.cs.isense.dfm.DataFieldManager;
@@ -151,12 +151,12 @@ public class QDataSet implements Serializable {
 	 * @return The ID of the data set created on iSENSE, or -1 if the upload
 	 *         failed
 	 */
-	public dataSetUploadInfo upload(API api, Context c) {
-        dataSetUploadInfo info = new dataSetUploadInfo();
+	public uploadInfo upload(API api, Context c) {
+        uploadInfo info = new uploadInfo();
 		// if no project is associated with this data set yet, we can't upload
 		// it
 		if (this.projID.equals("-1")) {
-            info.ErrorMessage = "No Project Selected";
+            info.errorMessage = "No Project Selected";
             return info;
         }
         // if the data is already in a forced order and just needs to be labeled
@@ -181,8 +181,8 @@ public class QDataSet implements Serializable {
 				// we have a JSONArray of JSONObjects: this is bad
                 Log.e("QDataSet method 'upload' in iSENSE Imports: ", "JSONArray of JSONObjects - ");
                 e.printStackTrace();
-                info.DataSetId = -1;
-                info.ErrorMessage = "Wrong JSON Format";
+                info.dataSetId = -1;
+                info.errorMessage = "Wrong JSON Format";
                 return info;
 			}
 		} else {
@@ -231,10 +231,9 @@ public class QDataSet implements Serializable {
 	 * @return The ID of the data set created on iSENSE, or -1 if the upload
 	 *         failed
 	 */
-	private dataSetUploadInfo uploadDataAndMedia() {
-        dataSetUploadInfo info = new dataSetUploadInfo();
-		int dataSetID = -1;
-		if (this.rdyForUpload) {			
+	private uploadInfo uploadDataAndMedia() {
+        uploadInfo info = new uploadInfo();
+		if (this.rdyForUpload) {
 			switch (type) {
 			case DATA:
 				info = uploadData();
@@ -243,11 +242,11 @@ public class QDataSet implements Serializable {
 
 			case PIC:
 				if (CredentialManager.isLoggedIn()) {
-					dataSetID = UploadQueue.getAPI().uploadMedia(
+                    info = UploadQueue.getAPI().uploadMedia(
 							Integer.parseInt(projID), picture, TargetType.PROJECT);
 				} else {
 					String key = CredentialManagerKey.getKey();
-					dataSetID = UploadQueue.getAPI().uploadMedia(
+                    info = UploadQueue.getAPI().uploadMedia(
 							Integer.parseInt(projID), picture, TargetType.PROJECT, key, name);
 				}
 				break;
@@ -255,13 +254,13 @@ public class QDataSet implements Serializable {
 			case BOTH:
 				info = uploadData();
 
-				if (CredentialManager.isLoggedIn()) {
+				if (CredentialManager.isLoggedIn() && info.dataSetId != -1) {
 					UploadQueue.getAPI().uploadMedia(
-							dataSetID, picture, TargetType.DATA_SET);
+							info.dataSetId, picture, TargetType.DATA_SET);
 				} else {
 					String key = CredentialManagerKey.getKey();
 					UploadQueue.getAPI().uploadMedia(
-						dataSetID, picture, TargetType.DATA_SET, key, name);
+                            info.dataSetId, picture, TargetType.DATA_SET, key, name);
 				}
 				break;
 			}
@@ -270,9 +269,9 @@ public class QDataSet implements Serializable {
 		return info;
 	}
 
-	private dataSetUploadInfo uploadData() {
+	private uploadInfo uploadData() {
 //		int dataSetID = -1;
-        dataSetUploadInfo info = new dataSetUploadInfo();
+        uploadInfo info = new uploadInfo();
 
 		JSONArray dataJSON = prepDataForUpload();
 		if (!(dataJSON.isNull(0))) {
@@ -282,8 +281,8 @@ public class QDataSet implements Serializable {
 				jobj.put("data", dataJSON);
 			} catch (JSONException e) {
 				e.printStackTrace();
-                info.DataSetId = -1;
-                info.ErrorMessage = "JSON Error";
+                info.dataSetId = -1;
+                info.errorMessage = "JSON Error";
 				return info;
 			}
 			jobj = UploadQueue.getAPI().rowsToCols(jobj);
@@ -305,7 +304,7 @@ public class QDataSet implements Serializable {
 						
 			}
 			
-			System.out.println("Data set ID from Upload is: " + info.DataSetId);
+			System.out.println("Data set ID from Upload is: " + info.dataSetId);
 		}
 
 		return info;
@@ -400,15 +399,16 @@ public class QDataSet implements Serializable {
 	 *         String, "Data and Picture" for a JSONArray formatted String with
 	 *         a single associated media file, or "Unsupported Type" otherwise.
 	 */
-	public CharSequence getType() {
-		if (this.type == Type.PIC)
-			return "Picture";
-		else if (this.type == Type.DATA)
-			return "Data";
-		else if (this.type == Type.BOTH)
-			return "Data and Picture";
-		else
-			return "Unsupported Type";
+	public Type getType() {
+        return type;
+//		if (this.type == Type.PIC)
+//			return "Picture";
+//		else if (this.type == Type.DATA)
+//			return "Data";
+//		else if (this.type == Type.BOTH)
+//			return "Data and Picture";
+//		else
+//			return "Unsupported Type";
 	}
 
 	/**

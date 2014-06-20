@@ -2,17 +2,17 @@
 <pre-dex-items>
 
     <item
-        dex="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/build/intermediates/pre-dexed/debug/classes-6be2748b05fa77a5896f90674ca7e24be55266dd.jar"
-        jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="3c1d34bee0d9272c5e6f3b8c2fcdac4208a816bf"/>
-    <item
         dex="/Users/bobbydonald/iSENSE-Hardware/Android/Pictures/build/intermediates/pre-dexed/debug/android-support-v4-36231bad5d4e7cee554a3e912d3893a6feed0bba.jar"
         jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/libs/android-support-v4.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="5896b0a4e377ac4242eb2bc785220c1c4fc052f4"/>
+    <item
+        dex="/Users/bobbydonald/iSENSE-Hardware/Android/Pictures/build/intermediates/pre-dexed/debug/classes-6be2748b05fa77a5896f90674ca7e24be55266dd.jar"
+        jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="75bc88c17bb629b444f9c0a1307b2fba17a91e02"/>
     <item
         dex="/Users/bobbydonald/iSENSE-Hardware/Android/Pictures/build/intermediates/pre-dexed/debug/httpmime-4.2.5-92627dde54df50d8864b97f5f66afcb53fb700aa.jar"
         jar="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/libs/httpmime-4.2.5.jar"

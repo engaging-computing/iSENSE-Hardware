@@ -1,15 +1,5 @@
 package edu.uml.cs.isense.riverwalk;
 
-import java.io.File;
-import java.util.ArrayList;
-
-
-import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.comm.API.TargetType;
-import edu.uml.cs.isense.credentials.CredentialManager;
-import edu.uml.cs.isense.credentials.CredentialManagerKey;
-import edu.uml.cs.isense.proj.Setup;
-import edu.uml.cs.isense.waffle.Waffle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -23,6 +13,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.API.TargetType;
+import edu.uml.cs.isense.comm.uploadInfo;
+import edu.uml.cs.isense.credentials.CredentialManager;
+import edu.uml.cs.isense.credentials.CredentialManagerKey;
+import edu.uml.cs.isense.proj.Setup;
+import edu.uml.cs.isense.waffle.Waffle;
+
 
 public class SharePicture extends Activity {
 	
@@ -33,7 +34,7 @@ public class SharePicture extends Activity {
 	private ProgressDialog dia;
 	
 	int project = -1;
-	int uploadCode = -1;
+	uploadInfo info = new uploadInfo();
 	private String key = "";
 		
 	boolean loggedIn;
@@ -74,6 +75,8 @@ public class SharePicture extends Activity {
 	    String type = intent.getType();
 	    
 	    mContext = this;
+        api = API.getInstance();
+        api.useDev(false);
 	  
 	    w = new Waffle(mContext);
 		
@@ -140,7 +143,6 @@ public class SharePicture extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == PROJECT_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -179,11 +181,12 @@ public class SharePicture extends Activity {
 				for(int i = 0; i < imageUris.size(); i++) {
 					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i), mContext));
 				}
+
 			}
 			@Override
 			protected Boolean doInBackground(Void... params) {
 				for(int i = 0; i < imageUris.size(); i++) {
-					uploadCode = api.uploadMedia(project,imageFiles.get(i), TargetType.PROJECT);
+                    info = api.uploadMedia(project,imageFiles.get(i), TargetType.PROJECT);
 				}
 				return null;
 			}
@@ -193,8 +196,8 @@ public class SharePicture extends Activity {
 				super.onPostExecute(result);
 				dia.cancel();
 				
-				if (uploadCode == -1) {
-					w.make(failure.toString(),
+				if (info.mediaId == -1) {
+					w.make(info.errorMessage,
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 					
 				} else {
@@ -227,7 +230,7 @@ public class SharePicture extends Activity {
 			protected Boolean doInBackground(Void... params) {
 				Log.e("test", "Here");
 				for(int i = 0; i < imageUris.size(); i++) {
-					uploadCode = api.uploadMedia(project, imageFiles.get(i), TargetType.PROJECT, key, "");
+                    info = api.uploadMedia(project, imageFiles.get(i), TargetType.PROJECT, key, "");
 				}
 				return null;
 			}
@@ -237,8 +240,8 @@ public class SharePicture extends Activity {
 															// running on UI thread
 				super.onPostExecute(result);
 				dia.cancel();
-				if (uploadCode == -1) {
-					w.make(failure,
+				if (info.mediaId == -1) {
+					w.make(info.errorMessage,
 							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 				} else {
 					w.make(success,
