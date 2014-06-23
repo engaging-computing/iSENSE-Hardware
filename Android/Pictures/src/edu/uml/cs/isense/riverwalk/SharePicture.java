@@ -228,12 +228,23 @@ public class SharePicture extends Activity {
 			
 			@Override
 			protected Boolean doInBackground(Void... params) {
-				Log.e("test", "Here");
-				for(int i = 0; i < imageUris.size(); i++) {
-                    info = api.uploadMedia(project, imageFiles.get(i), TargetType.PROJECT, key, "");
-				}
-				return null;
-			}
+                Log.e("test", "Here");
+                for (int i = 0; i < imageUris.size(); i++) {
+                    boolean validPicture;
+                    if (imageFiles.get(i) == null) {
+                        validPicture = false;
+                    } else {
+                        validPicture = true;
+                    }
+                    if (validPicture) {
+                        info = api.uploadMedia(project, imageFiles.get(i), TargetType.PROJECT, key, "");
+                    } else {
+                        info.mediaId = -1;
+                        info.errorMessage = "Invalid Image";
+                    }
+                }
+                return null;
+            }
 			
 			@Override
 			protected void onPostExecute(Boolean result) {// this method will be
