@@ -64,7 +64,7 @@ import edu.uml.cs.isense.carphysicsv2.dialogs.ContributorKeyDialog;
 import edu.uml.cs.isense.carphysicsv2.dialogs.Help;
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
-import edu.uml.cs.isense.comm.dataSetUploadInfo;
+import edu.uml.cs.isense.comm.uploadInfo;
 import edu.uml.cs.isense.credentials.ClassroomMode;
 import edu.uml.cs.isense.credentials.CredentialManager;
 import edu.uml.cs.isense.credentials.EnterName;
@@ -1307,9 +1307,9 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 				System.out.println("JOBJ: " + dataToUpload.toString());
 
-                dataSetUploadInfo info = UploadQueue.getAPI().uploadDataSet(
+                uploadInfo info = UploadQueue.getAPI().uploadDataSet(
 						Integer.parseInt(projectNumber), dataToUpload, nameOfDataSet);
-                dataSetID = info.DataSetId;
+                dataSetID = info.dataSetId;
 				System.out.println("Data set ID from Upload is: " + dataSetID);
 
 			}

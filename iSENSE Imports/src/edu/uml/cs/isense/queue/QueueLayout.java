@@ -389,12 +389,12 @@ public class QueueLayout extends Activity implements OnClickListener {
                 dataSetUploadStatus.add(uploadSet.getName() +
                         ": <font COLOR=\"#07B50A\">upload successful</font>");
 
-            } else if (uploadSet.getType() == QDataSet.Type.PIC && info.dataSetId != -1) {
+            } else if (uploadSet.getType() == QDataSet.Type.PIC && info.mediaId != -1) {
                 //has a valid id so successfully uploaded
                 dataSetUploadStatus.add(uploadSet.getName() +
                         ": <font COLOR=\"#07B50A\">upload successful</font>");
 
-            } else if (uploadSet.getType() == QDataSet.Type.BOTH && info.dataSetId != -1 && info.mediaId != -1) {
+            } else if (uploadSet.getType() == QDataSet.Type.BOTH && (info.dataSetId != -1 && info.mediaId != -1)) {
                 //both have a valid id so successfully uploaded
                 dataSetUploadStatus.add(uploadSet.getName() +
                         ": <font COLOR=\"#07B50A\">upload successful</font>");
