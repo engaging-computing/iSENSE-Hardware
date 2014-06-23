@@ -1,24 +1,10 @@
 package edu.uml.cs.isense.riverwalk;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.json.JSONArray;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -38,6 +24,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.content.CursorLoader;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -50,6 +37,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import edu.uml.cs.isense.comm.API;
 import edu.uml.cs.isense.comm.Connection;
 import edu.uml.cs.isense.credentials.CredentialManager;
@@ -308,7 +308,7 @@ public class Main extends Activity implements LocationListener {
 
 				Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 startActivityForResult(
 						Intent.createChooser(intent, "Select Picture"),
 						SELECT_PICTURE_REQUESTED);
@@ -774,64 +774,33 @@ public class Main extends Activity implements LocationListener {
 		return android.os.Build.VERSION.SDK_INT;
 	}
 
-	@SuppressLint("NewApi")
 	public static File convertImageUriToFile(Uri imageUri, Context c) {
-		int apiLevel = getApiLevel();
-		if (apiLevel >= 11) {
+            Log.e("BOBBY URI !!! ", imageUri.toString());
 
 			String[] proj = { MediaStore.Images.Media.DATA,
-					MediaStore.Images.Media._ID,
-					MediaStore.Images.ImageColumns.ORIENTATION };
+					MediaStore.Images.Media._ID };
+
 			String selection = null;
 			String[] selectionArgs = null;
 			String sortOrder = null;
 
-			CursorLoader cursorLoader = new CursorLoader(c, imageUri,
-					proj, selection, selectionArgs, sortOrder);
+            CursorLoader cursorLoader = new CursorLoader(c, imageUri,
+                    proj, selection, selectionArgs, sortOrder);
 
-			Cursor cursor = cursorLoader.loadInBackground();
+            Cursor cursor = cursorLoader.loadInBackground();
 
 			int file_ColumnIndex = cursor
 					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			int orientation_ColumnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
 			if (cursor.moveToFirst()) {
-				@SuppressWarnings("unused")
-				String orientation = cursor.getString(orientation_ColumnIndex);
-				return new File(cursor.getString(file_ColumnIndex));
+                File file = null;
+                try {
+                    file = new File(cursor.getString(file_ColumnIndex));
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+                return file;
 			}
 			return null;
-
-		} else {
-
-			Cursor cursor = null;
-			try {
-				String[] proj = { MediaStore.Images.Media.DATA,
-						MediaStore.Images.Media._ID,
-						MediaStore.Images.ImageColumns.ORIENTATION };
-				ContentResolver cr = c.getContentResolver();
-				cursor = cr.query(imageUri, proj, // Which columns
-													// to return
-						null, // WHERE clause; which rows to return (all rows)
-						null, // WHERE clause selection arguments (none)
-						null); // Order-by clause (ascending by name)
-				int file_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-				int orientation_ColumnIndex = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-				if (cursor.moveToFirst()) {
-					@SuppressWarnings("unused")
-					String orientation = cursor
-							.getString(orientation_ColumnIndex);
-					return new File(cursor.getString(file_ColumnIndex));
-				}
-				return null;
-			} finally {
-				if (cursor != null) {
-					cursor.close();
-				}
-			}
-		}
 	}
 
 	private void postRunnableWaffleError(final String message) {
