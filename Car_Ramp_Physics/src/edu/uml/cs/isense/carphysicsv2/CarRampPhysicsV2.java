@@ -47,6 +47,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -1048,7 +1049,8 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			if (resultCode == RESULT_OK) {
 				SharedPreferences namePrefs = getSharedPreferences(
 						EnterName.PREFERENCES_KEY_USER_INFO, MODE_PRIVATE);
-
+				
+				
 				if (namePrefs
 						.getBoolean(
 								EnterName.PREFERENCES_USER_INFO_SUBKEY_USE_ACCOUNT_NAME,
@@ -1181,6 +1183,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 //						mContext.getString(R.string.accel_y))) {
 //					if (dfm.getOrderList().contains(
 //							mContext.getString(R.string.accel_x))) {
+//						values.setText(values.getText() + " Y: "
 //						values.setText(values.getText() + " Y: "
 //								+ oneDigit.format(accel[1]));
 //					} else {
