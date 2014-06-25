@@ -1,15 +1,5 @@
 package edu.uml.cs.isense.riverwalk;
 
-import java.io.File;
-import java.util.ArrayList;
-
-
-import edu.uml.cs.isense.comm.API;
-import edu.uml.cs.isense.comm.API.TargetType;
-import edu.uml.cs.isense.credentials.CredentialManager;
-import edu.uml.cs.isense.credentials.CredentialManagerKey;
-import edu.uml.cs.isense.proj.Setup;
-import edu.uml.cs.isense.waffle.Waffle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -23,40 +13,51 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import edu.uml.cs.isense.comm.API;
+import edu.uml.cs.isense.comm.API.TargetType;
+import edu.uml.cs.isense.comm.uploadInfo;
+import edu.uml.cs.isense.credentials.CredentialManager;
+import edu.uml.cs.isense.credentials.CredentialManagerKey;
+import edu.uml.cs.isense.proj.Setup;
+import edu.uml.cs.isense.waffle.Waffle;
+
 
 public class SharePicture extends Activity {
-	
+
 	final int PROJECT_REQUESTED = 101;
 	final int LOGIN_REQUESTED = 102;
 	final int CREDENTIAL_KEY_REQUESTED = 103;
-	
+
 	private ProgressDialog dia;
-	
+
 	int project = -1;
-	int uploadCode = -1;
+	uploadInfo info = new uploadInfo();
 	private String key = "";
-		
+
 	boolean loggedIn;
-	
+
 	Button bCredentials;
 	Button bKey;
 	Button bProject;
-	
+
 	ArrayList<Uri> imageUris = new ArrayList<Uri>();
 	ArrayList<File> imageFiles = new ArrayList<File>();
 	Uri imageUri;
-	
+
 	String success = "Upload Successful!";
 	String failure = "Upload Failed!";
 
 	private Waffle w;
 
-	
-	
+
+
 	API api = API.getInstance();
-	
+
 	Context mContext;
-	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,17 +69,19 @@ public class SharePicture extends Activity {
 
 		bCredentials.setEnabled(false);
 		bKey.setEnabled(false);
-		
+
 		Intent intent = getIntent();
 	    String action = intent.getAction();
 	    String type = intent.getType();
-	    
+
 	    mContext = this;
-	  
+        api = API.getInstance();
+        api.useDev(false);
+
 	    w = new Waffle(mContext);
-		
-	    
-	    
+
+
+
 	    if (Intent.ACTION_SEND.equals(action) && type != null) {
 	        if (type.startsWith("image/")) {
 	            handleSendImage(intent); // Handle single image being sent
@@ -87,12 +90,12 @@ public class SharePicture extends Activity {
 	        if (type.startsWith("image/")) {
 	            handleSendMultipleImages(intent); // Handle multiple images being sent
 	        }
-	    } 
-	
-	   
+	    }
 
-	
-	
+
+
+
+
 		/*step1 select a project*/
 		bProject.setOnClickListener(new OnClickListener(){
 			@Override
@@ -104,9 +107,9 @@ public class SharePicture extends Activity {
 				iproject.putExtra("showOKCancel", true);
 				startActivityForResult(iproject, PROJECT_REQUESTED);
 			}
-			
+
 		});
-		
+
 		/*Step 2*/
 		/*upload with credentials*/
 		bCredentials.setOnClickListener(new OnClickListener() {
@@ -122,13 +125,13 @@ public class SharePicture extends Activity {
 			public void onClick(View v) {
 				CredentialManager.logout(mContext, api);
 				Intent key_intent = new Intent().setClass(mContext, CredentialManagerKey.class);
-				startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);			
-				
+				startActivityForResult(key_intent, CREDENTIAL_KEY_REQUESTED);
+
 			}
-			
+
 		});
-		
-		
+
+
 	}
 
 	 void handleSendImage(Intent intent) {
@@ -137,25 +140,24 @@ public class SharePicture extends Activity {
 	void handleSendMultipleImages(Intent intent) {
 	    imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == PROJECT_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
 				SharedPreferences mPrefs = getSharedPreferences("PROJID", 0);
 				project = Integer.parseInt(mPrefs.getString("project_id", ""));
-		
+
 				bProject.setEnabled(false);
 				bCredentials.setEnabled(true);
 				bKey.setEnabled(true);
-			
+
 			}
 		} else if (requestCode == LOGIN_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
 				new uploadLoggedIn().execute();
-				
+
 			}
 		} else if (requestCode == CREDENTIAL_KEY_REQUESTED) {
 			if (resultCode == Activity.RESULT_OK) {
@@ -164,91 +166,124 @@ public class SharePicture extends Activity {
 			}
 		}
 	}
-	
+
 		private class uploadLoggedIn extends AsyncTask<Void, Void, Boolean> {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				
+
 				 dia = new ProgressDialog(SharePicture.this);
 				 dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				 dia.setMessage("Uploading");
 				 dia.setCancelable(false);
 				 dia.show();
-				
+
 				for(int i = 0; i < imageUris.size(); i++) {
 					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i), mContext));
 				}
+
 			}
 			@Override
 			protected Boolean doInBackground(Void... params) {
-				for(int i = 0; i < imageUris.size(); i++) {
-					uploadCode = api.uploadMedia(project,imageFiles.get(i), TargetType.PROJECT);
-				}
-				return null;
+                for (int i = 0; i < imageUris.size(); i++) {
+
+                    boolean validPicture;
+                    if (imageFiles.get(i) == null) {
+                        validPicture = false;
+                    } else {
+                        validPicture = true;
+                    }
+                    if (validPicture) {
+                        info = api.uploadMedia(project, imageFiles.get(i), TargetType.PROJECT);
+                    } else {
+                        info.mediaId = -1;
+                        info.errorMessage = "Invalid Image";
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            if (info.mediaId == -1) {
+                                w.make(info.errorMessage,
+                                        Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+                            } else {
+                                w.make(success,
+                                        Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+                            }
+                        }
+                    });
+                }
+            return null;
+
 			}
 			@Override
 			protected void onPostExecute(Boolean result) {// this method will be
 															// running on UI thread
 				super.onPostExecute(result);
 				dia.cancel();
-				
-				if (uploadCode == -1) {
-					w.make(failure.toString(),
-							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-					
-				} else {
-					w.make(success.toString(),
-							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-				}
-				
 				finish();
 			}
 	}
-		
-		
+
+
 		private class uploadWithKey extends AsyncTask<Void, Void, Boolean> {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				
+
 				 dia = new ProgressDialog(SharePicture.this);
 				 dia.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 				 dia.setMessage("Uploading");
 				 dia.setCancelable(false);
 				 dia.show();
-				 
+
 				for(int i = 0; i < imageUris.size(); i++) {
 					imageFiles.add(Main.convertImageUriToFile(imageUris.get(i), mContext));
 				}
 			}
-			
+
 			@Override
 			protected Boolean doInBackground(Void... params) {
-				Log.e("test", "Here");
-				for(int i = 0; i < imageUris.size(); i++) {
-					uploadCode = api.uploadMedia(project, imageFiles.get(i), TargetType.PROJECT, key, "");
-				}
-				return null;
-			}
-			
+                Log.e("test", "Here");
+                for (int i = 0; i < imageUris.size(); i++) {
+                    boolean validPicture;
+                    if (imageFiles.get(i) == null) {
+                        validPicture = false;
+                    } else {
+                        validPicture = true;
+                    }
+                    if (validPicture) {
+                        info = api.uploadMedia(project, imageFiles.get(i), TargetType.PROJECT, key, "");
+                    } else {
+                        info.mediaId = -1;
+                        info.errorMessage = "Invalid Image";
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            if (info.mediaId == -1) {
+                                w.make(info.errorMessage,
+                                        Waffle.LENGTH_LONG, Waffle.IMAGE_X);
+                            } else {
+                                w.make(success,
+                                        Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
+                            }
+                        }
+                    });
+                }
+                return null;
+            }
+
 			@Override
 			protected void onPostExecute(Boolean result) {// this method will be
 															// running on UI thread
 				super.onPostExecute(result);
 				dia.cancel();
-				if (uploadCode == -1) {
-					w.make(failure,
-							Waffle.LENGTH_LONG, Waffle.IMAGE_X);
-				} else {
-					w.make(success,
-							Waffle.LENGTH_LONG, Waffle.IMAGE_CHECK);
-				}
+
 			    finish();
 		}
 
 	}
-		
+
 }
 
 

@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.uml.cs.isense.pendulum"
     android:versionCode="26"
-    android:versionName="2.1.4" >
+    android:versionName="2.1.4"
+    android:sharedUserId="edu.uml.cs.isense">
 
     <uses-sdk
         android:minSdkVersion="11"

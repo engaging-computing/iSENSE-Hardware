@@ -23,6 +23,7 @@ import edu.uml.cs.isense.waffle.Waffle;
  * @author iSENSE Android Dev Team
  */
 public class EnterName extends Activity {
+    public static boolean isOpen = false;
 
 	/* Use these to access the name and last initial from preferences. */
 	public static final String PREFERENCES_KEY_USER_INFO = "USER_INFO";
@@ -51,6 +52,8 @@ public class EnterName extends Activity {
 		baseContext = getBaseContext();
 		w = new Waffle(baseContext);
 		API api = API.getInstance();
+
+        isOpen = true;
 		
 		/* Determine if we are running in classroom mode or not */
 		boolean classroomMode = true;
@@ -172,14 +175,21 @@ public class EnterName extends Activity {
 					}
 					
 					setResult(RESULT_OK, null);
-					finish();
+                    isOpen = false;
+                    finish();
 				}
 			}
 
 		});
 	}
 
-	private void showFailure() {
+    @Override
+    protected void onDestroy() {
+        isOpen = false;
+        super.onDestroy();
+    }
+
+    private void showFailure() {
 		w.make(blankFields, Waffle.LENGTH_LONG, Waffle.IMAGE_X);
 	}
 

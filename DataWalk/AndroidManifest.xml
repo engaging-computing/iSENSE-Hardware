@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="edu.uml.cs.isense.datawalk_v2"
-    android:versionCode="21"
-    android:versionName="2.4.1" >
+    android:versionCode="23"
+    android:versionName="2.5.1"
+    android:sharedUserId="edu.uml.cs.isense">
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -124,6 +125,7 @@
         <activity
             android:name="edu.uml.cs.isense.credentials.EnterName"
             android:label="@string/enter_name_prompt"
+            android:launchMode="singleTop"
             android:theme="@style/AppThemeDialog"
             tools:ignore="MissingRegistered" />
         <activity
