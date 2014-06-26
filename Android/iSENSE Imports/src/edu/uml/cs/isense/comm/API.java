@@ -559,7 +559,7 @@ public class API {
 	 */
 	public uploadInfo uploadMedia(int dataId, File mediaToUpload, TargetType ttype) {
         uploadInfo info = new uploadInfo();
-        String output = null;
+        String output = "";
 		try {
 			URL url = new URL(baseURL + "/media_objects/");
 
@@ -655,7 +655,7 @@ public class API {
 	 */
 	public uploadInfo uploadMedia(int projectId, File mediaToUpload, TargetType ttype, String conKey, String conName) {
         uploadInfo info = new uploadInfo();
-        String output = null;
+        String output = "";
 		try {
 			URL url = new URL(baseURL + "/media_objects/");
 
