@@ -2,9 +2,9 @@
 <merger version="2" >
 
     <dataSet config="main" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/res" >
+        <source path="/home/bobby/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/res" >
             <file
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/res/values/attrs.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/res/values/attrs.xml"
                 qualifiers="" >
                 <declare-styleable name="CameraBridgeViewBase" >
                     <attr
@@ -26,11 +26,11 @@
                 </declare-styleable>
             </file>
         </source>
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/build/generated/res/rs/release" />
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/build/generated/res/generated/release" />
+        <source path="/home/bobby/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/build/generated/res/rs/release" />
+        <source path="/home/bobby/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/build/generated/res/generated/release" />
     </dataSet>
     <dataSet config="release" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/build-types/release/res" />
+        <source path="/home/bobby/iSENSE-Hardware/Android/OpenCV-2.4.5-android-sdk/sdk/java/build-types/release/res" />
     </dataSet>
 
 </merger>

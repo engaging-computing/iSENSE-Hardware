@@ -33,4 +33,4 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
-</ScrollView><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/queue_summary.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout-v11/queue_summary.xml -->
+</ScrollView><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/queue_summary.xml --><!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout-v11/queue_summary.xml -->

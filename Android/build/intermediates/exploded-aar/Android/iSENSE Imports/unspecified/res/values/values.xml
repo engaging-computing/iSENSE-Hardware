@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string-array name="field_type_array">
@@ -32,7 +32,7 @@
         <item>Temp. (Fahrenheit)</item>
         <item>Temp. (Kelvin)</item>
     </string-array>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/colors.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/colors.xml -->
     <eat-comment />
 
     <color name="actionbar_background">#113</color>
@@ -40,22 +40,22 @@
     <color name="blue_light">#A1D3FF</color>
     <color name="blue_lighter">#C7E5FF</color>
     <color name="navy_light">#608CBF</color>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="accel_total">Accel-Magnitude</string>
     <string name="accel_x">Accel-X</string>
     <string name="accel_y">Accel-Y</string>
     <string name="accel_z">Accel-Z</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="add_key">Add Contributor Key</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="altitude">Altitude</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="always_prompt_first_name">Always prompt for first name and last initial</string>
@@ -66,11 +66,11 @@
     <string name="change_data">Change Data</string>
     <string name="chooseProject">Enter Project ID:</string>
     <string name="classroom_mode">Classroom Mode</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="compatible">Compatible</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="contentDesc"></string>
@@ -95,24 +95,24 @@
     <string name="field_name">field name</string>
     <string name="field_type">Add Field</string>
     <string name="first_name">First Name:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="heading_deg">Angle (Degrees)</string>
     <string name="heading_rad">Angle (Radians)</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="how_to_add_field">Select a field type from the drop down menu below to add a new field to your project.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="incompatible">Incompatible</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="instructions"><u>Instructions:</u></string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="invalidProject">No fields found for this project. 
@@ -120,18 +120,18 @@
         chance that you are simply not connected to the internet and thus cannot currently
         get project fields.  (Selecting \"OK\" will return you to the configuration menu to select 
         a new project.)</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="isense_fields">Fields</string>
     <string name="key">Contributor Key:</string>
     <string name="key_info">A contributor key allows you to contribute data to a specific project without an iSENSE account.</string>
     <string name="last_initial">Last Initial:</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="latitude">Latitude</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="loading">Loading…</string>
@@ -142,7 +142,7 @@
     <string name="login_prompt">Login to iSENSE</string>
     <string name="login_success">Login Successful</string>
     <string name="logout">Log out</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="longitude">Longitude</string>
@@ -151,17 +151,17 @@
     <string name="magnetic_x">Magnetic-X</string>
     <string name="magnetic_y">Magnetic-Y</string>
     <string name="magnetic_z">Magnetic-Z</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="mode_type">\u0020mode</string>
     <string name="new_proj_name">New Project Name</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="noCompatibleFields">No compatible fields found. (Hitting \"Okay\" 
         will return you to the configuration menu to select a new project.)</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="noProjectYet">Don\'t have a project yet?</string>
@@ -169,11 +169,11 @@
         states \"No Project\" with each associated data set.  In order to upload these data sets, press and hold the data
         sets with no associated project and select \"Select Project\" to associate the data set with a project.</string>
     <string name="now_in_mode">Now in\u0020</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="null_string">strNullID</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="numbers_restriction">1234567890.-</string>
@@ -186,11 +186,11 @@
     <string name="please_enter_field">Please enter at least one field for your project</string>
     <string name="please_enter_name_field">Please enter a name for field #</string>
     <string name="please_enter_proj_name">Please enter a new project name</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="pressure">Pressure</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="proj">Project:</string>
@@ -240,14 +240,14 @@
 	    allowed on some WiFi networks, but it generally works on small, password-secured 
 	    WiFi networks.  Should you want to revert to your phone\'s local timestamp, you
 	    can use the \"Reset\" button.</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/fieldnames.xml -->
     <eat-comment />
 
     <string name="temperature_c">Temp. (Celsius)</string>
     <string name="temperature_f">Temp. (Fahrenheit)</string>
     <string name="temperature_k">Temp. (Kelvin)</string>
     <string name="time">Time</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/strings.xml -->
     <eat-comment />
 
     <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
@@ -260,7 +260,7 @@
     <string name="user_img_desc">iSense Gravatar</string>
     <string name="username">Email:</string>
     <string name="visit">Visit</string>
-    <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/styles.xml -->
+    <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/values/styles.xml -->
     <eat-comment />
 
     <style name="AppTheme" parent="android:Theme.Light" />

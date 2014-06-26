@@ -23,4 +23,4 @@
         android:title="@string/menu_reset"
         android:titleCondensed="@string/menu_reset_condensed"/>
 
-</menu><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/menu/menu.xml -->
+</menu><!-- From: file:/home/bobby/iSENSE-Hardware/Android/DataWalk/res/menu/menu.xml -->
