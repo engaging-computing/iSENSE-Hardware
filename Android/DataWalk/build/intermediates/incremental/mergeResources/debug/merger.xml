@@ -2,524 +2,757 @@
 <merger version="2" >
 
     <dataSet config="unspecified" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res" >
-            <file
-                name="button_rsense"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense.xml"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="button_rsense_green"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense_green.xml"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="filerow_state_selector"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/filerow_state_selector.xml"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="listelement_bkgd"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd.xml"
-                qualifiers=""
-                type="drawable" />
+        <source path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res" >
             <file
                 name="listelement_bkgd_changer"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer.xml"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="listelement_bkgd_changer_selected"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer_selected.xml"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="listelement_bkgd_selected"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_selected.xml"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="listelement_bkgdflash"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgdflash.xml"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="progress_small"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/progress_small.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toast_background_check"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_check.xml"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="toast_background_default"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_default.xml"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="toast_background_warning"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_warning.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_check.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toast_background_x"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_x.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_x.xml"
                 qualifiers=""
                 type="drawable" />
             <file
-                name="backarrow"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/backarrow.png"
-                qualifiers="hdpi-v4"
+                name="listelement_bkgd_selected"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_selected.xml"
+                qualifiers=""
                 type="drawable" />
             <file
-                name="checkmark"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/checkmark.png"
-                qualifiers="hdpi-v4"
+                name="progress_small"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/progress_small.xml"
+                qualifiers=""
                 type="drawable" />
             <file
-                name="icon_file"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/icon_file.png"
-                qualifiers="hdpi-v4"
+                name="listelement_bkgd_changer_selected"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer_selected.xml"
+                qualifiers=""
                 type="drawable" />
             <file
-                name="icon_folder"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/icon_folder.png"
-                qualifiers="hdpi-v4"
+                name="button_rsense_green"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense_green.xml"
+                qualifiers=""
                 type="drawable" />
             <file
-                name="red_x"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/red_x.png"
-                qualifiers="hdpi-v4"
+                name="toast_background_default"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_default.xml"
+                qualifiers=""
                 type="drawable" />
             <file
-                name="rsense_logo_recording_right"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/rsense_logo_recording_right.png"
-                qualifiers="hdpi-v4"
+                name="filerow_state_selector"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/filerow_state_selector.xml"
+                qualifiers=""
                 type="drawable" />
             <file
-                name="rsense_logo_right"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/rsense_logo_right.png"
-                qualifiers="hdpi-v4"
+                name="listelement_bkgd"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd.xml"
+                qualifiers=""
                 type="drawable" />
             <file
-                name="spinner_1_black"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/spinner_1_black.png"
-                qualifiers="hdpi-v4"
+                name="toast_background_warning"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_warning.xml"
+                qualifiers=""
                 type="drawable" />
             <file
-                name="warning_icon"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/warning_icon.png"
-                qualifiers="hdpi-v4"
+                name="listelement_bkgdflash"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgdflash.xml"
+                qualifiers=""
                 type="drawable" />
             <file
-                name="x_icon"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/x_icon.png"
-                qualifiers="hdpi-v4"
+                name="button_rsense"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense.xml"
+                qualifiers=""
                 type="drawable" />
-            <file
-                name="checkmark"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/checkmark.png"
-                qualifiers="mdpi-v4"
-                type="drawable" />
-            <file
-                name="red_x"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/red_x.png"
-                qualifiers="mdpi-v4"
-                type="drawable" />
-            <file
-                name="rsense_logo_recording_right"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/rsense_logo_recording_right.png"
-                qualifiers="mdpi-v4"
-                type="drawable" />
-            <file
-                name="rsense_logo_right"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/rsense_logo_right.png"
-                qualifiers="mdpi-v4"
-                type="drawable" />
-            <file
-                name="spinner_1_black"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/spinner_1_black.png"
-                qualifiers="mdpi-v4"
-                type="drawable" />
-            <file
-                name="warning_icon"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/warning_icon.png"
-                qualifiers="mdpi-v4"
-                type="drawable" />
-            <file
-                name="checkmark"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/checkmark.png"
-                qualifiers="xhdpi-v4"
-                type="drawable" />
-            <file
-                name="red_x"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/red_x.png"
-                qualifiers="xhdpi-v4"
-                type="drawable" />
-            <file
-                name="rsense_logo_recording_right"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/rsense_logo_recording_right.png"
-                qualifiers="xhdpi-v4"
-                type="drawable" />
-            <file
-                name="rsense_logo_right"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/rsense_logo_right.png"
-                qualifiers="xhdpi-v4"
-                type="drawable" />
-            <file
-                name="spinner_1_black"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/spinner_1_black.png"
-                qualifiers="xhdpi-v4"
-                type="drawable" />
-            <file
-                name="warning_icon"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/warning_icon.png"
-                qualifiers="xhdpi-v4"
-                type="drawable" />
-            <file
-                name="checkmark"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/checkmark.png"
-                qualifiers="xxhdpi-v4"
-                type="drawable" />
-            <file
-                name="red_x"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/red_x.png"
-                qualifiers="xxhdpi-v4"
-                type="drawable" />
-            <file
-                name="rsense_logo_right"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/rsense_logo_right.png"
-                qualifiers="xxhdpi-v4"
-                type="drawable" />
-            <file
-                name="spinner_1_black"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/spinner_1_black.png"
-                qualifiers="xxhdpi-v4"
-                type="drawable" />
-            <file
-                name="warning_icon"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/warning_icon.png"
-                qualifiers="xxhdpi-v4"
-                type="drawable" />
-            <file
-                name="classroom_mode"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/classroom_mode.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="credential_manager"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="credential_manager_add_key"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_add_key.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="credential_manager_key"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_key.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="credential_manager_keys"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_keys.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="credential_manager_login"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_login.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="credential_manager_person"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_person.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="dialog_filebrowser"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/dialog_filebrowser.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="edit_row"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/edit_row.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="enter_name"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/enter_name.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="field_match_cell"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_match_cell.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="field_matching"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_matching.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="filerow"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/filerow.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="loadrow"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/loadrow.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="login_dialog"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_dialog.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="login_error"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_error.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="new_project_name"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/new_project_name.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="no_initial_project"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_initial_project.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="no_qr"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_qr.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="project_create"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_create.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="project_field"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="project_field_location"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field_location.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="project_id"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_id.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="projectrow"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projectrow.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="projects"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projects.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="queue_delete_selected"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_delete_selected.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="queue_summary"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_summary.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="queueblock_alter"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_alter.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="queueblock_data"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_data.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="queueblock_pic"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_pic.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="queueedit_data"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_data.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="queueedit_rename"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_rename.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="queueprompt"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueprompt.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="synctime"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/synctime.xml"
-                qualifiers=""
-                type="layout" />
             <file
                 name="time_fail"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_fail.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="time_received"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_received.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="time_reset"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_reset.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="toast_layout_check"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_check.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="toast_layout_warning"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_warning.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="toast_layout_x"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_x.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="classroom_mode"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/classroom_mode.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_fail.xml"
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="dialog_filebrowser"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/dialog_filebrowser.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="enter_name"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/enter_name.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="field_matching"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/field_matching.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="login_dialog"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_dialog.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="login_error"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_error.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="new_project_name"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/new_project_name.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="no_initial_project"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_initial_project.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="no_qr"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_qr.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="project_create"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_create.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="project_id"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_id.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="queue_delete_selected"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_delete_selected.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="queue_summary"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_summary.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="queueblock_alter"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueblock_alter.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="queueedit_data"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_data.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="queueedit_rename"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_rename.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/dialog_filebrowser.xml"
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="queueprompt"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueprompt.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueprompt.xml"
                 qualifiers="v11"
                 type="layout" />
             <file
-                name="synctime"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/synctime.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="time_fail"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_fail.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="time_received"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_received.xml"
+                name="classroom_mode"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/classroom_mode.xml"
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="time_reset"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_reset.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_reset.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="no_initial_project"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_initial_project.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="field_matching"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/field_matching.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="queueedit_data"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_data.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="login_error"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_error.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="project_create"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_create.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="queueblock_alter"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueblock_alter.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="enter_name"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/enter_name.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="project_id"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_id.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="new_project_name"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/new_project_name.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="synctime"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/synctime.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="queue_summary"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_summary.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="queue_delete_selected"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_delete_selected.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="no_qr"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_qr.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="queueedit_rename"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_rename.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="login_dialog"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_dialog.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="time_received"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_received.xml"
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="key_menu"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/menu/key_menu.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/menu/key_menu.xml"
                 qualifiers=""
                 type="menu" />
             <file
+                name="red_x"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/red_x.png"
+                qualifiers="mdpi-v4"
+                type="drawable" />
+            <file
+                name="rsense_logo_recording_right"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/rsense_logo_recording_right.png"
+                qualifiers="mdpi-v4"
+                type="drawable" />
+            <file
+                name="checkmark"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/checkmark.png"
+                qualifiers="mdpi-v4"
+                type="drawable" />
+            <file
+                name="rsense_logo_right"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/rsense_logo_right.png"
+                qualifiers="mdpi-v4"
+                type="drawable" />
+            <file
+                name="warning_icon"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/warning_icon.png"
+                qualifiers="mdpi-v4"
+                type="drawable" />
+            <file
+                name="spinner_1_black"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi-v4/spinner_1_black.png"
+                qualifiers="mdpi-v4"
+                type="drawable" />
+            <file
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v11/values.xml"
+                qualifiers="v11" >
+
+                <style
+                    name="PDTheme"
+                    parent="@android:style/Theme.Holo.Dialog" >
+                    <item name="android:alertDialogStyle">
+@style/CustomProgressDialogStyle
+                    </item>
+                    <item name="android:textColorPrimary">
+#000000
+                    </item>
+                </style>
+
+                <style
+                    name="AppThemeDialog"
+                    parent="@android:style/Theme.Holo.Light.Dialog" >
+                    <item name="android:layout_height">
+wrap_content
+                    </item>
+                    <item name="android:layout_width">
+wrap_content
+                    </item>
+                </style>
+
+                <style
+                    name="AppTheme"
+                    parent="android:Theme.Holo.Light.DarkActionBar" >
+                    <item name="android:actionBarStyle">
+@style/AppTheme.ActionBar
+                    </item>
+                    <item name="android:popupMenuStyle">
+@style/AppTheme.PopupMenu
+                    </item>
+                    <item name="android:dropDownListViewStyle">
+@style/AppTheme.DropDownListView
+                    </item>
+                </style>
+
+                <style
+                    name="AppTheme.Widget"
+                    parent="@android:style/Theme.Holo.Light" >
+                    <item name="android:popupMenuStyle">
+@style/AppTheme.PopupMenu
+                    </item>
+                    <item name="android:dropDownListViewStyle">
+@style/AppTheme.DropDownListView
+                    </item>
+                </style>
+
+                <style
+                    name="AppTheme.DropDownListView"
+                    parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
+
+                <style
+                    name="AppTheme.ActionBar"
+                    parent="@android:style/Widget.Holo.Light.ActionBar" >
+                    <item name="android:background">
+@color/actionbar_background
+                    </item>
+                    <item name="android:logo">
+@drawable/rsense_logo_right
+                    </item>
+                    <item name="android:displayOptions">
+showHome|useLogo
+                    </item>
+                    <item name="android:titleTextStyle">
+@style/AppTheme.ActionBar.TitleTextStyle
+                    </item>
+                </style>
+
+                <style name="CustomProgressDialogStyle" >
+                    <item name="android:bottomBright">
+#FF0000
+                    </item>
+                    <item name="android:bottomDark">
+#FF0000
+                    </item>
+                    <item name="android:bottomMedium">
+#FF0000
+                    </item>
+                    <item name="android:centerBright">
+#FF0000
+                    </item>
+                    <item name="android:centerDark">
+#FF0000
+                    </item>
+                    <item name="android:centerMedium">
+#FF0000
+                    </item>
+                    <item name="android:fullBright">
+#FF0000
+                    </item>
+                    <item name="android:fullDark">
+#FF0000
+                    </item>
+                    <item name="android:topBright">
+#FF0000
+                    </item>
+                    <item name="android:topDark">
+#FF0000
+                    </item>
+                </style>
+
+                <style name="AppTheme.ActionBar.TitleTextStyle" >
+                    <item name="android:color">
+@color/actionbar_text
+                    </item>
+                </style>
+
+                <style
+                    name="AppThemeQueue"
+                    parent="@android:style/Theme.Holo.Light.Dialog" >
+                    <item name="android:layout_height">
+wrap_content
+                    </item>
+                </style>
+
+                <style
+                    name="AppTheme.PopupMenu"
+                    parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
+            </file>
+            <file
+                name="red_x"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/red_x.png"
+                qualifiers="xhdpi-v4"
+                type="drawable" />
+            <file
+                name="rsense_logo_recording_right"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/rsense_logo_recording_right.png"
+                qualifiers="xhdpi-v4"
+                type="drawable" />
+            <file
+                name="checkmark"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/checkmark.png"
+                qualifiers="xhdpi-v4"
+                type="drawable" />
+            <file
+                name="rsense_logo_right"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/rsense_logo_right.png"
+                qualifiers="xhdpi-v4"
+                type="drawable" />
+            <file
+                name="warning_icon"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/warning_icon.png"
+                qualifiers="xhdpi-v4"
+                type="drawable" />
+            <file
+                name="spinner_1_black"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi-v4/spinner_1_black.png"
+                qualifiers="xhdpi-v4"
+                type="drawable" />
+            <file
+                name="time_fail"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_fail.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="edit_row"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/edit_row.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="toast_layout_check"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_check.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="queueblock_pic"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_pic.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="dialog_filebrowser"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/dialog_filebrowser.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="queueprompt"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueprompt.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="classroom_mode"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/classroom_mode.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="time_reset"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_reset.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="no_initial_project"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_initial_project.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="projectrow"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projectrow.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="toast_layout_warning"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_warning.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="credential_manager_add_key"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_add_key.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="field_matching"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_matching.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="credential_manager_person"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_person.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="queueblock_data"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_data.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="toast_layout_x"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_x.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="queueedit_data"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_data.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="loadrow"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/loadrow.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="login_error"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_error.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="project_create"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_create.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="queueblock_alter"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_alter.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="enter_name"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/enter_name.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="project_id"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_id.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="new_project_name"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/new_project_name.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="synctime"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/synctime.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="credential_manager_login"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_login.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="project_field_location"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field_location.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="credential_manager"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="filerow"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/filerow.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="credential_manager_keys"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_keys.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="queue_summary"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_summary.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="queue_delete_selected"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_delete_selected.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="field_match_cell"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_match_cell.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="projects"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projects.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="project_field"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="no_qr"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_qr.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="queueedit_rename"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_rename.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="credential_manager_key"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_key.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="login_dialog"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_dialog.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="time_received"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_received.xml"
+                qualifiers=""
+                type="layout" />
+            <file
                 name="beep"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/raw/beep.mp3"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/raw/beep.mp3"
                 qualifiers=""
                 type="raw" />
             <file
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values/values.xml"
+                name="red_x"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/red_x.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="backarrow"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/backarrow.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="rsense_logo_recording_right"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/rsense_logo_recording_right.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="checkmark"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/checkmark.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="rsense_logo_right"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/rsense_logo_right.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="warning_icon"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/warning_icon.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="icon_folder"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/icon_folder.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="icon_file"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/icon_file.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="spinner_1_black"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/spinner_1_black.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="x_icon"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/x_icon.png"
+                qualifiers="hdpi-v4"
+                type="drawable" />
+            <file
+                name="red_x"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/red_x.png"
+                qualifiers="xxhdpi-v4"
+                type="drawable" />
+            <file
+                name="checkmark"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/checkmark.png"
+                qualifiers="xxhdpi-v4"
+                type="drawable" />
+            <file
+                name="rsense_logo_right"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/rsense_logo_right.png"
+                qualifiers="xxhdpi-v4"
+                type="drawable" />
+            <file
+                name="warning_icon"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/warning_icon.png"
+                qualifiers="xxhdpi-v4"
+                type="drawable" />
+            <file
+                name="spinner_1_black"
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi-v4/spinner_1_black.png"
+                qualifiers="xxhdpi-v4"
+                type="drawable" />
+            <file
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v14/values.xml"
+                qualifiers="v14" >
+
+                <style
+                    name="AppTheme.DropDownListView"
+                    parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
+
+                <style
+                    name="PDTheme"
+                    parent="@android:style/Theme.Holo.Dialog" >
+                    <item name="android:alertDialogStyle">
+@style/CustomProgressDialogStyle
+                    </item>
+                    <item name="android:textColorPrimary">
+#000000
+                    </item>
+                </style>
+
+                <style
+                    name="AppTheme"
+                    parent="android:Theme.Holo.Light.DarkActionBar" >
+                    <item name="android:actionBarStyle">
+@style/AppTheme.ActionBar
+                    </item>
+                    <item name="android:actionBarWidgetTheme">
+@style/AppTheme.Widget
+                    </item>
+                    <item name="android:popupMenuStyle">
+@style/AppTheme.PopupMenu
+                    </item>
+                    <item name="android:dropDownListViewStyle">
+@style/AppTheme.DropDownListView
+                    </item>
+                    <item name="android:homeAsUpIndicator">
+@null
+                    </item>
+                </style>
+
+                <style name="CustomProgressDialogStyle" >
+                    <item name="android:bottomBright">
+#FF0000
+                    </item>
+                    <item name="android:bottomDark">
+#FF0000
+                    </item>
+                    <item name="android:bottomMedium">
+#FF0000
+                    </item>
+                    <item name="android:centerBright">
+#FF0000
+                    </item>
+                    <item name="android:centerDark">
+#FF0000
+                    </item>
+                    <item name="android:centerMedium">
+#FF0000
+                    </item>
+                    <item name="android:fullBright">
+#FF0000
+                    </item>
+                    <item name="android:fullDark">
+#FF0000
+                    </item>
+                    <item name="android:topBright">
+#FF0000
+                    </item>
+                    <item name="android:topDark">
+#FF0000
+                    </item>
+                </style>
+
+                <style
+                    name="AppTheme.PopupMenu"
+                    parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
+
+                <style
+                    name="AppTheme.ActionBar"
+                    parent="@android:style/Widget.Holo.Light.ActionBar" >
+                    <item name="android:background">
+@color/actionbar_background
+                    </item>
+                    <item name="android:logo">
+@drawable/rsense_logo_right
+                    </item>
+                    <item name="android:displayOptions">
+showHome|useLogo
+                    </item>
+                    <item name="android:titleTextStyle">
+@style/AppTheme.ActionBar.TitleTextStyle
+                    </item>
+                </style>
+
+                <style name="AppTheme.ActionBar.TitleTextStyle" >
+                    <item name="android:color">
+@color/actionbar_text
+                    </item>
+                </style>
+
+                <style
+                    name="AppTheme.Widget"
+                    parent="@android:style/Theme.Holo.Light" >
+                    <item name="android:popupMenuStyle">
+@style/AppTheme.PopupMenu
+                    </item>
+                    <item name="android:dropDownListViewStyle">
+@style/AppTheme.DropDownListView
+                    </item>
+                </style>
+            </file>
+            <file
+                path="/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values/values.xml"
                 qualifiers="" >
                 <string name="use_isense_name" >Use iSENSE Account Name:
                 </string>
@@ -567,6 +800,8 @@
                 </style>
 
                 <string name="field_name" >field name
+                </string>
+                <string name="retry" >Try Again
                 </string>
 
                 <string-array name="isense_fields_array" >
@@ -630,8 +865,6 @@ Temp. (Kelvin)
                     </item>
                 </string-array>
 
-                <string name="retry" >Try Again
-                </string>
                 <string name="logout" >Log out
                 </string>
                 <string name="browse_proj" >Browse Projects
@@ -952,410 +1185,127 @@ Location
                 <string name="key_info" >A contributor key allows you to contribute data to a specific project without an iSENSE account.
                 </string>
             </file>
-            <file
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v11/values.xml"
-                qualifiers="v11" >
-
-                <style
-                    name="PDTheme"
-                    parent="@android:style/Theme.Holo.Dialog" >
-                    <item name="android:alertDialogStyle">
-@style/CustomProgressDialogStyle
-                    </item>
-                    <item name="android:textColorPrimary">
-#000000
-                    </item>
-                </style>
-
-                <style
-                    name="AppThemeDialog"
-                    parent="@android:style/Theme.Holo.Light.Dialog" >
-                    <item name="android:layout_height">
-wrap_content
-                    </item>
-                    <item name="android:layout_width">
-wrap_content
-                    </item>
-                </style>
-
-                <style
-                    name="AppTheme"
-                    parent="android:Theme.Holo.Light.DarkActionBar" >
-                    <item name="android:actionBarStyle">
-@style/AppTheme.ActionBar
-                    </item>
-                    <item name="android:popupMenuStyle">
-@style/AppTheme.PopupMenu
-                    </item>
-                    <item name="android:dropDownListViewStyle">
-@style/AppTheme.DropDownListView
-                    </item>
-                </style>
-
-                <style
-                    name="AppTheme.Widget"
-                    parent="@android:style/Theme.Holo.Light" >
-                    <item name="android:popupMenuStyle">
-@style/AppTheme.PopupMenu
-                    </item>
-                    <item name="android:dropDownListViewStyle">
-@style/AppTheme.DropDownListView
-                    </item>
-                </style>
-
-                <style
-                    name="AppTheme.DropDownListView"
-                    parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
-
-                <style
-                    name="AppTheme.ActionBar"
-                    parent="@android:style/Widget.Holo.Light.ActionBar" >
-                    <item name="android:background">
-@color/actionbar_background
-                    </item>
-                    <item name="android:logo">
-@drawable/rsense_logo_right
-                    </item>
-                    <item name="android:displayOptions">
-showHome|useLogo
-                    </item>
-                    <item name="android:titleTextStyle">
-@style/AppTheme.ActionBar.TitleTextStyle
-                    </item>
-                </style>
-
-                <style name="CustomProgressDialogStyle" >
-                    <item name="android:bottomBright">
-#FF0000
-                    </item>
-                    <item name="android:bottomDark">
-#FF0000
-                    </item>
-                    <item name="android:bottomMedium">
-#FF0000
-                    </item>
-                    <item name="android:centerBright">
-#FF0000
-                    </item>
-                    <item name="android:centerDark">
-#FF0000
-                    </item>
-                    <item name="android:centerMedium">
-#FF0000
-                    </item>
-                    <item name="android:fullBright">
-#FF0000
-                    </item>
-                    <item name="android:fullDark">
-#FF0000
-                    </item>
-                    <item name="android:topBright">
-#FF0000
-                    </item>
-                    <item name="android:topDark">
-#FF0000
-                    </item>
-                </style>
-
-                <style name="AppTheme.ActionBar.TitleTextStyle" >
-                    <item name="android:color">
-@color/actionbar_text
-                    </item>
-                </style>
-
-                <style
-                    name="AppThemeQueue"
-                    parent="@android:style/Theme.Holo.Light.Dialog" >
-                    <item name="android:layout_height">
-wrap_content
-                    </item>
-                </style>
-
-                <style
-                    name="AppTheme.PopupMenu"
-                    parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
-            </file>
-            <file
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v14/values.xml"
-                qualifiers="v14" >
-
-                <style
-                    name="AppTheme.DropDownListView"
-                    parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
-
-                <style
-                    name="PDTheme"
-                    parent="@android:style/Theme.Holo.Dialog" >
-                    <item name="android:alertDialogStyle">
-@style/CustomProgressDialogStyle
-                    </item>
-                    <item name="android:textColorPrimary">
-#000000
-                    </item>
-                </style>
-
-                <style
-                    name="AppTheme"
-                    parent="android:Theme.Holo.Light.DarkActionBar" >
-                    <item name="android:actionBarStyle">
-@style/AppTheme.ActionBar
-                    </item>
-                    <item name="android:actionBarWidgetTheme">
-@style/AppTheme.Widget
-                    </item>
-                    <item name="android:popupMenuStyle">
-@style/AppTheme.PopupMenu
-                    </item>
-                    <item name="android:dropDownListViewStyle">
-@style/AppTheme.DropDownListView
-                    </item>
-                    <item name="android:homeAsUpIndicator">
-@null
-                    </item>
-                </style>
-
-                <style name="CustomProgressDialogStyle" >
-                    <item name="android:bottomBright">
-#FF0000
-                    </item>
-                    <item name="android:bottomDark">
-#FF0000
-                    </item>
-                    <item name="android:bottomMedium">
-#FF0000
-                    </item>
-                    <item name="android:centerBright">
-#FF0000
-                    </item>
-                    <item name="android:centerDark">
-#FF0000
-                    </item>
-                    <item name="android:centerMedium">
-#FF0000
-                    </item>
-                    <item name="android:fullBright">
-#FF0000
-                    </item>
-                    <item name="android:fullDark">
-#FF0000
-                    </item>
-                    <item name="android:topBright">
-#FF0000
-                    </item>
-                    <item name="android:topDark">
-#FF0000
-                    </item>
-                </style>
-
-                <style
-                    name="AppTheme.PopupMenu"
-                    parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
-
-                <style
-                    name="AppTheme.ActionBar"
-                    parent="@android:style/Widget.Holo.Light.ActionBar" >
-                    <item name="android:background">
-@color/actionbar_background
-                    </item>
-                    <item name="android:logo">
-@drawable/rsense_logo_right
-                    </item>
-                    <item name="android:displayOptions">
-showHome|useLogo
-                    </item>
-                    <item name="android:titleTextStyle">
-@style/AppTheme.ActionBar.TitleTextStyle
-                    </item>
-                </style>
-
-                <style name="AppTheme.ActionBar.TitleTextStyle" >
-                    <item name="android:color">
-@color/actionbar_text
-                    </item>
-                </style>
-
-                <style
-                    name="AppTheme.Widget"
-                    parent="@android:style/Theme.Holo.Light" >
-                    <item name="android:popupMenuStyle">
-@style/AppTheme.PopupMenu
-                    </item>
-                    <item name="android:dropDownListViewStyle">
-@style/AppTheme.DropDownListView
-                    </item>
-                </style>
-            </file>
         </source>
     </dataSet>
     <dataSet config="main" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res" >
+        <source path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res" >
             <file
                 name="button_bar_green"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable/button_bar_green.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/drawable/button_bar_green.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="button_bar_rsense"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable/button_bar_rsense.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/drawable/button_bar_rsense.xml"
                 qualifiers=""
                 type="drawable" />
             <file
-                name="ic_launcher"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable-hdpi/ic_launcher.png"
-                qualifiers="hdpi-v4"
-                type="drawable" />
-            <file
                 name="logo"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable-hdpi/logo.png"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/drawable-hdpi/logo.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
             <file
                 name="ic_launcher"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable-mdpi/ic_launcher.png"
-                qualifiers="mdpi-v4"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/drawable-hdpi/ic_launcher.png"
+                qualifiers="hdpi-v4"
                 type="drawable" />
             <file
-                name="logo"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable-mdpi/logo.png"
-                qualifiers="mdpi-v4"
-                type="drawable" />
+                name="reset"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout-v11/reset.xml"
+                qualifiers="v11"
+                type="layout" />
             <file
-                name="ic_launcher"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable-xhdpi/ic_launcher.png"
-                qualifiers="xhdpi-v4"
-                type="drawable" />
+                name="no_gps"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout-v11/no_gps.xml"
+                qualifiers="v11"
+                type="layout" />
             <file
-                name="logo"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable-xhdpi/logo.png"
-                qualifiers="xhdpi-v4"
-                type="drawable" />
-            <file
-                name="ic_launcher"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable-xxhdpi/ic_launcher.png"
-                qualifiers="xxhdpi-v4"
-                type="drawable" />
-            <file
-                name="about"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/about.xml"
-                qualifiers=""
+                name="view_data"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout-v11/view_data.xml"
+                qualifiers="v11"
                 type="layout" />
             <file
                 name="force_stop"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/force_stop.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout-v11/force_stop.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+                name="main"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout-land/main.xml"
+                qualifiers="land"
+                type="layout" />
+            <file
+                name="menu"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/menu/menu.xml"
+                qualifiers=""
+                type="menu" />
+            <file
+                name="ic_launcher"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/drawable-xxhdpi/ic_launcher.png"
+                qualifiers="xxhdpi-v4"
+                type="drawable" />
+            <file
+                name="reset"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout/reset.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="about"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout/about.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="help_dialog"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/help_dialog.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout/help_dialog.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="main"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/main.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout/main.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="no_gps"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/no_gps.xml"
-                qualifiers=""
-                type="layout" />
-            <file
-                name="reset"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/reset.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout/no_gps.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_data"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/view_data.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout/view_data.xml"
                 qualifiers=""
-                type="layout" />
-            <file
-                name="main"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-land/main.xml"
-                qualifiers="land"
                 type="layout" />
             <file
                 name="force_stop"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-v11/force_stop.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="no_gps"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-v11/no_gps.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="reset"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-v11/reset.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="view_data"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-v11/view_data.xml"
-                qualifiers="v11"
-                type="layout" />
-            <file
-                name="menu"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/menu/menu.xml"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout/force_stop.xml"
                 qualifiers=""
-                type="menu" />
+                type="layout" />
             <file
                 name="beep"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/raw/beep.mp3"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/raw/beep.mp3"
                 qualifiers=""
                 type="raw" />
             <file
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/values/arrays.xml"
-                qualifiers="" >
-                <string-array name="data_rate_vals" >
-                    <item name="1">
-1000
-                    </item>
-                    <item name="2">
-2000
-                    </item>
-                    <item name="5">
-5000
-                    </item>
-                    <item name="10">
-10000
-                    </item>
-                    <item name="20">
-20000
-                    </item>
-                    <item name="30">
-30000
-                    </item>
-                    <item name="1 minute">
-60000
-                    </item>
-                </string-array>
-                <string-array name="data_rate" >
-                    <item name="1">
-1 second 
-                    </item>
-                    <item name="2">
-2 seconds 
-                    </item>
-                    <item name="5">
-5 seconds 
-                    </item>
-                    <item name="10">
-10 seconds 
-                    </item>
-                    <item name="20">
-20 seconds 
-                    </item>
-                    <item name="30">
-30 seconds 
-                    </item>
-                    <item name="1 minute">
-1 minute 
-                    </item>
-                </string-array>
-            </file>
+                name="logo"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/drawable-mdpi/logo.png"
+                qualifiers="mdpi-v4"
+                type="drawable" />
             <file
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/values/strings.xml"
+                name="ic_launcher"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/drawable-mdpi/ic_launcher.png"
+                qualifiers="mdpi-v4"
+                type="drawable" />
+            <file
+                name="logo"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/drawable-xhdpi/logo.png"
+                qualifiers="xhdpi-v4"
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/drawable-xhdpi/ic_launcher.png"
+                qualifiers="xhdpi-v4"
+                type="drawable" />
+            <file
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/values/strings.xml"
                 qualifiers="" >
                 <string name="Upload" >Upload
                 </string>
@@ -1444,12 +1394,62 @@ showHome|useLogo
                 <string name="menu_reset_condensed" >Reset
                 </string>
             </file>
+            <file
+                path="/home/bobby/iSENSE-Hardware/Android/DataWalk/res/values/arrays.xml"
+                qualifiers="" >
+                <string-array name="data_rate_vals" >
+                    <item name="1">
+1000
+                    </item>
+                    <item name="2">
+2000
+                    </item>
+                    <item name="5">
+5000
+                    </item>
+                    <item name="10">
+10000
+                    </item>
+                    <item name="20">
+20000
+                    </item>
+                    <item name="30">
+30000
+                    </item>
+                    <item name="1 minute">
+60000
+                    </item>
+                </string-array>
+                <string-array name="data_rate" >
+                    <item name="1">
+1 second 
+                    </item>
+                    <item name="2">
+2 seconds 
+                    </item>
+                    <item name="5">
+5 seconds 
+                    </item>
+                    <item name="10">
+10 seconds 
+                    </item>
+                    <item name="20">
+20 seconds 
+                    </item>
+                    <item name="30">
+30 seconds 
+                    </item>
+                    <item name="1 minute">
+1 minute 
+                    </item>
+                </string-array>
+            </file>
         </source>
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/generated/res/rs/debug" />
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/generated/res/generated/debug" />
+        <source path="/home/bobby/iSENSE-Hardware/Android/DataWalk/build/generated/res/rs/debug" />
+        <source path="/home/bobby/iSENSE-Hardware/Android/DataWalk/build/generated/res/generated/debug" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build-types/debug/res" />
+        <source path="/home/bobby/iSENSE-Hardware/Android/DataWalk/build-types/debug/res" />
     </dataSet>
 
 </merger>
