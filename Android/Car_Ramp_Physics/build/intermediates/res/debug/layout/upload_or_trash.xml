@@ -18,4 +18,4 @@
         android:layout_weight="1"
         android:text="@string/discard" />
 
-</LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout/upload_or_trash.xml -->
+</LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout/upload_or_trash.xml -->
