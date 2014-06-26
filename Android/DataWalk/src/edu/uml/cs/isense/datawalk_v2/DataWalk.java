@@ -98,12 +98,12 @@ public class DataWalk extends Activity implements LocationListener,
 	private Waffle w;
 
 	/* iSENSE API Globals and Constants */
-	private final String DEFAULT_PROJECT = "5";
-	private final String DEFAULT_PROJECT_DEV = "5";
+	private final String DEFAULT_PROJECT = "13";
+	private final String DEFAULT_PROJECT_DEV = "13";
 
 	private int actionBarTapCount = 0;
 	public static boolean useDev = false;
-	public static String projectID = "5";
+	public static String projectID = "13";
 
 	private String loginName = "";
 	private String loginPass = "";
@@ -283,10 +283,11 @@ public class DataWalk extends Activity implements LocationListener,
                 if (Datawalk_Service.running) {
                     setLayoutNotRecording();
                     stopService(service);
-                } else if (!Datawalk_Service.running && gpsWorking ) { //&& gpsWorking ) {
+                } else if (!Datawalk_Service.running && gpsWorking &&
+                        (loc.getLatitude() != 0 && loc.getLongitude() != 0)  ) {
                     setLayoutRecording();
                     startService(service);
-                } else if (!gpsWorking) {
+                } else if (!gpsWorking || (loc.getLatitude() != 0 && loc.getLongitude() != 0) ) {
                     w.make("No GPS Signal", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
                 }
 
