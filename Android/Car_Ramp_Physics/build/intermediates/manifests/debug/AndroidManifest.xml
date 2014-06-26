@@ -13,6 +13,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="edu.uml.cs.isense.carphysicsv2" />
+
     <activity
         android:name="edu.uml.cs.isense.queue.QueueLayout"
         android:label="Upload Data"
