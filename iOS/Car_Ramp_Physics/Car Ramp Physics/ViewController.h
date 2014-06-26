@@ -28,6 +28,7 @@
 #import <DLAVAlertViewController.h>
 #import <ISKeys.h>
 #import <RadioButton.h>
+#import <SlideNavigationController.h>
 
 typedef struct _RotationDataSaver{
     __unsafe_unretained NSString *user;
@@ -38,7 +39,7 @@ typedef struct _RotationDataSaver{
     
 } RotationDataSaver;
 
-@interface ViewController : UIViewController <RNGridMenuDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, ProjectBrowserDelegate, ZBarReaderDelegate, CredentialManagerDelegate, UIActionSheetDelegate>
+@interface ViewController : UIViewController <RNGridMenuDelegate, UIAlertViewDelegate, CLLocationManagerDelegate, UITextFieldDelegate,  ProjectBrowserDelegate, ZBarReaderDelegate, CredentialManagerDelegate, SlideNavigationControllerDelegate>
 {
     
     RotationDataSaver *saver;
@@ -106,10 +107,6 @@ typedef struct _RotationDataSaver{
 @property (nonatomic) BOOL running;
 @property (nonatomic) BOOL timeOver;
 @property (nonatomic) BOOL useDev;
-@property (nonatomic) BOOL x;
-@property (nonatomic) BOOL y;
-@property (nonatomic) BOOL z;
-@property (nonatomic) BOOL mag;
 @property (nonatomic) BOOL  setupDone;
 
 @property (nonatomic) BOOL  menuShown;
@@ -117,12 +114,16 @@ typedef struct _RotationDataSaver{
 @property (nonatomic) BOOL saveModeEnabled;
 
 - (void)longPress:(UILongPressGestureRecognizer*)gesture;
-- (void)showMenu;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)login:(NSString *)usernameInput withPassword:(NSString *)passwordInput;
 - (UIAlertView *) getDispatchDialogWithMessage:(NSString *)dString;
 - (void) updateElapsedTime;
 -(void) stopRecordingWithoutPublishing:(CMMotionManager *)finalMotionManager;
+- (void) showCredentialManager;
+- (void) showProjectIDDialog;
+- (void) showResetDialog;
+- (void) showRecordRateDialog;
+- (void) showRecordLengthDialog;
 
 @end
 

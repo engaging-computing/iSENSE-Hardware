@@ -42,7 +42,7 @@
 
 - (IBAction) upload:(id)sender;
 
-- (id)   initWithParentName:(NSString *)parentName;
+- (id) initWithParentName:(NSString *)parentName;
 
 @property (nonatomic, assign) API *api;
 @property (nonatomic, copy)   NSString *parent;

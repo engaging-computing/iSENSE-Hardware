@@ -13,15 +13,6 @@
 
 @synthesize api, mTableView, currentIndex, dataSaver, managedObjectContext, lastClickedCellIndex, parent, limitedTempQueue;
 
-// Initialize the view - TODO this shouldn't ever be used, right?  do we need it?
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        api = [API getInstance];
-    }
-    return self;
-}
-
 - (IBAction)enterEditMode:(id)sender {
     
     if ([self.mTableView isEditing]) {
@@ -274,6 +265,8 @@
             NSString *newDataSetName = [[actionSheet textFieldAtIndex:0] text];
             QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
             [cell setDataSetName:newDataSetName];
+            
+            
         }
         
     } else if (actionSheet.tag == QUEUE_SELECT_PROJ) {
@@ -328,6 +321,8 @@
         }
         
     }
+    
+    [self.mTableView reloadData];
 }
 
 - (void) didFinishChoosingProject:(ProjectBrowserViewController *)browser withID:(int)project_id {
@@ -582,6 +577,8 @@
         [cell setFields:fieldMatch];
         [cell.dataSet setFields:fieldMatch];
         [dataSaver editDataSetWithKey:cell.mKey andChangeFieldsTo:fieldMatch];
+        
+        [self.mTableView reloadData];
         
     }
     // else user canceled

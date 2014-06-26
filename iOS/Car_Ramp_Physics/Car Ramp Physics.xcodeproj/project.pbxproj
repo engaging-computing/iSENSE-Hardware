@@ -10,11 +10,14 @@
 		7605095F19001315006A73BB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7605095E19001315006A73BB /* Security.framework */; };
 		760FABBC1790566C00951F97 /* Strings.strings in Resources */ = {isa = PBXBuildFile; fileRef = 760FABBB1790566C00951F97 /* Strings.strings */; };
 		76163D98192E59E800FAABB2 /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 76163D97192E59E800FAABB2 /* beep.wav */; };
-		7621BA771940D9410043D0F3 /* Menu_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7621BA761940D9410043D0F3 /* Menu_iPhone.xib */; };
 		7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7627A39A1796EA3000F2CB48 /* ViewController~landscape_iPhone.xib */; };
 		762BBED51942155A00352B4C /* checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 762BBED31942155A00352B4C /* checked.png */; };
 		762BBED61942155A00352B4C /* unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 762BBED41942155A00352B4C /* unchecked.png */; };
 		76444EE1180F07DF00C41E3D /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */; };
+		764795CE1948E33A006C0CB4 /* MenuTableViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 764795CA1948E33A006C0CB4 /* MenuTableViewController_iPad.xib */; };
+		764795CF1948E33A006C0CB4 /* MenuTableViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 764795CB1948E33A006C0CB4 /* MenuTableViewController_iPhone.xib */; };
+		764795D01948E33A006C0CB4 /* MenuTableViewController~landscape_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 764795CC1948E33A006C0CB4 /* MenuTableViewController~landscape_iPad.xib */; };
+		764795D11948E33A006C0CB4 /* MenuTableViewController~landscape_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 764795CD1948E33A006C0CB4 /* MenuTableViewController~landscape_iPhone.xib */; };
 		765099CA178DF0CE00425A27 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099C9178DF0CE00425A27 /* CoreLocation.framework */; };
 		765099CC178DF0D500425A27 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765099CB178DF0D500425A27 /* CoreMotion.framework */; };
 		7669F02A178B275C00E51AD0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7669F029178B275C00E51AD0 /* UIKit.framework */; };
@@ -52,6 +55,7 @@
 		76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */; };
 		76E02E31178F19220057D37B /* Fields.strings in Resources */ = {isa = PBXBuildFile; fileRef = 76E02E30178F19220057D37B /* Fields.strings */; };
 		76EA3694187F2EC0002B95C2 /* libiSENSE_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C62BC1187F2D9A00DAEF36 /* libiSENSE_API.a */; };
+		76F98B611947857E000E3204 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76F98B5F1947857E000E3204 /* MenuTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,11 +93,14 @@
 		7605095E19001315006A73BB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		760FABBB1790566C00951F97 /* Strings.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Strings.strings; sourceTree = "<group>"; };
 		76163D97192E59E800FAABB2 /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
-		7621BA761940D9410043D0F3 /* Menu_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Menu_iPhone.xib; sourceTree = "<group>"; };
 		7627A3991796EA3000F2CB48 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "en.lproj/ViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		762BBED31942155A00352B4C /* checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checked.png; sourceTree = "<group>"; };
 		762BBED41942155A00352B4C /* unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unchecked.png; sourceTree = "<group>"; };
 		76444EE0180F07DF00C41E3D /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		764795CA1948E33A006C0CB4 /* MenuTableViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuTableViewController_iPad.xib; sourceTree = "<group>"; };
+		764795CB1948E33A006C0CB4 /* MenuTableViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuTableViewController_iPhone.xib; sourceTree = "<group>"; };
+		764795CC1948E33A006C0CB4 /* MenuTableViewController~landscape_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MenuTableViewController~landscape_iPad.xib"; sourceTree = "<group>"; };
+		764795CD1948E33A006C0CB4 /* MenuTableViewController~landscape_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MenuTableViewController~landscape_iPhone.xib"; sourceTree = "<group>"; };
 		765099B7178DD39500425A27 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		765099C9178DF0CE00425A27 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		765099CB178DF0D500425A27 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -138,6 +145,8 @@
 		76DF6A8617E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo72x72.png; path = ../CarRampPhysicsLogo72x72.png; sourceTree = "<group>"; };
 		76DF6A8817E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CarRampPhysicsLogo144x144.png; path = ../CarRampPhysicsLogo144x144.png; sourceTree = "<group>"; };
 		76E02E30178F19220057D37B /* Fields.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Fields.strings; sourceTree = "<group>"; };
+		76F98B5E1947857E000E3204 /* MenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuTableViewController.h; sourceTree = "<group>"; };
+		76F98B5F1947857E000E3204 /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -260,7 +269,8 @@
 		76E91F8E1794789F001749FC /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
-				7621BA761940D9410043D0F3 /* Menu_iPhone.xib */,
+				764795CB1948E33A006C0CB4 /* MenuTableViewController_iPhone.xib */,
+				764795CD1948E33A006C0CB4 /* MenuTableViewController~landscape_iPhone.xib */,
 				76B58D8F178C742B006E1425 /* AboutViewController_iPhone.xib */,
 				76A5ED961796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib */,
 				7669F044178B275C00E51AD0 /* ViewController_iPhone.xib */,
@@ -272,6 +282,8 @@
 		76E91F90179478AD001749FC /* iPad */ = {
 			isa = PBXGroup;
 			children = (
+				764795CC1948E33A006C0CB4 /* MenuTableViewController~landscape_iPad.xib */,
+				764795CA1948E33A006C0CB4 /* MenuTableViewController_iPad.xib */,
 				76B58D92178C7492006E1425 /* AboutViewController_iPad.xib */,
 				76A5ED9C1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib */,
 				7669F047178B275C00E51AD0 /* ViewController_iPad.xib */,
@@ -283,6 +295,7 @@
 		76E91F91179478B7001749FC /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				76F98B5E1947857E000E3204 /* MenuTableViewController.h */,
 				767E4AF21901C25300417FEC /* LongPressButtonView.h */,
 				765099B7178DD39500425A27 /* Constants.h */,
 				7669F038178B275C00E51AD0 /* AppDelegate.h */,
@@ -300,6 +313,7 @@
 				76B58D8E178C742B006E1425 /* AboutViewController.m */,
 				7669F035178B275C00E51AD0 /* main.m */,
 				767E4AF31901C25400417FEC /* LongPressButtonView.m */,
+				76F98B5F1947857E000E3204 /* MenuTableViewController.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -414,18 +428,21 @@
 				769B5FB4188C221800668355 /* ZBarSDK in Resources */,
 				76E02E31178F19220057D37B /* Fields.strings in Resources */,
 				760FABBC1790566C00951F97 /* Strings.strings in Resources */,
+				764795D11948E33A006C0CB4 /* MenuTableViewController~landscape_iPhone.xib in Resources */,
 				76A5ED971796C8AF00F83E7A /* AboutViewController~landscape_iPhone.xib in Resources */,
 				76163D98192E59E800FAABB2 /* beep.wav in Resources */,
-				7621BA771940D9410043D0F3 /* Menu_iPhone.xib in Resources */,
 				762BBED61942155A00352B4C /* unchecked.png in Resources */,
 				7627A3981796EA3000F2CB48 /* ViewController~landscape_iPhone.xib in Resources */,
+				764795D01948E33A006C0CB4 /* MenuTableViewController~landscape_iPad.xib in Resources */,
 				76A5ED9D1796CB1F00F83E7A /* AboutViewController~landscape_iPad.xib in Resources */,
 				76A5ED9F1796CB8C00F83E7A /* ViewController~landscape_iPad.xib in Resources */,
 				76DF6A8317E4FF3A00CF5DDD /* CarRampPhysicsLogo57x57.png in Resources */,
+				764795CF1948E33A006C0CB4 /* MenuTableViewController_iPhone.xib in Resources */,
 				767E4AF119019C5700417FEC /* Images.xcassets in Resources */,
 				76DF6A8517E4FF4F00CF5DDD /* CarRampPhysicsLogo114x114.png in Resources */,
 				762BBED51942155A00352B4C /* checked.png in Resources */,
 				76DF6A8717E4FF5A00CF5DDD /* CarRampPhysicsLogo72x72.png in Resources */,
+				764795CE1948E33A006C0CB4 /* MenuTableViewController_iPad.xib in Resources */,
 				76DF6A8917E4FF6200CF5DDD /* CarRampPhysicsLogo144x144.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,6 +458,7 @@
 				7669F036178B275C00E51AD0 /* main.m in Sources */,
 				7669F03A178B275C00E51AD0 /* AppDelegate.m in Sources */,
 				7669F043178B275C00E51AD0 /* ViewController.mm in Sources */,
+				76F98B611947857E000E3204 /* MenuTableViewController.m in Sources */,
 				76B58D90178C742C006E1425 /* AboutViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
