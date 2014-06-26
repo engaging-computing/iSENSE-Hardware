@@ -31,4 +31,8 @@
         android:entries="@array/isense_fields_array"
         android:prompt="@string/isense_fields" />
 
+<<<<<<< HEAD:Android/Car_Ramp_Physics/build/intermediates/res/debug/layout/field_match_cell.xml
 </LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/field_match_cell.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/field_match_cell.xml -->
+=======
+</LinearLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/field_match_cell.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/field_match_cell.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/Data_Collector/build/res/all/debug/layout/field_match_cell.xml

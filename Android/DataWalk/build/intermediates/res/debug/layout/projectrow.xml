@@ -26,4 +26,8 @@
         android:singleLine="true"
         android:textIsSelectable="false" />
 
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/res/debug/layout/projectrow.xml
 </RelativeLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projectrow.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/projectrow.xml -->
+=======
+</RelativeLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projectrow.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/projectrow.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/Canobie_Physics_v2/build/res/all/debug/layout/projectrow.xml

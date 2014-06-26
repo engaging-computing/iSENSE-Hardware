@@ -43,4 +43,8 @@
             android:text="@string/createProjectButton" />
     </LinearLayout>
 
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/res/debug/layout-v11/new_project_name.xml
 </LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/new_project_name.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout-v11/new_project_name.xml -->
+=======
+</LinearLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/new_project_name.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout-v11/new_project_name.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/res/all/debug/layout-v11/new_project_name.xml

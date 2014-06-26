@@ -37,4 +37,8 @@
         <corners android:radius="3dp" />
     </shape>
    </item>
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/res/debug/drawable/listelement_bkgd.xml
 </layer-list><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/drawable/listelement_bkgd.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/drawable/listelement_bkgd.xml -->
+=======
+</layer-list><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/drawable/listelement_bkgd.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/drawable/listelement_bkgd.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/Data_Collector/build/res/all/debug/drawable/listelement_bkgd.xml

@@ -98,4 +98,8 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
+<<<<<<< HEAD:Android/Car_Ramp_Physics/build/intermediates/res/debug/layout/project_create.xml
 </RelativeLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/project_create.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/project_create.xml -->
+=======
+</RelativeLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/project_create.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/project_create.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/res/all/debug/layout/project_create.xml

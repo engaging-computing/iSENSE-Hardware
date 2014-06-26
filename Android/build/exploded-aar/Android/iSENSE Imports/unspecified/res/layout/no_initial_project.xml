@@ -29,4 +29,8 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
+<<<<<<< HEAD
 </ScrollView><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/no_initial_project.xml -->
+=======
+</ScrollView><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/no_initial_project.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

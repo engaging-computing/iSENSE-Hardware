@@ -71,4 +71,8 @@
         android:choiceMode="singleChoice" >
     </ListView>
 
+<<<<<<< HEAD
 </RelativeLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/dialog_filebrowser.xml -->
+=======
+</RelativeLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/dialog_filebrowser.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

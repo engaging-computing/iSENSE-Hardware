@@ -31,4 +31,8 @@
         android:layout_height="fill_parent"
         android:text="@string/project_no_items" />
 
+<<<<<<< HEAD
 </LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projects.xml -->
+=======
+</LinearLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projects.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

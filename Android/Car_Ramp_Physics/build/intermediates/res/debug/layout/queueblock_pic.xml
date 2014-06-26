@@ -55,4 +55,8 @@
         android:textIsSelectable="false"
         android:textSize="12sp" />
 
+<<<<<<< HEAD:Android/Car_Ramp_Physics/build/intermediates/res/debug/layout/queueblock_pic.xml
 </LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/queueblock_pic.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/queueblock_pic.xml -->
+=======
+</LinearLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/queueblock_pic.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/queueblock_pic.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/Data_Collector/build/res/all/debug/layout/queueblock_pic.xml

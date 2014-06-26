@@ -13,13 +13,13 @@
 
 @implementation AboutViewController
 
-@synthesize text;
+@synthesize text, textString;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andStringText:(NSString *) key
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        textString = [StringGrabber grabString:key];
     }
     return self;
 }
@@ -70,19 +70,11 @@
     
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    
-    self.navigationItem.title = @"About";
-}
-
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     [self willRotateToInterfaceOrientation:self.interfaceOrientation duration:0];
-    [text setText:[StringGrabber grabString:@"about_app_text"]];
+    [text setText:textString];
 }
 
 - (void)didReceiveMemoryWarning

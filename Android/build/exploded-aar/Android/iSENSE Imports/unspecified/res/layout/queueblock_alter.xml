@@ -80,4 +80,8 @@
             android:textSize="16sp" />
     </LinearLayout>
 
+<<<<<<< HEAD
 </ScrollView><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/queueblock_alter.xml -->
+=======
+</ScrollView><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/queueblock_alter.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

@@ -13,5 +13,8 @@
 
 
 @property(nonatomic) IBOutlet UITextView *text;
+@property(nonatomic) NSString *textString;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil andStringText:(NSString *) key;
 
 @end

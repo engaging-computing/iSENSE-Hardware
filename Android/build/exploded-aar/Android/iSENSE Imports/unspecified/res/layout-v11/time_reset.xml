@@ -46,4 +46,8 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
+<<<<<<< HEAD
 </LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/time_reset.xml -->
+=======
+</LinearLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/time_reset.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2
