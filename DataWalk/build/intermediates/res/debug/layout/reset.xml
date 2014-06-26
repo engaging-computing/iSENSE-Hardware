@@ -18,4 +18,4 @@
         android:layout_weight=".5"
         android:text="@android:string/cancel" />
 
-</LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/DataWalk/res/layout/reset.xml -->
+</LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/reset.xml -->

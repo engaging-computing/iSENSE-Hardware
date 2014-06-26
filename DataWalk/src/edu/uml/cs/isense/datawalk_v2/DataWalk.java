@@ -283,10 +283,11 @@ public class DataWalk extends Activity implements LocationListener,
                 if (Datawalk_Service.running) {
                     setLayoutNotRecording();
                     stopService(service);
-                } else if (!Datawalk_Service.running && gpsWorking ) { //&& gpsWorking ) {
+                } else if (!Datawalk_Service.running && gpsWorking &&
+                        (loc.getLatitude() != 0 && loc.getLongitude() != 0)  ) {
                     setLayoutRecording();
                     startService(service);
-                } else if (!gpsWorking) {
+                } else if (!gpsWorking || (loc.getLatitude() != 0 && loc.getLongitude() != 0) ) {
                     w.make("No GPS Signal", Waffle.LENGTH_LONG, Waffle.IMAGE_X);
                 }
 

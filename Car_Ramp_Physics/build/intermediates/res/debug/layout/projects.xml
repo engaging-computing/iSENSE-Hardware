@@ -33,4 +33,4 @@
         android:layout_height="fill_parent"
         android:text="@string/project_no_items" />
 
-</LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projects.xml --><!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/projects.xml -->
+</LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projects.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/projects.xml -->
