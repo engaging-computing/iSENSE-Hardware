@@ -98,12 +98,12 @@ public class DataWalk extends Activity implements LocationListener,
 	private Waffle w;
 
 	/* iSENSE API Globals and Constants */
-	private final String DEFAULT_PROJECT = "5";
-	private final String DEFAULT_PROJECT_DEV = "5";
+	private final String DEFAULT_PROJECT = "13";
+	private final String DEFAULT_PROJECT_DEV = "13";
 
 	private int actionBarTapCount = 0;
 	public static boolean useDev = false;
-	public static String projectID = "5";
+	public static String projectID = "13";
 
 	private String loginName = "";
 	private String loginPass = "";
