@@ -20,4 +20,4 @@
         android:layout_weight="1"
         android:text="@string/view" />
 
-</LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-v14/view_data.xml -->
+</LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-v14/view_data.xml -->

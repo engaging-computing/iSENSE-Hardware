@@ -45,4 +45,4 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
-</LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/queue_delete_selected.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout-v11/queue_delete_selected.xml -->
+</LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/queue_delete_selected.xml --><!-- From: file:/home/bobby/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout-v11/queue_delete_selected.xml -->
