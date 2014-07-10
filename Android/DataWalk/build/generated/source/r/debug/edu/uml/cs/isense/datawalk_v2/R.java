@@ -440,6 +440,8 @@ public final class R {
         public static final int visit=0x7f070096;
     }
     public static final class style {
+        /**  theme UI controls like checkboxes and text fields 
+         */
         public static final int AppTheme=0x7f080000;
         public static final int AppTheme_ActionBar=0x7f080005;
         public static final int AppTheme_ActionBar_TitleTextStyle=0x7f080006;

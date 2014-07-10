@@ -607,11 +607,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	}
 
-	public void onUserLeaveHint() {
-		super.onUserLeaveHint();
-		usedHomeButton = true;
-	}
-
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -719,11 +714,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			}
 
 		}
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
 	}
 
 	@Override

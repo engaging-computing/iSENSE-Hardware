@@ -179,7 +179,6 @@ public class DataWalk extends Activity implements LocationListener,
 		// Initialize action bar customization for API >= 11
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			ActionBar bar = getActionBar();
-
 			// make the actionbar clickable
 			bar.setDisplayHomeAsUpEnabled(true);
 		}

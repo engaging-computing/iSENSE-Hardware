@@ -6,8 +6,8 @@
     android:versionName="4.1.2">
 
     <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="19" />
+        android:minSdkVersion="L"
+        android:targetSdkVersion="L" />
 
     <supports-screens
         android:anyDensity="true"
