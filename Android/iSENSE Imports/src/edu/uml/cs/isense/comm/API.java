@@ -1,7 +1,5 @@
 package edu.uml.cs.isense.comm;
 
-import android.util.Log;
-
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -139,8 +137,6 @@ public class API {
 	 * @return True is the key is valid for that project, false if it is not
 	 */
 	public boolean validateKey(int projectId, String conKey) {
-		//TODO implement this when we get the API functionality to actually do it
-
 		return true;
 	}
 
@@ -405,7 +401,7 @@ public class API {
 	 *         fails
 	 */
 	public uploadInfo uploadDataSet(int projectId, JSONObject data, String datasetName) {
-        uploadInfo ret = new uploadInfo();
+        uploadInfo info = new uploadInfo();
 		datasetName += appendedTimeStamp();
         String reqResult = "";
 		JSONObject requestData = new JSONObject();
@@ -420,14 +416,23 @@ public class API {
 					"projects/" + projectId + "/jsonDataUpload", "", "POST",
 					requestData);
 			JSONObject jobj = new JSONObject(reqResult);
-            ret.dataSetId = jobj.getInt("id");
-			return ret;
+            info.dataSetId = jobj.getInt("id");
+			return info;
 		} catch (Exception e) {
-			e.printStackTrace();
-            ret.errorMessage = reqResult;
-		}
-        ret.dataSetId = -1;
-		return ret;
+            try {
+                JSONObject jobj = new JSONObject(reqResult);
+                info.errorMessage = jobj.getString("msg");
+            } catch (Exception e2) {
+                try {
+                    JSONObject jobj = new JSONObject(reqResult);
+                    info.errorMessage = jobj.getString("error");
+                } catch (Exception e3) {
+                    info.errorMessage = reqResult;
+                }
+            }
+        }
+        info.dataSetId = -1;
+		return info;
 	}
 
 	/**
@@ -448,7 +453,7 @@ public class API {
 	 *         fails
 	 */
 	public uploadInfo uploadDataSet(int projectId, JSONObject data, String dataName, String conKey,  String conName) {
-        uploadInfo ret = new uploadInfo();
+        uploadInfo info = new uploadInfo();
 		JSONObject requestData = new JSONObject();
         String reqResult = "";
 		try {
@@ -460,23 +465,24 @@ public class API {
 					baseURL,
 					"projects/" + projectId + "/jsonDataUpload", "", "POST",
 					requestData);
-			JSONObject jobj = new JSONObject(reqResult);
-            ret.dataSetId = jobj.getInt("id");
-			return ret;
-		} catch (Exception e) {
-			e.printStackTrace();
-            Log.e("message" , e.getLocalizedMessage());
+            JSONObject jobj = new JSONObject(reqResult);
+            info.dataSetId = jobj.getInt("id");
+            return info;
+        } catch (Exception e) {
             try {
                 JSONObject jobj = new JSONObject(reqResult);
-                ret.errorMessage = jobj.getString("msg");
-                ret.dataSetId = -1;
-                return ret;
+                info.errorMessage = jobj.getString("msg");
             } catch (Exception e2) {
-       
+                try {
+                    JSONObject jobj = new JSONObject(reqResult);
+                    info.errorMessage = jobj.getString("error");
+                } catch (Exception e3) {
+                    info.errorMessage = reqResult;
+                }
             }
 		}
-        ret.dataSetId = -1;
-		return ret;
+        info.dataSetId = -1;
+		return info;
 	}
 
 	/**
@@ -551,9 +557,9 @@ public class API {
 	 * 			The type of the target (project or dataset)
 	 * @return The media object ID for the media uploaded or -1 if upload fails
 	 */
-    //TODO
 	public uploadInfo uploadMedia(int dataId, File mediaToUpload, TargetType ttype) {
         uploadInfo info = new uploadInfo();
+        String output = "";
 		try {
 			URL url = new URL(baseURL + "/media_objects/");
 
@@ -602,28 +608,25 @@ public class API {
 					bo.write(i);
 					i = in.read();
 				}
-				String output = bo.toString();
+				output = bo.toString();
 				System.out.println("Returning from uploadProjectMedia: "
 						+ output);
                 JSONObject jobj = new JSONObject(output);
-                try {
-					info.mediaId = jobj.getInt("id");
-					return info;
+                info.mediaId = jobj.getInt("id");
+                return info;
 
-				} catch (Exception e) {
-					System.err
-					.println("UploadProjectMedia: generic exception:");
-					e.printStackTrace();
-                    info.mediaId = -1;
+			} catch (Exception e) {
+                try {
+                    JSONObject jobj = new JSONObject(output);
                     info.errorMessage = jobj.getString("msg");
-					return info;
-				}
-			} catch (IOException e) {
-                info.mediaId = -1;
-				return info;
-			} catch (NumberFormatException e) {
-                info.mediaId = -1;
-				return info;
+                    info.mediaId = -1;
+                    return info;
+                } catch (Exception e2) {
+                    JSONObject jobj = new JSONObject(output);
+                    info.errorMessage = jobj.getString("error");
+                    info.mediaId = -1;
+                    return info;
+                }
 			} finally {
 				in.close();
 			}
@@ -650,9 +653,9 @@ public class API {
 	 * 			The contributor name
 	 * @return The media object ID for the media uploaded or -1 if upload fails
 	 */
-    //TODO
 	public uploadInfo uploadMedia(int projectId, File mediaToUpload, TargetType ttype, String conKey, String conName) {
         uploadInfo info = new uploadInfo();
+        String output = "";
 		try {
 			URL url = new URL(baseURL + "/media_objects/");
 
@@ -699,27 +702,25 @@ public class API {
 					bo.write(i);
 					i = in.read();
 				}
-				String output = bo.toString();
+				output = bo.toString();
 				System.out.println("Returning from uploadProjectMedia: "
 						+ output);
                 JSONObject jobj = new JSONObject(output);
+                info.mediaId = jobj.getInt("id");
+                return info;
+
+            } catch (Exception e) {
                 try {
-					info.mediaId = jobj.getInt("id");
-                    return info;
-				} catch (Exception e) {
-					System.err
-					.println("UploadProjectMedia: generic exception:");
-					e.printStackTrace();
+                    JSONObject jobj = new JSONObject(output);
                     info.errorMessage = jobj.getString("msg");
                     info.mediaId = -1;
                     return info;
+                } catch (Exception e2) {
+                    JSONObject jobj = new JSONObject(output);
+                    info.errorMessage = jobj.getString("error");
+                    info.mediaId = -1;
+                    return info;
                 }
-			} catch (IOException e) {
-                info.mediaId = -1;
-				return info;
-			} catch (NumberFormatException e) {
-                info.mediaId = -1;
-				return info;
 			} finally {
 				in.close();
 			}

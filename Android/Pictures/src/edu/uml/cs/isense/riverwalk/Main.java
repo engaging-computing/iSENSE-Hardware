@@ -133,7 +133,9 @@ public class Main extends Activity implements LocationListener {
 	private static Camera mCamera;
 	private CameraPreview mPreview;
 	private FrameLayout preview;
-	
+
+    Boolean validPicture = false;
+
 	@SuppressLint("NewApi")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -293,7 +295,7 @@ public class Main extends Activity implements LocationListener {
 		});
 		
 		
-		/* Add a Picture to upload queue from gallery */
+		/* Add a Picture to queue from gallery */
 		addPicture.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -412,7 +414,8 @@ public class Main extends Activity implements LocationListener {
 					runOnUiThread(new Runnable() {
 						public void run() {
 							try {
-								mCamera.takePicture(null, null, mPicture); // takes
+                                mCamera.enableShutterSound(true);
+                  				mCamera.takePicture(null, null, mPicture); // takes
 																			// a
 																			// picture
 							} catch (Exception e) {
@@ -420,30 +423,38 @@ public class Main extends Activity implements LocationListener {
 								e.printStackTrace();
 							}
 
-							if (picture != null) {
-								Log.d("CameraMain",
-										"Successfully captured picture.");
-							}
-						}
+                            if (picture != null) {
+                                validPicture = true;
+                            } else {
+                                w.make("Picture is Null", Waffle.LENGTH_SHORT,
+                                        Waffle.IMAGE_X);
+                                validPicture = false;
+                            }
+
+                        }
 					});
-					//set curTime lat and long before running upload task 
+
+                    if (validPicture) {
+
+                        //set curTime lat and long before running upload task
 					curTime = System.currentTimeMillis();
 					lat = loc.getLatitude();
 					lon = loc.getLongitude();
 					uploader.run();
 					uq.buildQueueFromFile();
 
-					runOnUiThread(new Runnable() {
-						public void run() {
-							w.make("Picture saved!", Waffle.LENGTH_SHORT,
-									Waffle.IMAGE_CHECK);
-							queueCount.setText(getResources().getString(
-									R.string.queueCount)
-									+ uq.queueSize());
-							mCamera.stopPreview();
-							mCamera.startPreview();
-						}
-					});
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                w.make("Picture saved!", Waffle.LENGTH_SHORT,
+                                        Waffle.IMAGE_CHECK);
+                                queueCount.setText(getResources().getString(
+                                        R.string.queueCount)
+                                        + uq.queueSize());
+                                mCamera.stopPreview();
+                                mCamera.startPreview();
+                            }
+                        });
+                    }
 
 				} else {
 					return null;
