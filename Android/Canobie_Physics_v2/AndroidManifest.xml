@@ -3,7 +3,7 @@
     package="edu.uml.cs.isense.canobiev2"
     android:versionCode="10"
     android:versionName="2.2" 
-    android:sharedUserId='edu.uml.cs.isense'>
+    >
 
     <uses-sdk
         android:minSdkVersion="11"

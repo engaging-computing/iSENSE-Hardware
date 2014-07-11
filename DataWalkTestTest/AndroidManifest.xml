@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="edu.uml.cs.isense.canobiev2.test"
+    package="edu.uml.cs.isense.datawalk_v2.test"
     android:versionCode="1"
-    android:versionName="1.0">
+    android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="11" />
+    <uses-sdk android:minSdkVersion="9" />
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="edu.uml.cs.isense.canobiev2" />
+        android:targetPackage="edu.uml.cs.isense.datawalk_v2" />
 
     <application
         android:icon="@drawable/ic_launcher"
