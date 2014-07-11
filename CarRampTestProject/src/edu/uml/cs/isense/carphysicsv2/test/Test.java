@@ -14,6 +14,7 @@ import edu.uml.cs.isense.credentials.CredentialManager;
 
 public class Test extends ActivityInstrumentationTestCase2<CarRampPhysicsV2> {
 	Solo solo;
+	int a;
 
 	public Test() {
 		super(CarRampPhysicsV2.class);

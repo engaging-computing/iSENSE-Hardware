@@ -104,14 +104,7 @@ public class Datawalk_Service extends Service {
 
         initLocationManager();
 
-        //MySensorListener is an object of the class I made down below
-        sensorListener = new MySensorListener();
-
-        // Start the sensor manager so we can get accelerometer data
-        mSensorManager.registerListener(sensorListener,
-                mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
-                SensorManager.SENSOR_DELAY_FASTEST);
-
+        initSensorManager();
 
         broadcaster = LocalBroadcastManager.getInstance(this);
 
@@ -446,6 +439,20 @@ public class Datawalk_Service extends Service {
         firstLoc = loc;
     }
 
+    private void initSensorManager() {
+        //MySensorListener is an object of the class I made down below
+        sensorListener = new MySensorListener();
+
+        Log.e("Datawalk Service: ", "about to try and register SensorManger");
+
+        // Start the sensor manager so we can get accelerometer data
+        mSensorManager.registerListener(sensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION),
+                SensorManager.SENSOR_DELAY_FASTEST);
+
+
+    }
+
     // formats numbers to 2 decimal points
     double roundTwoDecimals(double d) {
         DecimalFormat twoDForm = new DecimalFormat("#.##");
@@ -501,14 +508,19 @@ public class Datawalk_Service extends Service {
 
         @Override
         public void onSensorChanged(SensorEvent event) {
-            Log.e("onSensorChanged ", "here");
+//            Log.e("onSensorChanged ", "here");
 
             if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-                accel[0] = event.values[0];
-                accel[1] = event.values[1];
-                accel[2] = event.values[2];
-                accel[3] = (float) Math.sqrt((float) (Math.pow(accel[0], 2)
-                        + Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
+                try {
+                    accel[0] = event.values[0];
+                    accel[1] = event.values[1];
+                    accel[2] = event.values[2];
+                    accel[3] = (float) Math.sqrt((float) (Math.pow(accel[0], 2)
+                            + Math.pow(accel[1], 2) + Math.pow(accel[2], 2)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
 
         }

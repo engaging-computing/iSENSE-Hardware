@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.uml.cs.isense.canobiev2.test"
     android:versionCode="1"
+<<<<<<< HEAD
     android:versionName="1.0">
+=======
+    android:versionName="1.0" >
+>>>>>>> upstream/master
 
     <uses-sdk android:minSdkVersion="11" />
 
