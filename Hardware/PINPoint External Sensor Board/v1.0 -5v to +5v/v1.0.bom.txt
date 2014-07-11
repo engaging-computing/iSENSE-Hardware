@@ -1,0 +1,12 @@
+Partlist exported from C:/Users/ECG/iSENSE-Hardware/PINPoint External Sensor Board/v1.0 -5v to +5v/v1.0.sch at 6/18/2012 2:42:00 PM
+
+Qty Value         Device     Parts                                               
+5   0             R-US_R0805 R-2.5V, R1-1, R2-1, R3-1, RF-1                      
+2   0.1u          C-USC0805  C1, C2                                              
+2   10k 1%        R-US_R0805 R2-2, RF-2                                          
+1   10u           C-USC0805  C3                                                  
+2   20k 1%        R-US_R0805 R1-2, R3-2                                          
+1   MCP1525T-I/TT MCP1525    IC2                                                 
+1   MCP6001T-I/OT MCP6001    IC1                                                 
+9   open          R-US_R0805 R-0V, R1-3, R1-4, R2-3, R2-4, R3-3, R3-4, RF-3, RF-4
+1   open          R-US_R2512 RS                                                  
