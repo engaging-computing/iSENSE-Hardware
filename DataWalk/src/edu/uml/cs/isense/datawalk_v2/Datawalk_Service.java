@@ -77,7 +77,7 @@ public class Datawalk_Service extends Service {
 
     Intent intent;
 
-    private String loginName = "";
+    private String  Name = "";
     private String loginPass = "";
     private String projectURL = "";
     private String dataSetName = "";
