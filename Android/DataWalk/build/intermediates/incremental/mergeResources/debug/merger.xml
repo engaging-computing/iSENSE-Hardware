@@ -1252,7 +1252,7 @@ showHome|useLogo
 
                 <style
                     name="AppTheme.DropDownListView"
-                    parent="@android:style/Widget.Material.Light.ListView.DropDown" />
+                    parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
 
                 <style
                     name="AppTheme.Widget"
@@ -1267,7 +1267,7 @@ showHome|useLogo
 
                 <style
                     name="PDTheme"
-                    parent="@android:style/Theme.Material.Dialog" >
+                    parent="@android:style/Theme.Holo.Dialog" >
                     <item name="android:alertDialogStyle">
 @style/CustomProgressDialogStyle
                     </item>
@@ -1278,7 +1278,7 @@ showHome|useLogo
 
                 <style
                     name="AppTheme.PopupMenu"
-                    parent="@android:style/Widget.Material.Light.ListPopupWindow" />
+                    parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
 
                 <style
                     name="AppTheme.ActionBar"
