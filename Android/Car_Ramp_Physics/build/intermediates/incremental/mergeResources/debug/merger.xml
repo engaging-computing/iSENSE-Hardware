@@ -1206,6 +1206,8 @@ showHome|useLogo
                     <item name="android:homeAsUpIndicator">
 @null
                     </item>
+
+                    <!-- your app's branding color (for the app bar) -->
                     <item name="android:colorPrimary">
 @color/actionbar_background
                     </item>
@@ -1214,6 +1216,7 @@ showHome|useLogo
 @color/actionbar_background
                     </item>
                     <!-- theme UI controls like checkboxes and text fields -->
+                    <!-- <item name="android:colorAccent">@color/actionbar_background</item> -->
 
                 </style>
 
@@ -1290,7 +1293,7 @@ showHome|useLogo
 @drawable/rsense_logo_right
                     </item>
                     <item name="android:displayOptions">
-showHome|useLogo
+ showHome|useLogo
                     </item>
                     <item name="android:titleTextStyle">
 @style/AppTheme.ActionBar.TitleTextStyle
@@ -1345,6 +1348,11 @@ showHome|useLogo
             <file
                 name="contrib_key"
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout/contrib_key.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                name="drawer_item_row"
+                path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout/drawer_item_row.xml"
                 qualifiers=""
                 type="layout" />
             <file
@@ -1408,9 +1416,19 @@ showHome|useLogo
                 qualifiers="land"
                 type="layout" />
             <file
+                name="main"
+                path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-land-v14/main.xml"
+                qualifiers="land-v14"
+                type="layout" />
+            <file
                 name="record_settings"
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-land-v14/record_settings.xml"
                 qualifiers="land-v14"
+                type="layout" />
+            <file
+                name="main"
+                path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-land-v20/main.xml"
+                qualifiers="land-v20"
                 type="layout" />
             <file
                 name="contrib_key"
@@ -1420,6 +1438,11 @@ showHome|useLogo
             <file
                 name="login"
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-v14/login.xml"
+                qualifiers="v14"
+                type="layout" />
+            <file
+                name="main"
+                path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-v14/main.xml"
                 qualifiers="v14"
                 type="layout" />
             <file
@@ -1456,6 +1479,11 @@ showHome|useLogo
                 name="view_data"
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-v14/view_data.xml"
                 qualifiers="v14"
+                type="layout" />
+            <file
+                name="main"
+                path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-v20/main.xml"
+                qualifiers="v20"
                 type="layout" />
             <file
                 name="main"
@@ -1510,6 +1538,28 @@ showHome|useLogo
                 </string>
                 <string name="about_title" >About
                 </string>
+
+                <string-array name="items" >
+                    <item>
+Item 1
+                    </item>
+                    <item>
+Item 2
+                    </item>
+                    <item>
+Item 3
+                    </item>
+                    <item>
+Item 4
+                    </item>
+                    <item>
+Item 5
+                    </item>
+                    <item>
+Item 6
+                    </item>
+                </string-array>
+
                 <string name="Z" >Z
                 </string>
                 <string name="upload" >Upload
@@ -1578,26 +1628,6 @@ Accel-Mag\t\t\t\t\t\t\tNumber\n\n
                 <string name="mag" >Magnitude
                 </string>
             </file>
-            <file
-                name="main"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-v20/main.xml"
-                qualifiers="v20"
-                type="layout" />
-            <file
-                name="main"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-land-v20/main.xml"
-                qualifiers="land-v20"
-                type="layout" />
-            <file
-                name="main"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-land-v14/main.xml"
-                qualifiers="land-v14"
-                type="layout" />
-            <file
-                name="main"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/res/layout-v14/main.xml"
-                qualifiers="v14"
-                type="layout" />
         </source>
         <source path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/build/generated/res/rs/debug" />
         <source path="/Users/bobbydonald/iSENSE-Hardware/Android/Car_Ramp_Physics/build/generated/res/generated/debug" />

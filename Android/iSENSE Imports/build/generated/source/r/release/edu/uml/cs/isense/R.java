@@ -352,6 +352,7 @@ public final class R {
     }
     public static final class style {
         /**  theme UI controls like checkboxes and text fields 
+ <item name="android:colorAccent">@color/actionbar_background</item> 
          */
         public static int AppTheme=0x7f080000;
         public static int AppTheme_ActionBar=0x7f080005;

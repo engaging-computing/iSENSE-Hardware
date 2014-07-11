@@ -1206,6 +1206,8 @@ showHome|useLogo
                     <item name="android:homeAsUpIndicator">
 @null
                     </item>
+
+                    <!-- your app's branding color (for the app bar) -->
                     <item name="android:colorPrimary">
 @color/actionbar_background
                     </item>
@@ -1214,6 +1216,7 @@ showHome|useLogo
 @color/actionbar_background
                     </item>
                     <!-- theme UI controls like checkboxes and text fields -->
+                    <!-- <item name="android:colorAccent">@color/actionbar_background</item> -->
 
                 </style>
 
@@ -1252,7 +1255,7 @@ showHome|useLogo
 
                 <style
                     name="AppTheme.DropDownListView"
-                    parent="@android:style/Widget.Holo.Light.ListView.DropDown" />
+                    parent="@android:style/Widget.Material.Light.ListView.DropDown" />
 
                 <style
                     name="AppTheme.Widget"
@@ -1267,7 +1270,7 @@ showHome|useLogo
 
                 <style
                     name="PDTheme"
-                    parent="@android:style/Theme.Holo.Dialog" >
+                    parent="@android:style/Theme.Material.Dialog" >
                     <item name="android:alertDialogStyle">
 @style/CustomProgressDialogStyle
                     </item>
@@ -1278,7 +1281,7 @@ showHome|useLogo
 
                 <style
                     name="AppTheme.PopupMenu"
-                    parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
+                    parent="@android:style/Widget.Material.Light.ListPopupWindow" />
 
                 <style
                     name="AppTheme.ActionBar"
@@ -1290,7 +1293,7 @@ showHome|useLogo
 @drawable/rsense_logo_right
                     </item>
                     <item name="android:displayOptions">
-showHome|useLogo
+ showHome|useLogo
                     </item>
                     <item name="android:titleTextStyle">
 @style/AppTheme.ActionBar.TitleTextStyle
