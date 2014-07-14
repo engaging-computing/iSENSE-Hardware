@@ -301,9 +301,9 @@
             NSString *projIDString = [[actionSheet textFieldAtIndex:0] text];
             projID = [projIDString intValue];
             
-//            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-//            [cell setProjID:projIDString];
-//            [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
+            QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+            [cell setProjID:projIDString];
+            [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
             
             NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
             [prefs setInteger:projID forKey:KEY_PROJECT_ID];
@@ -330,11 +330,11 @@
     projID = project_id;
     
     if (projID != 0) {
-//        QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
-//        
-//        [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
-//        [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
-//        [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:project];
+        QueueCell *cell = (QueueCell *) [self.mTableView cellForRowAtIndexPath:lastClickedCellIndex];
+        
+        [cell setProjID:[NSString stringWithFormat:@"%d", projID]];
+        [cell.dataSet setProjID:[NSNumber numberWithInt:projID]];
+        [dataSaver editDataSetWithKey:cell.mKey andChangeProjIDTo:[NSNumber numberWithInt:projID]];
         
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setInteger:projID forKey:KEY_PROJECT_ID];
