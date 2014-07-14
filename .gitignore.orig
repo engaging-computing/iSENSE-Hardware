@@ -9,9 +9,6 @@ bin/
 gen/
 
 <<<<<<< HEAD
-# Local configuration file (sdk path, etc)
-local.properties
-=======
 */.DS_Store
 .DS_Store
 .DS_Store?
@@ -21,7 +18,10 @@ local.properties
 Icon?
 ehthumbs.db
 Thumbs.db
->>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2
+=======
+# Local configuration file (sdk path, etc)
+local.properties
+>>>>>>> android/master
 
 # Eclipse project files
 .classpath
@@ -43,4 +43,11 @@ Thumbs.db
 */build
 */production
 */local.properties
+<<<<<<< HEAD
 */out
+=======
+*/out
+
+# Backup Merge Files
+*.orig
+>>>>>>> android/master

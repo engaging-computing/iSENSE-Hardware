@@ -8,15 +8,8 @@
 bin/
 gen/
 
-*/.DS_Store
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-Icon?
-ehthumbs.db
-Thumbs.db
+# Local configuration file (sdk path, etc)
+local.properties
 
 # Eclipse project files
 .classpath
@@ -39,3 +32,6 @@ Thumbs.db
 */production
 */local.properties
 */out
+
+# Backup Merge Files
+*.orig
