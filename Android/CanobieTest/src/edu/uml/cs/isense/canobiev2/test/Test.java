@@ -81,31 +81,37 @@ public class Test extends ActivityInstrumentationTestCase2<AmusementPark> {
 		Thread.sleep(1000);
 		solo.clickOnButton("OK");
 		
-		// check to see if user's name was saved into sharedpref
-		Context context = solo.getCurrentActivity();
-		SharedPreferences namePrefs = context.getSharedPreferences(
-		edu.uml.cs.isense.credentials.EnterName.PREFERENCES_KEY_USER_INFO, context.MODE_PRIVATE);
-		String name = namePrefs.getString(
-				edu.uml.cs.isense.credentials.EnterName.PREFERENCES_USER_INFO_SUBKEY_FIRST_NAME, "");
+		// check to see if user's name was saved 
+		solo.clickOnView(actionbarItem1);
+		Thread.sleep(3000);
+		if(solo.searchEditText("Carl S")) {
+			Assert.assertTrue(true);
+		}
 		
-	
+		// check to see if time was saved
+		Assert.assertEquals(AmusementPark.rate, "200");
 		
-		Assert.assertEquals(AmusementPark.rate, 200);
+		//check if project number saved
+		solo.clickOnButton("Select a Project");
+		if(solo.searchEditText("571"))
+			Assert.assertTrue(true);
+		solo.clickOnButton("OK");
 		
-		Context context2 = solo.getCurrentActivity();
-		SharedPreferences namePrefs2 = context2.getSharedPreferences("PROJID", context2.MODE_PRIVATE);
-		String projectNumber = namePrefs2.getString("project_id", "");
-		Assert.assertEquals(projectNumber, "571");
+		//check to see if ride selection saved
+		if(solo.searchText("Alpine Swing"))
+			Assert.assertTrue(true);
+		
+		solo.clickOnButton("OK");
+		
 	}
 
-	
-
 	public void logIn(final String UserName, final String Password) throws Exception {
+	
 		// click login
 		View actionbarItem2 = solo.getView(edu.uml.cs.isense.canobiev2.R.id.MENU_ITEM_LOGIN);
 		solo.clickOnView(actionbarItem2);
+		
 		// am i logged in?
-
 		if (CredentialManager.isLoggedIn()) {
 			solo.clickOnButton("Log out");
 		}
@@ -113,12 +119,15 @@ public class Test extends ActivityInstrumentationTestCase2<AmusementPark> {
 		// enter Username
 		solo.clearEditText(0);
 		solo.enterText(0, UserName);
+		
 		// enter password
 		solo.clearEditText(1);
 		solo.enterText(1, Password);
+		
 		// click login
 		solo.clickOnButton("Login");
 		Thread.sleep(2000);
+		
 		// verify that you are logged in
 		Assert.assertNotNull(API.getInstance().getCurrentUser());
 
@@ -126,48 +135,59 @@ public class Test extends ActivityInstrumentationTestCase2<AmusementPark> {
 	}
 
 	public void recordData() throws Exception {
+		
 		// push hold to start button
 		View b = solo.getButton("START");
 		solo.clickLongOnView(b);
-		// wait desired amount of time
 		
+		// wait desired amount of time
 		Thread.sleep(11000);
 		
+		//stop recording
 		solo.clickLongOnView(b);
 		solo.clickOnButton("OK");
+		
 		// check to see if my dataset exists
-		Assert.assertNotNull("Carl S.");
-		Thread.sleep(2000);
-		solo.clickOnButton("Cancel");
-		Thread.sleep(2000);
+		if(solo.searchText("Type: DATA")) {
+			Assert.assertTrue(true);
+			solo.clickOnButton("Cancel");
+		}
 	}
 
 	public void uploadData() throws Exception {
+		
 		// push upload
 		View actionbarItem1 = solo.getView(edu.uml.cs.isense.canobiev2.R.id.MENU_ITEM_UPLOAD);
 		solo.clickOnView(actionbarItem1);
 		solo.clickOnButton("Upload");
 		Thread.sleep(3000);
-		solo.clickOnButton("OK");
+		
+		
 		// check to see if it uploaded
-		Assert.assertNotNull("");
+		if(solo.searchText("upload successful") ) {
+			Assert.assertTrue(true);
+			solo.clickOnButton("OK");
+		}
 	}
 
 	public void recordNoGrav() throws Exception {
 		
 			//turn off gravity
 			solo.clickOnButton("Include Gravity");
+			
 			//push hold to start button
 			View b = solo.getButton("START");
 			solo.clickLongOnView(b);
+			
 			// wait desired amount of time
-			Thread.sleep(11000);
-				
+			Thread.sleep(11000);	
 			solo.clickLongOnView(b);
 			solo.clickOnButton("OK");
-			// check to see if my dataset exists				
-			Assert.assertNotNull("Carl S.");
 			
+			// check to see if my dataset exists				
+			if(solo.searchText("Type:DATA")) 
+				Assert.assertTrue(true);
+						
 			Thread.sleep(2000);
 			solo.clickOnButton("Cancel");
 			Thread.sleep(2000);
@@ -175,6 +195,7 @@ public class Test extends ActivityInstrumentationTestCase2<AmusementPark> {
 	
 	
 	public void uploadConKey(final String Key) throws Exception {
+		
 		// logout if logged in
 		if (CredentialManager.isLoggedIn()) {
 			View actionbarItem2 = solo.getView(edu.uml.cs.isense.canobiev2.R.id.MENU_ITEM_LOGIN);
@@ -182,23 +203,24 @@ public class Test extends ActivityInstrumentationTestCase2<AmusementPark> {
 			solo.clickOnButton("Log out");
 			solo.clickOnButton("Cancel");
 		}
-		//turn off gravity
-		solo.clickOnButton("Include Gravity");
-		// push hold to start button
-		View b = solo.getButton("START");
-		solo.clickLongOnView(b);
-		// wait desired amount of time
-		Thread.sleep(12000);
-		solo.clickLongOnView(b);
-		// upload
+		//Upload data
+		View actionbarItem3 = solo.getView(edu.uml.cs.isense.canobiev2.R.id.MENU_ITEM_UPLOAD);
+		solo.clickOnView(actionbarItem3);
 		solo.clickOnButton("Upload");
+		
 		// enter contributor key
+		Thread.sleep(2000);
 		solo.enterText(0, Key);
 		solo.clickOnButton("OK");
 		Thread.sleep(2000);
-		solo.clickOnButton("OK");
-		Thread.sleep(3000);
-		Assert.assertNotNull("");
+		
+		//check if upload was successful
+		if(solo.searchText("upload successful")) {
+			Assert.assertTrue(true);
+			solo.clickOnButton("OK");
+		}
+		
+		
 	}
 	
 }

@@ -29,13 +29,14 @@ public class Test extends ActivityInstrumentationTestCase2<CarRampPhysicsV2> {
 		solo.finishOpenedActivities();
 	}
 
-	public void testLoggedIn() throws Exception {
+	public void testApp() throws Exception {
 		enterName("Carl", "S");
 		devMode();
 		logIn("mobile.fake@example.com", "mobile");
 		recordData();
 		selectProject("512");
 		uploadData();
+		recordGrav();
 		uploadConKey("testing");
 	}
 
@@ -71,17 +72,19 @@ public class Test extends ActivityInstrumentationTestCase2<CarRampPhysicsV2> {
 	}
 
 	public void devMode() throws Exception {
-		// click isense logo 7 times
+
 		// check to see if in dev mode
 		for (int i = 0; i < 7; i++) {
 			View actionbarItem11 = solo.getView(android.R.id.home);
 			solo.clickOnView(actionbarItem11);
 			Thread.sleep(500);
 		}
+		// click isense logo 7 times
 		Assert.assertTrue(API.getInstance().isUsingDevMode());
 	}
 
 	public void logIn(final String UserName, final String Password) throws Exception {
+
 		// click login
 		View actionbarItem2 = solo.getView(edu.uml.cs.isense.carphysicsv2.R.id.login);
 		solo.clickOnView(actionbarItem2);
@@ -94,12 +97,15 @@ public class Test extends ActivityInstrumentationTestCase2<CarRampPhysicsV2> {
 		// enter Username
 		solo.clearEditText(0);
 		solo.enterText(0, UserName);
+
 		// enter password
 		solo.clearEditText(1);
 		solo.enterText(1, Password);
+
 		// click login
 		solo.clickOnButton("Login");
 		Thread.sleep(2000);
+
 		// verify that you are logged in
 		Assert.assertNotNull(API.getInstance().getCurrentUser());
 
@@ -107,69 +113,97 @@ public class Test extends ActivityInstrumentationTestCase2<CarRampPhysicsV2> {
 	}
 
 	public void selectProject(final String Number) throws Exception {
+
 		// click select project
 		View actionbarItem1 = solo.getView(edu.uml.cs.isense.carphysicsv2.R.id.project_select);
 		solo.clickOnView(actionbarItem1);
-
 		Thread.sleep(2000);
+
 		// enter project ID
 		solo.clearEditText(0);
 		solo.enterText(0, Number);
 		solo.clickOnButton("OK");
+
 		// check to see if project ID is saved
-
-		Context context = solo.getCurrentActivity();
-		SharedPreferences namePrefs = context.getSharedPreferences("PROJID", context.MODE_PRIVATE);
-		String projectNumber = namePrefs.getString("project_id", "");
-		Assert.assertEquals(projectNumber, "512");
-
+		solo.clickOnView(actionbarItem1);
+		if (solo.searchText("512")) {
+			Assert.assertTrue(true);
+			solo.clickOnButton("OK");
+		}
 	}
 
 	public void recordData() throws Exception {
-		// push hold to start button
-		View b = solo.getButton("Hold to Start");
-		solo.clickLongOnView(b);
+
 		// wait TIME INTERVAL
 		Thread.sleep(11000);
+
 		// check to see if my dataset exists
-		Assert.assertNotNull("Carl S.");
-		Thread.sleep(2000);
+		if (solo.searchText("Type:DATA")) {
+			Assert.assertTrue(true);
+
+		}
 		solo.clickOnButton("Cancel");
-		Thread.sleep(2000);
 	}
 
 	public void uploadData() throws Exception {
+
 		// push upload
 		View actionbarItem1 = solo.getView(edu.uml.cs.isense.carphysicsv2.R.id.upload);
 		solo.clickOnView(actionbarItem1);
 		solo.clickOnButton("Upload");
 		Thread.sleep(3000);
-		solo.clickOnButton("OK");
+
 		// check to see if it uploaded
-		Assert.assertNotNull("");
+		if (solo.searchText("upload successful")) {
+			Assert.assertTrue(true);
+			solo.clickOnButton("OK");
+		}
 	}
 
-	public void uploadConKey(final String Key) throws Exception {
+	public void recordGrav() throws Exception {
+
 		// logout if logged in
 		if (CredentialManager.isLoggedIn()) {
 			View actionbarItem2 = solo.getView(edu.uml.cs.isense.carphysicsv2.R.id.login);
 			solo.clickOnView(actionbarItem2);
 			solo.clickOnButton("Log out");
 			solo.clickOnButton("Cancel");
+
 		}
+
 		// push hold to start button
 		View b = solo.getButton("Hold to Start");
 		solo.clickLongOnView(b);
+
 		// wait TIME INTERVAL
 		Thread.sleep(11000);
+
+		// check if data exists
+		if (solo.searchText("Type:Data")) {
+			Assert.assertTrue(true);
+			solo.clickOnButton("Cancel");
+		}
+
+	}
+
+	public void uploadConKey(final String Key) throws Exception {
+
 		// upload
-		solo.clickOnButton("Upload");
+		View actionbarItem3 = solo.getView(edu.uml.cs.isense.carphysicsv2.R.id.upload);
+		solo.clickOnView(actionbarItem3);
+		// Upload is pressed automatically? solo.clickOnButton("Upload");
+
 		// enter contributor key
 		solo.enterText(0, Key);
 		solo.clickOnButton("OK");
 		Thread.sleep(2000);
-		solo.clickOnButton("OK");
-		Thread.sleep(3000);
+
+		// check if upload was successful
+		if (solo.searchText("upload successful")) {
+			Assert.assertTrue(true);
+			solo.clickOnButton("OK");
+		}
+
 	}
 
 }
