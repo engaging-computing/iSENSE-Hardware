@@ -33,4 +33,8 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/res/debug/layout-v11/login_error.xml
 </LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/login_error.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout-v11/login_error.xml -->
+=======
+</LinearLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/login_error.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout-v11/login_error.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/Canobie_Physics_v2/build/res/all/debug/layout-v11/login_error.xml

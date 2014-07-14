@@ -51,4 +51,8 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
+<<<<<<< HEAD
 </RelativeLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/queueedit_data.xml -->
+=======
+</RelativeLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/queueedit_data.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

@@ -2,74 +2,130 @@
 <merger version="2" >
 
     <dataSet config="unspecified" >
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
         <source path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res" >
             <file
                 name="button_rsense"
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense.xml"
+=======
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res" >
+            <file
+                name="button_rsense"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="button_rsense_green"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense_green.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/button_rsense_green.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="filerow_state_selector"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/filerow_state_selector.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/filerow_state_selector.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="listelement_bkgd"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="listelement_bkgd_changer"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="listelement_bkgd_changer_selected"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer_selected.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_changer_selected.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="listelement_bkgd_selected"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_selected.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgd_selected.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="listelement_bkgdflash"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgdflash.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/listelement_bkgdflash.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="progress_small"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/progress_small.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/progress_small.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toast_background_check"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_check.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_check.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toast_background_default"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_default.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_default.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toast_background_warning"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_warning.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_warning.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="toast_background_x"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_x.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable/toast_background_x.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="drawable" />
             <file
                 name="backarrow"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi-v4/backarrow.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
@@ -206,320 +262,710 @@
             <file
                 name="classroom_mode"
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/classroom_mode.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/backarrow.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="checkmark"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/checkmark.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="icon_file"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/icon_file.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="icon_folder"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/icon_folder.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="red_x"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/red_x.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="rsense_logo_recording_right"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/rsense_logo_recording_right.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="rsense_logo_right"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/rsense_logo_right.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="spinner_1_black"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/spinner_1_black.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="warning_icon"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/warning_icon.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="x_icon"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-hdpi/x_icon.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="checkmark"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi/checkmark.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="red_x"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi/red_x.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="rsense_logo_recording_right"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi/rsense_logo_recording_right.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="rsense_logo_right"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi/rsense_logo_right.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="spinner_1_black"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi/spinner_1_black.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="warning_icon"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-mdpi/warning_icon.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="checkmark"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi/checkmark.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="red_x"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi/red_x.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="rsense_logo_recording_right"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi/rsense_logo_recording_right.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="rsense_logo_right"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi/rsense_logo_right.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="spinner_1_black"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi/spinner_1_black.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="warning_icon"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xhdpi/warning_icon.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="checkmark"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi/checkmark.png"
+                qualifiers="xxhdpi"
+                type="drawable" />
+            <file
+                name="red_x"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi/red_x.png"
+                qualifiers="xxhdpi"
+                type="drawable" />
+            <file
+                name="rsense_logo_right"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi/rsense_logo_right.png"
+                qualifiers="xxhdpi"
+                type="drawable" />
+            <file
+                name="spinner_1_black"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi/spinner_1_black.png"
+                qualifiers="xxhdpi"
+                type="drawable" />
+            <file
+                name="warning_icon"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/drawable-xxhdpi/warning_icon.png"
+                qualifiers="xxhdpi"
+                type="drawable" />
+            <file
+                name="classroom_mode"
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/classroom_mode.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="credential_manager"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="credential_manager_add_key"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_add_key.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_add_key.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="credential_manager_key"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_key.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_key.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="credential_manager_keys"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_keys.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_keys.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="credential_manager_login"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_login.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_login.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="credential_manager_person"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_person.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/credential_manager_person.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="dialog_filebrowser"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/dialog_filebrowser.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/dialog_filebrowser.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="edit_row"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/edit_row.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/edit_row.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="enter_name"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/enter_name.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/enter_name.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="field_match_cell"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_match_cell.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_match_cell.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="field_matching"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_matching.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/field_matching.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="filerow"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/filerow.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/filerow.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="loadrow"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/loadrow.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/loadrow.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="login_dialog"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_dialog.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_dialog.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="login_error"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_error.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/login_error.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="new_project_name"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/new_project_name.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/new_project_name.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="no_initial_project"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_initial_project.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_initial_project.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="no_qr"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_qr.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/no_qr.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="project_create"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_create.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_create.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="project_field"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="project_field_location"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field_location.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_field_location.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="project_id"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_id.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/project_id.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="projectrow"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projectrow.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projectrow.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="projects"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projects.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/projects.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="queue_delete_selected"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_delete_selected.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_delete_selected.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="queue_summary"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_summary.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queue_summary.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="queueblock_alter"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_alter.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_alter.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="queueblock_data"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_data.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_data.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="queueblock_pic"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_pic.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueblock_pic.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="queueedit_data"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_data.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_data.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="queueedit_rename"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_rename.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueedit_rename.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="queueprompt"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueprompt.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/queueprompt.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="synctime"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/synctime.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/synctime.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="time_fail"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_fail.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_fail.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="time_received"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_received.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_received.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="time_reset"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_reset.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/time_reset.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="toast_layout_check"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_check.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_check.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="toast_layout_warning"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_warning.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_warning.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="toast_layout_x"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_x.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout/toast_layout_x.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="layout" />
             <file
                 name="classroom_mode"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/classroom_mode.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/classroom_mode.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="dialog_filebrowser"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/dialog_filebrowser.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/dialog_filebrowser.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="enter_name"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/enter_name.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/enter_name.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="field_matching"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/field_matching.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/field_matching.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="login_dialog"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_dialog.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_dialog.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="login_error"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_error.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/login_error.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="new_project_name"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/new_project_name.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/new_project_name.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="no_initial_project"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_initial_project.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_initial_project.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="no_qr"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_qr.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/no_qr.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="project_create"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_create.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_create.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="project_id"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_id.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/project_id.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="queue_delete_selected"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_delete_selected.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_delete_selected.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="queue_summary"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_summary.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queue_summary.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="queueblock_alter"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueblock_alter.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueblock_alter.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="queueedit_data"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_data.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_data.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="queueedit_rename"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_rename.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueedit_rename.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="queueprompt"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueprompt.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/queueprompt.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="synctime"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/synctime.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/synctime.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="time_fail"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_fail.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_fail.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="time_received"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_received.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_received.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="time_reset"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_reset.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/layout-v11/time_reset.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="key_menu"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/menu/key_menu.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/menu/key_menu.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers=""
                 type="menu" />
             <file
                 name="beep"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/raw/beep.mp3"
                 qualifiers=""
                 type="raw" />
             <file
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values/values.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/raw/beep.mp3"
+                qualifiers=""
+                type="raw" />
+            <file
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/values/values.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="" >
                 <string name="use_isense_name" >Use iSENSE Account Name:
                 </string>
@@ -567,6 +1013,8 @@
                 </style>
 
                 <string name="field_name" >field name
+                </string>
+                <string name="retry" >Try Again
                 </string>
 
                 <string-array name="isense_fields_array" >
@@ -630,8 +1078,6 @@ Temp. (Kelvin)
                     </item>
                 </string-array>
 
-                <string name="retry" >Try Again
-                </string>
                 <string name="logout" >Log out
                 </string>
                 <string name="browse_proj" >Browse Projects
@@ -953,7 +1399,11 @@ Location
                 </string>
             </file>
             <file
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v11/values.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v11/values.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v11" >
 
                 <style
@@ -1076,7 +1526,11 @@ wrap_content
                     parent="@android:style/Widget.Holo.Light.ListPopupWindow" />
             </file>
             <file
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v14/values.xml"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/res/values-v14/values.xml"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 qualifiers="v14" >
 
                 <style
@@ -1188,19 +1642,20 @@ showHome|useLogo
         </source>
     </dataSet>
     <dataSet config="main" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res" >
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res" >
             <file
                 name="button_bar_green"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable/button_bar_green.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/drawable/button_bar_green.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="button_bar_rsense"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable/button_bar_rsense.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/drawable/button_bar_rsense.xml"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="ic_launcher"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable-hdpi/ic_launcher.png"
                 qualifiers="hdpi-v4"
                 type="drawable" />
@@ -1233,79 +1688,129 @@ showHome|useLogo
                 name="ic_launcher"
                 path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/drawable-xxhdpi/ic_launcher.png"
                 qualifiers="xxhdpi-v4"
+=======
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/drawable-hdpi/ic_launcher.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="logo"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/drawable-hdpi/logo.png"
+                qualifiers="hdpi"
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/drawable-mdpi/ic_launcher.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="logo"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/drawable-mdpi/logo.png"
+                qualifiers="mdpi"
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/drawable-xhdpi/ic_launcher.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="logo"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/drawable-xhdpi/logo.png"
+                qualifiers="xhdpi"
+                type="drawable" />
+            <file
+                name="ic_launcher"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/drawable-xxhdpi/ic_launcher.png"
+                qualifiers="xxhdpi"
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 type="drawable" />
             <file
                 name="about"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/about.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout/about.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="force_stop"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/force_stop.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout/force_stop.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="help_dialog"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/help_dialog.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout/help_dialog.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="main"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/main.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout/main.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="no_gps"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/no_gps.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout/no_gps.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="reset"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/reset.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout/reset.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="view_data"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout/view_data.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout/view_data.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 name="main"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-land/main.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout-land/main.xml"
                 qualifiers="land"
                 type="layout" />
             <file
-                name="force_stop"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-v11/force_stop.xml"
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
+=======
+                name="about"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout-v11/about.xml"
                 qualifiers="v11"
                 type="layout" />
             <file
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
+                name="force_stop"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout-v11/force_stop.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
+=======
+                name="help_dialog"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout-v11/help_dialog.xml"
+                qualifiers="v11"
+                type="layout" />
+            <file
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
                 name="no_gps"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-v11/no_gps.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout-v11/no_gps.xml"
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="reset"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-v11/reset.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout-v11/reset.xml"
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="view_data"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/layout-v11/view_data.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/layout-v11/view_data.xml"
                 qualifiers="v11"
                 type="layout" />
             <file
                 name="menu"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/menu/menu.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/menu/menu.xml"
                 qualifiers=""
                 type="menu" />
             <file
                 name="beep"
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/raw/beep.mp3"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/raw/beep.mp3"
                 qualifiers=""
                 type="raw" />
             <file
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/values/arrays.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/values/arrays.xml"
                 qualifiers="" >
                 <string-array name="data_rate_vals" >
                     <item name="1">
@@ -1355,7 +1860,7 @@ showHome|useLogo
                 </string-array>
             </file>
             <file
-                path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/res/values/strings.xml"
+                path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/res/values/strings.xml"
                 qualifiers="" >
                 <string name="Upload" >Upload
                 </string>
@@ -1445,11 +1950,16 @@ showHome|useLogo
                 </string>
             </file>
         </source>
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeResources/debug/merger.xml
         <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/generated/res/rs/debug" />
         <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build/generated/res/generated/debug" />
+=======
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/build/res/rs/debug" />
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/build/res/generated/debug" />
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeResources/debug/merger.xml
     </dataSet>
     <dataSet config="debug" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build-types/debug/res" />
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/build-types/debug/res" />
     </dataSet>
 
 </merger>

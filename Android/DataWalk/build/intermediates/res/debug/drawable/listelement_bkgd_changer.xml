@@ -12,4 +12,8 @@
     <!-- Selected tab (using d-pad) -->
     <item android:state_focused="true" android:state_selected="true"
         android:state_pressed="false" android:drawable="@drawable/listelement_bkgdflash" />
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/res/debug/drawable/listelement_bkgd_changer.xml
 </selector> <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/drawable/listelement_bkgd_changer.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/drawable/listelement_bkgd_changer.xml -->
+=======
+</selector> <!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/drawable/listelement_bkgd_changer.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/drawable/listelement_bkgd_changer.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/Data_Collector/build/res/all/debug/drawable/listelement_bkgd_changer.xml

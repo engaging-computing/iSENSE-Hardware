@@ -30,4 +30,8 @@
 	</RelativeLayout>
 			
 </RelativeLayout>
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/res/debug/layout/loadrow.xml
 <!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/loadrow.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/loadrow.xml -->
+=======
+<!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/loadrow.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/loadrow.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/Car_Ramp_Physics/build/res/all/debug/layout/loadrow.xml

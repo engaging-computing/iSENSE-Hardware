@@ -2,13 +2,17 @@
 <merger version="2" >
 
     <dataSet config="unspecified" >
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/incremental/mergeAssets/debug/merger.xml
         <source path="/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE Imports/unspecified/assets" />
+=======
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE Imports/unspecified/assets" />
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/DataWalk/build/incremental/mergeAssets/debug/merger.xml
     </dataSet>
     <dataSet config="main" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/assets" />
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/assets" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="/Users/bobbydonald/iSENSE-Hardware/Android/DataWalk/build-types/debug/assets" />
+        <source path="/Users/balabhv/iSENSE-Hardware/Android/DataWalk/build-types/debug/assets" />
     </dataSet>
 
 </merger>

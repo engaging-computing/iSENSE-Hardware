@@ -39,4 +39,8 @@
         android:scaleType="fitCenter"
         android:src="@drawable/x_icon" />
 
+<<<<<<< HEAD:Android/DataWalk/build/intermediates/res/debug/layout/project_field.xml
 </LinearLayout><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/project_field.xml --><!-- From: file:/Users/bobbydonald/iSENSE-Hardware/Android/build/intermediates/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/project_field.xml -->
+=======
+</LinearLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/project_field.xml --><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/build/exploded-aar/Android/iSENSE%20Imports/unspecified/res/layout/project_field.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2:Android/Data_Collector/build/res/all/debug/layout/project_field.xml

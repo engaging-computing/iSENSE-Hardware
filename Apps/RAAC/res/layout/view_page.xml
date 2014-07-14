@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+   	 	android:layout_height="match_parent"
+   	 	android:gravity="center"
+    	android:layout_gravity="center">
+    <RelativeLayout
+    	android:id="@+id/layout_root"
+   	 	android:layout_width="match_parent"
+   	 	android:layout_height="match_parent"
+   	 	android:layout_gravity="center"
+   	 	android:gravity="center">
+    
+    	<TextView
+	        android:id="@+id/prompt"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	   	     android:layout_centerInParent="true"
+	        android:layout_marginBottom="10dip"
+	        android:layout_marginTop="10dip"
+	        android:gravity="center"
+	        android:text="Would you like to visualize your data on iSENSE?"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:textColor="#FFFFFF" />
+		
+		<LinearLayout
+		    android:layout_below="@id/prompt"
+		    android:layout_marginTop="10dp"
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="125dp"
+			android:layout_gravity="center"
+		    android:gravity="center">
+	
+			<Button 
+			    android:id="@+id/yes"
+		    	android:layout_width="wrap_content"
+		    	android:layout_height="fill_parent"
+		    	android:layout_margin="5dp"
+		    	android:gravity="center"
+		    	android:layout_gravity="center"
+		    	android:textAppearance="?android:attr/textAppearanceMedium"
+		    	android:layout_weight="1"
+		    	android:text="Yes" />
+
+			<Button
+		    	android:id="@+id/no"
+			    android:layout_width="wrap_content"
+			    android:layout_height="fill_parent"
+			    android:gravity="center"
+			    android:layout_margin="5dp"
+			    android:layout_gravity="center"
+			    android:layout_weight="1"
+			    android:text="No"
+			    android:textAppearance="?android:attr/textAppearanceMedium" />	
+		</LinearLayout>
+	</RelativeLayout>
+</LinearLayout>
