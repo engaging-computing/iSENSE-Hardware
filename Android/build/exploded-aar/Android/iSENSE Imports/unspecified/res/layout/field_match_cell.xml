@@ -31,4 +31,8 @@
         android:entries="@array/isense_fields_array"
         android:prompt="@string/isense_fields" />
 
+<<<<<<< HEAD
 </LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/field_match_cell.xml -->
+=======
+</LinearLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/field_match_cell.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

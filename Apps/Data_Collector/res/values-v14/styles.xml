@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="AppThemeHideActionBarBackArrow" parent="android:Theme.Holo.Light.DarkActionBar">
+    	<item name="android:homeAsUpIndicator">@null</item>
+ 	</style>
+ 	
+</resources>

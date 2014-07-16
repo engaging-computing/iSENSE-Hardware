@@ -27,9 +27,9 @@
 -(void) addDataSetFromCoreData:(QDataSet *)dataSet;
 -(BOOL) addDataSet:(QDataSet *)dataSet;
 -(id)   removeDataSet:(NSNumber *)key;
--(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID;
--(void) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription;
--(void) editDataSetWithKey:(NSNumber *)key andChangeFieldsTo:(NSMutableArray *)newFields;
+-(BOOL) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID;
+-(BOOL) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription;
+-(BOOL) editDataSetWithKey:(NSNumber *)key andChangeFieldsTo:(NSMutableArray *)newFields;
 -(bool) upload:(NSString *)parentName;
 -(void) removeAllDataSets;
 -(id)   getDataSet;

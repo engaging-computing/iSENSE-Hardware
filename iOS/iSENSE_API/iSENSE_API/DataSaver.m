@@ -93,29 +93,29 @@
     [self commitMOCChanges];
 }
 
--(void) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID {
+-(BOOL) editDataSetWithKey:(NSNumber *)key andChangeProjIDTo:(NSNumber *)newProjID {
     
     QDataSet *dataSet = [dataQueue objectForKey:key];
     [dataSet setProjID:newProjID];
     
-    [self commitMOCChanges];
+    return [self commitMOCChanges];
 }
 
--(void) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription {
+-(BOOL) editDataSetWithKey:(NSNumber *)key andChangeDescription:(NSString *)newDescription {
     
     QDataSet *dataSet = [dataQueue objectForKey:key];
     [dataSet setDataDescription:newDescription];
     
-    [self commitMOCChanges];
+    return [self commitMOCChanges];
     
 }
 
--(void) editDataSetWithKey:(NSNumber *)key andChangeFieldsTo:(NSMutableArray *)newFields {
+-(BOOL) editDataSetWithKey:(NSNumber *)key andChangeFieldsTo:(NSMutableArray *)newFields {
     
     QDataSet *dataSet = [dataQueue objectForKey:key];
     [dataSet setFields:newFields];
     
-    [self commitMOCChanges];
+    return [self commitMOCChanges];
     
 }
 

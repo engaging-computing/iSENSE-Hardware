@@ -26,4 +26,8 @@
         android:singleLine="true"
         android:textIsSelectable="false" />
 
+<<<<<<< HEAD
 </RelativeLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projectrow.xml -->
+=======
+</RelativeLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/projectrow.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

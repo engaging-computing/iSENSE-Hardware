@@ -7,6 +7,7 @@
 //  Engaging Computing Lab, Advisor: Fred Martin
 
 #import "ViewController.h"
+#import "MenuTableViewController.h"
 
 @interface ViewController ()
 
@@ -23,9 +24,15 @@
 
 @end
 
+@interface QueueUploaderView ()
+
+- (id) initWithParentName:(NSString *) parent;
+
+@end
+
 @implementation ViewController
 
-@synthesize start, menuButton, vector_status, items, recordLength, countdown, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,x,y,z,mag,proj_num, loginalert, pickerLength,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, mngr,alert, buttonText, countdownLbl, menu, rates, pickerRate, rateField, enterName, name;
+@synthesize start, menuButton, vector_status, items, recordLength, countdown, api, running, timeOver, setupDone, dfm, motionmanager, locationManager, recordDataTimer, timer, testLength, projNum, sampleInterval, sessionName,geoCoder,city,country,address,dataToBeJSONed,elapsedTime,recordingRate, project,userName,useDev,passWord,session_num,managedObjectContext,dataSaver,proj_num, loginalert, pickerLength,lengths, lengthField, saveModeEnabled, saveMode, dataToBeOrdered, formatter, mngr,alert, buttonText, countdownLbl, menu, rates, pickerRate, rateField, enterName, name, menuShown;
 
 // displays the correct xib based on orientation and device type - called automatically upon view controller entry
 -(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -33,11 +40,6 @@
     saver->user = userName;
     saver->pass = passWord;
     
-    
-    
-    if (running) {
-        return;
-    }
     
     [start removeFromSuperview];
     [buttonText removeFromSuperview];
@@ -101,341 +103,453 @@
     
     self.navigationItem.titleView = titleView;
     
-    
 }
 
 // Allows the device to rotate as necessary.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return !running;
+    return YES;
 }
 
 // iOS6 enable rotation
 - (BOOL)shouldAutorotate {
-    return !running;
+    return YES;
 }
 
 // iOS6 enable rotation
 - (NSUInteger)supportedInterfaceOrientations {
-
-    if (running) {
-        if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait) {
-            return UIInterfaceOrientationMaskPortrait;
-        } else if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortraitUpsideDown) {
-            return UIInterfaceOrientationMaskPortraitUpsideDown;
-        } else if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeLeft) {
-            return UIInterfaceOrientationMaskLandscapeLeft;
-        } else if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationLandscapeRight) {
-            return UIInterfaceOrientationMaskLandscapeRight;
-        }
-    } else {
-        return UIInterfaceOrientationMaskAll;
-    }
-}
-
-// returns the number of 'columns' to display.
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
+    
+    
+    return UIInterfaceOrientationMaskAll;
     
 }
-
-// returns the # of rows in each component..
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent: (NSInteger)component
-{
-    return 6;
-    
-}
-
--(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    if ([pickerView isEqual:pickerLength]) {
-        return [lengths objectAtIndex:row];
-    } else {
-        return [rates objectAtIndex:row];
-    }
-    
-    
-}
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    if ([pickerView isEqual:pickerLength]) {
-        lengthField.text =  [lengths objectAtIndex:row];
-    } else {
-        rateField.text = [rates objectAtIndex:row];
-    }
-    
-    
-}
-
 
 - (void)viewDidLoad {
     
-    [super viewDidLoad];
-    
-    formatter = [[NSNumberFormatter alloc] init];
-    
-    [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    
-    [formatter setMaximumFractionDigits:3];
-    
-    [formatter setRoundingMode: NSNumberFormatterRoundUp];
-    
-    useDev = TRUE;
-    
-    api = [API getInstance];
-    [api useDev: useDev];
-    
-    if (saver == nil) {
-        saver = new RotationDataSaver;
-        saver->hasLogin = false;
-        saver->isLoggedIn = false;
-        saver->user = [[NSString alloc] init];
-        saver->pass = [[NSString alloc] init];
-        saver->saveMode = NO;
+    if (!running) {
+        
+        [super viewDidLoad];
+        
+        formatter = [[NSNumberFormatter alloc] init];
+        
+        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        
+        [formatter setMaximumFractionDigits:3];
+        
+        [formatter setRoundingMode: NSNumberFormatterRoundUp];
+        
+        useDev = TRUE;
+        
+        api = [API getInstance];
+        [api useDev: useDev];
+        
+        if (saver == nil) {
+            saver = new RotationDataSaver;
+            saver->hasLogin = false;
+            saver->isLoggedIn = false;
+            saver->user = [[NSString alloc] init];
+            saver->pass = [[NSString alloc] init];
+            saver->saveMode = NO;
+        }
+        
+        saveModeEnabled = saver->saveMode;
+        
+        
+        running = NO;
+        timeOver = NO;
+        setupDone = NO;
+        
+        motionmanager = [[CMMotionManager alloc] init];
+        
+        if (saver->hasLogin){
+            userName = saver->user;
+            passWord = saver->pass;
+            [self login:userName withPassword:passWord];
+            saver->isLoggedIn = true;
+        } else {
+            userName = @"";
+            passWord = @"";
+            saver->isLoggedIn = false;
+            
+            
+        }
+        
+        
+        if (saveModeEnabled) {
+            projNum = -1;
+        } else {
+            NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+            projNum= [prefs integerForKey:KEY_PROJECT_ID];
+            
+            if (projNum == 0) {
+                if (useDev) {
+                    projNum = DEV_DEFAULT_PROJ;
+                } else {
+                    projNum = PROD_DEFAULT_PROJ;
+                }
+            }
+            
+            
+        }
+        
+        if (alert != nil && ![alert isHidden] && setupDone) {
+            [alert dismissWithClickedButtonIndex:0 animated:YES];
+            mngr = [[CredentialManager alloc] initWithDelegate:self];
+            DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
+            [parent addChildViewController:mngr];
+            alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+            [alert setContentView:mngr.view];
+            [alert setDismissesOnBackdropTap:YES];
+            [alert show];
+            
+        }
+        
+        [countdownLbl setTextAlignment:NSTextAlignmentCenter];
+        [vector_status setTextAlignment:NSTextAlignmentCenter];
+        
+        
+        
+        
+        
+        
+        
+        // Managed Object Context for Data_CollectorAppDelegate
+        if (managedObjectContext == nil) {
+            managedObjectContext = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
+        }
+        
+        // DataSaver from Data_CollectorAppDelegate
+        if (dataSaver == nil) {
+            dataSaver = [(AppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
+            NSLog(@"Datasaver Details: %@", dataSaver.description);
+            NSLog(@"Current count = %d", dataSaver.dataQueue.count);
+        }
+        
+        
+        lengths = [[NSMutableArray alloc] initWithObjects:@"1 sec", @"2 sec", @"5 sec", @"10 sec", @"30 sec", @"60 sec", nil];
+        rates = [[NSMutableArray alloc] initWithObjects:@"1 Hz", @"5 Hz", @"10 Hz", @"15 Hz", @"25 Hz", @"30 Hz", nil];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        recordLength = countdown = [defaults integerForKey:@"recordLength"];
+        
+        dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:nil];
+        
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            [[UINavigationBar appearance] setBarTintColor:UIColorFromHex(0x111155)];
+            self.navigationController.navigationBar.translucent = NO;
+        } else {
+            [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
+            [[UINavigationBar appearance] setBackgroundColor:UIColorFromHex(0x111155)];
+            [[UIButton appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)] forState:UIControlStateHighlighted];
+            [[UISearchBar appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
+            [[UISearchBar appearance] setScopeBarBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
+            menuButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(upload)];
+            self.navigationItem.rightBarButtonItem = menuButton;
+        }
+        
+        
+        
+        //[self setUpMenu:isenseBundle];
+        
     }
     
-    saveModeEnabled = saver->saveMode;
+}
+
+- (void) upload {
+    QueueUploaderView *queueUploader = [[QueueUploaderView alloc] initWithParentName:@"CarRampPhysics"];
+    queueUploader.title = @"Upload saved data";
+    [self.navigationController pushViewController:queueUploader animated:YES];
+
+}
+
+- (void) showRecordLengthDialog {
+    DLAVAlertView *recordLengthAlert = [[DLAVAlertView alloc] initWithTitle:@"Change Recording Length" message:nil delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+    UIView *radioView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, recordLengthAlert.frame.size.width, recordLengthAlert.frame.size.height*2)];
+    NSMutableArray *group = [[NSMutableArray alloc] init];
+    CGRect frame = radioView.frame;
+    int framex =0;
+    framex= frame.size.width/1;
+    int framey = 0;
+    framey =frame.size.height/(6/(1));
+    int rem =6%1;
+    if(rem !=0){
+        framey =frame.size.height/((6/1)+1);
+    }
+    int k = 0;
+    for(int i=0;i<(6/1);i++){
+        for(int j=0;j<1;j++){
+            
+            int x = framex*0.25;
+            int y = framey*0.25;
+            RadioButton *btTemp = [[RadioButton alloc]initWithFrame:CGRectMake(framex*j+x, framey*i+y, framex/2+x, framey/2+y)];
+            btTemp.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+            [btTemp setImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+            [btTemp setImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateSelected];
+            [btTemp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            btTemp.titleLabel.font =[UIFont systemFontOfSize:14.f];
+            [btTemp setTitle:[lengths objectAtIndex:k] forState:UIControlStateNormal];
+            btTemp.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+            [group addObject:btTemp];
+            [radioView addSubview:btTemp];
+            k++;
+            
+        }
+    }
     
-    
-    running = NO;
-    timeOver = NO;
-    setupDone = NO;
-    
-    motionmanager = [[CMMotionManager alloc] init];
-    
-    if (saver->hasLogin){
-        userName = saver->user;
-        passWord = saver->pass;
-        [self login:userName withPassword:passWord];
-        saver->isLoggedIn = true;
-    } else {
-        userName = @"";
-        passWord = @"";
-        saver->isLoggedIn = false;
+    for(int j=0;j<rem;j++){
+        
+        int x = framex*0.25;
+        int y = framey*0.25;
+        RadioButton *btTemp = [[RadioButton alloc]initWithFrame:CGRectMake(framex*j+x, framey*(6/1), framex/2+x, framey/2+y)];
+        btTemp.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [btTemp setImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+        [btTemp setImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateSelected];
+        [btTemp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        btTemp.titleLabel.font =[UIFont systemFontOfSize:14.f];
+        [btTemp setTitle:[lengths objectAtIndex:k] forState:UIControlStateNormal];
+        btTemp.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+        [group addObject:btTemp];
+        [radioView addSubview:btTemp];
+        k++;
         
         
     }
     
+    RadioButton *button1 = [group objectAtIndex:0];
+    button1.groupButtons = group;
+    switch (recordLength) {
+        case 1:
+            [button1.groupButtons[0] setSelected:YES];
+            break;
+        case 2:
+            [button1.groupButtons[1] setSelected:YES];
+            break;
+        case 5:
+            [button1.groupButtons[2] setSelected:YES];
+            break;
+        case 10:
+            [button1.groupButtons[3] setSelected:YES];
+            break;
+        case 30:
+            [button1.groupButtons[4] setSelected:YES];
+            break;
+        case 60:
+            [button1.groupButtons[5] setSelected:YES];
+            break;
+            
+        default:
+            break;
+    }
     
-    if (saveModeEnabled) {
-        projNum = -1;
-    } else {
-        NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
-        projNum= [prefs integerForKey:KEY_PROJECT_ID];
-        
-        if (projNum == 0) {
-            if (useDev) {
-                projNum = DEV_DEFAULT_PROJ;
-            } else {
-                projNum = PROD_DEFAULT_PROJ;
+    
+    [recordLengthAlert setContentView:radioView];
+    
+    [recordLengthAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+        int index ;
+        for (int i = 0 ; i < group.count ; i++) {
+            if ([[group objectAtIndex:i] isSelected]) {
+                index = i;
             }
         }
-
         
-    }
-    
-    if (alert != nil && ![alert isHidden] && setupDone) {
-        [alert dismissWithClickedButtonIndex:0 animated:YES];
-        mngr = [[CredentialManager alloc] initWithDelegate:self];
-        DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
-        [parent addChildViewController:mngr];
-        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
-        [alert setContentView:mngr.view];
-        [alert setDismissesOnBackdropTap:YES];
-        [alert show];
+        switch (index) {
+            case 0:
+                recordLength = countdown = 1;
+                break;
+            case 1:
+                recordLength = countdown = 2;
+                break;
+            case 2:
+                recordLength = countdown = 5;
+                break;
+            case 3:
+                recordLength = countdown = 10;
+                break;
+            case 4:
+                recordLength = countdown = 30;
+                break;
+            case 5:
+                recordLength = countdown = 60;
+                break;
+            default:
+                recordLength = countdown = 10;
+                break;
+        }
         
-    }
-    
-    [countdownLbl setTextAlignment:NSTextAlignmentCenter];
-    [vector_status setTextAlignment:NSTextAlignmentCenter];
-    
-    
-    
-    
-    
-    
-    
-    // Managed Object Context for Data_CollectorAppDelegate
-    if (managedObjectContext == nil) {
-        managedObjectContext = [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
-    }
-    
-    // DataSaver from Data_CollectorAppDelegate
-    if (dataSaver == nil) {
-        dataSaver = [(AppDelegate *) [[UIApplication sharedApplication] delegate] dataSaver];
-        NSLog(@"Datasaver Details: %@", dataSaver.description);
-        NSLog(@"Current count = %d", dataSaver.dataQueue.count);
-    }
-    
-    
-    lengths = [[NSMutableArray alloc] initWithObjects:@"1 sec", @"2 sec", @"5 sec", @"10 sec", @"30 sec", @"60 sec", nil];
-    rates = [[NSMutableArray alloc] initWithObjects:@"1 Hz", @"5 Hz", @"10 Hz", @"15 Hz", @"25 Hz", @"30 Hz", nil];
-    
-    pickerLength = [[UIPickerView alloc]init];
-    [pickerLength setDataSource:self];
-    [pickerLength setDelegate:self];
-    
-    [pickerLength setShowsSelectionIndicator:YES];
-    
-    pickerRate = [[UIPickerView alloc]init];
-    [pickerRate setDataSource:self];
-    [pickerRate setDelegate:self];
-    
-    [pickerRate setShowsSelectionIndicator:YES];
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    recordLength = countdown = [defaults integerForKey:@"recordLength"];
-    
-    dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:nil];
-    
-    [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarMetrics:UIBarMetricsDefault];
-    [[UINavigationBar appearance] setBackgroundColor:UIColorFromHex(0x111155)];
-    UIButton* btton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btton setFrame:CGRectMake(0, 0, 30, 30)];
-    [btton addTarget:self action:@selector(showMenu) forControlEvents:UIControlEventTouchUpInside];
-    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
-    [btton setImage:[UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"menuIcon" ofType:@"png"]] forState:UIControlStateNormal];
-    menuButton = [[UIBarButtonItem alloc] initWithCustomView:btton];
-    [menuButton setTintColor:UIColorFromHex(0x111155)];
-    self.navigationItem.rightBarButtonItem = menuButton;
-    [[UIBarButtonItem appearance] setTintColor:UIColorFromHex(0x111155)];
-    [[UIButton appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)] forState:UIControlStateHighlighted];
-    [[UISearchBar appearance] setBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
-    [[UISearchBar appearance] setScopeBarBackgroundImage:[self imageWithColor:UIColorFromHex(0x111155)]];
-    
-    [self setUpMenu:isenseBundle];
-    
-
+        NSUserDefaults * prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setInteger:recordLength forKey:@"recordLength"];
+        
+        [self.view makeWaffle:[NSString stringWithFormat:@"Recording length set to %d seconds.", recordLength] duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
+        
+    }];
     
 }
 
-- (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex {
-    //NSLog(@"Index: %@", buttonIndex);
-    if ([popup.title isEqualToString:@"Recording Settings"]) {
-        if ([[popup buttonTitleAtIndex:buttonIndex] isEqualToString:@"Recording Length"]) {
-            NSLog(@"Length");
-                    UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording length" message:@"Enter time in seconds." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-                    [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-                    lengthField = [talert textFieldAtIndex:0];
-                    lengthField.inputView = pickerLength;
-                    [self setPickerDefault:pickerLength];
-                    [talert show];
+- (void) showRecordRateDialog {
+    DLAVAlertView *recordLengthAlert = [[DLAVAlertView alloc] initWithTitle:@"Change Recording Rate" message:nil delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+    UIView *radioView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, recordLengthAlert.frame.size.width, recordLengthAlert.frame.size.height*2)];
+    NSMutableArray *group = [[NSMutableArray alloc] init];
+    CGRect frame = radioView.frame;
+    int framex =0;
+    framex= frame.size.width/1;
+    int framey = 0;
+    framey =frame.size.height/(6/(1));
+    int rem =6%1;
+    if(rem !=0){
+        framey =frame.size.height/((6/1)+1);
+    }
+    int k = 0;
+    for(int i=0;i<(6/1);i++){
+        for(int j=0;j<1;j++){
             
-        } else if ([[popup buttonTitleAtIndex:buttonIndex] isEqualToString:@"Recording Rate"]) {
-
-                    NSLog(@"Rate");
-                    UIAlertView *talert = [[UIAlertView alloc] initWithTitle:@"Enter recording rate" message:@"Enter rate in Hz." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Done", nil];
-                    [talert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-                    rateField = [talert textFieldAtIndex:0];
-                    rateField.inputView = pickerRate;
-                    [self setPickerDefault: pickerRate];
-                    [talert show];
+            int x = framex*0.25;
+            int y = framey*0.25;
+            RadioButton *btTemp = [[RadioButton alloc]initWithFrame:CGRectMake(framex*j+x, framey*i+y, framex/2+x, framey/2+y)];
+            btTemp.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+            [btTemp setImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+            [btTemp setImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateSelected];
+            [btTemp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            btTemp.titleLabel.font =[UIFont systemFontOfSize:14.f];
+            [btTemp setTitle:[rates objectAtIndex:k] forState:UIControlStateNormal];
+            btTemp.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+            [group addObject:btTemp];
+            [radioView addSubview:btTemp];
+            k++;
             
         }
+    }
+    
+    for(int j=0;j<rem;j++){
+        
+        int x = framex*0.25;
+        int y = framey*0.25;
+        RadioButton *btTemp = [[RadioButton alloc]initWithFrame:CGRectMake(framex*j+x, framey*(6/1), framex/2+x, framey/2+y)];
+        btTemp.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [btTemp setImage:[UIImage imageNamed:@"unchecked.png"] forState:UIControlStateNormal];
+        [btTemp setImage:[UIImage imageNamed:@"checked.png"] forState:UIControlStateSelected];
+        [btTemp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        btTemp.titleLabel.font =[UIFont systemFontOfSize:14.f];
+        [btTemp setTitle:[rates objectAtIndex:k] forState:UIControlStateNormal];
+        btTemp.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
+        [group addObject:btTemp];
+        [radioView addSubview:btTemp];
+        k++;
         
         
     }
+    
+    RadioButton *button1 = [group objectAtIndex:0];
+    button1.groupButtons = group;
+    switch (recordingRate) {
+        case 1:
+            [button1.groupButtons[0] setSelected:YES];
+            break;
+        case 5:
+            [button1.groupButtons[1] setSelected:YES];
+            break;
+        case 10:
+            [button1.groupButtons[2] setSelected:YES];
+            break;
+        case 15:
+            [button1.groupButtons[3] setSelected:YES];
+            break;
+        case 25:
+            [button1.groupButtons[4] setSelected:YES];
+            break;
+        case 30:
+            [button1.groupButtons[5] setSelected:YES];
+            break;
+            
+        default:
+            break;
+    }
+    
+    
+    [recordLengthAlert setContentView:radioView];
+    
+    [recordLengthAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+        int index ;
+        for (int i = 0 ; i < group.count ; i++) {
+            if ([[group objectAtIndex:i] isSelected]) {
+                index = i;
+            }
+        }
+        
+        switch (index) {
+            case 0:
+                recordingRate = 1;
+                break;
+            case 1:
+                recordingRate = 5;
+                break;
+            case 2:
+                recordingRate = 10;
+                break;
+            case 3:
+                recordingRate = 15;
+                break;
+            case 4:
+                recordingRate = 25;
+                break;
+            case 5:
+                recordingRate = 30;
+                break;
+            default:
+                recordingRate = 30;
+                break;
+        }
+        
+        [self.view makeWaffle:[NSString stringWithFormat:@"Recording rate set to %d Hz.", recordingRate] duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
+        
+    }];
+    
 }
 
-- (void) setUpMenu: (NSBundle*) isenseBundle {
-    UIImage *upload = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"upload2" ofType:@"png"]];
-    UIImage *settings = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"settings" ofType:@"png"]];;
-    UIImage *code = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"barcode" ofType:@"png"]];
-    UIImage *login = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"users" ofType:@"png"]];
-    UIImage *about = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"info" ofType:@"png"]];
-    UIImage *reset = [UIImage imageWithContentsOfFile:[isenseBundle pathForResource:@"reset" ofType:@"png"]];
+- (BOOL)slideNavigationControllerShouldDisplayLeftMenu
+{
+    return !running;
+}
+
+- (BOOL)slideNavigationControllerShouldDisplayRightMenu
+{
+    return NO;
+}
+
+- (void) showCredentialManager {
+    mngr = [[CredentialManager alloc] initWithDelegate:self];
+    DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
+    [parent addChildViewController:mngr];
+    alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+    [alert setContentView:mngr.view];
+    [alert setDismissesOnBackdropTap:YES];
+    [alert show];
+}
+
+- (void) showProjectIDDialog {
+    project = [[UIAlertView alloc] initWithTitle:@"Project ID" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+    [project addButtonWithTitle:@"Enter Project ID"];
+    [project addButtonWithTitle:@"Browse"];
+    //[project addButtonWithTitle:@"QR Code"];
+    [project addButtonWithTitle:@"Create New Project"];
+    [project addButtonWithTitle:@"Done"];
+    [project show];
+}
+
+- (void) showResetDialog {
+    countdown = recordLength = 10;
+    recordingRate = 30;
+    [[API getInstance] deleteSession];
+    enterName = [[DLAVAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [enterName setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
+    [enterName textFieldAtIndex:0].placeholder = @"First Name";
+    [enterName textFieldAtIndex:1].placeholder = @"Last Initial";
+    [enterName textFieldAtIndex:0].delegate = self;
+    [enterName textFieldAtIndex:1].delegate = self;
+    [enterName textFieldAtIndex:1].secureTextEntry = NO;
+    [enterName textFieldAtIndex:0].tag = FIRST_NAME_FIELD;
+    [enterName showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
+        name = [NSString stringWithFormat:@"%@ %@.", [alertView textFieldTextAtIndex:0],[alertView textFieldTextAtIndex:1]];
+    }];
     
-    void (^uploadBlock)() = ^() {
-        NSLog(@"Upload button pressed");
-        if (dataSaver.dataQueue.count > 0) {
-            QueueUploaderView *queueUploader = [[QueueUploaderView alloc] init];
-            queueUploader.title = @"Upload saved data";
-            menu = nil;
-            [self.navigationController pushViewController:queueUploader animated:YES];
-        } else {
-            [self.view makeWaffle:@"No data sets to upload!" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_RED_X];
-            menu = nil;
-        }
-        
-    };
-    void (^settingsBlock)() = ^() {
-        menu = nil;
-        UIActionSheet *settings = [[UIActionSheet alloc] initWithTitle:@"Recording Settings" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Recording Length", @"Recording Rate", nil];
-        settings.tag = 1;
-        [settings showInView:self.view];
-        
-        
-    };
-    void (^codeBlock)() = ^() {
-        NSLog(@"project button pressed");
-        project = [[UIAlertView alloc] initWithTitle:@"Project ID" message:@"" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
-        [project addButtonWithTitle:@"Enter Project ID"];
-        [project addButtonWithTitle:@"Browse"];
-        [project addButtonWithTitle:@"QR Code"];
-        [project addButtonWithTitle:@"Create New Project"];
-        [project addButtonWithTitle:@"Done"];
-        menu = nil;
-        [project show];
-        
-    };
-    void (^loginBlock)() = ^() {
-        NSLog(@"Login button pressed");
-        
-        mngr = [[CredentialManager alloc] initWithDelegate:self];
-        DLAVAlertViewController *parent = [DLAVAlertViewController sharedController];
-        [parent addChildViewController:mngr];
-        alert = [[DLAVAlertView alloc] initWithTitle:@"Credential Manager" message:@"" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
-        [alert setContentView:mngr.view];
-        [alert setDismissesOnBackdropTap:YES];
-        menu = nil;
-        [alert show];
-        
-    };
-    void (^aboutBlock)() = ^() {
-        NSLog(@"About button pressed");
-        
-        AboutViewController *about;
-        // Override point for customization after application launch.
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            about = [[AboutViewController alloc] initWithNibName:@"AboutViewController_iPhone" bundle:nil];
-        } else {
-            about = [[AboutViewController alloc] initWithNibName:@"AboutViewController_iPad" bundle:nil];
-        }
-        menu = nil;
-        [self.navigationController pushViewController:about animated:YES];
-        
-    };
-    void (^resetBlock)() = ^() {
-        NSLog(@"Reset button pressed");
-        countdown = recordLength = 10;
-        recordingRate = 30;
-        [[API getInstance] deleteSession];
-        menu = nil;
-        enterName = [[DLAVAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        [enterName setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
-        [enterName textFieldAtIndex:0].placeholder = @"First Name";
-        [enterName textFieldAtIndex:1].placeholder = @"Last Initial";
-        [enterName textFieldAtIndex:0].delegate = self;
-        [enterName textFieldAtIndex:1].delegate = self;
-        [enterName textFieldAtIndex:1].secureTextEntry = NO;
-        [enterName textFieldAtIndex:0].tag = FIRST_NAME_FIELD;
-        [enterName showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
-            name = [NSString stringWithFormat:@"%@ %@.", [alertView textFieldTextAtIndex:0],[alertView textFieldTextAtIndex:1]];
-        }];
-    };
-    
-    RNGridMenuItem *uploadItem = [[RNGridMenuItem alloc] initWithImage:upload title:@"Upload" action:uploadBlock];
-    RNGridMenuItem *recordSettingsItem = [[RNGridMenuItem alloc] initWithImage:settings title:@"Recording Settings" action:settingsBlock];
-    RNGridMenuItem *codeItem = [[RNGridMenuItem alloc] initWithImage:code title:@"Project ID" action:codeBlock];
-    RNGridMenuItem *loginItem = [[RNGridMenuItem alloc] initWithImage:login title:@"Login" action:loginBlock];
-    RNGridMenuItem *aboutItem = [[RNGridMenuItem alloc] initWithImage:about title:@"About" action:aboutBlock];
-    RNGridMenuItem *resetItem = [[RNGridMenuItem alloc] initWithImage:reset title:@"Reset" action:resetBlock];
-    
-    items = [[NSArray alloc] initWithObjects:uploadItem, recordSettingsItem, codeItem, loginItem, aboutItem, resetItem, nil];
-    
-    menu = [[RNGridMenu alloc] initWithItems:items];
-    
-    menu.delegate = self;
 }
 
 - (UIImage *)imageWithColor:(UIColor *)color {
@@ -465,102 +579,22 @@
     [loginalert textFieldAtIndex:0].placeholder = @"Email";
     [loginalert show];
 }
-
-- (void) setPickerDefault:(UIPickerView *) picker {
-    if ([picker isEqual:pickerLength]) {
-            switch (countdown) {
-                case 1:
-                    [picker selectRow:0 inComponent:0 animated:YES];
-                    lengthField.text = [lengths objectAtIndex:0];
-                    break;
-                case 2:
-                    [picker selectRow:1 inComponent:0 animated:YES];
-                    lengthField.text = [lengths objectAtIndex:1];
-                    break;
-                case 5:
-                    [picker selectRow:2 inComponent:0 animated:YES];
-                    lengthField.text = [lengths objectAtIndex:2];
-                    break;
-                case 10:
-                    [picker selectRow:3 inComponent:0 animated:YES];
-                    lengthField.text = [lengths objectAtIndex:3];
-                    break;
-                case 30:
-                    [picker selectRow:4 inComponent:0 animated:YES];
-                    lengthField.text = [lengths objectAtIndex:4];
-                    break;
-                case 60:
-                    [picker selectRow:5 inComponent:0 animated:YES];
-                    lengthField.text = [lengths objectAtIndex:5];
-                    break;
-                default:
-                    break;
-            }
-    } else {
-            switch (recordingRate) {
-                case 1:
-                    [picker selectRow:0 inComponent:0 animated:YES];
-                    rateField.text = [rates objectAtIndex:0];
-                    break;
-                case 5:
-                    [picker selectRow:1 inComponent:0 animated:YES];
-                    rateField.text = [rates objectAtIndex:1];
-                    break;
-                case 10:
-                    [picker selectRow:2 inComponent:0 animated:YES];
-                    rateField.text = [rates objectAtIndex:2];
-                    break;
-                case 15:
-                    [picker selectRow:3 inComponent:0 animated:YES];
-                    rateField.text = [rates objectAtIndex:3];
-                    break;
-                case 25:
-                    [picker selectRow:4 inComponent:0 animated:YES];
-                    rateField.text = [rates objectAtIndex:4];
-                    break;
-                case 30:
-                    [picker selectRow:5 inComponent:0 animated:YES];
-                    rateField.text = [rates objectAtIndex:5];
-                    break;
-                default:
-                    break;
-
-            }
-        }
-    
-    [picker reloadComponent:0];
-}
-
 - (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    
-    BOOL x1 = [prefs boolForKey:@"X"];
-    BOOL y1 = [prefs boolForKey:@"Y"];
-    BOOL z1 = [prefs boolForKey:@"Z"];
-    BOOL mag1 = [prefs boolForKey:@"Magnitude"];
-    
-    
-    x = x1;
-    y = y1;
-    z = z1;
-    mag = mag1;
     
     if (self.isMovingToParentViewController == YES) {
         
         
         if (![API hasConnectivity]){
-            [dfm setEnabledField:x atIndex:fACCEL_X];
-            [dfm setEnabledField:y atIndex:fACCEL_Y];
-            [dfm setEnabledField:z atIndex:fACCEL_Z];
-            [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
+            saveModeEnabled = YES;
+            saver->saveMode = YES;
+            projNum = -1;
+            [self.view makeWaffle:@"Save Mode Enabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
         }
         
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         recordLength = countdown = [defaults integerForKey:@"recordLength"];
         
-        [self saveModeDialog];
         enterName = [[DLAVAlertView alloc] initWithTitle:@"Enter Name" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [enterName setAlertViewStyle:DLAVAlertViewStyleLoginAndPasswordInput];
         [enterName textFieldAtIndex:0].placeholder = @"First Name";
@@ -580,14 +614,6 @@
     
 }
 
-- (void) saveModeDialog {
-    if (![API hasConnectivity]) {
-        saveMode = [[UIAlertView alloc] initWithTitle:@"No Connectivity" message:@"Could not connect to the Internet through either Wi-Fi or mobile service. You will not be able to upload data to iSENSE until either is enabled.\n* Turning on Save Mode will allow data to be saved until Internet is enabled." delegate:self cancelButtonTitle:@"Try Again" otherButtonTitles:@"Save Mode", nil];
-        
-        [saveMode show];
-    }
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -605,14 +631,8 @@
         [buttonText setTextColor:[UIColor blackColor]];
         if (!running) {
             // Get Field Order
-            if (![API hasConnectivity]){
-                [dfm setEnabledField:x atIndex:fACCEL_X];
-                [dfm setEnabledField:y atIndex:fACCEL_Y];
-                [dfm setEnabledField:z atIndex:fACCEL_Z];
-                [dfm setEnabledField:mag atIndex:fACCEL_TOTAL];
-            } else {
-                [self getEnabledFields];
-            }
+            
+            [self getEnabledFields];
             // Record Data
             running = YES;
             [start setUserInteractionEnabled:NO];
@@ -1064,7 +1084,7 @@
                     [contribKeyAlert textFieldAtIndex:0].placeholder = @"Contributor Name";
                     [contribKeyAlert textFieldAtIndex:1].placeholder = @"Contributor Key";
                     [contribKeyAlert textFieldAtIndex:0].text = name;
-                
+                    
                     [contribKeyAlert showWithCompletion:^(DLAVAlertView *alertView, NSInteger buttonIndex) {
                         if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Upload"]) {
                             ds_id = [api uploadDataWithId:projNum withData:data withContributorKey:[contribKeyAlert textFieldTextAtIndex:1] as:@"" andName:[contribKeyAlert textFieldTextAtIndex:0]];
@@ -1075,7 +1095,7 @@
             } else {
                 ds_id = [api uploadDataWithId:projNum withData:data andName:sessionName];
             }
-
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [message dismissWithClickedButtonIndex:nil animated:YES];
                 if (ds_id == -1) {
@@ -1083,6 +1103,15 @@
                 } else {
                     [self.view makeWaffle:@"Upload successful" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM title:nil image:WAFFLE_CHECKMARK];
                     session_num = [[NSNumber alloc] initWithInt:ds_id];
+                    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"View data on iSENSE?"
+                                                                      message:nil
+                                                                     delegate:self
+                                                            cancelButtonTitle:@"No"
+                                                            otherButtonTitles:@"Yes", nil];
+                    
+                    message.delegate = self;
+                    [message show];
+                    
                     
                 }
                 
@@ -1094,24 +1123,6 @@
         [self saveDataSetWithDescription:sessionName];
     }
     return true;
-    
-}
-
-- (void)showMenu {
-    
-    if (menu != nil) {
-        menu = nil;
-    }
-    
-    NSBundle *isenseBundle = [NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"iSENSE_API_Bundle" withExtension:@"bundle"]];
-    [self setUpMenu:isenseBundle];
-    
-    if (![menu isVisible]) {
-       [menu showInViewController:self center:CGPointMake(self.view.bounds.size.width/2.f, self.view.bounds.size.height/2.f)];
-    } else {
-        [menu dismissAnimated:YES];
-        menu = nil;
-    }
     
 }
 
@@ -1189,15 +1200,6 @@
         NSLog(@"ID = %d", projNum);
         dfm = [[DataFieldManager alloc] initWithProjID:projNum API:api andFields:nil];
         [self launchFieldMatchingViewControllerFromBrowse:FALSE];
-    } else if ([alertView.title isEqualToString:@"No Connectivity"]) {
-        if ([title isEqualToString:@"Try Again"]){
-            [self saveModeDialog];
-        } else {
-            saveModeEnabled = YES;
-            saver->saveMode = YES;
-            projNum = -1;
-            [self.view makeWaffle:@"Save Mode Enabled" duration:WAFFLE_LENGTH_SHORT position:WAFFLE_BOTTOM image:WAFFLE_CHECKMARK];
-        }
     } else if ([alertView.title isEqualToString:@"Enter Project Name"]) {
         
         if ([title isEqualToString:@"Create Project"] && [API hasConnectivity] && [api getCurrentUser] != nil) {
@@ -1310,13 +1312,13 @@
                 [prefs setObject:usernameInput forKey:[StringGrabber grabString:@"key_username"]];
                 [prefs setObject:passwordInput forKey:[StringGrabber grabString:@"key_password"]];
                 [prefs synchronize];
-            
+                
                 userName = usernameInput;
                 passWord = passwordInput;
                 saver->hasLogin = TRUE;
                 saver->isLoggedIn = true;
             } else {
-               [self.view makeWaffle:@"Login failed"
+                [self.view makeWaffle:@"Login failed"
                              duration:WAFFLE_LENGTH_SHORT
                              position:WAFFLE_BOTTOM
                                 image:WAFFLE_RED_X];

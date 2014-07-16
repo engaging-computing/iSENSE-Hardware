@@ -37,4 +37,8 @@
         <corners android:radius="3dp" />
     </shape>
    </item>
+<<<<<<< HEAD
 </layer-list><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/drawable/listelement_bkgd.xml -->
+=======
+</layer-list><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/drawable/listelement_bkgd.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

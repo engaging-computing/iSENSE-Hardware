@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <iSENSE_API/Fields.h>
 #import "ViewController.h"
+#import "MenuTableViewController.h"
 
 @implementation AppDelegate
 
@@ -22,9 +23,10 @@
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
     } else {
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
-    }    
-    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-    self.viewController.navigationItem.rightBarButtonItem = self.viewController.menuButton;
+    }
+    SlideNavigationController *navigation = [[SlideNavigationController alloc] initWithRootViewController:self.viewController];
+    MenuTableViewController *menu = [[MenuTableViewController alloc] initWithParentViewController:self.viewController];
+    [SlideNavigationController sharedInstance].leftMenu = menu;
     navigation.navigationBar.barStyle = UIBarStyleBlackOpaque;
     self.window.rootViewController = navigation;
     self.viewController.setupDone = YES;
