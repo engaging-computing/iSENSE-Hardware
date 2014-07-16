@@ -83,4 +83,8 @@
             android:text="@string/login" />
     </LinearLayout>
 
+<<<<<<< HEAD
 </RelativeLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/login_dialog.xml -->
+=======
+</RelativeLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/login_dialog.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

@@ -32,3 +32,6 @@ local.properties
 */production
 */local.properties
 */out
+
+# Backup Merge Files
+*.orig

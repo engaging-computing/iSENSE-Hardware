@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Canobie Physics</string>
+    <string name="display_name">iS Canobie Physics</string>
+    <string name="login">Login</string>
+    <string name="iSenseConfig"><u><b>iSENSE Configurations</b></u></string>
+    <string name="otherConfig"><u><b>Ride Configurations</b></u></string>
+    <string name="rides_prompt">Choose a ride</string>
+    <string name="about">About</string>
+     <string name="help">Help</string>
+    <!-- Rajia -->
+    <string name="aboutApp">About:\n\nThis app enables you to record your location and accel/magn in all directions while riding any ride at Canobie Lake Park, and it allows you to share that data online. When the app is activated, your data is saved once every 200ms and then can be shared on the iSENSE web system (isenseproject.org), where the data can be viewed publicly. The recording interval can be changed via the Setup option in the Menu. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\nInstructions:\n\n In order to begin recording and sharing data, first click Setup and then enter your first name and last initial, the sample interval in which you would like data to be recorded, the project you would like the data to be uploaded to and the ride you are going record data on. After pressing Okay, press and hold the button that says \"Start.\" This allows data to be recorded and saved. When you are ready to stop recording, press and hold the button that says \"Stop.\" While data is being recorded, please refrain from exiting the app by pressing the Back button. Pressing the Home button will interrupt the recording but your data will remain saved. When you are ready to upload your data, click on the Upload option in the menu.</string>
+    <string name="Help">\nHow to Create a Project for this App:\n\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Click on Create Project.\n\n5. Enter a name for your project, then click finish. \n\n6. Enter a Description.\n\n7. When formatting the project, the fields should be as follows:\n\n 
+Name:\t\t\t\t\t\t\t\t\tType:\n\n
+Timestamp\t\t\t\t\t\tTimestamp\n
+accel-x\t\t\t\t\t\t\t\t\tNumber\n
+accel-y\t\t\t\t\t\t\t\t\tNumber\n
+accel-z\t\t\t\t\t\t\t\t\tNumber\n
+accel-mag\t\t\t\t\t\t\tNumber\n
+magnetic-x\t\t\t\t\t\tNumber\n
+magnetic-y\t\t\t\t\t\tNumber\n
+magnetic-z\t\t\t\t\t\tNumber\n
+magnetic-mag\t\t\t\tNumber\n
+Latitude\t\t\t\t\t\t\t\tLatitude\n
+Longitude\t\t\t\t\t\t\tLongitude\n\n
+8. Your project\'s QR code is shown near the top left corner of the page and the project number will be listed two lines under the project\'s title.\n\n9. Remember to change the project number in the app to match your project number!\n\nYou may also use the Create a Project feature in this app by clicking on the data recorded in the upload menu then pressing “Select Project” and then selecting “Create New Project” from the new menu that pops up. This will allow you to create a new project with the proper fields set up for you.</string>
+
+    <string-array name="rides_array">
+        <item>Unknown</item>
+        <item>Bumper Cars</item>
+        <item>Carousel</item>
+        <item>Drop Tower</item>
+        <item>Ferris Wheel</item>
+        <item>Frisbee</item>
+        <item>Gravitron</item>
+        <item>Jump-and-Smile</item>
+        <item>Kiddie Ride</item>
+        <item>Log Flume</item>
+        <item>Matterhorn</item>
+        <item>Orbiter</item>
+        <item>Other</item>
+        <item>Pirate Ship</item>
+        <item>Railway</item>
+        <item>River Rafting</item>
+        <item>Roller Coaster (wooden)</item>
+        <item>Roller Coaster (steel)</item>
+        <item>Rotor</item>
+        <item>Scrambler</item>
+        <item>Slide</item>
+        <item>Speed</item>
+        <item>Swings</item>
+        <item>Teacups</item>
+        <item>Tilt-A-Whirl</item>
+        <item>Wipeout</item>
+        <item>Zero Gravity</item>
+        <item>Zipper</item>
+    </string-array>
+    <string-array name="canobie_array">
+        <item>Unknown</item>
+        <item>Alpine Swing</item>
+        <item>Antique Carousel</item>
+        <item>Antique Cars</item>
+        <item>Blue Heron</item> 
+		<item>Boston Harbor Patrol</item> 
+        <item>Boston Tea Party</item>
+        <item>Canobie 500</item>
+        <item>Canobie Express</item>
+        <item>Caterpillar</item>
+        <item>Corkscrew</item>
+        <item>Crazy Cups</item>
+        <item>daVinvi\'s Dream</item>
+        <item>Dodgems</item>
+        <item>Dragon Coaster</item>
+        <item>Equinox</item>
+        <item>Giant Sky Wheel</item>
+        <item>Jungle Bounce</item>
+        <item>Junior Sports Cars</item>
+        <item>Kiddie Carousel</item>
+        <item>Log Flume</item>
+        <item>Mine of Lost Souls</item>
+        <item>Over the Rainbow</item>
+        <item>Pirate Ship</item>
+        <item>Psychodrome</item>
+        <item>Rowdy Rousters</item> 
+        <item>Skater</item>
+        <item>Sky Ride</item>
+        <item>Star Blaster</item>
+        <item>Tiki Maze</item>
+        <item>Turkish Twist</item>
+        <item>Twist and Shout</item>
+        <item>Untamed</item>
+        <item>Wave Blaster</item>
+        <item>Wipeout</item>
+        <item>Xtreme Frisbee</item>
+        <item>Yankee Cannonball</item>
+        <item>Zero Gravity</item>    
+    </string-array>
+
+    <string name="experiments_no_items">No experiments were found.</string>
+    <string name="xyz">Ax:\nAy:\nAz:</string>
+    <string name="startString">START\n(Press and Hold)</string>
+    <string name="stopString">STOP\n(Press and Hold)</string>
+    <string name="notLoggedIn"> Not Logged In</string>
+    <string name="rideAndSeat">Ride: </string>
+    <string name="picAndVidCount">Pictures and Videos taken: \0</string>
+    <string name="menuDirections">Use Menu to Access Configurations</string>
+    <string name="timeElapsed">Time Elapsed: 0:00</string>
+    <string name="sessionName">First Name/Last Initial: </string>
+    <string name="projectNum">Project: Not Selected </string>
+    <string name="browse">  Browse&#8230;  </string>
+    <string name="canobieRides">Canobie Lake Park Rides</string>
+    <string name="ride">Ride: </string>
+    <string name="takePic">Take a Picture</string>
+    <string name="takeVid">Take a Video"</string>
+    <string name="instructions">Instructions:</string>
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
+    <string name="cancel">Cancel</string>
+    <string name="timeFailed">Failed to synchronize time.  You may try again.</string>
+    <string name="retry">Try Again</string>
+    <string name="done">Done</string>
+    <string name="exit">Exit</string>
+    <string name="media_desc">Select one of the following options:</string>
+    <string name="upload">Upload</string>
+    <string name="sample_rate">Sample Interval (milli-seconds): </string>
+    <string name="select_fields_for">	    Please select the fields you would like to record for project #</string>
+    
+    <string name="syncTime">	    Synchronizing time is useful when using multiple devices on a ride at the
+	    same time.  By default, many Android devices\' clocks will not match one
+	    another\'s, thus making recording data at similar times difficult.  However,
+	    you have a choice to fix this issue by setting a device as a \"host\".
+	    This can be done by hitting the \"Send\" button.  Upon hitting \"Send\", 
+	    the time from that particular Android device will be broadcasted as a timeframe
+	    that all other phones in the local network can receive.  However, in order for
+	    a phone to receive a broadcasted time, that phone must be currently in 
+	    receive-mode, which can be done by hitting \"Receive\".  In other words, if
+	    you intend on receiving a host\'s time, you must be in receive-mode before the
+	    host hits \"Send\". (By default, \"Send\" will also receive the time that you have 
+	    broadcasted, should you be the host).  After pressing either \"Send\" or 
+	    \"Receive\", a dialog box will tell you the time that has been received from
+	    the host, along with the millisecond offset between 
+	    the received time and your Android device\'s actual clock.  If you do choose 
+	    to synchronize time, recording data will now use the received time as a label 
+	    for data points, rather than using your local time.  This now allows 
+	    simultaneous data recording across multiple devices on the same ride at the 
+	    same time.  Please note: synchronizing time will only work if all the Android
+	    devices are connected to the same WiFi network.  Mobile plans (e.g. 3G or 4G)
+	    generally will not allow for synchronizing time.  Also, synchronizing time may not be
+	    allowed on some WiFi networks, but it generally works on small, password-secured 
+	    WiFi networks.</string>
+    <string name="prompt">Would you like to retry uploading any of the following?</string>
+    <string name="loading">Loading&#x2026;</string>
+    <string name="search">Search</string>
+    <string name="select_later">I\'ll select one later</string>
+    <string name="setup">Setup</string>
+    <string name="media">Media</string>
+    <string name="ok">OK</string>
+    <string name="selectProject">Select a Project</string>
+    <string name="project_prompt">Select a Project</string>
+    <string name="project_name_dialog">Create a Project</string>
+    <string name="login_prompt_error">Login Error</string>
+    <string name="uploadPicture">Upload a Picture</string>
+    
+
+</resources>

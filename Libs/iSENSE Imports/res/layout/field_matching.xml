@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:padding="10dp" >
+
+    <TextView
+        android:id="@+id/field_matching_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:paddingBottom="10dp"
+        android:text="@string/field_matching_text"
+        android:textSize="12sp" />
+
+    <ScrollView
+        android:id="@+id/field_matching_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/field_matching_button_layout"
+        android:layout_below="@+id/field_matching_text"
+        android:background="#CCCCCC"
+        android:padding="5dp"
+        android:scrollbars="vertical" >
+
+        <LinearLayout
+            android:id="@+id/field_matching_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@id/field_matching_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <Button
+            android:id="@+id/field_matching_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight=".5"
+            android:text="@string/back" />
+
+        <Button
+            android:id="@+id/field_matching_ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight=".5"
+            android:text="@android:string/ok" />
+    </LinearLayout>
+
+</RelativeLayout>

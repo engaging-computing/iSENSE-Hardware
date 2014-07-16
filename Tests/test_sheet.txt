@@ -1,0 +1,42 @@
+               iSENSE ANDROID APPLICATION TESTING SHEET
+
+----------------------------------------------------------------------
+
+			      SUMMARY
+
+Please prepend each .apk file with "beta_" and append it with "_vX_X".
+For example, if we were testing the Uploader app on version 3.2, we
+would call the .apk file
+      beta_uploader_v3_2.apk
+
+Add all .apk files to be tested to the "Tests" directory and
+list your file to be tested in this .txt file.
+
+IF YOUR APP IS NOT LISTED HERE, IT WILL NOT BE TESTED.
+
+Also, write a short description of what testers should be looking for
+with your update.
+
+After testing any application listed here, please leave your name and
+a brief response as to how the app test went in the comments section
+below.
+
+---------------------------------------------------------------------
+
+                        .APK FILES TO TEST
+
+
+
+---------------------------------------------------------------------
+
+			 WHAT TO LOOK FOR
+
+Generic tests for all apps.  Try new logins and changing name.
+
+---------------------------------------------------------------------
+
+                             COMMENTS
+
+
+
+---------------------------------------------------------------------

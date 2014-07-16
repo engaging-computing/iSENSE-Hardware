@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">iS Pictures</string>
+    <string name="experiments_no_items">No projects were found.</string>
+    <string name="app_name_experiments">Projects</string>
+    <string name="prompt">Would you like to try uploading any of the following?</string>
+    <string name="upload">Upload</string>
+    
+    <string name="firstName">First Name/Last Initial: \0</string>
+    <string name="takePicSingle">Press Here to Take a Picture</string>
+    <string name="iSlogo">iSENSE Logo</string>
+    <string name="queueCount">Picture Count: \0</string>
+    
+    <string name="noLocation0">Lat: waiting for GPS\nLong: waiting for GPS</string>
+	<string name="noLocation1">Lat: waiting for GPS .\nLong: waiting for GPS .</string>
+	<string name="noLocation2">Lat: waiting for GPS . .\nLong: waiting for GPS . .</string>
+	<string name="noLocation3">Lat: waiting for GPS . . .\nLong: waiting for GPS . . .</string>
+	
+	<string name="projectLabel">Project: \0</string>
+	<string name="help">Help</string>
+	<string name="loading">Loading &#8230;</string>
+	<string name="search">Search</string>
+	<string name="cancel">Cancel</string>
+    <string name="okay">OK</string>
+    <string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="gpsString">
+	    Enabling GPS satellites is recommended for this application.  Would you like to enable GPS?
+	</string>
+	<string name="ready_upload_prompt">
+	    Now that there is a connection to iSENSE, would you like to upload your pictures?
+	</string>
+	<string name="qr_prompt">	    
+	    Your device does not have the proper Barcode Scanner application installed
+		to use this feature.  However, you may visit the Google Play store to download 
+		this application (\"Barcode Scanner\" by the Zxing Team).
+	</string>
+	<string name="visit">Visit</string>
+	<string name="chooseExperiment">Enter or select a project you would like to upload to: </string>
+	<string name="browse">Browse &#8230;</string>
+	<string name="scan_qr">Scan QR Code</string>
+	<string name="deletedataset">Are you sure you want to delete this data set from the queue&#63;</string>
+	
+	<string name="describe">Please describe your photo:</string>
+	
+    <string name="ecosystemChanges">Ecosystem Changes\n\t-automobile chemicals\n\t-point source pollution\n\t-storm water runoff</string>
+    <string name="ecosystemChanges_short">Ecosystem Changes</string>
+    
+    <string name="foodwebElements">Foodweb Elements\n\t-aquatic plants\n\t-insect larvae\n\t-larger animals\n\t-waterfowl</string>
+    <string name="foodwebElements_short">Foodweb Elements</string>
+    
+	<string name="habitat">Habitat\n\t-habitat disruption\n\t-natural habitat</string>
+	<string name="habitat_short">Habitat</string>
+	
+	<string name="invasiveSpecies">Invasive Species\n\t-pigeons\n\t-norway maple\n\t-turfgrass</string>
+	<string name="invasiveSpecies_short">Invasive Species</string>
+	
+	<string name="other">Other</string>
+	<string name="project">Project</string>
+	<string name="login">Login</string>
+	<string name="continuous">Continuously Take Photos</string>
+	<string name="interval">Time Interval (seconds):</string>
+	<string name="takePicContinuous">Press Here to Continuously Take Pictures</string>
+	<string name="addPicture">Upload a Picture from the Gallery</string>
+	<string name="step1">Step 1:</string>
+	<string name="step2">Step 2:</string>
+	<string name="selectProject">Select a Project</string>
+	<string name="uploadCredentials">Upload with Your Credentials</string>
+	<string name="uploadKey">Upload with a Contributor Key</string>
+	<string name="or">or</string>
+    <string name="About_Title">About</string>
+    <string name="Help_Title">Help</string>
+    
+    <string name="aboutApp">About:\n\nThis app enables you to share a photo, the location and time it was taken and to upload that data online. When the app is activated, you are given the option to take a picture, upload a picture from the gallery or continuously take photos. All data that is recorded can be shared on the iSENSE web system (isenseproject.org), where it can be viewed publicly. In order to allow you to find your contributed data easily, the app asks you to enter your first name and last initial. If you are not comfortable with this information being posted on the web, please refrain from using this application.\n\n
+Instructions:\n\n
+In order to begin recording and sharing data, first you must enter your first name and last initial. Next, you can click on the menu option that says \”Project\” to select the project you would like your data to be uploaded to.\n\n 
+
+To Take a Photo: Press the button that says \”Press Here to Take a Picture.\” After taking the picture and adding a description to it, the picture and your data are recorded and then saved. When you are ready to upload your saved data, click on the Upload option in the menu.\n\n  
+
+To Upload a Picture from the Gallery: Press the button that says \”Upload a Picture from the Gallery.\” Select the picture you would like to upload. The picture and data automatically save. When you are ready to upload your saved data, click on the Upload option in the menu.\n\n  
+
+To Continuously Take Photos: Press the menu option that says \”Continuously Take Photos.\”  Make sure the checkbox is checked and then select the time interval in which you would like your data to be recorded. To start recording data, click on the button that says \“Press Here to Continuously Take Pictures.\” When you are ready to stop recording the data click on the button that says \“Recording Press to Stop.\” The pictures taken and data recorded will save. When you are ready to upload your saved data, click on the Upload option in the menu.\n\n  
+
+To use the App via the Share Feature in Gallery: While viewing images in your gallery, you can use the share feature and then select the iSENSE Pictures App to upload that image and its corresponding data to the iSENSE web system. 
+         </string>
+  	<string name="About">\n\nThis app can record data regardless of Internet or Wi-Fi connection. After finished recording data, the points you recorded will remain saved. Later, if you have internet connection, you can click on upload (a menu option located at the top of the app). This will show you the session name and time that your data was recorded. Clicking on the upload button will publish that information to iSENSE.\n\n </string>
+    <string name="helpText">\nHow to Create a Project for this App:\n\n1. Go to isenseproject.org\n\n2. Login or Register for an Account.\n\n3. Click on Projects.\n\n4. Click on Create Project.\n\n5. Enter a name for your project, then click finish. \n\n6. Enter a Description.\n\n7. When formatting the project, the fields should be as follows:\n\n 
+Name:\t\t\t\t\t\t\t\tType:\n\n        
+Timestamp\t\t\t\t\tTimestamp\n
+Latitude\t\t\t\t\t\t\tLatitude\n
+Longitude\t\t\t\t\t\tLongitude
+        
+        \n\n8. Your project\'s QR code is shown near the top left corner of the page and the project number will be listed two lines under the project\'s title.\n\n9. Remember to change the project number in the app to match your project number!\n\nYou may also use the Create a Project feature in this app by clicking on the data recorded in the upload menu then pressing “Select Project” and then selecting “Create New Project” from the new menu that pops up. This will allow you to create a new project with the proper fields set up for you.
+</string>
+	
+	
+</resources>

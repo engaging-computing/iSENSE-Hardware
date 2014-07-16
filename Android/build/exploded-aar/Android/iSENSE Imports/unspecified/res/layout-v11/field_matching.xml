@@ -70,4 +70,8 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
+<<<<<<< HEAD
 </RelativeLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/field_matching.xml -->
+=======
+</RelativeLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/field_matching.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

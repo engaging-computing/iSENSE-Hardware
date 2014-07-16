@@ -11,4 +11,8 @@
     android:textColor="@android:color/black"
     android:textIsSelectable="false" />
 
+<<<<<<< HEAD
 <!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/filerow.xml -->
+=======
+<!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/filerow.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

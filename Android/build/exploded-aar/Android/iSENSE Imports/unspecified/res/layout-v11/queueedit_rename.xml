@@ -60,4 +60,8 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
+<<<<<<< HEAD
 </LinearLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/queueedit_rename.xml -->
+=======
+</LinearLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout-v11/queueedit_rename.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

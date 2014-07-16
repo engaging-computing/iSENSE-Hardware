@@ -77,4 +77,8 @@
                 android:bottom="10dp" />
         </shape>
     </item>
+<<<<<<< HEAD
 </selector><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/drawable/button_rsense.xml -->
+=======
+</selector><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/drawable/button_rsense.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

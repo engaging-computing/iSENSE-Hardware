@@ -85,4 +85,8 @@
             android:text="@string/upload" />
     </LinearLayout>
 
+<<<<<<< HEAD
 </RelativeLayout><!-- From: file:/home/bobby/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/queueprompt.xml -->
+=======
+</RelativeLayout><!-- From: file:/Users/balabhv/iSENSE-Hardware/Android/iSENSE%20Imports/res/layout/queueprompt.xml -->
+>>>>>>> 1d67f70885eeafa962ac587022d6f224b29505c2

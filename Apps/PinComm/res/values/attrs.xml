@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="exprow">
+		<attr name="name" format="string" />
+        <attr name="desc" format="string" />
+        <attr name="lastmod" format="string" />
+    </declare-styleable>
+    
+    <declare-styleable name="datarow">
+		<attr name="toplabel" format="string" />
+    </declare-styleable>
+    
+    <declare-styleable name="datasubrow">
+        <attr name="label" format="string" />
+        <attr name="data" format="string" />
+    </declare-styleable>
+    
+    <declare-styleable name="theme">
+        <attr name="menuConnect" format="reference"/>
+        <attr name="menuRefresh" format="reference"/>
+        <attr name="menuSensor" format="reference"/>
+        <attr name="menuShare" format="reference"/>
+        <attr name="menuTime" format="reference"/>
+    </declare-styleable>
+
+</resources>
