@@ -1,4 +1,0 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="2450" android:versionName="2.4.5" package="org.opencv">
-
-    <uses-sdk android:minSdkVersion="8"/>
-</manifest>
