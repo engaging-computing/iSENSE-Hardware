@@ -34,17 +34,18 @@ import android.location.LocationListener;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.Log;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -175,8 +176,16 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	
 	private Switch switchGravity;
 
-	/* Action Bar */
+    private String[] mNavigationDrawerItemTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+
+    /* Action Bar */
 	private static int actionBarTapCount = 0;
+
+
 
 	/* Make sure url is updated when useDev is set. */
 	void setUseDev(boolean useDev) {
@@ -216,8 +225,50 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			// make the actionbar clickable
 			bar.setDisplayHomeAsUpEnabled(true);
 		}
-		
-		f = new Fields();
+
+        mNavigationDrawerItemTitles= getResources().getStringArray(R.array.items);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_item_row, mNavigationDrawerItemTitles));
+
+//        // Set the list's click listener
+//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener(){
+//
+//        });
+
+
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                       /* host Activity */
+                mDrawerLayout,              /* DrawerLayout object */
+                R.drawable.ic_launcher,     /* nav drawer icon to replace 'Up' caret */
+                1,                     /* "open drawer" description */
+                0                     /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        f = new Fields();
 		uq = new UploadQueue("carrampphysics", mContext, api);
 		uq.buildQueueFromFile();
 
@@ -261,8 +312,7 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 		new DecimalFormat("#,##0.0");
 
-		startStop.setOnLongClickListener(new OnLongClickListener() {
-
+        startStop.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View arg0) {
 				 
@@ -607,11 +657,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	}
 
-	public void onUserLeaveHint() {
-		super.onUserLeaveHint();
-		usedHomeButton = true;
-	}
-
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -722,11 +767,6 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 	}
 
 	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
@@ -739,6 +779,11 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
 		switch (item.getItemId()) {
 		case R.id.login:
 			startActivityForResult(new Intent(this, CredentialManager.class),
@@ -777,53 +822,58 @@ public class CarRampPhysicsV2 extends Activity implements SensorEventListener,
 			startActivity(new Intent(this, Help.class));
 			return true;
 		case android.R.id.home:
-			CountDownTimer cdt = null;
 
-			// Give user 10 seconds to switch dev/prod mode
-			if (actionBarTapCount == 0) {
-				cdt = new CountDownTimer(5000, 5000) {
-					public void onTick(long millisUntilFinished) {
-					}
 
-					public void onFinish() {
-						actionBarTapCount = 0;
-					}
-				}.start();
-			}
 
-			String other = (useDev) ? "production" : "dev";
 
-			switch (++actionBarTapCount) {
-			case 5:
-				w.make(getResources().getString(R.string.two_more_taps) + other
-						+ getResources().getString(R.string.mode_type));
-				break;
-			case 6:
-				w.make(getResources().getString(R.string.one_more_tap) + other
-						+ getResources().getString(R.string.mode_type));
-				break;
-			case 7:
-				w.make(getResources().getString(R.string.now_in_mode) + other
-						+ getResources().getString(R.string.mode_type));
-				useDev = !useDev;
 
-				if (cdt != null)
-					cdt.cancel();
-
-				if (api.getCurrentUser() != null) {
-					Runnable r = new Runnable() {
-						public void run() {
-							api.deleteSession();
-							api.useDev(useDev);
-						}
-					};
-					new Thread(r).start();
-				} else
-					setUseDev(useDev);
-
-				actionBarTapCount = 0;
-				break;
-			}
+//			CountDownTimer cdt = null;
+//
+//			// Give user 10 seconds to switch dev/prod mode
+//			if (actionBarTapCount == 0) {
+//				cdt = new CountDownTimer(5000, 5000) {
+//					public void onTick(long millisUntilFinished) {
+//					}
+//
+//					public void onFinish() {
+//						actionBarTapCount = 0;
+//					}
+//				}.start();
+//			}
+//
+//			String other = (useDev) ? "production" : "dev";
+//
+//			switch (++actionBarTapCount) {
+//			case 5:
+//				w.make(getResources().getString(R.string.two_more_taps) + other
+//						+ getResources().getString(R.string.mode_type));
+//				break;
+//			case 6:
+//				w.make(getResources().getString(R.string.one_more_tap) + other
+//						+ getResources().getString(R.string.mode_type));
+//				break;
+//			case 7:
+//				w.make(getResources().getString(R.string.now_in_mode) + other
+//						+ getResources().getString(R.string.mode_type));
+//				useDev = !useDev;
+//
+//				if (cdt != null)
+//					cdt.cancel();
+//
+//				if (api.getCurrentUser() != null) {
+//					Runnable r = new Runnable() {
+//						public void run() {
+//							api.deleteSession();
+//							api.useDev(useDev);
+//						}
+//					};
+//					new Thread(r).start();
+//				} else
+//					setUseDev(useDev);
+//
+//				actionBarTapCount = 0;
+//				break;
+//			}
 
 			return true;
 		}
